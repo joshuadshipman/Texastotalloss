@@ -147,7 +147,7 @@ async function deleteIntent(name: string) {
 
 async function createIntent(config: IntentConfig) {
   const trainingPhrases = config.trainingPhrasesParts.map(part => ({
-    type: 'EXAMPLE',
+    type: 'EXAMPLE' as const,
     parts: [{ text: part }],
   }));
 
