@@ -1,7 +1,12 @@
+'use client';
+
 import ChatWidget from '@/components/ChatWidget';
 import Link from 'next/link';
+import { useChat } from '@/components/ChatContext';
 
 export default function Home() {
+    const { openChat } = useChat();
+
     return (
         <main className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900">
             {/* Hero Section */}
@@ -14,10 +19,13 @@ export default function Home() {
                         Find out if your total loss offer is low, whether gap coverage applies, and what your injuries may really be worth.
                     </p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
-                        <button className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:scale-105">
+                        <button
+                            onClick={openChat}
+                            className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:scale-105"
+                        >
                             Check My Total Loss & Injuries
                         </button>
-                        <a href="tel:555-555-5555" className="bg-white text-blue-900 hover:bg-gray-100 font-bold py-3 px-8 rounded-full shadow-lg transition">
+                        <a href="tel:1-800-555-0199" className="bg-white text-blue-900 hover:bg-gray-100 font-bold py-3 px-8 rounded-full shadow-lg transition">
                             Call Now
                         </a>
                     </div>
@@ -75,7 +83,10 @@ export default function Home() {
             <section className="py-16 px-4 bg-blue-900 text-white text-center">
                 <div className="max-w-4xl mx-auto space-y-6">
                     <h2 className="text-3xl font-bold">Free Total Loss, Gap Coverage, and Injury Check</h2>
-                    <button className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-10 rounded-full shadow-lg transition text-xl">
+                    <button
+                        onClick={openChat}
+                        className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-10 rounded-full shadow-lg transition text-xl"
+                    >
                         Start My Free Check
                     </button>
                 </div>

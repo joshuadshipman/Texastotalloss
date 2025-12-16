@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useChat } from './ChatContext';
 
 type Message = {
     sender: 'user' | 'bot';
@@ -8,7 +9,7 @@ type Message = {
 };
 
 export default function ChatWidget() {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isOpen, toggleChat } = useChat();
     const [messages, setMessages] = useState<Message[]>([
         { sender: 'bot', text: 'Totaled car? Injured? check your payout now.' }
     ]);
@@ -41,7 +42,7 @@ export default function ChatWidget() {
             setContext(data.outputContext);
         } catch (e) {
             console.error(e);
-            setMessages(prev => [...prev, { sender: 'bot', text: 'Sorry, I encountered an error.' }]);
+            setMessages(prev => [...prev, { sender: 'bot', text: 'Sorry, I encountered an error. Please try again later.' }]);
         }
     };
 
@@ -49,7 +50,7 @@ export default function ChatWidget() {
         <>
             {/* Trigger Button */}
             <button
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={toggleChat}
                 className="fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition z-50 font-bold"
             >
                 {isOpen ? 'Close' : 'Check My Offer'}
@@ -58,11 +59,12 @@ export default function ChatWidget() {
             {/* Chat Window */}
             {isOpen && (
                 <div className="fixed bottom-20 right-4 w-80 md:w-96 h-[500px] bg-white rounded-lg shadow-2xl flex flex-col z-50 border border-gray-200 overflow-hidden">
-                    <div className="bg-blue-600 text-white p-4 rounded-t-lg font-bold">
-                        Total Loss Check
+                    <div className="bg-blue-600 text-white p-4 rounded-t-lg font-bold flex justify-between items-center">
+                        <span>Total Loss Check</span>
+                        <button onClick={toggleChat} className="text-sm opacity-75 hover:opacity-100">✕</button>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
                         {messages.map((m, i) => (
                             <div
                                 key={i}
