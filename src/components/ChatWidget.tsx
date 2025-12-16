@@ -57,7 +57,7 @@ export default function ChatWidget() {
 
             {/* Chat Window */}
             {isOpen && (
-                <div className="fixed bottom-20 right-4 w-80 md:w-96 h-[500px] bg-white rounded-lg shadow-2xl flex flex-col z-50 border border-gray-200">
+                <div className="fixed bottom-20 right-4 w-80 md:w-96 h-[500px] bg-white rounded-lg shadow-2xl flex flex-col z-50 border border-gray-200 overflow-hidden">
                     <div className="bg-blue-600 text-white p-4 rounded-t-lg font-bold">
                         Total Loss Check
                     </div>
@@ -70,8 +70,8 @@ export default function ChatWidget() {
                             >
                                 <div
                                     className={`max-w-[80%] p-3 rounded-lg text-sm ${m.sender === 'user'
-                                            ? 'bg-blue-600 text-white rounded-br-none'
-                                            : 'bg-gray-100 text-gray-800 rounded-bl-none'
+                                        ? 'bg-blue-600 text-white rounded-br-none'
+                                        : 'bg-gray-100 text-gray-800 rounded-bl-none'
                                         }`}
                                 >
                                     {m.text}
