@@ -139,6 +139,21 @@ const intentsToCreate: IntentConfig[] = [
     trainingPhrasesParts: ['What are the 2025 trends', 'Latest total loss stats', 'Is this common in 2025', 'Class action lawsuits'],
     messageTexts: ['In 2025, 27% of claims are total losses. Major insurers face lawsuits for using algorithms to artificially lower offers, and only 58% of customers feel their valuation was fair.']
   },
+  {
+    displayName: 'FAQ - What Not To Say',
+    trainingPhrasesParts: ['What should I not say', 'What to avoid telling insurance', 'Things not to say to adjuster'],
+    messageTexts: ['NEVER say "I\'m sorry", "I made a mistake", or "I\'m fine" (regarding injuries). Do not guess about details; say "I don\'t know" instead.']
+  },
+  {
+    displayName: 'FAQ - Safe Phrases',
+    trainingPhrasesParts: ['What are safe phrases', 'What should I say about injuries', 'Safe things to tell adjuster'],
+    messageTexts: ['Use safe phrases like: "I am receiving medical evaluation and will rely on my records" or "It is too early to know the full extent."']
+  },
+  {
+    displayName: 'FAQ - Recorded Statement',
+    trainingPhrasesParts: ['Should I give a recorded statement', 'They asked for a recorded statement', 'Can they record me'],
+    messageTexts: ['Do NOT agree to a recorded statement for the at-fault insurer without legal advice. Statements can be used to attack your credibility later.']
+  },
 
   // --- Core Flow ---
   {
