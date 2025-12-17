@@ -94,7 +94,30 @@ export async function POST(req: NextRequest) {
             ctx.name && ctx.name.endsWith('/contexts/end_conversation')
         );
 
+        if (intentName === 'Receive VIN') {
+            const vin = (parameters?.['vin']?.stringValue || '').trim();
+            console.log(`Processing VIN: ${vin}`);
+
+            // Decode VIN logic here (using your new library)
+            // For now, we will just acknowledge it. 
+            // In a real app, await decodeVin(vin) here.
+            fulfillmentText += ` I've looked up VIN ${vin}. It appears to be a [Year Make Model].`;
+        }
+
+        // Check if this message is a photo upload (from frontend hidden message)
+        if (body.isAttachment) {
+            console.log('Received attachment:', message);
+            await supabaseAdmin.from('total_loss_leads').update({
+                photos: supabaseAdmin.rpc('array_append', {
+                    arr: 'photos',
+                    elem: message.replace('Uploaded photo: ', '')
+                })
+            }).match({ dialogflow_session_id: session });
+        }
+
+        // Final save logic
         if (isEndConversation || intentName === 'Collect Phone') {
+            // ... existing save logic ...
             console.log('Conversation ended, saving lead...');
 
             let collectedData: any = {};

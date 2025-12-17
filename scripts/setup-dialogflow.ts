@@ -154,6 +154,28 @@ const intentsToCreate: IntentConfig[] = [
     trainingPhrasesParts: ['Should I give a recorded statement', 'They asked for a recorded statement', 'Can they record me'],
     messageTexts: ['Do NOT agree to a recorded statement for the at-fault insurer without legal advice. Statements can be used to attack your credibility later.']
   },
+  {
+    displayName: 'Valuation Request',
+    trainingPhrasesParts: ['How much is my car worth', 'Get valuation', 'Check value', 'What is the value'],
+    messageTexts: ['I can help with that. Please enter your VIN (Vehicle Identification Number) so I can pull the exact specs.'],
+    outputContexts: [{ name: 'awaiting_vin', lifespan: 2 }]
+  },
+  {
+    displayName: 'Receive VIN',
+    inputContextNames: ['awaiting_vin'],
+    trainingPhrasesParts: ['My VIN is 1HGCM...', 'VIN: 1G1...'],
+    parameters: [
+      {
+        displayName: 'vin',
+        entityTypeDisplayName: '@sys.any',
+        mandatory: true,
+        value: '$vin',
+        prompts: ['Please enter the VIN.']
+      }
+    ],
+    messageTexts: ['Thanks. To get the most accurate valuation, please upload photos of the vehicle (Front, Back, Side, Interior). You can attach them here.'],
+    outputContexts: [{ name: 'awaiting_photos', lifespan: 2 }]
+  },
 
   // --- Core Flow ---
   {

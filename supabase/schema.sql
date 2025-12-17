@@ -44,6 +44,7 @@ create table public.total_loss_leads (
   has_injury boolean,
   treatment_started boolean,
   treatment_types text[],                 -- ER, urgent care, chiro, PT, etc.
+  photos text[],                          -- Array of photo URLs
   injury_areas text[],                    -- neck, back, head, etc.
   lost_wages boolean,
   missed_work_days integer,

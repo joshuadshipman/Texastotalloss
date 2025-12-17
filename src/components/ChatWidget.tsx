@@ -17,12 +17,54 @@ export default function ChatWidget() {
     const [context, setContext] = useState('');
     const [sessionId] = useState(() => Math.random().toString(36).substring(7));
     const bottomRef = useRef<HTMLDivElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const { supabaseClient } = require('@/lib/supabaseClient'); // Dynamic import to avoid build issues if env missing
 
     useEffect(() => {
         if (isOpen) {
             bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
     }, [messages, isOpen]);
+
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setMessages(prev => [...prev, { sender: 'user', text: `Uploading ${file.name}...` }]);
+
+        try {
+            const fileName = `${sessionId}/${Date.now()}-${file.name}`;
+            const { data, error } = await supabaseClient.storage
+                .from('vehicle-photos')
+                .upload(fileName, file);
+
+            if (error) throw error;
+
+            const { data: { publicUrl } } = supabaseClient.storage
+                .from('vehicle-photos')
+                .getPublicUrl(fileName);
+
+            const msgText = `Uploaded photo: ${publicUrl}`;
+
+            // Send hidden URL message to bot to save in context
+            await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: msgText,
+                    session: sessionId,
+                    context,
+                    isAttachment: true
+                })
+            });
+
+            setMessages(prev => [...prev, { sender: 'user', text: `✅ Photo uploaded!` }]);
+
+        } catch (error) {
+            console.error('Upload error:', error);
+            setMessages(prev => [...prev, { sender: 'bot', text: 'Failed to upload photo. Please try again.' }]);
+        }
+    };
 
     const sendMessage = async () => {
         if (!input.trim()) return;
@@ -83,13 +125,23 @@ export default function ChatWidget() {
                         <div ref={bottomRef} />
                     </div>
 
-                    <div className="p-4 border-t border-gray-100 bg-gray-50 rounded-b-lg flex gap-2">
+                    <div className="p-4 border-t border-gray-100 bg-gray-50 rounded-b-lg flex gap-2 items-center">
+                        <label className="cursor-pointer text-gray-500 hover:text-blue-600 p-2">
+                            📷
+                            <input
+                                type="file"
+                                className="hidden"
+                                accept="image/*"
+                                onChange={handleFileUpload}
+                                ref={fileInputRef}
+                            />
+                        </label>
                         <input
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                            placeholder="Type your answer..."
+                            placeholder="Type..."
                             className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 text-black"
                         />
                         <button
