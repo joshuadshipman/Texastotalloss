@@ -177,6 +177,33 @@ const intentsToCreate: IntentConfig[] = [
     outputContexts: [{ name: 'awaiting_photos', lifespan: 2 }]
   },
 
+  // --- Insurance & Coverage Guide (New) ---
+  {
+    displayName: 'FAQ - Low/No Insurance',
+    trainingPhrasesParts: ['They have no insurance', 'Driver is uninsured', 'What if they have no money', 'Limits exhausted'],
+    messageTexts: ['If they have no insurance or low limits, they are still liable, but collecting is hard. Using your own UMPD/Collision coverage is often the fastest route to get paid.']
+  },
+  {
+    displayName: 'FAQ - UMPD Coverage',
+    trainingPhrasesParts: ['What is UMPD', 'Do I have UMPD', 'Uninsured motorist property damage'],
+    messageTexts: ['UMPD (Uninsured/Underinsured Motorist Property Damage) pays for your car repairs or total loss when the at-fault driver cannot pay. It usually has a lower deductible than Collision.']
+  },
+  {
+    displayName: 'FAQ - Gap Coverage Explained',
+    trainingPhrasesParts: ['Will gap pay my loan', 'I have gap insurance', 'Does insurance pay off my car'],
+    messageTexts: ['Standard insurance only pays the cars current value (ACV). GAP insurance pays the difference between that value and what you still owe on your loan. Without GAP, you owe the difference.']
+  },
+  {
+    displayName: 'FAQ - Payout Process',
+    trainingPhrasesParts: ['How is payout calculated', 'When do I get paid', 'Who gets the money'],
+    messageTexts: ['The payout is: (Actual Cash Value) minus (Deductible). This amount goes to your lienholder first to pay off the car. Any remainder comes to you.']
+  },
+  {
+    displayName: 'FAQ - Action Steps',
+    trainingPhrasesParts: ['What should I do next', 'Steps to take', 'Help me start'],
+    messageTexts: ['1. Get their "no coverage" status in writing. 2. Check your policy for UMPD/Collision. 3. Gather your loan info. 4. Do NOT give a recorded statement yet.']
+  },
+
   // --- Core Flow ---
   {
     displayName: 'Default Welcome Intent',

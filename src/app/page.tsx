@@ -138,6 +138,107 @@ export default function Home() {
                 </div>
             </section>
 
+            {/* NEW: Insurance & Compensation Guide */}
+            <section className="py-20 bg-blue-900 text-white">
+                <div className="container mx-auto px-4">
+                    <h2 className="text-4xl font-bold text-center mb-12">Understanding Your Coverage & Rights</h2>
+
+                    <div className="space-y-8 max-w-5xl mx-auto">
+
+                        {/* 1. Total Loss & No Insurance */}
+                        <div className="bg-white/10 p-8 rounded-xl backdrop-blur-sm border border-white/20 flex flex-col md:flex-row gap-8 items-center transition hover:bg-white/15">
+                            <div className="flex-1">
+                                <h3 className="text-2xl font-bold mb-4 text-yellow-400">1. Total Loss & No Insurance</h3>
+                                <p className="mb-4 text-lg">
+                                    When a car is totaled, the insurer owes you the <strong>Actual Cash Value (ACV)</strong> immediately before the crash,
+                                    not what you owe on your loan.
+                                </p>
+                                <p className="text-gray-200">
+                                    If the at-fault driver has <strong>no insurance</strong> or low limits, they are still legally responsible,
+                                    but collecting from them personally can be very difficult.
+                                </p>
+                            </div>
+                            <div className="w-full md:w-1/3 h-48 bg-blue-800/50 rounded-lg border-2 border-dashed border-blue-400 flex items-center justify-center text-blue-300 font-bold text-center p-4">
+                                [Infographic: Total Loss vs Loan Balance]
+                            </div>
+                        </div>
+
+                        {/* 2. Your Coverage Steps In */}
+                        <div className="bg-white/10 p-8 rounded-xl backdrop-blur-sm border border-white/20 flex flex-col md:flex-row gap-8 items-center transition hover:bg-white/15">
+                            <div className="flex-1">
+                                <h3 className="text-2xl font-bold mb-4 text-green-400">2. Where Your Coverage Steps In</h3>
+                                <ul className="list-disc ml-5 space-y-3 text-lg">
+                                    <li>
+                                        <strong>UMPD / UIMPD:</strong> Pays for damage when the at-fault driver is uninsured.
+                                    </li>
+                                    <li>
+                                        <strong>Collision:</strong> Pays to total your car regardless of who caused it (minus deductible).
+                                    </li>
+                                    <li>
+                                        <strong>UM/UIM Bodily Injury:</strong> Covers your medical bills.
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className="w-full md:w-1/3 h-48 bg-green-900/50 rounded-lg border-2 border-dashed border-green-400 flex items-center justify-center text-green-300 font-bold text-center p-4">
+                                [Infographic: Coverage Flow Chart]
+                            </div>
+                        </div>
+
+                        {/* 3. Handling Payouts */}
+                        <div className="bg-white/10 p-8 rounded-xl backdrop-blur-sm border border-white/20 flex flex-col md:flex-row gap-8 items-center transition hover:bg-white/15">
+                            <div className="flex-1">
+                                <h3 className="text-2xl font-bold mb-4 text-blue-300">3. How Payouts Work</h3>
+                                <p className="mb-4 text-lg">
+                                    Even with your own coverage, the payout is based on <strong>ACV minus your deductible</strong>.
+                                </p>
+                                <p className="text-gray-200">
+                                    <strong>Gap Insurance:</strong> If the ACV payout doesn't cover your loan balance, Gap coverage pays the difference.
+                                    <em className="block mt-2 opacity-75">Without Gap, you are responsible for the remaining loan balance.</em>
+                                </p>
+                            </div>
+                            <div className="w-full md:w-1/3 h-48 bg-blue-800/50 rounded-lg border-2 border-dashed border-blue-400 flex items-center justify-center text-blue-300 font-bold text-center p-4">
+                                [Infographic: ACV vs Deductible Math]
+                            </div>
+                        </div>
+
+                        {/* 4. No Coverage Scenarios */}
+                        <div className="bg-white/10 p-8 rounded-xl backdrop-blur-sm border border-white/20 flex flex-col md:flex-row gap-8 items-center transition hover:bg-white/15">
+                            <div className="flex-1">
+                                <h3 className="text-2xl font-bold mb-4 text-red-400">4. If There Is NO Coverage</h3>
+                                <p className="mb-4 text-lg">
+                                    If the driver is uninsured and you lack UMPD/Collision, your options are limited to suing the driver personally.
+                                </p>
+                                <div className="border-l-4 border-red-500 pl-4 bg-red-900/20 py-3 rounded-r">
+                                    <strong>Reality Check:</strong> Many uninsured drivers have few assets, making judgments hard to collect.
+                                    <br /><em>Always carry UM/UIM.</em>
+                                </div>
+                            </div>
+                            <div className="w-full md:w-1/3 h-48 bg-red-900/50 rounded-lg border-2 border-dashed border-red-400 flex items-center justify-center text-red-300 font-bold text-center p-4">
+                                [Infographic: The Risk of Uninsured Drivers]
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {/* 5. Action Steps */}
+                    <div className="mt-16 bg-white text-blue-900 p-10 rounded-2xl shadow-xl max-w-5xl mx-auto">
+                        <h3 className="text-3xl font-bold mb-8 text-center border-b-2 border-blue-100 pb-4">📝 5 Steps to Take Now</h3>
+                        <div className="flex flex-col md:flex-row gap-8">
+                            <ol className="list-decimal ml-6 space-y-6 font-medium text-lg flex-1">
+                                <li><strong>Confirm Limits:</strong> Get it in writing if the other insurer claims "no coverage" or "limits exhausted".</li>
+                                <li><strong>Check Your Policy:</strong> Look for "Collision", "UM/UIM", and "UMPD" on your declarations page.</li>
+                                <li><strong>Ask Your Agent:</strong> Request a clear explanation of which of <em>your</em> coverages apply.</li>
+                                <li><strong>Document Everything:</strong> Gather your valuation, loan payoff, and gap contracts.</li>
+                                <li><strong>Consult Counsel:</strong> If there is no coverage, a lawyer can evaluate options.</li>
+                            </ol>
+                            <div className="w-full md:w-1/3 min-h-[300px] bg-gray-100 rounded-lg border-2 border-dashed border-gray-400 flex items-center justify-center text-gray-500 font-bold text-center p-4">
+                                [Infographic: The 5-Step Action Checklist]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* FAQ Section */}
             <section className="py-16 px-4 bg-white">
                 <div className="max-w-4xl mx-auto">
