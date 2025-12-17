@@ -8,6 +8,8 @@ type Message = {
     text: string;
 };
 
+import { supabaseClient } from '@/lib/supabaseClient';
+
 export default function ChatWidget() {
     const { isOpen, toggleChat } = useChat();
     const [messages, setMessages] = useState<Message[]>([
@@ -18,7 +20,6 @@ export default function ChatWidget() {
     const [sessionId] = useState(() => Math.random().toString(36).substring(7));
     const bottomRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const { supabaseClient } = require('@/lib/supabaseClient'); // Dynamic import to avoid build issues if env missing
 
     useEffect(() => {
         if (isOpen) {
