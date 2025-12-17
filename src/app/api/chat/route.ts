@@ -105,14 +105,23 @@ export async function POST(req: NextRequest) {
         }
 
         // Check if this message is a photo upload (from frontend hidden message)
+        // Check if this message is a photo upload (from frontend hidden message)
         if (body.isAttachment) {
             console.log('Received attachment:', message);
-            await supabaseAdmin.from('total_loss_leads').update({
-                photos: supabaseAdmin.rpc('array_append', {
-                    arr: 'photos',
-                    elem: message.replace('Uploaded photo: ', '')
-                })
-            }).match({ dialogflow_session_id: session });
+            const photoUrl = message.replace('Uploaded photo: ', '');
+
+            // Safe Array Append: get current, append, update
+            const { data: currentLead } = await supabaseAdmin
+                .from('total_loss_leads')
+                .select('photos')
+                .eq('dialogflow_session_id', session)
+                .single();
+
+            const currentPhotos = currentLead?.photos || [];
+
+            await supabaseAdmin.from('total_loss_leads')
+                .update({ photos: [...currentPhotos, photoUrl] })
+                .eq('dialogflow_session_id', session);
         }
 
         // Final save logic
@@ -151,7 +160,7 @@ export async function POST(req: NextRequest) {
 
             const { data, error } = await supabaseAdmin
                 .from('total_loss_leads')
-                .insert(leadData)
+                .upsert(leadData, { onConflict: 'dialogflow_session_id' }) // Upsert to merge with photos
                 .select()
                 .single();
 
@@ -172,9 +181,10 @@ export async function POST(req: NextRequest) {
 
     } catch (error: any) {
         console.error('Dialogflow API Error:', error);
+        // RETURN ACTUAL ERROR FOR DEBUGGING
         return NextResponse.json({
-            fulfillmentText: 'Sorry, I am having trouble connecting to the agent right now.',
+            fulfillmentText: `System Error: ${error.message}. Please report this.`,
             debugError: error.message
-        }, { status: 500 });
+        }, { status: 200 }); // Return 200 so chat widget displays it
     }
 }
