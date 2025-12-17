@@ -92,50 +92,47 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Section 4: 10 Key Facts */}
-            <section className="py-16 px-4 bg-gray-50">
-                <div className="max-w-4xl mx-auto">
-                    <h2 className="text-3xl font-bold mb-8 text-blue-900 text-center">10 Critical Facts About Total Loss</h2>
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <h3 className="font-bold text-lg text-blue-800 mb-2">1. ACV is the foundation.</h3>
-                            <p className="text-gray-600 text-sm">Total loss offers are anchored to Actual Cash Value (market value), not your loan balance or purchase price.</p>
+            {/* Section 4: 2025 Market & Legal Reality Check */}
+            <section className="py-16 px-4 bg-blue-50">
+                <div className="max-w-5xl mx-auto">
+                    <h2 className="text-3xl font-bold mb-4 text-blue-900 text-center">2025 Reality Check: The Data</h2>
+                    <p className="text-center text-gray-600 mb-10 max-w-2xl mx-auto">Latest industry stats and legal trends show why you need to protect your value.</p>
+
+                    <div className="grid md:grid-cols-3 gap-6">
+                        <div className="bg-white p-6 rounded-lg shadow-sm border border-blue-100">
+                            <div className="text-3xl font-bold text-red-600 mb-2">27%</div>
+                            <h3 className="font-bold text-lg text-gray-900 mb-2">Of Claims Are Total Losses</h3>
+                            <p className="text-gray-600 text-sm">Up from 16% in 2022. More drivers than ever are being pushed into total loss valuations instead of repairs.</p>
                         </div>
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <h3 className="font-bold text-lg text-blue-800 mb-2">2. State law sets the threshold.</h3>
-                            <p className="text-gray-600 text-sm">States dictate when a car must be totaled (e.g., when repairs hit 70-80% of value).</p>
+
+                        <div className="bg-white p-6 rounded-lg shadow-sm border border-blue-100">
+                            <div className="text-3xl font-bold text-red-600 mb-2">42%</div>
+                            <h3 className="font-bold text-lg text-gray-900 mb-2">Unsatisfied Customers</h3>
+                            <p className="text-gray-600 text-sm">Only 58% of customers say their total loss valuation met expectations in 2025 studies.</p>
                         </div>
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <h3 className="font-bold text-lg text-blue-800 mb-2">3. Vendors drive the offers.</h3>
-                            <p className="text-gray-600 text-sm">Insurers use third-party reports (CCC, Mitchell) that can contain errors or weak comparables.</p>
+
+                        <div className="bg-white p-6 rounded-lg shadow-sm border border-blue-100">
+                            <div className="text-3xl font-bold text-red-600 mb-2">⚠ Legal Alert</div>
+                            <h3 className="font-bold text-lg text-gray-900 mb-2">Class Action Lawsuits</h3>
+                            <p className="text-gray-600 text-sm">Major insurers face suits for "rigged" algorithms that apply fake "negotiation discounts" to lower offers.</p>
                         </div>
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <h3 className="font-bold text-lg text-blue-800 mb-2">4. "Comps" aren't always comparable.</h3>
-                            <p className="text-gray-600 text-sm">Valuations often use cars with higher mileage, different trims, or from cheaper markets.</p>
+
+                        <div className="bg-white p-6 rounded-lg shadow-sm border border-blue-100">
+                            <div className="text-3xl font-bold text-red-600 mb-2">$1,000+</div>
+                            <h3 className="font-bold text-lg text-gray-900 mb-2">High Deductibles</h3>
+                            <p className="text-gray-600 text-sm">26% of drivers now have deductibles of $1k or more, increasing the financial hit of a total loss.</p>
                         </div>
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <h3 className="font-bold text-lg text-blue-800 mb-2">5. Details matter.</h3>
-                            <p className="text-gray-600 text-sm">Documenting options, lower mileage, and recent maintenance can justify higher values.</p>
+
+                        <div className="bg-white p-6 rounded-lg shadow-sm border border-blue-100">
+                            <div className="text-3xl font-bold text-red-600 mb-2">Gap Trap</div>
+                            <h3 className="font-bold text-lg text-gray-900 mb-2">Unpaid Loan Balances</h3>
+                            <p className="text-gray-600 text-sm">Many drivers are left paying for cars they can't drive because ACV payouts don't cover the full loan balance.</p>
                         </div>
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <h3 className="font-bold text-lg text-blue-800 mb-2">6. You can challenge the offer.</h3>
-                            <p className="text-gray-600 text-sm">You have the right to request the valuation report, correct errors, and submit your own comps.</p>
-                        </div>
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <h3 className="font-bold text-lg text-blue-800 mb-2">7. Repair estimates count.</h3>
-                            <p className="text-gray-600 text-sm">Adjusters compare repair costs + salvage value against ACV to decide the car's fate.</p>
-                        </div>
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <h3 className="font-bold text-lg text-blue-800 mb-2">8. Loans are separate logic.</h3>
-                            <p className="text-gray-600 text-sm">The insurer pays the car's value. If you owe more, that's a "gap" issue, not an insurance failure.</p>
-                        </div>
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <h3 className="font-bold text-lg text-blue-800 mb-2">9. Negative equity is common.</h3>
-                            <p className="text-gray-600 text-sm">Long loans and small down payments often leave you "upside down" when a crash happens.</p>
-                        </div>
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <h3 className="font-bold text-lg text-blue-800 mb-2">10. Knowledge pays off.</h3>
-                            <p className="text-gray-600 text-sm">Reviewing your report and challenging bad data can add real dollars to your settlement.</p>
+
+                        <div className="bg-white p-6 rounded-lg shadow-sm border border-blue-100">
+                            <div className="text-3xl font-bold text-red-600 mb-2">Manipulation</div>
+                            <h3 className="font-bold text-lg text-gray-900 mb-2">Artificial Downgrades</h3>
+                            <p className="text-gray-600 text-sm">Lawsuits allege vendors use "phantom" comparables and unfair condition adjustments to artificially lower values.</p>
                         </div>
                     </div>
                 </div>

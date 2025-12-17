@@ -134,6 +134,11 @@ const intentsToCreate: IntentConfig[] = [
     trainingPhrasesParts: ['Should I accept first offer', 'Take the first check'],
     messageTexts: ['Experts suggest reviewing the valuation detail first. If comparables look bad, negotiate before accepting.']
   },
+  {
+    displayName: 'FAQ - 2025 Trends',
+    trainingPhrasesParts: ['What are the 2025 trends', 'Latest total loss stats', 'Is this common in 2025', 'Class action lawsuits'],
+    messageTexts: ['In 2025, 27% of claims are total losses. Major insurers face lawsuits for using algorithms to artificially lower offers, and only 58% of customers feel their valuation was fair.']
+  },
 
   // --- Core Flow ---
   {
