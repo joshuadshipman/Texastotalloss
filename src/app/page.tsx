@@ -44,27 +44,27 @@ export default function Home() {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:flex gap-3 pt-6 max-w-2xl mx-auto justify-center">
-                        <a href="tel:1-800-555-0199" className="bg-white text-blue-900 hover:bg-gray-100 font-bold py-3 px-4 rounded-full shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base">
+                    <div className="grid grid-cols-2 lg:flex lg:flex-row gap-4 pt-6 max-w-4xl mx-auto w-full">
+                        <a href="tel:1-800-555-0199" className="flex-1 h-16 bg-white text-blue-900 hover:bg-gray-100 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base leading-tight px-2">
                             <span>📞 Call Now</span>
                         </a>
                         <button
                             onClick={() => openChat()}
-                            className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold py-3 px-4 rounded-full shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base"
+                            className="flex-1 h-16 bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base leading-tight px-2"
                         >
                             <span>💬 Live Chat</span>
                         </button>
                         <button
                             onClick={() => openChat('callback')}
-                            className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-full shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base"
+                            className="flex-1 h-16 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base leading-tight px-2"
                         >
                             <span>📅 Callback Request</span>
                         </button>
                         <button
                             onClick={() => openChat()}
-                            className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-full shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base"
+                            className="flex-1 h-16 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base leading-tight px-2"
                         >
-                            <span>⏱ Free 15 Min Consult</span>
+                            <span>⏱ Schedule a Free 15 Min Consult</span>
                         </button>
                     </div>
                     <p className="text-xs text-blue-300 mt-4">No lawyers. No fees. Just answers.</p>
