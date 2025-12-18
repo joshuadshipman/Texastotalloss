@@ -31,14 +31,16 @@ export default function Home() {
                     <div className="inline-block bg-blue-700/50 backdrop-blur-sm border border-blue-500/30 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
                         Free Texas Auto Claim Help
                     </div>
-                    <h1 className="text-3xl md:text-6xl font-extrabold tracking-tight leading-tight mb-2">
-                        <br className="block" />
-                        <span className="text-blue-300">Upside‑Down?</span>
+                    <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight mb-4">
+                        <span className="block text-white mb-2">Possible Total Loss?</span>
+                        <span className="block text-blue-300">Worried about the ACV?</span>
                     </h1>
-                    <div className="text-lg md:text-xl font-medium text-blue-100 space-y-2 max-w-3xl mx-auto bg-blue-800/50 p-4 rounded-xl border border-blue-400/30">
+                    <div className="text-lg md:text-xl font-medium text-blue-100 space-y-4 max-w-3xl mx-auto bg-blue-800/50 p-6 rounded-xl border border-blue-400/30">
                         <p>
-                            Ask <span className="text-yellow-400 font-bold">Angel</span> our Texas Total Loss Chatbot anything total loss related.
-                            If you have questions about how we might can help, we are just a click...
+                            Concerned about possible injuries or even just getting the kids to school?
+                        </p>
+                        <p className="font-bold text-white">
+                            Don't Worry, <span className="text-yellow-400">Angel</span> is here to help with all your Total Loss concerns.
                         </p>
                     </div>
 
