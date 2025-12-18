@@ -19,7 +19,7 @@ export default function FortWorthTotalLossPage() {
                         Resources for Tarrant County drivers facing total loss claims and towing fees.
                     </p>
                     <button
-                        onClick={openChat}
+                        onClick={() => openChat()}
                         className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 font-bold py-4 px-8 rounded-full text-lg shadow-lg transition transform hover:scale-105"
                     >
                         🤖 Get a Free Instant Valuation
@@ -91,7 +91,7 @@ export default function FortWorthTotalLossPage() {
 
                     <div className="mt-12 text-center">
                         <button
-                            onClick={openChat}
+                            onClick={() => openChat()}
                             className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-8 rounded-full transition"
                         >
                             <span>💬 Start a Free Claim Review</span>

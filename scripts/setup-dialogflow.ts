@@ -351,18 +351,28 @@ const intentsToCreate: IntentConfig[] = [
   {
     displayName: 'FAQ - 51 Percent Rule',
     trainingPhrasesParts: ['What is the 51 percent rule', 'Comparative fault', 'Shared blame', 'My fault'],
-    messageTexts: ['Texas uses a 51% Bar Rule. If you are found 51% or more responsible for your own damages (like by ignoring medical advice), you get $0. Don\'t give them a reason to shift blame.']
+    messageTexts: ["Texas uses a 51% Bar Rule. If you are found 51% or more responsible for your own damages (like by ignoring medical advice), you get $0. Don't give them a reason to shift blame."]
   },
   {
     displayName: 'FAQ - Property Mitigation',
     trainingPhrasesParts: ['Broken window', 'Rain damage', 'Prevent more damage', 'Loose bumper'],
     messageTexts: ['You must take "reasonable steps" to prevent further damage, like covering a broken window. Keep receipts for materials—they are reimbursable.']
   },
+  {
+    displayName: 'FAQ - UMPD Definition',
+    trainingPhrasesParts: ['What is UMPD?', 'Uninsured Motorist Property Damage', 'Underinsured Motorist', 'Driver has no insurance'],
+    messageTexts: ['UMPD (Uninsured/Underinsured Motorist Property Damage) pays for your car repairs or total loss when the at-fault driver cannot pay. It usually has a lower deductible than Collision.']
+  },
+  {
+    displayName: 'FAQ - Total Loss Indicators',
+    trainingPhrasesParts: ['How do I know if I have a total loss?', 'Is my car totaled?', 'Total loss threshold', 'Is it a write off'],
+    messageTexts: ["You likely have a total loss if repairs cost more than 100% of the car's value(in Texas), or if it's unsafe to repair. I can help you check the values if you have your VIN."]
+  },
 
   {
     displayName: 'Default Welcome Intent',
     trainingPhrasesParts: ['Hi', 'Hello', 'Start', 'I have a total loss', 'Good morning', 'Help'],
-    messageTexts: ['Welcome to the Total Loss Intake support. I can help you file a claim for your vehicle. First, can I get your full name?'],
+    messageTexts: ['Welcome to Ask Angel support. I can help you file a claim for your vehicle. First, can I get your full name?'],
     outputContexts: [{ name: 'awaiting_name', lifespan: 2 }]
   },
   {

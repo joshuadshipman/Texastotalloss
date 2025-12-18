@@ -161,7 +161,7 @@ export default function ValuationCalculator() {
                                 </p>
 
                                 <button
-                                    onClick={openChat}
+                                    onClick={() => openChat()}
                                     className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full shadow-lg text-xl transition animate-pulse"
                                 >
                                     Discuss My Options & Injuries

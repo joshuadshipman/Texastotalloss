@@ -11,10 +11,29 @@ type Message = {
 import { supabaseClient } from '@/lib/supabaseClient';
 
 export default function ChatWidget() {
-    const { isOpen, toggleChat } = useChat();
-    const [messages, setMessages] = useState<Message[]>([
-        { sender: 'bot', text: 'Totaled car? Injured? check your payout now.' }
-    ]);
+    const { isOpen, toggleChat, chatMode } = useChat();
+    // Reset messages when opening/mode changes? Ideally yes for clean start.
+    // For now, let's append or reset based on effect.
+    const [messages, setMessages] = useState<Message[]>([]);
+
+    useEffect(() => {
+        // Init messages based on mode
+        if (messages.length === 0) {
+            setMessages([{ sender: 'bot', text: 'Hi! I\'m Angel. Tell me why your vehicle is or might be a total loss. Where and when was the accident?  Did the police issues any tickets? Anyone hurt? As much detail as you can recall.' }]);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (isOpen && chatMode === 'callback') {
+            setMessages([
+                { sender: 'bot', text: 'To request a callback, I need to ask a few quick questions.' },
+                { sender: 'bot', text: '1) Who was at fault for the accident?' }
+            ]);
+            setCallbackStep(1); // Start callback flow
+        }
+    }, [isOpen, chatMode]);
+
+    const [callbackStep, setCallbackStep] = useState(0); // 0=none, 1=Q1, 2=Q2, 3=Done
     const [input, setInput] = useState('');
     const [context, setContext] = useState('');
     const [sessionId] = useState(() => Math.random().toString(36).substring(7));
@@ -67,12 +86,29 @@ export default function ChatWidget() {
         }
     };
 
+    const handleCallbackOption = (option: string) => {
+        const newMsgs = [...messages, { sender: 'user', text: option } as Message];
+
+        if (callbackStep === 1) {
+            setMessages([...newMsgs, { sender: 'bot', text: '2) Was anyone taken for injuries or does anyone plan on seeking medical treatment?' }]);
+            setCallbackStep(2);
+        } else if (callbackStep === 2) {
+            setMessages([...newMsgs, { sender: 'bot', text: 'Thank you. An agent will contact you shortly based on these details.' }]);
+            setCallbackStep(0); // End flow
+            // Here you would send the data to backend
+        }
+    };
+
     const sendMessage = async () => {
         if (!input.trim()) return;
 
         const userMsg = input;
         setMessages(prev => [...prev, { sender: 'user', text: userMsg }]);
         setInput('');
+
+        // If in callback flow and user types instead of clicks?
+        // Let's assume standard chat resumes or we block input?
+        // Let's just allow standard chat to takeover or handle basic answers.
 
         try {
             const res = await fetch('/api/chat', {
@@ -101,9 +137,9 @@ export default function ChatWidget() {
 
             {/* Chat Window */}
             {isOpen && (
-                <div className="fixed bottom-20 right-4 w-80 md:w-96 h-[500px] bg-white rounded-lg shadow-2xl flex flex-col z-50 border border-gray-200 overflow-hidden">
-                    <div className="bg-blue-600 text-white p-4 rounded-t-lg font-bold flex justify-between items-center">
-                        <span>Total Loss Check</span>
+                <div className="fixed inset-0 md:inset-auto md:bottom-20 md:right-4 md:w-96 md:h-[500px] bg-white md:rounded-lg shadow-2xl flex flex-col z-50 border border-gray-200 overflow-hidden">
+                    <div className="bg-blue-600 text-white p-4 rounded-t-none md:rounded-t-lg font-bold flex justify-between items-center">
+                        <span>Ask Angel - Total Loss Help</span>
                         <button onClick={toggleChat} className="text-sm opacity-75 hover:opacity-100">✕</button>
                     </div>
 
@@ -123,6 +159,15 @@ export default function ChatWidget() {
                                 </div>
                             </div>
                         ))}
+
+                        {/* Callback Options */}
+                        {isOpen && chatMode === 'callback' && callbackStep > 0 && (
+                            <div className="flex gap-2 justify-end mt-2">
+                                <button onClick={() => handleCallbackOption('Yes')} className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full hover:bg-blue-200 font-medium">Yes</button>
+                                <button onClick={() => handleCallbackOption('No')} className="bg-gray-100 text-gray-800 px-4 py-2 rounded-full hover:bg-gray-200 font-medium">No</button>
+                            </div>
+                        )}
+
                         <div ref={bottomRef} />
                     </div>
 

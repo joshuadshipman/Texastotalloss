@@ -3,18 +3,23 @@
 import ChatWidget from '@/components/ChatWidget';
 import Link from 'next/link';
 import { useChat } from '@/components/ChatContext';
-import ValuationCalculator from '@/components/ValuationCalculator';
-import FlipCard from '@/components/FlipCard';
-import MobileScrollContainer from '@/components/ui/MobileScrollContainer';
-import LightboxImage from '@/components/ui/LightboxImage';
-import { ShieldCheckIcon, AlertTriangleIcon, FileTextIcon, MapPinIcon } from 'lucide-react';
+import dynamic from 'next/dynamic';
+// Optimize loading by dynamically importing heavy/interactive components
+const ValuationCalculator = dynamic(() => import('@/components/ValuationCalculator'), { ssr: false });
+const FlipCard = dynamic(() => import('@/components/FlipCard')); // If still used, or remove if unused
+const MobileScrollContainer = dynamic(() => import('@/components/ui/MobileScrollContainer'));
+const MobileNav = dynamic(() => import('@/components/MobileNav'), { ssr: false });
+const SectionCard = dynamic(() => import('@/components/SectionCard'));
+const LightboxImage = dynamic(() => import('@/components/ui/LightboxImage'));
+
+import { ShieldCheckIcon, AlertTriangleIcon, FileTextIcon, MapPinIcon, GavelIcon, CarIcon, DollarSignIcon } from 'lucide-react';
 
 
 export default function Home() {
     const { openChat } = useChat();
 
     return (
-        <main className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900">
+        <main className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900 pb-20 md:pb-0"> {/* Added pb-20 for mobile nav */}
             {/* Hero Section */}
             {/* Hero Section - Mobile First */}
             <header className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white py-12 px-4 text-center relative overflow-hidden">
@@ -24,28 +29,58 @@ export default function Home() {
                         Free Texas Auto Claim Help
                     </div>
                     <h1 className="text-3xl md:text-6xl font-extrabold tracking-tight leading-tight mb-2">
-                        Totaled Car? <br className="block" />
+                        <br className="block" />
                         <span className="text-blue-300">Upside‑Down?</span>
                     </h1>
-                    <div className="text-lg md:text-2xl font-medium text-blue-100 space-y-2 max-w-3xl mx-auto">
-                        <p>Not sure if you have GAP coverage?</p>
-                        <p className="text-sm md:text-lg opacity-90">We check your claim for free in minutes.</p>
+                    <div className="text-lg md:text-xl font-medium text-blue-100 space-y-2 max-w-3xl mx-auto bg-blue-800/50 p-4 rounded-xl border border-blue-400/30">
+                        <p>
+                            Ask <span className="text-yellow-400 font-bold">Angel</span> our Texas Total Loss Chatbot anything total loss related.
+                            If you have questions about how we might can help, we are just a click...
+                        </p>
                     </div>
 
-                    <div className="flex flex-col gap-3 pt-6 max-w-xs mx-auto">
-                        <button
-                            onClick={openChat}
-                            className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-green-900/20 transition transform active:scale-95 flex items-center justify-center gap-2"
-                        >
-                            <span>💬 Start Free Chat Check</span>
-                        </button>
-                        <a href="tel:1-800-555-0199" className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-bold py-3 px-6 rounded-xl transition flex items-center justify-center gap-2">
+                    <div className="grid grid-cols-2 lg:flex gap-3 pt-6 max-w-2xl mx-auto justify-center">
+                        <a href="tel:1-800-555-0199" className="bg-white text-blue-900 hover:bg-gray-100 font-bold py-3 px-4 rounded-full shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base">
                             <span>📞 Call Now</span>
                         </a>
+                        <button
+                            onClick={() => openChat()}
+                            className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold py-3 px-4 rounded-full shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base"
+                        >
+                            <span>💬 Live Chat</span>
+                        </button>
+                        <button
+                            onClick={() => openChat('callback')}
+                            className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-full shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base"
+                        >
+                            <span>📅 Callback Request</span>
+                        </button>
+                        <button
+                            onClick={() => openChat()}
+                            className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-full shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base"
+                        >
+                            <span>⏱ Free 15 Min Consult</span>
+                        </button>
                     </div>
                     <p className="text-xs text-blue-300 mt-4">No lawyers. No fees. Just answers.</p>
                 </div>
             </header>
+
+            {/* NEW: Total Loss Definition */}
+            <section className="py-8 px-4 bg-white border-b border-gray-100">
+                <div className="max-w-4xl mx-auto text-center">
+                    <h2 className="text-2xl font-bold mb-4 text-blue-900">How do I know if it's a Total Loss?</h2>
+                    <div className="bg-blue-50 p-6 rounded-xl border border-blue-200 text-left md:text-center">
+                        <p className="text-lg text-gray-800 mb-2">
+                            In Texas, your car is a total loss if:
+                        </p>
+                        <p className="font-bold text-xl text-red-600 mb-2">Repairs + Salvage Value ≥ Current Value (ACV)</p>
+                        <p className="text-gray-600 text-sm">
+                            Unlike some states with a simple % threshold, Texas uses this formula. If the numbers don't add up, the insurer takes the car.
+                        </p>
+                    </div>
+                </div>
+            </section>
 
             {/* Section 4: 2025 Market & Legal Reality Check - Mobile Scroll */}
             <section className="py-12 px-4 bg-blue-50">
@@ -95,278 +130,266 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Section 1: Total Loss Value */}
-            <section className="py-16 px-4 bg-white">
-                <div className="max-w-4xl mx-auto">
-                    <h2 className="text-3xl font-bold mb-6 text-blue-900">Is Your Total Loss Offer Too Low?</h2>
-                    <p className="text-gray-700 mb-6 text-lg">
-                        Insurance companies often undervalue totaled vehicles by using "comparables" that aren't really comparable.
-                        Understanding the Actual Cash Value (ACV) vs. what they offer is critical.
-                    </p>
-                    <ul className="list-disc pl-6 space-y-3 text-gray-700">
-                        <li>See what similar vehicles sell for in your area.</li>
-                        <li>Spot missing options and upgrades in your valuation.</li>
-                        <li>Understand how insurers calculate total loss.</li>
-                    </ul>
-                </div>
-            </section>
+            {/* NEW: 3-Card Feature Row (Replaces separate sections) */}
+            <section id="features" className="py-12 px-4 bg-gray-50">
+                <div className="max-w-7xl mx-auto">
+                    <MobileScrollContainer>
+                        {/* Card 1: Total Loss Offer */}
+                        <div className="w-[85vw] md:w-auto md:flex-1 bg-white p-8 rounded-2xl shadow-sm border border-gray-200 flex flex-col min-h-[300px]">
+                            <h3 className="text-xl font-bold mb-4 text-blue-900">Is Your Total Loss Offer Too Low?</h3>
+                            <p className="text-gray-600 text-sm mb-4 flex-grow">
+                                Insurance companies often undervalue totaled vehicles by using "comparables" that aren't really comparable.
+                                Understanding the Actual Cash Value (ACV) vs. what they offer is critical.
+                            </p>
+                            <ul className="text-sm text-gray-500 space-y-2 mb-6">
+                                <li>• See what similar vehicles sell for</li>
+                                <li>• Spot missing options/upgrades</li>
+                                <li>• Understand the calculation</li>
+                            </ul>
+                            <button onClick={() => openChat()} className="text-blue-600 font-bold text-sm hover:underline mt-auto">Check My Offer &rarr;</button>
+                        </div>
 
-            {/* Section 2: Gap Coverage */}
-            <section className="py-16 px-4 bg-gray-50">
-                <div className="max-w-4xl mx-auto">
-                    <h2 className="text-3xl font-bold mb-6 text-blue-900">Gap Coverage and Being "Upside Down" on Your Car Loan.</h2>
-                    <div className="space-y-4 text-gray-700 text-lg">
-                        <p>
-                            If your loan balance is higher than the car's value, you are "upside down" or have negative equity.
-                            <strong>Gap insurance</strong> (Guaranteed Asset Protection) is designed to cover this difference.
-                        </p>
-                        <p>
-                            Without gap coverage, you could be left paying thousands for a car you no longer drive.
-                            Our check helps determine if you might have gap coverage hidden in your contract or if your lender required it.
-                        </p>
-                    </div>
-                </div>
-            </section>
+                        {/* Card 2: Gap Coverage */}
+                        <div className="w-[85vw] md:w-auto md:flex-1 bg-white p-8 rounded-2xl shadow-sm border border-gray-200 flex flex-col min-h-[300px]">
+                            <h3 className="text-xl font-bold mb-4 text-blue-900">Gap Coverage & "Upside Down" Loans</h3>
+                            <p className="text-gray-600 text-sm mb-4 flex-grow">
+                                If your loan balance is higher than the car's value, you are "upside down".
+                                <strong>Gap insurance</strong> pays the difference. Without it, you still owe the bank.
+                            </p>
+                            <ul className="text-sm text-gray-500 space-y-2 mb-6">
+                                <li>• Covers the "Gap" in value</li>
+                                <li>• Hidden in many finance contracts</li>
+                                <li>• Specific exclusions apply</li>
+                            </ul>
+                            <button onClick={() => openChat()} className="text-blue-600 font-bold text-sm hover:underline mt-auto">Scan for Gap &rarr;</button>
+                        </div>
 
-            {/* Section 3: Injuries */}
-            <section className="py-16 px-4 bg-white">
-                <div className="max-w-4xl mx-auto">
-                    <h2 className="text-3xl font-bold mb-6 text-blue-900">Totaled Car + Injuries: Are You Leaving Money on the Table?</h2>
-                    <p className="text-gray-700 mb-6 text-lg">
-                        If you were injured, your settlement should cover medical bills, pain and suffering, lost wages, and future care.
-                        Handling a total loss claim while injured is overwhelming—and insurers know it.
-                    </p>
-                    <p className="text-gray-700 text-lg">
-                        A combined review of your vehicle value and injury claim ensures you don't settle for less than you deserve on either front.
-                    </p>
+                        {/* Card 3: Injuries */}
+                        <div className="w-[85vw] md:w-auto md:flex-1 bg-white p-8 rounded-2xl shadow-sm border border-gray-200 flex flex-col min-h-[300px]">
+                            <h3 className="text-xl font-bold mb-4 text-blue-900">Totaled Car + Injuries?</h3>
+                            <p className="text-gray-600 text-sm mb-4 flex-grow">
+                                If you were injured, your settlement should cover medical bills, pain and suffering, and lost wages.
+                                Don't let them rush you into a cheap settlement.
+                            </p>
+                            <ul className="text-sm text-gray-500 space-y-2 mb-6">
+                                <li>• Separate form property claim</li>
+                                <li>• Don't sign a general release</li>
+                                <li>• Seek medical care immediately</li>
+                            </ul>
+                            <button onClick={() => openChat()} className="text-blue-600 font-bold text-sm hover:underline mt-auto">Injury Review &rarr;</button>
+                        </div>
+                    </MobileScrollContainer>
                 </div>
             </section>
 
             {/* NEW: Interactive Valuation Calculator (Replaces old CTA) */}
-            <ValuationCalculator />
+            <div id="calculator">
+                <ValuationCalculator />
+            </div>
 
-            {/* NEW: Texas UM/UIM Law Explained */}
-            <section className="py-16 px-4 bg-gray-50 border-t border-gray-200">
-                <div className="max-w-5xl mx-auto">
-                    <h2 className="text-3xl font-bold mb-8 text-blue-900 text-center">Texas Law: You Have UM/UIM Coverage Unless You Rejected It In Writing.</h2>
+            {/* NEW: Resource Cards Grid (Consolidated Sections) */}
+            <section className="py-12 px-4 bg-white" id="resources">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-2xl font-bold mb-6 text-gray-900">Critical Resources</h2>
+                    <div className="flex flex-col gap-4">
 
-                    <div className="bg-white p-8 rounded-xl shadow-sm border border-blue-100 mb-8">
-                        <div className="flex flex-col md:flex-row gap-8 items-center">
-                            <div className="flex-1">
-                                <h3 className="text-2xl font-bold text-gray-900 mb-4">The "Implied Coverage" Rule</h3>
-                                <p className="text-gray-700 mb-4">
-                                    Under Texas Insurance Code, Uninsured/Underinsured Motorist (UM/UIM) coverage is <strong>automatically included</strong> in every auto policy by default.
-                                </p>
-                                <p className="text-gray-700 font-medium">
-                                    The ONLY way it is removed is if a "Named Insured" signs a specific rejection form in writing.
-                                </p>
+                        {/* 1. Texas UM Law Card */}
+                        <SectionCard
+                            title="Texas UM/UIM Law Explained"
+                            subtitle="Implied Coverage Rule & Rejection Forms"
+                            icon={<GavelIcon size={24} />}
+                            colorClass="bg-blue-800"
+                        >
+                            <div className="max-w-5xl mx-auto">
+                                <h2 className="text-3xl font-bold mb-8 text-blue-900 text-center">Texas Law: You Have UM/UIM Coverage Unless You Rejected It In Writing.</h2>
+
+                                <div className="bg-white p-8 rounded-xl shadow-sm border border-blue-100 mb-8">
+                                    <div className="flex flex-col md:flex-row gap-8 items-center">
+                                        <div className="flex-1">
+                                            <h3 className="text-2xl font-bold text-gray-900 mb-4">The "Implied Coverage" Rule</h3>
+                                            <p className="text-gray-700 mb-4">
+                                                Under Texas Insurance Code, Uninsured/Underinsured Motorist (UM/UIM) coverage is <strong>automatically included</strong> in every auto policy by default.
+                                            </p>
+                                            <p className="text-gray-700 font-medium">
+                                                The ONLY way it is removed is if a "Named Insured" signs a specific rejection form in writing.
+                                            </p>
+                                        </div>
+                                        <div className="flex-1 bg-blue-50 p-6 rounded-lg text-sm text-blue-900">
+                                            <h4 className="font-bold border-b border-blue-200 pb-2 mb-2">Who Can Reject It?</h4>
+                                            <ul className="list-disc pl-5 space-y-2">
+                                                <li><strong>Named Insured:</strong> The primary person listed on the declarations page.</li>
+                                                <li><strong>Resident Spouse:</strong> A spouse living in the same household (who is defined as an insured) can also sign a binding rejection.</li>
+                                                <li><strong>NOT Valid:</strong> A random household driver or child generally cannot reject coverage for the policyholder.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid md:grid-cols-2 gap-8 text-center">
+                                    <div className="bg-green-50 p-6 rounded-xl border border-green-200">
+                                        <div className="text-4xl mb-4">✅</div>
+                                        <h3 className="text-xl font-bold text-green-800 mb-2">Scenario A: No Written Rejection</h3>
+                                        <p className="text-green-900">If the insurer cannot produce a valid, signed rejection form, <strong>coverage exists by law</strong> up to your liability limits.</p>
+                                    </div>
+                                    <div className="bg-red-50 p-6 rounded-xl border border-red-200">
+                                        <div className="text-4xl mb-4">❌</div>
+                                        <h3 className="text-xl font-bold text-red-800 mb-2">Scenario B: Signed Rejection</h3>
+                                        <p className="text-red-900">If you or your spouse signed the specific state-approved form, coverage is removed or limited to what you selected.</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="flex-1 bg-blue-50 p-6 rounded-lg text-sm text-blue-900">
-                                <h4 className="font-bold border-b border-blue-200 pb-2 mb-2">Who Can Reject It?</h4>
-                                <ul className="list-disc pl-5 space-y-2">
-                                    <li><strong>Named Insured:</strong> The primary person listed on the declarations page.</li>
-                                    <li><strong>Resident Spouse:</strong> A spouse living in the same household (who is defined as an insured) can also sign a binding rejection.</li>
-                                    <li><strong>NOT Valid:</strong> A random household driver or child generally cannot reject coverage for the policyholder.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                        </SectionCard>
 
-                    <div className="grid md:grid-cols-2 gap-8 text-center">
-                        <div className="bg-green-50 p-6 rounded-xl border border-green-200">
-                            <div className="text-4xl mb-4">✅</div>
-                            <h3 className="text-xl font-bold text-green-800 mb-2">Scenario A: No Written Rejection</h3>
-                            <p className="text-green-900">If the insurer cannot produce a valid, signed rejection form, <strong>coverage exists by law</strong> up to your liability limits.</p>
-                        </div>
-                        <div className="bg-red-50 p-6 rounded-xl border border-red-200">
-                            <div className="text-4xl mb-4">❌</div>
-                            <h3 className="text-xl font-bold text-red-800 mb-2">Scenario B: Signed Rejection</h3>
-                            <p className="text-red-900">If you or your spouse signed the specific state-approved form, coverage is removed or limited to what you selected.</p>
-                        </div>
+                        {/* 2. Accident Checklist Card */}
+                        <SectionCard
+                            title="Just in an Accident?"
+                            subtitle="10-Step Immediate Action Plan"
+                            icon={<CarIcon size={24} />}
+                            colorClass="bg-red-600"
+                        >
+                            <div className="text-center mb-8">
+                                <h2 className="text-3xl font-black text-red-600 mb-2 uppercase">🚨 Post-Accident Checklist</h2>
+                                <p>Interactive Guide</p>
+                            </div>
+
+                            <div className="max-w-3xl mx-auto space-y-4">
+                                <div className="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm border-l-4 border-green-500">
+                                    <div className="bg-green-100 text-green-800 font-bold rounded-full w-8 h-8 flex items-center justify-center shrink-0">1</div>
+                                    <div>
+                                        <h4 className="font-bold text-gray-900">Stop & Check for Injuries</h4>
+                                        <p className="text-sm text-gray-600">Turn on hazards. Call 911 if <em>anyone</em> is hurt. Move to shoulder if drivable.</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm border-l-4 border-green-500">
+                                    <div className="bg-green-100 text-green-800 font-bold rounded-full w-8 h-8 flex items-center justify-center shrink-0">2</div>
+                                    <div>
+                                        <h4 className="font-bold text-gray-900">Call Police</h4>
+                                        <p className="text-sm text-gray-600">Even for minor bumps. You need an official report for insurance.</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm border-l-4 border-red-500">
+                                    <div className="bg-red-100 text-red-800 font-bold rounded-full w-8 h-8 flex items-center justify-center shrink-0">3</div>
+                                    <div>
+                                        <h4 className="font-bold text-gray-900">Shut Up & Listen</h4>
+                                        <p className="text-sm text-gray-600"><strong>DO NOT</strong> say "I'm sorry" or "I'm fine." Ask: "Are you okay?" and exchange info only.</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm border-l-4 border-blue-500">
+                                    <div className="bg-blue-100 text-blue-800 font-bold rounded-full w-8 h-8 flex items-center justify-center shrink-0">4</div>
+                                    <div>
+                                        <h4 className="font-bold text-gray-900">Photo Evidence (The "CSI" Step)</h4>
+                                        <p className="text-sm text-gray-600">Wide shots of scene, close-up of damage, license plates, insurance cards, and witness phone numbers.</p>
+                                    </div>
+                                </div>
+
+                                <div className="mt-8 text-center">
+                                    <a href="/checklist" className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-8 rounded-full transition transform hover:scale-105">
+                                        <span>🖨️ View & Print Full Checklist</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </SectionCard>
+
+                        {/* 3. Storage Fees Card */}
+                        <SectionCard
+                            title="STOP Storage Fees"
+                            subtitle="Avoid daily charges of $100+"
+                            icon={<DollarSignIcon size={24} />}
+                            colorClass="bg-red-800"
+                        >
+                            <div className="py-8 bg-red-50 rounded-xl p-4">
+                                <div className="flex flex-col items-center text-center mb-12">
+                                    <div className="bg-yellow-400 text-red-900 font-black px-6 py-2 rounded-full uppercase tracking-widest text-sm mb-4 animate-pulse">
+                                        Immediate Financial Risk
+                                    </div>
+                                    <h2 className="text-3xl md:text-5xl font-extrabold mb-4 text-red-900">STOP THE BLEEDING</h2>
+                                    <p className="text-xl max-w-3xl text-red-800">
+                                        Tow yards charge <strong>$20–$100+ per day</strong>. If you ignore this, you could lose thousands.
+                                    </p>
+                                </div>
+
+                                <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                                    {/* 1. The Cost Trap */}
+                                    <div className="bg-white p-8 rounded-xl border border-red-200 shadow-sm">
+                                        <h3 className="text-xl font-bold mb-3 text-red-700">1. The Daily Cost Trap</h3>
+                                        <p className="mb-2 text-gray-700">Fees start the minute your car arrives. If it sits for weeks while you argue, the bill can hit <strong>$3,000+</strong>.</p>
+                                        <p className="text-sm text-red-600 italic">Insurers can refuse to pay for "avoidable" storage days.</p>
+                                    </div>
+
+                                    {/* 2. Duty to Mitigate */}
+                                    <div className="bg-white p-8 rounded-xl border border-red-200 shadow-sm">
+                                        <h3 className="text-xl font-bold mb-3 text-red-700">2. Your "Duty to Mitigate"</h3>
+                                        <p className="mb-2 text-gray-700">You have a <strong>legal obligation</strong> to minimize costs. Leaving a car in a fee-charging lot violates this duty.</p>
+                                        <p className="text-sm text-red-600 italic">If you settle later, they will deduct these "unnecessary" fees from your check.</p>
+                                    </div>
+
+                                    {/* 4. Action Plan */}
+                                    <div className="bg-red-900 text-white p-8 rounded-xl shadow-lg border-4 border-yellow-400 md:col-span-2">
+                                        <h3 className="text-xl font-black mb-3 uppercase">ACTION: Notify & Move</h3>
+                                        <ul className="list-disc ml-5 space-y-2 font-bold">
+                                            <li>Tell the insurer WHERE the car is immediately.</li>
+                                            <li>Give permission to move it to a <strong>fee-free</strong> lot.</li>
+                                            <li>Get the move confirmation in writing.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </SectionCard>
+
+                        {/* 4. Duty to Mitigate Card */}
+                        <SectionCard
+                            title="Duty to Mitigate"
+                            subtitle="Medical & Property Obligations"
+                            icon={<ShieldCheckIcon size={24} />}
+                            colorClass="bg-emerald-700"
+                        >
+                            <div className="container mx-auto px-4 py-8">
+                                <h2 className="text-3xl font-extrabold text-center mb-8 text-gray-800">Your Duty: <span className="text-red-600">Don't Make It Worse</span></h2>
+
+                                <div className="grid md:grid-cols-2 gap-8 max-w-7xl mx-auto">
+
+                                    {/* 1. Medical Actions */}
+                                    <div className="bg-white p-8 rounded-xl shadow-lg border-t-8 border-green-500">
+                                        <h3 className="text-2xl font-bold mb-4 text-green-700">1. Medical Actions</h3>
+                                        <p className="mb-4 text-gray-700">
+                                            <strong>Seek Prompt Care:</strong> Go to the doctor within 24–72 hours. "Toughing it out" creates a gap in treatment that insurers use to deny claims.
+                                        </p>
+                                        <p className="mb-4 text-gray-700">
+                                            <strong>Follow Orders:</strong> If a doctor prescribes therapy or rest, do it. Ignoring advice is "failure to mitigate."
+                                        </p>
+                                    </div>
+
+                                    {/* 2. The Refusal Trap & 51% Rule */}
+                                    <div className="bg-white p-8 rounded-xl shadow-lg border-t-8 border-red-500 relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-bl">CRITICAL</div>
+                                        <h3 className="text-2xl font-bold mb-4 text-red-700">2. The "Refusal" Trap</h3>
+                                        <p className="mb-4 text-gray-700">
+                                            <strong>Refusing Treatment = $0?</strong> Texas has a <span className="underline decoration-red-400 decoration-2">51% Bar Rule</span>.
+                                            If you are found &gt;50% at fault for your own damages (e.g., by refusing care), you recover nothing.
+                                        </p>
+                                    </div>
+
+                                    {/* 3. Property Actions */}
+                                    <div className="bg-white p-8 rounded-xl shadow-lg border-t-8 border-blue-500 md:col-span-2">
+                                        <h3 className="text-2xl font-bold mb-4 text-blue-700">3. Property Actions</h3>
+                                        <p className="mb-4 text-gray-700">
+                                            <strong>Prevent More Damage:</strong> Cover broken windows to stop rain. Secure loose parts. Move the car off the road.
+                                        </p>
+                                        <p className="mb-4 text-gray-700">
+                                            <strong>Keep Receipts:</strong> You can be reimbursed for tarps, tape, and temporary fixes, but only if you have proof.
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </SectionCard>
+
                     </div>
                 </div>
             </section>
-
-            {/* NEW: Interactive Crash Checklist */}
-            <section className="py-16 bg-white border-b-8 border-red-600">
-                <div className="container mx-auto px-4 text-center">
-                    <h2 className="text-4xl font-black text-red-600 mb-8 uppercase tracking-tighter">🚨 Just in an accident?</h2>
-
-                    <div className="max-w-4xl mx-auto bg-gray-50 rounded-2xl shadow-xl overflow-hidden border border-gray-200">
-                        <div className="bg-red-600 text-white p-4 font-bold text-lg">
-                            10-Step Immediate Action Plan
-                        </div>
-                        <div className="p-8 text-left space-y-4">
-
-                            <div className="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm border-l-4 border-green-500">
-                                <div className="bg-green-100 text-green-800 font-bold rounded-full w-8 h-8 flex items-center justify-center shrink-0">1</div>
-                                <div>
-                                    <h4 className="font-bold text-gray-900">Stop & Check for Injuries</h4>
-                                    <p className="text-sm text-gray-600">Turn on hazards. Call 911 if <em>anyone</em> is hurt. Move to shoulder if drivable.</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm border-l-4 border-green-500">
-                                <div className="bg-green-100 text-green-800 font-bold rounded-full w-8 h-8 flex items-center justify-center shrink-0">2</div>
-                                <div>
-                                    <h4 className="font-bold text-gray-900">Call Police</h4>
-                                    <p className="text-sm text-gray-600">Even for minor bumps. You need an official report for insurance.</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm border-l-4 border-red-500">
-                                <div className="bg-red-100 text-red-800 font-bold rounded-full w-8 h-8 flex items-center justify-center shrink-0">3</div>
-                                <div>
-                                    <h4 className="font-bold text-gray-900">Shut Up & Listen</h4>
-                                    <p className="text-sm text-gray-600"><strong>DO NOT</strong> say "I'm sorry" or "I'm fine." Ask: "Are you okay?" and exchange info only.</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm border-l-4 border-blue-500">
-                                <div className="bg-blue-100 text-blue-800 font-bold rounded-full w-8 h-8 flex items-center justify-center shrink-0">4</div>
-                                <div>
-                                    <h4 className="font-bold text-gray-900">Photo Evidence (The "CSI" Step)</h4>
-                                    <p className="text-sm text-gray-600">Wide shots of scene, close-up of damage, license plates, insurance cards, and witness phone numbers.</p>
-                                </div>
-                            </div>
-
-                            <div className="mt-8 text-center">
-                                <a href="/checklist" className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-8 rounded-full transition transform hover:scale-105">
-                                    <span>🖨️ View & Print Full Checklist</span>
-                                </a>
-                                <p className="text-xs text-gray-500 mt-2">Print this and keep it in your glovebox.</p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* CRITICAL WARNING: Storage Fees */}
-            <section className="py-20 bg-red-900 text-white border-y-8 border-yellow-400 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-                <div className="container mx-auto px-4 relative z-10">
-                    <div className="flex flex-col items-center text-center mb-12">
-                        <div className="bg-yellow-400 text-red-900 font-black px-6 py-2 rounded-full uppercase tracking-widest text-sm mb-4 animate-pulse">
-                            Immediate Financial Risk
-                        </div>
-                        <h2 className="text-4xl md:text-5xl font-extrabold mb-4">⚠ STOP THE BLEEDING: Storage Fees</h2>
-                        <p className="text-xl max-w-3xl text-red-100">
-                            Tow yards charge <strong>$20–$100+ per day</strong>. If you ignore this, you could lose thousands or even your car.
-                        </p>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-
-                        {/* 1. The Cost Trap */}
-                        <div className="bg-black/30 p-8 rounded-xl border border-red-400/30 flex flex-col md:flex-row gap-6 items-center">
-                            <div className="flex-1 text-left">
-                                <h3 className="text-2xl font-bold mb-3 text-yellow-300">1. The Daily Cost Trap</h3>
-                                <p className="mb-2">Fees start the minute your car arrives. If it sits for weeks while you argue, the bill can hit <strong>$3,000+</strong>.</p>
-                                <p className="text-sm text-red-200 italic">Insurers can refuse to pay for "avoidable" storage days.</p>
-                            </div>
-                            <div className="w-full md:w-32 h-32 bg-red-950 rounded border-2 border-dashed border-red-500 flex items-center justify-center text-red-400 font-bold text-xs text-center p-2">
-                                [Infographic: Compounding Fees Chart]
-                            </div>
-                        </div>
-
-                        {/* 2. Duty to Mitigate */}
-                        <div className="bg-black/30 p-8 rounded-xl border border-red-400/30 flex flex-col md:flex-row gap-6 items-center">
-                            <div className="flex-1 text-left">
-                                <h3 className="text-2xl font-bold mb-3 text-yellow-300">2. Your "Duty to Mitigate"</h3>
-                                <p className="mb-2">You have a <strong>legal obligation</strong> to minimize costs. Leaving a car in a fee-charging lot violates this duty.</p>
-                                <p className="text-sm text-red-200 italic">If you settle later, they will deduct these "unnecessary" fees from your check.</p>
-                            </div>
-                            <div className="w-full md:w-32 h-32 bg-red-950 rounded border-2 border-dashed border-red-500 flex items-center justify-center text-red-400 font-bold text-xs text-center p-2">
-                                [Infographic: Duty to Mitigate Definition]
-                            </div>
-                        </div>
-
-                        {/* 3. Risk of Losing Vehicle */}
-                        <div className="bg-black/30 p-8 rounded-xl border border-red-400/30 flex flex-col md:flex-row gap-6 items-center">
-                            <div className="flex-1 text-left">
-                                <h3 className="text-2xl font-bold mb-3 text-yellow-300">3. Risk of Losing the Car</h3>
-                                <p className="mb-2">In many states, if fees aren't paid, the tow yard can place a <strong>lien</strong> and sell your car at auction.</p>
-                                <p className="text-sm text-red-200 italic">You lose the asset AND still owe the storage debt.</p>
-                            </div>
-                            <div className="w-full md:w-32 h-32 bg-red-950 rounded border-2 border-dashed border-red-500 flex items-center justify-center text-red-400 font-bold text-xs text-center p-2">
-                                [Infographic: Lien & Auction Timeline]
-                            </div>
-                        </div>
-
-                        {/* 4. Action Plan */}
-                        <div className="bg-white text-red-900 p-8 rounded-xl shadow-2xl flex flex-col md:flex-row gap-6 items-center transform scale-105 border-4 border-yellow-400">
-                            <div className="flex-1 text-left">
-                                <h3 className="text-2xl font-black mb-3 uppercase">4. ACTION: Notify & Move</h3>
-                                <ul className="list-disc ml-5 space-y-2 font-bold">
-                                    <li>Tell the insurer WHERE the car is immediately.</li>
-                                    <li>Give permission to move it to a <strong>fee-free</strong> lot.</li>
-                                    <li>Get the move confirmation in writing.</li>
-                                </ul>
-                            </div>
-                            <div className="w-full md:w-32 h-32 bg-gray-100 rounded border-2 border-dashed border-gray-400 flex items-center justify-center text-gray-400 font-bold text-xs text-center p-2">
-                                [Infographic: Move Request Script]
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </section >
-
-            {/* NEW: Duty to Mitigate (Medical & Property) */}
-            < section className="py-20 bg-gray-50 text-gray-900 border-b-8 border-gray-200" >
-                <div className="container mx-auto px-4">
-                    <h2 className="text-4xl font-extrabold text-center mb-12 text-gray-800">Your Duty to Mitigate: <span className="text-red-600">Don't Make It Worse</span></h2>
-
-                    <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-
-                        {/* 1. Medical Actions */}
-                        <div className="bg-white p-8 rounded-xl shadow-lg border-t-8 border-green-500 hover:shadow-2xl transition">
-                            <h3 className="text-2xl font-bold mb-4 text-green-700">1. Medical Actions</h3>
-                            <p className="mb-4">
-                                <strong>Seek Prompt Care:</strong> Go to the doctor within 24–72 hours. "Toughing it out" creates a gap in treatment that insurers use to deny claims.
-                            </p>
-                            <p className="mb-4">
-                                <strong>Follow Orders:</strong> If a doctor prescribes therapy or rest, do it. Ignoring advice is "failure to mitigate."
-                            </p>
-                            <div className="w-full h-40 bg-green-50 rounded border-2 border-dashed border-green-300 flex items-center justify-center text-green-600 font-bold text-center p-4">
-                                [Infographic: Gap in Care Timeline]
-                            </div>
-                        </div>
-
-                        {/* 2. The Refusal Trap & 51% Rule */}
-                        <div className="bg-white p-8 rounded-xl shadow-lg border-t-8 border-red-500 hover:shadow-2xl transition relative overflow-hidden">
-                            <div className="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-bl">CRITICAL WARNING</div>
-                            <h3 className="text-2xl font-bold mb-4 text-red-700">2. The "Refusal" Trap</h3>
-                            <p className="mb-4">
-                                <strong>Refusing Treatment = $0?</strong> Texas has a <span className="underline decoration-red-400 decoration-2">51% Bar Rule</span>.
-                                If you are found &gt;50% at fault for your own damages (e.g., by refusing care and making injuries worse), you recover <strong>NOTHING</strong>.
-                            </p>
-                            <p className="mb-4 text-sm italic text-gray-600">
-                                Defense lawyers will argue YOUR inaction caused the long-term pain, not the crash.
-                            </p>
-                            <div className="w-full h-40 bg-red-50 rounded border-2 border-dashed border-red-300 flex items-center justify-center text-red-600 font-bold text-center p-4">
-                                [Infographic: 51% Fault Bar Explained]
-                            </div>
-                        </div>
-
-                        {/* 3. Property Actions */}
-                        <div className="bg-white p-8 rounded-xl shadow-lg border-t-8 border-blue-500 hover:shadow-2xl transition">
-                            <h3 className="text-2xl font-bold mb-4 text-blue-700">3. Property Actions</h3>
-                            <p className="mb-4">
-                                <strong>Prevent More Damage:</strong> Cover broken windows to stop rain. Secure loose parts. Move the car off the road.
-                            </p>
-                            <p className="mb-4">
-                                <strong>Keep Receipts:</strong> You can be reimbursed for tarps, tape, and temporary fixes, but only if you have proof.
-                            </p>
-                            <div className="w-full h-40 bg-blue-50 rounded border-2 border-dashed border-blue-300 flex items-center justify-center text-blue-600 font-bold text-center p-4">
-                                [Infographic: Property Mitigation Checklist]
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </section >
 
             {/* NEW: Determining Fault & Liability */}
             <section className="py-16 px-4 bg-gray-900 text-white">
@@ -551,7 +574,7 @@ export default function Home() {
                             <div className="flex-1">
                                 <h3 className="text-xl font-bold mb-2 text-green-400">2. Coverage Flow</h3>
                                 <ul className="list-disc ml-5 space-y-1 text-sm md:text-base opacity-90">
-                                    <li><strong>UMPD:</strong> Pays if they have no insurance.</li>
+                                    <li><strong>UMPD (Uninsured Motorist Property Damage):</strong> Pays for repairs or total loss when the at-fault driver can't pay. Lower deductible than Collision.</li>
                                     <li><strong>Collision:</strong> Pays regardless of fault.</li>
                                     <li><strong>PIP/MedPay:</strong> Pays medical bills now.</li>
                                 </ul>
@@ -959,6 +982,8 @@ export default function Home() {
             </footer>
 
             <ChatWidget />
-        </main >
+            {/* Mobile Nav */}
+            <MobileNav />
+        </main>
     );
 }
