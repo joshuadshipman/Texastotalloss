@@ -36,10 +36,10 @@ export default function Home() {
                         <span className="block text-blue-300">Worried about the ACV?</span>
                     </h1>
                     <div className="text-lg md:text-xl font-medium text-blue-100 space-y-4 max-w-3xl mx-auto bg-blue-800/50 p-6 rounded-xl border border-blue-400/30">
-                        <p>
-                            Concerned about possible injuries or even just getting the kids to school?
+                        <p className="text-2xl md:text-3xl font-extrabold text-amber-300 italic leading-snug drop-shadow-sm">
+                            "Concerned about possible injuries or even just getting the kids to school?"
                         </p>
-                        <p className="font-bold text-white">
+                        <p className="font-bold text-white text-lg">
                             Don't Worry, <span className="text-yellow-400">Angel</span> is here to help with all your Total Loss concerns.
                         </p>
                     </div>
