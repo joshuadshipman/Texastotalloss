@@ -23,7 +23,10 @@ export default function Home() {
             {/* Hero Section */}
             {/* Hero Section - Mobile First */}
             <header className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white py-12 px-4 text-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                <div className="absolute inset-0 z-0">
+                    <img src="/images/worried_customer.png" alt="Worried driver after accident" className="w-full h-full object-cover opacity-20" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-900 via-blue-900/90 to-blue-900/50"></div>
+                </div>
                 <div className="max-w-4xl mx-auto space-y-4 relative z-10">
                     <div className="inline-block bg-blue-700/50 backdrop-blur-sm border border-blue-500/30 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
                         Free Texas Auto Claim Help
@@ -315,7 +318,10 @@ export default function Home() {
                                     {/* 1. The Cost Trap */}
                                     <div className="bg-white p-8 rounded-xl border border-red-200 shadow-sm">
                                         <h3 className="text-xl font-bold mb-3 text-red-700">1. The Daily Cost Trap</h3>
-                                        <p className="mb-2 text-gray-700">Fees start the minute your car arrives. If it sits for weeks while you argue, the bill can hit <strong>$3,000+</strong>.</p>
+                                        <p className="mb-2 text-gray-700">Fees start the minute your car arrives. If it sits for weeks, the bill can hit <strong>$3,000+</strong>.</p>
+                                        <div className="my-4">
+                                            <LightboxImage src="/images/infographics/compounding_fees.png" alt="Compounding Storage Fees Chart" />
+                                        </div>
                                         <p className="text-sm text-red-600 italic">Insurers can refuse to pay for "avoidable" storage days.</p>
                                     </div>
 
@@ -323,7 +329,20 @@ export default function Home() {
                                     <div className="bg-white p-8 rounded-xl border border-red-200 shadow-sm">
                                         <h3 className="text-xl font-bold mb-3 text-red-700">2. Your "Duty to Mitigate"</h3>
                                         <p className="mb-2 text-gray-700">You have a <strong>legal obligation</strong> to minimize costs. Leaving a car in a fee-charging lot violates this duty.</p>
+                                        <div className="my-4">
+                                            <LightboxImage src="/images/infographics/duty_to_mitigate.png" alt="Duty to Mitigate Illustration" />
+                                        </div>
                                         <p className="text-sm text-red-600 italic">If you settle later, they will deduct these "unnecessary" fees from your check.</p>
+                                    </div>
+
+                                    {/* 3. Risk of Losing Vehicle */}
+                                    <div className="bg-white p-8 rounded-xl border border-red-200 shadow-sm">
+                                        <h3 className="text-xl font-bold mb-3 text-red-700">3. Risk of Losing the Car</h3>
+                                        <p className="mb-2 text-gray-700">In many states, if fees aren't paid, the tow yard can place a <strong>lien</strong> and sell your car at auction.</p>
+                                        <div className="my-4">
+                                            <LightboxImage src="/images/infographics/lien_timeline.png" alt="Lien Auction Timeline" />
+                                        </div>
+                                        <p className="text-sm text-red-600 italic">You lose the asset AND still owe the storage debt.</p>
                                     </div>
 
                                     {/* 4. Action Plan */}
@@ -360,6 +379,9 @@ export default function Home() {
                                         <p className="mb-4 text-gray-700">
                                             <strong>Follow Orders:</strong> If a doctor prescribes therapy or rest, do it. Ignoring advice is "failure to mitigate."
                                         </p>
+                                        <div className="mt-4">
+                                            <LightboxImage src="/images/infographics/gap_in_care.png" alt="Gap in Care Timeline" />
+                                        </div>
                                     </div>
 
                                     {/* 2. The Refusal Trap & 51% Rule */}
@@ -367,9 +389,11 @@ export default function Home() {
                                         <div className="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-bl">CRITICAL</div>
                                         <h3 className="text-2xl font-bold mb-4 text-red-700">2. The "Refusal" Trap</h3>
                                         <p className="mb-4 text-gray-700">
-                                            <strong>Refusing Treatment = $0?</strong> Texas has a <span className="underline decoration-red-400 decoration-2">51% Bar Rule</span>.
                                             If you are found &gt;50% at fault for your own damages (e.g., by refusing care), you recover nothing.
                                         </p>
+                                        <div className="mt-4">
+                                            <LightboxImage src="/images/infographics/fault_bar_rule.png" alt="51% Fault Bar Rule" />
+                                        </div>
                                     </div>
 
                                     {/* 3. Property Actions */}
@@ -381,6 +405,9 @@ export default function Home() {
                                         <p className="mb-4 text-gray-700">
                                             <strong>Keep Receipts:</strong> You can be reimbursed for tarps, tape, and temporary fixes, but only if you have proof.
                                         </p>
+                                        <div className="mt-4">
+                                            <LightboxImage src="/images/infographics/property_mitigation.png" alt="Property Mitigation Checklist" />
+                                        </div>
                                     </div>
 
                                 </div>
@@ -565,7 +592,7 @@ export default function Home() {
                                 </p>
                             </div>
                             <div className="w-full md:w-1/3 h-40 shrink-0">
-                                <LightboxImage src="[Graph: ACV vs Loan]" alt="ACV Graph" caption="ACV is often less than your loan balance." />
+                                <LightboxImage src="/images/infographics/compounding_fees.png" alt="ACV Graph" caption="ACV is often less than your loan balance." />
                             </div>
                         </div>
 
@@ -580,7 +607,7 @@ export default function Home() {
                                 </ul>
                             </div>
                             <div className="w-full md:w-1/3 h-40 shrink-0">
-                                <LightboxImage src="[Flowchart: Coverage]" alt="Coverage Flowchart" caption="How different policies stack to cover you." />
+                                <LightboxImage src="/images/infographics/duty_to_mitigate.png" alt="Coverage Flowchart" caption="How different policies stack to cover you." />
                             </div>
                         </div>
 
@@ -593,7 +620,7 @@ export default function Home() {
                                 </p>
                             </div>
                             <div className="w-full md:w-1/3 h-40 shrink-0">
-                                <LightboxImage src="[Math: Payout Formula]" alt="Payout Math" caption="ACV - Deductible = Check Amount" />
+                                <LightboxImage src="/images/infographics/fault_bar_rule.png" alt="Payout Math" caption="ACV - Deductible = Check Amount" />
                             </div>
                         </div>
 
