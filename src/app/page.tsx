@@ -85,53 +85,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Section 4: 2025 Market & Legal Reality Check - Mobile Scroll */}
-            <section className="py-12 px-4 bg-blue-50">
-                <div className="max-w-6xl mx-auto">
-                    <h2 className="text-2xl md:text-3xl font-bold mb-2 text-blue-900 text-center">2025 Reality Check</h2>
-                    <p className="text-center text-gray-600 mb-8 max-w-2xl mx-auto text-sm md:text-base">Why you need to protect your value.</p>
 
-                    <div className="md:hidden mb-2 text-xs text-center text-gray-400 font-medium">← Swipe to see more →</div>
-
-                    <MobileScrollContainer>
-                        <div className="h-full bg-white p-6 rounded-2xl shadow-sm border border-blue-100 flex flex-col">
-                            <div className="text-3xl font-bold text-red-600 mb-2">27%</div>
-                            <h3 className="font-bold text-lg text-gray-900 mb-2">Total Loss Rate</h3>
-                            <p className="text-gray-600 text-sm flex-grow">Up from 16% in 2022. More drivers than ever are being pushed into total loss valuations.</p>
-                        </div>
-
-                        <div className="h-full bg-white p-6 rounded-2xl shadow-sm border border-blue-100 flex flex-col">
-                            <div className="text-3xl font-bold text-red-600 mb-2">42%</div>
-                            <h3 className="font-bold text-lg text-gray-900 mb-2">Unsatisfied</h3>
-                            <p className="text-gray-600 text-sm flex-grow">Only 58% of customers say their total loss valuation met expectations in 2025.</p>
-                        </div>
-
-                        <div className="h-full bg-white p-6 rounded-2xl shadow-sm border border-blue-100 flex flex-col">
-                            <div className="text-3xl font-bold text-red-600 mb-2">⚠ Alert</div>
-                            <h3 className="font-bold text-lg text-gray-900 mb-2">Class Actions</h3>
-                            <p className="text-gray-600 text-sm flex-grow">Major insurers face suits for algorithms that apply fake "negotiation discounts".</p>
-                        </div>
-
-                        <div className="h-full bg-white p-6 rounded-2xl shadow-sm border border-blue-100 flex flex-col">
-                            <div className="text-3xl font-bold text-red-600 mb-2">$1k+</div>
-                            <h3 className="font-bold text-lg text-gray-900 mb-2">Deductibles</h3>
-                            <p className="text-gray-600 text-sm flex-grow">26% of drivers now have deductibles of $1k+, increasing the financial hit.</p>
-                        </div>
-
-                        <div className="h-full bg-white p-6 rounded-2xl shadow-sm border border-blue-100 flex flex-col">
-                            <div className="text-3xl font-bold text-red-600 mb-2">Gap</div>
-                            <h3 className="font-bold text-lg text-gray-900 mb-2">Loan Balances</h3>
-                            <p className="text-gray-600 text-sm flex-grow">Many drivers are left paying for cars they can't drive due to ACV shortfall.</p>
-                        </div>
-
-                        <div className="h-full bg-white p-6 rounded-2xl shadow-sm border border-blue-100 flex flex-col">
-                            <div className="text-3xl font-bold text-red-600 mb-2">Rigged</div>
-                            <h3 className="font-bold text-lg text-gray-900 mb-2">Downgrades</h3>
-                            <p className="text-gray-600 text-sm flex-grow">Vendors use "phantom" comps and unfair condition adjustments to lower values.</p>
-                        </div>
-                    </MobileScrollContainer>
-                </div>
-            </section>
 
             {/* NEW: 3-Card Feature Row (Replaces separate sections) */}
             <section id="features" className="py-12 px-4 bg-gray-50">
@@ -195,6 +149,57 @@ export default function Home() {
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-2xl font-bold mb-6 text-gray-900">Critical Resources</h2>
                     <div className="flex flex-col gap-4">
+
+                        {/* 0. 2025 Market Reality Card */}
+                        <SectionCard
+                            title="2025 Market Reality Check"
+                            subtitle="Why Total Loss Values are Dropping"
+                            icon={<AlertTriangleIcon size={24} />}
+                            colorClass="bg-orange-700"
+                        >
+                            <div className="text-center mb-8">
+                                <h2 className="text-3xl font-black text-orange-700 mb-2">2025 MARKET REALITY</h2>
+                                <p className="text-lg text-gray-600">Why you need to protect your value now more than ever.</p>
+                            </div>
+
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div className="bg-white p-6 rounded-xl shadow-sm border border-orange-100">
+                                    <div className="text-4xl font-black text-red-600 mb-2">27%</div>
+                                    <h3 className="font-bold text-lg text-gray-900 mb-2">Total Loss Rate</h3>
+                                    <p className="text-gray-600 text-sm">Up from 16% in 2022. More drivers than ever are being pushed into total loss valuations.</p>
+                                </div>
+
+                                <div className="bg-white p-6 rounded-xl shadow-sm border border-orange-100">
+                                    <div className="text-4xl font-black text-red-600 mb-2">42%</div>
+                                    <h3 className="font-bold text-lg text-gray-900 mb-2">Unsatisfied</h3>
+                                    <p className="text-gray-600 text-sm">Only 58% of customers say their total loss valuation met expectations in 2025.</p>
+                                </div>
+
+                                <div className="bg-white p-6 rounded-xl shadow-sm border border-orange-100">
+                                    <div className="text-4xl font-black text-red-600 mb-2">⚠</div>
+                                    <h3 className="font-bold text-lg text-gray-900 mb-2">Class Actions</h3>
+                                    <p className="text-gray-600 text-sm">Major insurers face suits for algorithms that apply fake "negotiation discounts".</p>
+                                </div>
+
+                                <div className="bg-white p-6 rounded-xl shadow-sm border border-orange-100">
+                                    <div className="text-4xl font-black text-red-600 mb-2">$1k+</div>
+                                    <h3 className="font-bold text-lg text-gray-900 mb-2">Deductibles</h3>
+                                    <p className="text-gray-600 text-sm">26% of drivers now have deductibles of $1k+, increasing the financial hit.</p>
+                                </div>
+
+                                <div className="bg-white p-6 rounded-xl shadow-sm border border-orange-100">
+                                    <div className="text-4xl font-black text-red-600 mb-2">Gap</div>
+                                    <h3 className="font-bold text-lg text-gray-900 mb-2">Loan Balances</h3>
+                                    <p className="text-gray-600 text-sm">Many drivers are left paying for cars they can't drive due to ACV shortfall.</p>
+                                </div>
+
+                                <div className="bg-white p-6 rounded-xl shadow-sm border border-orange-100">
+                                    <div className="text-4xl font-black text-red-600 mb-2">📉</div>
+                                    <h3 className="font-bold text-lg text-gray-900 mb-2">Downgrades</h3>
+                                    <p className="text-gray-600 text-sm">Vendors use "phantom" comps and unfair condition adjustments to lower values.</p>
+                                </div>
+                            </div>
+                        </SectionCard>
 
                         {/* 1. Texas UM Law Card */}
                         <SectionCard
