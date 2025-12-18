@@ -1,0 +1,86 @@
+﻿
+> total-loss-intake@0.1.0 build
+> next build
+
+   Γû▓ Next.js 16.0.10 (Turbopack)
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ Γ£ô Compiled successfully in 13.4s
+   Running TypeScript ...
+node.exe : Failed to 
+compile.
+At line:1 char:1
++ & "C:\Program Files\
+nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~~~~
+    + CategoryInfo    
+          : NotSpeci  
+  fied: (Failed to    
+ compile.:String)     
+[], RemoteExcepti    
+on
+    + FullyQualifiedE 
+   rrorId : NativeCo  
+  mmandError
+ 
+
+./src/app/page.tsx:7:7
+8
+Type error: Cannot 
+find module 
+'lucide-react' or its 
+corresponding type 
+declarations.
+
+[0m [90m  5 |[39m 
+[36mimport[39m { 
+useChat } 
+[36mfrom[39m [32m'@
+/components/ChatContex
+t'[39m[33m;[39m
+ [90m  6 |[39m 
+[36mimport[39m [33m
+ValuationCalculator[3
+9m [36mfrom[39m [32
+m'@/components/Valuati
+onCalculator'[39m[33
+m;[39m
+[31m[1m>[22m[39m[
+90m  7 |[39m 
+[36mimport[39m { [3
+3mShieldCheckIcon[39m
+[33m,[39m [33mAlert
+TriangleIcon[39m[33m
+,[39m [33mFileTextIc
+on[39m[33m,[39m 
+[33mMapPinIcon[39m 
+} [36mfrom[39m [32m
+'lucide-react'[39m[3
+3m;[39m
+ [90m    |[39m      
+                      
+                      
+                      
+      
+[31m[1m^[22m[39m
+ [90m  8 |[39m
+ [90m  9 |[39m 
+[36mexport[39m 
+[36mdefault[39m 
+[36mfunction[39m 
+[33mHome[39m() {
+ [90m 10 |[39m     
+[36mconst[39m { 
+openChat } 
+[33m=[39m useChat()
+[33m;[39m[0m
+Next.js build worker 
+exited with code: 1 
+and signal: null

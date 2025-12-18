@@ -12,6 +12,7 @@
     "@google-cloud/dialogflow": "^7.4.0",
     "@supabase/supabase-js": "^2.88.0",
     "dotenv": "^17.2.3",
+    "lucide-react": "^0.561.0",
     "next": "16.0.10",
     "nodemailer": "^7.0.11",
     "react": "19.2.1",

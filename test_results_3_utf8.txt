@@ -1,0 +1,91 @@
+﻿[dotenv@17.2.3] injecting env (7) from .env.local -- tip: ≡ƒöæ add access controls to secrets: https://dotenvx.com/ops
+
+--- Test: Core Intake Flow (Session: 9f83145b) ---
+User: "Hi"
+Bot:  "Sorry, could you say that again?"
+Intent: [Default Fallback Intent]
+---
+User: "John Doe"
+Bot:  "Sorry, could you say that again?"
+Intent: [Default Fallback Intent]
+---
+User: "2022 Ford F150"
+Bot:  "Say that one more time?"
+Intent: [Default Fallback Intent]
+---
+User: "Yesterday"
+Bot:  "Can you say that again?"
+Intent: [Default Fallback Intent]
+---
+User: "I was rear ended at a light"
+Bot:  "I didn't get that. Can you say it again?"
+Intent: [Default Fallback Intent]
+---
+User: "Yes my neck hurts"
+Bot:  "Say that one more time?"
+Intent: [Default Fallback Intent]
+---
+User: "555-123-4567"
+Bot:  "I missed what you said. What was that?"
+Intent: [Default Fallback Intent]
+---
+
+--- Test: Value Dispute (Devaluation) (Session: 499d7d18) ---
+User: "Why is my offer so low?"
+Bot:  "Sorry, I didn't get that. Can you rephrase?"
+Intent: [Default Fallback Intent]
+---
+User: "The comparables they used are trash"
+Bot:  "Sorry, what was that?"
+Intent: [Default Fallback Intent]
+---
+User: "They are charging me for betterment on tires"
+Bot:  "Sorry, can you say that again?"
+Intent: [Default Fallback Intent]
+---
+User: "How does the appraisal clause work?"
+Bot:  "What was that?"
+Intent: [Default Fallback Intent]
+---
+
+--- Test: Liability & Fault (Session: 2007deb9) ---
+User: "I got rear ended who is at fault?"
+Bot:  "Can you say that again?"
+Intent: [Default Fallback Intent]
+---
+User: "I was turning left and got hit"
+Bot:  "I missed that, say that again?"
+Intent: [Default Fallback Intent]
+---
+User: "Someone backed into me in a parking lot"
+Bot:  "I didn't get that. Can you repeat?"
+Intent: [Default Fallback Intent]
+---
+
+--- Test: Adjuster Script (Rights) (Session: 8f05de58) ---
+User: "Are you recording this call?"
+Bot:  "Say that one more time?"
+Intent: [Default Fallback Intent]
+---
+User: "What is your settlement authority?"
+Bot:  "Say that one more time?"
+Intent: [Default Fallback Intent]
+---
+User: "Do you accept liability?"
+Bot:  "What was that?"
+Intent: [Default Fallback Intent]
+---
+
+--- Test: Mitigation & Storage (Session: 9c8cfbe3) ---
+User: "Who pays for storage fees?"
+Bot:  "No. Gap coverage pays your lender the shortfall to clear the loan; you do not receive extra cash."
+Intent: [FAQ - Gap Extra Money]
+---
+User: "Should I move my car?"
+Bot:  "Can you say that again?"
+Intent: [Default Fallback Intent]
+---
+User: "I refused the ambulance am I screwed?"
+Bot:  "Can you say that again?"
+Intent: [Default Fallback Intent]
+---

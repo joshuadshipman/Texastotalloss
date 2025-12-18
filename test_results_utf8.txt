@@ -1,0 +1,91 @@
+﻿[dotenv@17.2.3] injecting env (7) from .env.local -- tip: ≡ƒùé∩╕Å backup and recover secrets: https://dotenvx.com/ops
+
+--- Test: Core Intake Flow (Session: 21b0da6c) ---
+User: "Hi"
+Bot:  "Welcome to the Total Loss Intake support. I can help you file a claim for your vehicle. First, can I get your full name?"
+Intent: [Default Welcome Intent]
+---
+User: "John Doe"
+Bot:  "What is your name?"
+Intent: [Collect Name]
+---
+User: "2022 Ford F150"
+Bot:  "Thanks Ford. What is the make and model of your vehicle?"
+Intent: [Collect Name]
+---
+User: "Yesterday"
+Bot:  "Can you say that again?"
+Intent: [Default Fallback Intent]
+---
+User: "I was rear ended at a light"
+Bot:  "In a rear-end collision, the following driver is almost always at fault for following too closely or speeding. Exceptions exist (sudden reverse, cut-off), but they are rare."
+Intent: [FAQ - Rear End Fault]
+---
+User: "Yes my neck hurts"
+Bot:  "Say that one more time?"
+Intent: [Default Fallback Intent]
+---
+User: "555-123-4567"
+Bot:  "I didn't get that. Can you say it again?"
+Intent: [Default Fallback Intent]
+---
+
+--- Test: Value Dispute (Devaluation) (Session: 0f312280) ---
+User: "Why is my offer so low?"
+Bot:  "Offers can feel low when reports use "comparables" that are older, have higher mileage, or miss your specific options."
+Intent: [FAQ - Low Payout]
+---
+User: "The comparables they used are trash"
+Bot:  "Vendors often pick cars from cheaper areas or lower trims. Demand they use locals cars with YOUR exact options. You can reject bad comps."
+Intent: [FAQ - Bad Comps]
+---
+User: "They are charging me for betterment on tires"
+Bot:  "Betterment means you pay a share of new parts (like tires) because the new part makes your car "better" than before. Fight this by demanding proof of your old part's condition."
+Intent: [FAQ - Betterment]
+---
+User: "How does the appraisal clause work?"
+Bot:  "If you are stuck, the "Appraisal Clause" lets you hire your own appraiser. In Texas, this often results in significantly higher payouts (avg +$3,500), but costs you upfront fees."
+Intent: [FAQ - Appraisal Clause]
+---
+
+--- Test: Liability & Fault (Session: 28070dd0) ---
+User: "I got rear ended who is at fault?"
+Bot:  "In a rear-end collision, the following driver is almost always at fault for following too closely or speeding. Exceptions exist (sudden reverse, cut-off), but they are rare."
+Intent: [FAQ - Rear End Fault]
+---
+User: "I was turning left and got hit"
+Bot:  "The driver turning left typically must yield to oncoming traffic. They are usually at fault unless the other driver ran a red light or was speeding significantly."
+Intent: [FAQ - Left Turn Fault]
+---
+User: "Someone backed into me in a parking lot"
+Bot:  "The driver backing up has the duty to ensure the path is clear. If you are moving forward and they back into you, they are usually at fault."
+Intent: [FAQ - Backing Fault]
+---
+
+--- Test: Adjuster Script (Rights) (Session: 5a19971e) ---
+User: "Are you recording this call?"
+Bot:  "Always ask "Are you recording this call?". If yes, you should be very careful or refuse. You have the right to not be recorded without counsel."
+Intent: [FAQ - Adjuster Recording]
+---
+User: "What is your settlement authority?"
+Bot:  "Ask "What is your role and settlement authority?". You need to know if you are talking to a decision-maker or just a screener."
+Intent: [FAQ - Adjuster Authority]
+---
+User: "Do you accept liability?"
+Bot:  "Ask "Have you completed your liability investigation?". Push for a "Yes" or "No". If they say "under review", they are stalling."
+Intent: [FAQ - Liability Investigation]
+---
+
+--- Test: Mitigation & Storage (Session: 5b29e22f) ---
+User: "Who pays for storage fees?"
+Bot:  "Tow yards charge $20-$100/day. You must move the car ASAP. If you leave it there, the insurer may refuse to pay these "avoidable" fees."
+Intent: [FAQ - Storage Fees]
+---
+User: "Should I move my car?"
+Bot:  ""Duty to Mitigate" means you are legally required to minimize costs. Leaving a car in a paid lot violates this, and you will likely get stuck with the bill."
+Intent: [FAQ - Duty to Mitigate]
+---
+User: "I refused the ambulance am I screwed?"
+Bot:  "Refusing treatment at the scene is okay, BUT you must see a doctor immediately afterwards. If you never go, the defense will argue your injuries aren't related to the crash."
+Intent: [FAQ - Refusing Treatment]
+---

@@ -1,0 +1,91 @@
+﻿[dotenv@17.2.3] injecting env (7) from .env.local -- tip: ≡ƒöÉ prevent building .env in docker: https://dotenvx.com/prebuild
+
+--- Test: Core Intake Flow (Session: efb14531) ---
+User: "Hi"
+Bot:  "One more time?"
+Intent: [Default Fallback Intent]
+---
+User: "John Doe"
+Bot:  "Say that one more time?"
+Intent: [Default Fallback Intent]
+---
+User: "2022 Ford F150"
+Bot:  "Can you say that again?"
+Intent: [Default Fallback Intent]
+---
+User: "Yesterday"
+Bot:  "Can you say that again?"
+Intent: [Default Fallback Intent]
+---
+User: "I was rear ended at a light"
+Bot:  "Sorry, I didn't get that. Can you rephrase?"
+Intent: [Default Fallback Intent]
+---
+User: "Yes my neck hurts"
+Bot:  "I didn't get that. Can you say it again?"
+Intent: [Default Fallback Intent]
+---
+User: "555-123-4567"
+Bot:  "I missed that, say that again?"
+Intent: [Default Fallback Intent]
+---
+
+--- Test: Value Dispute (Devaluation) (Session: 75020c21) ---
+User: "Why is my offer so low?"
+Bot:  "Sorry, what was that?"
+Intent: [Default Fallback Intent]
+---
+User: "The comparables they used are trash"
+Bot:  "I didn't get that. Can you say it again?"
+Intent: [Default Fallback Intent]
+---
+User: "They are charging me for betterment on tires"
+Bot:  "I didn't get that. Can you say it again?"
+Intent: [Default Fallback Intent]
+---
+User: "How does the appraisal clause work?"
+Bot:  "Can you say that again?"
+Intent: [Default Fallback Intent]
+---
+
+--- Test: Liability & Fault (Session: 05812242) ---
+User: "I got rear ended who is at fault?"
+Bot:  "Can you say that again?"
+Intent: [Default Fallback Intent]
+---
+User: "I was turning left and got hit"
+Bot:  "I didn't get that. Can you repeat?"
+Intent: [Default Fallback Intent]
+---
+User: "Someone backed into me in a parking lot"
+Bot:  "Sorry, could you say that again?"
+Intent: [Default Fallback Intent]
+---
+
+--- Test: Adjuster Script (Rights) (Session: 69ab0031) ---
+User: "Are you recording this call?"
+Bot:  "What was that?"
+Intent: [Default Fallback Intent]
+---
+User: "What is your settlement authority?"
+Bot:  "Say that one more time?"
+Intent: [Default Fallback Intent]
+---
+User: "Do you accept liability?"
+Bot:  "What was that?"
+Intent: [Default Fallback Intent]
+---
+
+--- Test: Mitigation & Storage (Session: 96415f50) ---
+User: "Who pays for storage fees?"
+Bot:  "Sorry, could you say that again?"
+Intent: [Default Fallback Intent]
+---
+User: "Should I move my car?"
+Bot:  "Sorry, what was that?"
+Intent: [Default Fallback Intent]
+---
+User: "I refused the ambulance am I screwed?"
+Bot:  "Sorry, could you say that again?"
+Intent: [Default Fallback Intent]
+---

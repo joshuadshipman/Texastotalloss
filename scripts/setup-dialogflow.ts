@@ -16,7 +16,8 @@ const agentPath = intentsClient.projectAgentPath(PROJECT_ID);
 
 interface IntentConfig {
   displayName: string;
-  trainingPhrasesParts: string[];
+  trainingPhrasesParts?: string[];
+  trainingPhrases?: { parts: { text: string; alias?: string; entityType?: string }[] }[];
   messageTexts: string[];
   inputContextNames?: string[];
   outputContexts?: { name: string, lifespan: number }[];
@@ -102,17 +103,96 @@ const intentsToCreate: IntentConfig[] = [
   {
     displayName: 'FAQ - Total Loss Threshold',
     trainingPhrasesParts: ['What is the threshold', 'Total loss formula'],
-    messageTexts: ['States stick to a percentage of ACV (e.g., 75%) or a formula (Repair + Salvage > ACV) to decide when to total a car.']
+    messageTexts: ['Texas uses a 100% Threshold. The car is totaled if (Repair Cost + Salvage Value) is greater than or equal to the Actual Cash Value. This is stricter than many other states.']
   },
   {
     displayName: 'FAQ - Car After Total Loss',
     trainingPhrasesParts: ['What happen to car after total loss', 'Who keeps the car'],
-    messageTexts: ['The insurer usually pays you the ACV and takes the car to sell for salvage.']
+    messageTexts: ['Usually, the insurer takes the car. BUT you can choose to keep it ("Owner Retention"). If you do, they deduct the Salvage Value from your payout, and you get a Salvage Title.']
+  },
+  // --- Liability & Fault ---
+  {
+    displayName: 'FAQ - Rear End Fault',
+    trainingPhrasesParts: ['Who is at fault in rear end', 'I got rear ended', 'Is the person behind always at fault'],
+    messageTexts: ['In a rear-end collision, the following driver is almost always at fault for following too closely or speeding. Exceptions exist (sudden reverse, cut-off), but they are rare.']
+  },
+  {
+    displayName: 'FAQ - Left Turn Fault',
+    trainingPhrasesParts: ['Left turn accident fault', 'T-boned at intersection', 'Who yields on left turn'],
+    messageTexts: ['The driver turning left typically must yield to oncoming traffic. They are usually at fault unless the other driver ran a red light or was speeding significantly.']
+  },
+  {
+    displayName: 'FAQ - Sideswipe Fault',
+    trainingPhrasesParts: ['Sideswipe fault', 'He merged into me', 'Lane change accident'],
+    messageTexts: ['The driver who leaves their lane (changing lanes, merging, drifting) is primarily at fault. Look for scrape marks to prove who crossed the line.']
+  },
+  {
+    displayName: 'FAQ - Head On Fault',
+    trainingPhrasesParts: ['Head on collision fault', 'Crossed center line'],
+    messageTexts: ['The driver who leaves their lane into oncoming traffic is at fault. This is often due to distraction, fatigue, or impairment.']
+  },
+  {
+    displayName: 'FAQ - Backing Fault',
+    trainingPhrasesParts: ['Backing up accident', 'Parking lot accident'],
+    messageTexts: ['The driver backing up has the duty to ensure the path is clear. If you are moving forward and they back into you, they are usually at fault.']
+  },
+  {
+    displayName: 'FAQ - Determining Fault',
+    trainingPhrasesParts: ['How do I prove fault', 'Impact points', 'Read damage'],
+    messageTexts: ['Impact points tell the story. Rear damage = rear ended. Side/Door damage = T-bone. Scrapes = sideswipe. Document WHERE the cars hit to prove who moved into whom.']
+  },
+
+  // --- Devaluation Tactics ---
+  {
+    displayName: 'FAQ - Low ACV',
+    trainingPhrasesParts: ['Why is my offer so low', 'My payout is too small', 'They lowballed me'],
+    messageTexts: ['Insurers often start low by using "comparables" that are older or higher mileage than yours. They also deduct for "typical wear" without inspecting. Challenge every line item.']
+  },
+  {
+    displayName: 'FAQ - Bad Comps',
+    trainingPhrasesParts: ['These cars are not like mine', 'Wrong trim level', 'Bad comparables'],
+    messageTexts: ['Vendors often pick cars from cheaper areas or lower trims. Demand they use locals cars with YOUR exact options. You can reject bad comps.']
+  },
+  {
+    displayName: 'FAQ - Condition Adjustment',
+    trainingPhrasesParts: ['Condition adjustment', 'Deduction for wear', 'They said my car is average'],
+    messageTexts: ['Insurers deduct $500+ for "condition" on every comp to lower value. If your car was clean, send photos and maintenance records to prove it deserves a "Dealer Retail" rating.']
+  },
+  {
+    displayName: 'FAQ - UPD',
+    trainingPhrasesParts: ['Unrelated prior damage', 'UPD deduction', 'Old dent deduction'],
+    messageTexts: ['UPD stands for Unrelated Prior Damage. They can deduct for old damage, BUT they cannot double-dip by deducting for condition AND UPD for the same thing.']
+  },
+  {
+    displayName: 'FAQ - Betterment',
+    trainingPhrasesParts: ['What is betterment', 'Why am I paying for tires', 'Betterment charge'],
+    messageTexts: ['Betterment means you pay a share of new parts (like tires) because the new part makes your car "better" than before. Fight this by demanding proof of your old part\'s condition.']
+  },
+  {
+    displayName: 'FAQ - Double Dipping',
+    trainingPhrasesParts: ['Double dipping', 'Charged twice for damage'],
+    messageTexts: ['"Double Dipping" is when they lower your Condition score AND charge a UPD fee for the same scratch. This is wrong. Point it out and demand one be removed.']
+  },
+  {
+    displayName: 'FAQ - Appraisal Clause',
+    trainingPhrasesParts: ['Should I hire an appraiser', 'Appraisal clause', 'Independent appraisal'],
+    messageTexts: ['If you are stuck, the "Appraisal Clause" lets you hire your own appraiser. In Texas, this often results in significantly higher payouts (avg +$3,500), but costs you upfront fees.']
+  },
+
+  {
+    displayName: 'FAQ - Injury Definition',
+    trainingPhrasesParts: ['What counts as an injury', 'Is soreness an injury', 'Do I have an injury claim'],
+    messageTexts: ['In Texas, "bodily injury" includes ANY physical pain (even soreness or stiffness) if it is documented by a doctor. If you are hurting, get it checked out—it counts.']
+  },
+  {
+    displayName: 'FAQ - Pain and Suffering',
+    trainingPhrasesParts: ['What is pain and suffering', 'Does whiplash count', 'Can I get paid for stress'],
+    messageTexts: ['Texas law allows compensation for physical pain, mental anguish, and loss of enjoyment. Even soft-tissue injuries like whiplash qualify if documented. It involves more than just medical bills.']
   },
   {
     displayName: 'FAQ - Injuries',
     trainingPhrasesParts: ['How do injuries affect claim', 'Injury settlement'],
-    messageTexts: ['Property damage and injury are separate. Your injury settlement covers medical bills and pain/suffering, on top of the car value.']
+    messageTexts: ['Property damage and injury claims are SEPARATE. The insurer will NOT pay more for your car just because you are hurt. Do not expect injury money to fix your car loan gap.']
   },
   {
     displayName: 'FAQ - One Vendor',
@@ -204,7 +284,81 @@ const intentsToCreate: IntentConfig[] = [
     messageTexts: ['1. Get their "no coverage" status in writing. 2. Check your policy for UMPD/Collision. 3. Gather your loan info. 4. Do NOT give a recorded statement yet.']
   },
 
-  // --- Core Flow ---
+
+
+  // --- Storage & Mitigation (New) ---
+  {
+    displayName: 'FAQ - Storage Fees',
+    trainingPhrasesParts: ['Who pays storage fees', 'Tow yard fees', 'Daily charges', 'Cost per day'],
+    messageTexts: ['Tow yards charge $20-$100/day. You must move the car ASAP. If you leave it there, the insurer may refuse to pay these "avoidable" fees.']
+  },
+  {
+    displayName: 'FAQ - Duty to Mitigate',
+    trainingPhrasesParts: ['What is duty to mitigate', 'Do I have to move my car', 'Why move the car'],
+    messageTexts: ['"Duty to Mitigate" means you are legally required to minimize costs. Leaving a car in a paid lot violates this, and you will likely get stuck with the bill.']
+  },
+  {
+    displayName: 'FAQ - Move Vehicle',
+    trainingPhrasesParts: ['Should I let them move my car', 'Move to salvage yard', 'Permission to move'],
+    messageTexts: ['YES. Give the insurer permission to move the car to a fee-free lot immediately. This stops the daily fees and preserves your payout.']
+  },
+
+  // --- Adjuster Script Intents ---
+  {
+    displayName: 'FAQ - Adjuster Recording',
+    trainingPhrasesParts: ['Are you recording me', 'Can I record the call', 'Is this line recorded'],
+    messageTexts: ['Always ask "Are you recording this call?". If yes, you should be very careful or refuse. You have the right to not be recorded without counsel.']
+  },
+  {
+    displayName: 'FAQ - Adjuster Authority',
+    trainingPhrasesParts: ['What is your authority', 'Are you the manager', 'Can you settle this'],
+    messageTexts: ['Ask "What is your role and settlement authority?". You need to know if you are talking to a decision-maker or just a screener.']
+  },
+  {
+    displayName: 'FAQ - Liability Investigation',
+    trainingPhrasesParts: ['Is the investigation done', 'Who is at fault', 'Do you accept liability'],
+    messageTexts: ['Ask "Have you completed your liability investigation?". Push for a "Yes" or "No". If they say "under review", they are stalling.']
+  },
+  {
+    displayName: 'FAQ - Policy Limits',
+    trainingPhrasesParts: ['What are the limits', 'Policy maximum', 'How much coverage'],
+    messageTexts: ['Ask "What are the bodily injury and property damage limits?". You must know the cap to value your case correctly.']
+  },
+  {
+    displayName: 'FAQ - Written Position',
+    trainingPhrasesParts: ['Put it in writing', 'Send me a letter', 'Email that to me'],
+    messageTexts: ['Always ask "Can you put that position in writing?". Whether they admit or deny fault, a written record is your best weapon.']
+  },
+
+  // --- Accident Checklist ---
+  {
+    displayName: 'FAQ - Accident Checklist',
+    trainingPhrasesParts: ['I just crashed what do I do', 'Accident checklist', 'Steps after accident', 'Just got in a wreck'],
+    messageTexts: ['Stay calm. 1. Ensure safety/Call 911. 2. Do NOT admit fault. 3. Get photos & witness info. 4. Go to the ER if you feel ANY pain. Check the site for our full 10-step guide.']
+  },
+
+  // --- Mitigation & Refusal (New) ---
+  {
+    displayName: 'FAQ - Medical Mitigation',
+    trainingPhrasesParts: ['Should I go to the doctor', 'Toughing it out', 'I feel okay', 'Do I need a doctor'],
+    messageTexts: ['Go to a doctor within 72 hours. "Toughing it out" creates gaps in care that insurers use to claim you weren\'t really hurt.']
+  },
+  {
+    displayName: 'FAQ - Refusing Treatment',
+    trainingPhrasesParts: ['I refused the ambulance', 'I didn\'t go to the hospital', 'Can I refuse treatment', 'I said I was fine'],
+    messageTexts: ['Refusing treatment at the scene is okay, BUT you must see a doctor immediately afterwards. If you never go, the defense will argue your injuries aren\'t related to the crash.']
+  },
+  {
+    displayName: 'FAQ - 51 Percent Rule',
+    trainingPhrasesParts: ['What is the 51 percent rule', 'Comparative fault', 'Shared blame', 'My fault'],
+    messageTexts: ['Texas uses a 51% Bar Rule. If you are found 51% or more responsible for your own damages (like by ignoring medical advice), you get $0. Don\'t give them a reason to shift blame.']
+  },
+  {
+    displayName: 'FAQ - Property Mitigation',
+    trainingPhrasesParts: ['Broken window', 'Rain damage', 'Prevent more damage', 'Loose bumper'],
+    messageTexts: ['You must take "reasonable steps" to prevent further damage, like covering a broken window. Keep receipts for materials—they are reimbursable.']
+  },
+
   {
     displayName: 'Default Welcome Intent',
     trainingPhrasesParts: ['Hi', 'Hello', 'Start', 'I have a total loss', 'Good morning', 'Help'],
@@ -214,7 +368,12 @@ const intentsToCreate: IntentConfig[] = [
   {
     displayName: 'Collect Name',
     inputContextNames: ['awaiting_name'],
-    trainingPhrasesParts: ['My name is John Doe', 'Jane Smith', 'It is Alice'],
+    // Annotated phrases so Dialogflow knows WHERE the name is
+    trainingPhrases: [
+      { parts: [{ text: 'My name is ' }, { text: 'John Doe', alias: 'given-name', entityType: '@sys.person' }] },
+      { parts: [{ text: 'It is ' }, { text: 'Jane', alias: 'given-name', entityType: '@sys.person' }] },
+      { parts: [{ text: 'Bob Smith', alias: 'given-name', entityType: '@sys.person' }] }
+    ],
     parameters: [
       {
         displayName: 'given-name',
@@ -230,7 +389,11 @@ const intentsToCreate: IntentConfig[] = [
   {
     displayName: 'Collect Vehicle Info',
     inputContextNames: ['awaiting_vehicle'],
-    trainingPhrasesParts: ['It\'s a Toyota Camry', '2020 Honda Civic', 'Ford F150', 'Tesla Model 3'],
+    trainingPhrases: [
+      { parts: [{ text: 'It\'s a ' }, { text: 'Toyota Camry', alias: 'vehicle', entityType: '@sys.any' }] },
+      { parts: [{ text: '2020 Honda Civic', alias: 'vehicle', entityType: '@sys.any' }] },
+      { parts: [{ text: 'Ford F150', alias: 'vehicle', entityType: '@sys.any' }] }
+    ],
     parameters: [
       {
         displayName: 'vehicle',
@@ -246,7 +409,11 @@ const intentsToCreate: IntentConfig[] = [
   {
     displayName: 'Collect Date',
     inputContextNames: ['awaiting_date'],
-    trainingPhrasesParts: ['Yesterday', 'Last Monday', '2023-10-15', 'On Friday'],
+    trainingPhrases: [
+      { parts: [{ text: 'It happened ' }, { text: 'Yesterday', alias: 'date', entityType: '@sys.date' }] },
+      { parts: [{ text: 'Last Monday', alias: 'date', entityType: '@sys.date' }] },
+      { parts: [{ text: '2023-10-15', alias: 'date', entityType: '@sys.date' }] }
+    ],
     parameters: [
       {
         displayName: 'date',
@@ -263,6 +430,11 @@ const intentsToCreate: IntentConfig[] = [
     displayName: 'Collect Description',
     inputContextNames: ['awaiting_description'],
     trainingPhrasesParts: ['I was rear-ended at a light', 'Hit a deer', 'Someone backed into me', 'I slid on ice'],
+    // Use sys.any without annotation for description, as it acts as a "catch all" usually.
+    // Or just make it mandatory so it grabs the whole input if not matched?
+    // Actually for 'sys.any' description, often best to just rely on "whole payload" or make it mandatory.
+    // Let's use generic parts for now, but we'll relax mandatory if needed.
+    // Actually, let's keep it simple.
     parameters: [
       {
         displayName: 'description',
@@ -278,7 +450,12 @@ const intentsToCreate: IntentConfig[] = [
   {
     displayName: 'Collect Injury Status',
     inputContextNames: ['awaiting_injury_status'],
-    trainingPhrasesParts: ['Yes', 'No', 'My neck hurts', 'Just minor cuts'],
+    // We want to detect Yes/No/Maybe etc.
+    trainingPhrases: [
+      { parts: [{ text: 'Yes', alias: 'injury_status', entityType: '@sys.any' }] },
+      { parts: [{ text: 'No', alias: 'injury_status', entityType: '@sys.any' }] },
+      { parts: [{ text: 'My neck hurts', alias: 'injury_status', entityType: '@sys.any' }] }
+    ],
     parameters: [
       {
         displayName: 'injury_status',
@@ -294,7 +471,10 @@ const intentsToCreate: IntentConfig[] = [
   {
     displayName: 'Collect Phone',
     inputContextNames: ['awaiting_phone'],
-    trainingPhrasesParts: ['555-0123', '(555) 123-4567', 'My number is 123 456 7890'],
+    trainingPhrases: [
+      { parts: [{ text: '555-0123', alias: 'phone-number', entityType: '@sys.phone-number' }] },
+      { parts: [{ text: 'My number is ' }, { text: '123-456-7890', alias: 'phone-number', entityType: '@sys.phone-number' }] }
+    ],
     parameters: [
       {
         displayName: 'phone-number',
@@ -320,10 +500,24 @@ async function deleteIntent(name: string) {
 }
 
 async function createIntent(config: IntentConfig) {
-  const trainingPhrases = config.trainingPhrasesParts.map(part => ({
-    type: 'EXAMPLE' as const,
-    parts: [{ text: part }],
-  }));
+  let trainingPhrases;
+
+  if (config.trainingPhrases) {
+    trainingPhrases = config.trainingPhrases.map(phrase => ({
+      type: 'EXAMPLE' as const,
+      parts: phrase.parts.map(part => ({
+        text: part.text,
+        entityType: part.entityType, // e.g. @sys.person
+        alias: part.alias,           // e.g. given-name
+        userDefined: !!part.alias
+      }))
+    }));
+  } else if (config.trainingPhrasesParts) {
+    trainingPhrases = config.trainingPhrasesParts.map(part => ({
+      type: 'EXAMPLE' as const,
+      parts: [{ text: part }],
+    }));
+  }
 
   const message = {
     text: {
@@ -378,12 +572,14 @@ async function run() {
       const match = existingIntents.find(i => i.displayName === config.displayName);
       if (match && match.name) {
         await deleteIntent(match.name);
+        await new Promise(resolve => setTimeout(resolve, 1500)); // Throttling
       }
     }
 
     // Create new intents
     for (const config of intentsToCreate) {
       await createIntent(config);
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Throttling
     }
 
     console.log('All intents configured successfully!');
