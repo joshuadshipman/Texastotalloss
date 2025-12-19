@@ -45,6 +45,27 @@ export default function AdminChatPage() {
             .channel('admin-chat-list')
             .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, (payload) => {
                 const newMsg = payload.new as ChatMessage;
+
+                // Notification Sound & Title for non-agent messages
+                if (newMsg.sender !== 'agent') {
+                    // 1. Play Sound
+                    try {
+                        const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.frequency.setValueAtTime(880, ctx.currentTime); // High ping
+                        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5);
+                        osc.start();
+                        osc.stop(ctx.currentTime + 0.5);
+                    } catch (e) { console.error("Audio play failed", e); }
+
+                    // 2. Update Title
+                    document.title = `(${newMsg.sender}) New Message!`;
+                }
+
                 // Update session list locally
                 setSessions(prev => {
                     const exists = prev.find(s => s.session_id === newMsg.session_id);
@@ -136,6 +157,7 @@ export default function AdminChatPage() {
             })
         });
         setInput('');
+        document.title = 'Admin Chat'; // Reset title
     };
 
     if (!isAuthenticated) {
@@ -181,8 +203,8 @@ export default function AdminChatPage() {
                             {messages.map((m, i) => (
                                 <div key={i} className={`flex ${m.sender === 'agent' ? 'justify-end' : 'justify-start'}`}>
                                     <div className={`max-w-[70%] p-3 rounded-lg text-sm ${m.sender === 'agent' ? 'bg-blue-600 text-white' :
-                                            m.sender === 'bot' ? 'bg-gray-200 text-gray-600 italic' :
-                                                'bg-white border border-gray-300'
+                                        m.sender === 'bot' ? 'bg-gray-200 text-gray-600 italic' :
+                                            'bg-white border border-gray-300'
                                         }`}>
                                         <div className="text-xs opacity-75 mb-1 capitalize">{m.sender}</div>
                                         {m.content}

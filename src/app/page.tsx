@@ -32,7 +32,7 @@ export default function Home() {
                         Free Texas Auto Claim Help
                     </div>
                     <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight mb-4">
-                        <span className="block text-white mb-2 text-red-500 font-bold">Total Loss!!! Now what!?!</span>
+                        <span className="block text-white mb-2 text-red-500 font-bold">Total Loss!!! Now what?!?</span>
                         <span className="block text-blue-300">Mitigate Damages? ACV? GAP Coverage? Injuries? Missed Work?</span>
                     </h1>
                     <div className="text-lg md:text-xl font-medium text-blue-100 space-y-4 max-w-3xl mx-auto bg-blue-800/50 p-6 rounded-xl border border-blue-400/30">
