@@ -181,11 +181,17 @@ export default function AdminChatPage() {
                     {sessions.map(s => (
                         <div
                             key={s.session_id}
-                            onClick={() => setSelectedSession(s.session_id)}
-                            className={`p-4 border-b cursor-pointer hover:bg-blue-50 ${selectedSession === s.session_id ? 'bg-blue-100' : ''}`}
+                            onClick={() => {
+                                setSelectedSession(s.session_id);
+                                setSessions(prev => prev.map(sess => sess.session_id === s.session_id ? { ...sess, is_read: true } : sess));
+                            }}
+                            className={`p-4 border-b cursor-pointer hover:bg-blue-50 relative ${selectedSession === s.session_id ? 'bg-blue-100' : ''}`}
                         >
-                            <div className="font-bold text-sm text-gray-700 truncate">{s.session_id}</div>
-                            <div className="text-xs text-gray-500 truncate">{s.last_message}</div>
+                            {!s.is_read && (
+                                <div className="absolute top-4 right-4 w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-sm"></div>
+                            )}
+                            <div className="font-bold text-sm text-gray-700 truncate pr-6">{s.session_id}</div>
+                            <div className={`text-xs truncate ${!s.is_read ? 'font-bold text-gray-900' : 'text-gray-500'}`}>{s.last_message}</div>
                             <div className="text-xs text-gray-400 mt-1">{new Date(s.updated_at).toLocaleTimeString()}</div>
                         </div>
                     ))}
