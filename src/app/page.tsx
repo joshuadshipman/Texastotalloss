@@ -12,14 +12,17 @@ const MobileNav = dynamic(() => import('@/components/MobileNav'), { ssr: false }
 const SectionCard = dynamic(() => import('@/components/SectionCard'));
 const LightboxImage = dynamic(() => import('@/components/ui/LightboxImage'));
 
-import { ShieldCheckIcon, AlertTriangleIcon, FileTextIcon, MapPinIcon, GavelIcon, CarIcon, DollarSignIcon, SearchIcon } from 'lucide-react';
+import { ShieldCheckIcon, AlertTriangleIcon, FileTextIcon, MapPinIcon, GavelIcon, CarIcon, DollarSignIcon, SearchIcon, SparklesIcon } from 'lucide-react';
 
 
 export default function Home() {
-    const { openChat } = useChat();
+    const { openChat, openReview } = useChat();
+    // Dynamically load the modal so it doesn't slow down initial paint
+    const CaseReviewModal = dynamic(() => import('@/components/CaseReviewModal'), { ssr: false });
 
     return (
         <main className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900 pb-20 md:pb-0"> {/* Added pb-20 for mobile nav */}
+            <CaseReviewModal />
             {/* Hero Section */}
             {/* Hero Section - Mobile First */}
             <header className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white py-12 px-4 text-center relative overflow-hidden">
@@ -45,6 +48,13 @@ export default function Home() {
                     </div>
 
                     <div className="grid grid-cols-2 lg:flex lg:flex-row gap-4 pt-6 max-w-4xl mx-auto w-full">
+                        <button
+                            onClick={openReview}
+                            className="flex-1 h-16 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-black rounded-xl shadow-xl transition flex items-center justify-center gap-2 text-sm md:text-base leading-tight px-2 animate-pulse border-2 border-white/20"
+                        >
+                            <SparklesIcon size={20} className="text-yellow-300" />
+                            <span>Instant AI Case Review</span>
+                        </button>
                         <button
                             onClick={() => openChat('callback')}
                             className="flex-1 h-16 bg-white text-blue-900 hover:bg-gray-100 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base leading-tight px-2"
@@ -161,12 +171,19 @@ export default function Home() {
                                     {/* 1. Medical Actions */}
                                     <div className="bg-white p-8 rounded-xl shadow-lg border-t-8 border-green-500">
                                         <h3 className="text-2xl font-bold mb-4 text-green-700">1. Medical Actions</h3>
-                                        <p className="mb-4 text-gray-700">
-                                            <strong>Seek Prompt Care:</strong> Go to the doctor within 24–72 hours. "Toughing it out" creates a gap in treatment that insurers use to deny claims.
-                                        </p>
-                                        <p className="mb-4 text-gray-700">
-                                            <strong>Follow Orders:</strong> If a doctor prescribes therapy or rest, do it. Ignoring advice is "failure to mitigate."
-                                        </p>
+                                        <div className="space-y-4 text-lg text-gray-700 leading-relaxed">
+                                            <p>
+                                                <strong>Rule:</strong> You must see a doctor immediately (within 72 hours).
+                                            </p>
+                                            <p className="bg-green-50 p-4 rounded-lg border border-green-200 text-base">
+                                                <strong>Example:</strong> Imagine you hurt your back but wait 2 weeks to see a doctor because you "hate hospitals."<br /><br />
+                                                The insurance company will say: <em>"If you were really hurt, you would have gone sooner. Maybe you hurt your back at the gym last week, not in the crash."</em><br /><br />
+                                                <strong>Result:</strong> They deny your medical bills.
+                                            </p>
+                                            <p>
+                                                <strong>Doctors Orders:</strong> If a doctor says "rest for 3 days," and you go to work and lift heavy boxes, they won't pay for your reinjury.
+                                            </p>
+                                        </div>
                                         <div className="mt-4">
                                             <LightboxImage src="/images/infographics/gap_in_care.png" alt="Gap in Care Timeline" />
                                         </div>
@@ -175,13 +192,21 @@ export default function Home() {
                                     {/* 2. The Refusal Trap & 51% Rule */}
                                     <div className="bg-white p-8 rounded-xl shadow-lg border-t-8 border-red-500 relative overflow-hidden">
                                         <div className="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-bl">CRITICAL</div>
-                                        <h3 className="text-2xl font-bold mb-4 text-red-700">2. The "Refusal" Trap</h3>
-                                        <p className="mb-4 text-gray-700">
-                                            Warning: Texas follows the "51% Bar Rule". If you are found more than 50% responsible for your own damages(injuries)—<strong>even if just by refusing medical care and letting an injury get worse</strong>—you recover $0.
-                                        </p>
-                                        <p className="mb-2 text-sm text-red-600 font-bold">
-                                            Do not give them a reason to shift the blame to you.
-                                        </p>
+                                        <h3 className="text-2xl font-bold mb-4 text-red-700">2. The "51% Rule" (The Trap)</h3>
+                                        <div className="space-y-4 text-lg text-gray-700 leading-relaxed">
+                                            <p>
+                                                <strong>The Law:</strong> In Texas, if you are 51% (or more) at fault, you get $0. Nothing.
+                                            </p>
+                                            <p className="bg-red-50 p-4 rounded-lg border border-red-200 text-base">
+                                                <strong>Real Life Example:</strong> You are driving straight through a green light. A car turns left in front of you and you hit them.<br /><br />
+                                                Clearly <em>their</em> fault, right?<br /><br />
+                                                But if you told the police: <em>"I saw them coming but didn't brake because I had the right of way,"</em> the insurance company might say you were <strong>51% responsible</strong> for not avoiding the crash.<br /><br />
+                                                <strong>Result:</strong> You get $0 for your car and $0 for your injuries.
+                                            </p>
+                                            <p className="font-bold text-red-600">
+                                                Never admit fault or say "I could have done X" until you speak to a professional.
+                                            </p>
+                                        </div>
                                         <div className="mt-4">
                                             <LightboxImage src="/images/infographics/fault_bar_rule.png" alt="51% Fault Bar Rule" />
                                         </div>

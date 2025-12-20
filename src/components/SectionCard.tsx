@@ -33,8 +33,8 @@ export default function SectionCard({ title, subtitle, icon, colorClass, childre
                         {icon}
                     </div>
                     <div>
-                        <h3 className="text-lg font-bold text-gray-900">{title}</h3>
-                        <p className="text-sm text-gray-500">{subtitle}</p>
+                        <h3 className="text-xl font-bold text-gray-900">{title}</h3>
+                        <p className="text-base text-gray-600">{subtitle}</p>
                     </div>
                 </div>
                 <ChevronRightIcon className="text-gray-400" />

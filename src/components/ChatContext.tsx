@@ -8,12 +8,16 @@ type ChatContextType = {
     openChat: (mode?: string) => void;
     closeChat: () => void;
     toggleChat: () => void;
+    isReviewOpen: boolean;
+    openReview: () => void;
+    closeReview: () => void;
 };
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
     const [isOpen, setIsOpen] = useState(false);
+    const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [chatMode, setChatMode] = useState<string | null>(null);
 
     const openChat = (mode?: string) => {
@@ -24,8 +28,11 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     const closeChat = () => setIsOpen(false);
     const toggleChat = () => setIsOpen((prev) => !prev);
 
+    const openReview = () => setIsReviewOpen(true);
+    const closeReview = () => setIsReviewOpen(false);
+
     return (
-        <ChatContext.Provider value={{ isOpen, chatMode, openChat, closeChat, toggleChat }}>
+        <ChatContext.Provider value={{ isOpen, chatMode, openChat, closeChat, toggleChat, isReviewOpen, openReview, closeReview }}>
             {children}
         </ChatContext.Provider>
     );
