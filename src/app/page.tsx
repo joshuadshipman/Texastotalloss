@@ -721,12 +721,13 @@ export default function Home() {
                     </div>
                 </div>
 
-                <p>© {new Date().getFullYear()} Total Loss Intake Platform. All rights reserved.</p>
-                <p className="mt-2">Disclaimer: This tool provides informational estimates only and is not legal advice or a formal appraisal.</p>
+                <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400 text-sm">
+                    <p>&copy; {new Date().getFullYear()} Texas Total Loss Claim Help. Not Legal Advice.</p>
+                    <p className="mt-2 text-xs text-gray-600">v1.7 - Bot Logic Update</p>
+                </div>
             </footer>
-
+            {/* Chat & Mobile Nav */}
             <ChatWidget />
-            {/* Mobile Nav */}
             <MobileNav />
         </main >
     );

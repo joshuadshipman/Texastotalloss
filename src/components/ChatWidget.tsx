@@ -268,8 +268,16 @@ export default function ChatWidget() {
 
             // --- FALLBACK from Live Agent ---
             case 30: // Waiting for Text Time
+                // Improve validation slightly
+                const isShort = userText.length < 3;
                 newData.best_time = userText;
-                botText = "Thank you. An agent will text you at that time. We have your details.";
+
+                if (isShort || userText.toLowerCase().includes('hello') || userText.toLowerCase().includes('hi ')) {
+                    botText = "Thanks. I've noted that you are available now. We have your details and an agent will text you shortly.";
+                } else {
+                    botText = "Thank you. An agent will text you around that time. We have your details.";
+                }
+
                 setTimeout(() => { submitLead(newData); }, 1000);
                 nextStep = 9; // End
                 break;
