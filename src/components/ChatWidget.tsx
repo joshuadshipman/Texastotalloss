@@ -30,6 +30,31 @@ export default function ChatWidget() {
                     text: "No problem. Let's get this set up so we can text you. To start, please provide your cell phone number."
                 }]);
                 setStep(20); // SMS: Waiting for Cell
+            } else if (chatMode === 'live') {
+                // Trigger immediate live agent handoff simulation
+                setMessages([{
+                    sender: 'bot',
+                    text: "I am connecting you to a live specialist now. Please hold on, someone will be with you shortly."
+                }]);
+
+                // Set timeout logic similar to the interrupt
+                agentTimeoutRef.current = setTimeout(() => {
+                    setMessages(prev => [...prev, {
+                        sender: 'bot',
+                        text: "All our agents are currently busy. An agent will text you as soon as they are available. What is the best time to text you?"
+                    }]);
+                    setStep(30);
+                }, 20000);
+
+                // Notify admin
+                supabaseClient.from('chat_messages').insert({
+                    session_id: sessionId,
+                    sender: 'bot',
+                    content: '[SYSTEM]: User clicked Live Agent button.'
+                }).then(({ error }) => {
+                    if (error) console.error(error);
+                });
+
             } else {
                 setMessages([{
                     sender: 'bot',
@@ -82,14 +107,10 @@ export default function ChatWidget() {
 
         // 1. Save to DB for Admin to see
         try {
-            await fetch('/api/chat/send', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    session_id: sessionId,
-                    sender: 'user',
-                    content: text
-                })
+            await supabaseClient.from('chat_messages').insert({
+                session_id: sessionId,
+                sender: 'user',
+                content: text
             });
         } catch (e) {
             console.error('Failed to save message', e);
@@ -105,17 +126,25 @@ export default function ChatWidget() {
         let newData = { ...userData };
 
         // Global Interrupt: Live Agent (only if not already in SMS flow or waiting)
-        if (step < 20 && (userText.toLowerCase().includes('live agent') || userText.toLowerCase().includes('agent'))) {
+        const lowerText = userText.toLowerCase();
+        if (step < 20 && (
+            lowerText.includes('live agent') ||
+            lowerText.includes('agent') ||
+            lowerText.includes('human') ||
+            lowerText.includes('person') ||
+            lowerText.includes('representative') ||
+            lowerText.includes('talk to someone')
+        )) {
             setMessages(prev => [...prev, {
                 sender: 'bot',
                 text: "I am connecting you to a live specialist now. Please hold on, someone will be with you shortly."
             }]);
 
-            // Notify admin via system message (simulated by generic send)
-            await fetch('/api/chat/send', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ session_id: sessionId, sender: 'bot', content: '[SYSTEM]: User requested Live Agent.' })
+            // Notify admin via system message
+            await supabaseClient.from('chat_messages').insert({
+                session_id: sessionId,
+                sender: 'bot',
+                content: '[SYSTEM]: User requested Live Agent.'
             });
 
             // Set 20s timeout

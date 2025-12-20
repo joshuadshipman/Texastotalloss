@@ -42,8 +42,14 @@ export default function SectionCard({ title, subtitle, icon, colorClass, childre
 
             {/* Modal Content */}
             {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col relative animate-in zoom-in-95 duration-200">
+                <div
+                    className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200"
+                    onClick={() => setIsOpen(false)} // Click backdrop to close
+                >
+                    <div
+                        className="bg-white w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col relative animate-in zoom-in-95 duration-200"
+                        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+                    >
                         {/* Header */}
                         <div className={`p-4 ${colorClass} text-white flex justify-between items-center shrink-0`}>
                             <div className="flex items-center gap-3">
@@ -60,9 +66,12 @@ export default function SectionCard({ title, subtitle, icon, colorClass, childre
                             {children}
                         </div>
 
-                        {/* Footer (Optional) */}
+                        {/* Footer */}
                         <div className="p-4 border-t border-gray-100 bg-white shrink-0 text-center">
-                            <button onClick={() => setIsOpen(false)} className="text-gray-500 hover:text-gray-900 font-medium text-sm">
+                            <button
+                                onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}
+                                className="text-gray-500 hover:text-gray-900 font-medium text-sm"
+                            >
                                 Close Section
                             </button>
                         </div>

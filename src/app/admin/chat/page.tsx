@@ -148,13 +148,10 @@ export default function AdminChatPage() {
         // Optimistic update
         // setMessages(prev => [...prev, { id: 'temp', session_id: selectedSession, sender: 'agent', content: input, created_at: new Date().toISOString() }]);
 
-        await fetch('/api/chat/send', {
-            method: 'POST',
-            body: JSON.stringify({
-                session_id: selectedSession,
-                sender: 'agent',
-                content: input
-            })
+        await supabaseClient.from('chat_messages').insert({
+            session_id: selectedSession,
+            sender: 'agent',
+            content: input
         });
         setInput('');
         document.title = 'Admin Chat'; // Reset title
