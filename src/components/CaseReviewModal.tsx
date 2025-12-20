@@ -57,7 +57,44 @@ export default function CaseReviewModal() {
         leadSource: 'AI_Case_Review_Web',
         severityFlag: false,
         liabilityFlag: 'clear',
+        // 8. Documents
+        uploadedFiles: [] as string[]
     });
+
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Optimistic UI update
+        const fileName = file.name;
+        setFormData(prev => ({ ...prev, uploadedFiles: [...prev.uploadedFiles, `(Uploading) ${fileName}`] }));
+
+        try {
+            const storagePath = `case-review/${Date.now()}-${fileName}`;
+            const { error } = await supabaseClient.storage
+                .from('vehicle-photos') // Reusing existing bucket
+                .upload(storagePath, file);
+
+            if (error) throw error;
+
+            const { data: { publicUrl } } = supabaseClient.storage
+                .from('vehicle-photos')
+                .getPublicUrl(storagePath);
+
+            // Update with actual link or just mark complete
+            setFormData(prev => ({
+                ...prev,
+                uploadedFiles: prev.uploadedFiles.map(f => f.includes(fileName) ? `[LINK] ${publicUrl}` : f)
+            }));
+
+        } catch (error) {
+            console.error('Upload failed', error);
+            setFormData(prev => ({
+                ...prev,
+                uploadedFiles: prev.uploadedFiles.map(f => f.includes(fileName) ? `(Failed) ${fileName}` : f)
+            }));
+        }
+    };
 
     if (!isReviewOpen) return null;
 
@@ -127,9 +164,12 @@ Fault: ${formData.faultBelief} | Admitted: ${formData.admitFault}
 Other Ins: ${formData.otherInsurance} | My Ins: ${formData.myInsurance}
 Recorded Stmt: ${formData.recordedStatement}
 
-ea INJURY (Pain: ${formData.painLevel}/10):
+🏥 INJURY (Pain: ${formData.painLevel}/10):
 Injured: ${formData.isInjured} | Parts: ${formData.bodyParts.join(', ')}
 Treatment: ${formData.treatmentStatus} | Need Doc: ${formData.needDoctor}
+
+📂 DOCUMENTS:
+${formData.uploadedFiles.length > 0 ? formData.uploadedFiles.join('\n') : 'None Uploaded'}
 
 ⚠️ FLAGS:
 Represented: ${formData.hiredLawyer}
@@ -312,7 +352,6 @@ Concerns: ${formData.biggestConcern.join(', ')}
                     </div>
                 );
             case 6: // Work & Impact
-            case 7: // Review (Combined for brevity or split if needed. Doing split to follow user structure)
                 return (
                     <div className="space-y-4 animate-fade-in">
                         <h3 className="text-xl font-bold text-blue-900 border-b pb-2">6. Impact & Work</h3>
@@ -342,10 +381,38 @@ Concerns: ${formData.biggestConcern.join(', ')}
                                     ))}
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                );
+            case 7: // Documents
+                return (
+                    <div className="space-y-4 animate-fade-in">
+                        <h3 className="text-xl font-bold text-blue-900 border-b pb-2">7. Quick Document Upload (Optional)</h3>
+                        <p className="text-sm text-gray-600">If you have any of these handy, you can upload them now (photos are fine):</p>
+                        <ul className="text-sm text-gray-500 list-disc ml-5 space-y-1">
+                            <li>Other driver’s insurance card</li>
+                            <li>Your auto / health insurance card</li>
+                            <li>Police exchange form or tickets</li>
+                            <li>Scene photos</li>
+                        </ul>
 
-                            <div className="p-4 bg-gray-50 text-sm text-gray-600 rounded">
-                                <p>By clicking "Get AI Analysis", I agree to the <a href="#" className="underline">Terms</a> and understand this is an automated preliminary review.</p>
+                        <div className="border-2 border-dashed border-blue-200 rounded-xl p-8 text-center bg-blue-50 hover:bg-blue-100 transition cursor-pointer relative">
+                            <input type="file" onChange={handleFileUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                            <p className="font-bold text-blue-700">Tap to Upload Photo/Document</p>
+                            <p className="text-xs text-blue-400">Secure & Confidential</p>
+                        </div>
+
+                        {formData.uploadedFiles.length > 0 && (
+                            <div className="bg-white p-4 rounded border">
+                                <h4 className="font-bold text-xs mb-2">Attached:</h4>
+                                {formData.uploadedFiles.map((f, i) => (
+                                    <div key={i} className="text-xs text-gray-600 truncate">📄 {f}</div>
+                                ))}
                             </div>
+                        )}
+
+                        <div className="p-4 bg-gray-50 text-xs text-gray-500 rounded mt-4">
+                            <p>By clicking "Get AI Analysis", I agree to the <a href="#" className="underline">Terms</a> and understand this is an automated preliminary review.</p>
                         </div>
                     </div>
                 );
@@ -405,7 +472,7 @@ Concerns: ${formData.biggestConcern.join(', ')}
                             </button>
                         ) : <div></div>}
 
-                        {step < 6 ? (
+                        {step < 7 ? (
                             <button onClick={nextStep} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow flex items-center gap-2">
                                 Next <ChevronRightIcon size={16} />
                             </button>
