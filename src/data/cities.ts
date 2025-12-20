@@ -1,12 +1,16 @@
 export interface CityData {
     slug: string;
-    name: string;
-    county: string;
+    translations: {
+        [key: string]: {
+            name: string;
+            description: string;
+            county: string;
+        }
+    };
     coordinates: {
         latitude: number;
         longitude: number;
     };
-    description: string;
     zipCodes: string[];
     medicalResources: {
         name: string;
@@ -18,10 +22,19 @@ export interface CityData {
 export const cities: CityData[] = [
     {
         slug: 'houston',
-        name: 'Houston',
-        county: 'Harris',
+        translations: {
+            en: {
+                name: 'Houston',
+                county: 'Harris',
+                description: "As the largest city in Texas, Houston's busy highways like I-45 and the 610 Loop see thousands of accidents annually. Harris County courts are notoriously tough on injury claims."
+            },
+            es: {
+                name: 'Houston',
+                county: 'Harris',
+                description: "Como la ciudad más grande de Texas, las autopistas de Houston como la I-45 ven miles de accidentes anualmente. Los tribunales del condado de Harris son notoriamente duros con los reclamos de lesiones."
+            }
+        },
         coordinates: { latitude: 29.7604, longitude: -95.3698 },
-        description: "As the largest city in Texas, Houston's busy highways like I-45 and the 610 Loop see thousands of accidents annually. Harris County courts are notoriously tough on injury claims.",
         zipCodes: ["77002", "77003", "77004", "77005", "77006"],
         medicalResources: [
             { name: "The Joint Chiropractic - Houston", link: "https://www.thejoint.com/texas/houston/", note: "Multiple locations including Midtown, Heights, and Montrose." },
@@ -31,10 +44,19 @@ export const cities: CityData[] = [
     },
     {
         slug: 'dallas',
-        name: 'Dallas',
-        county: 'Dallas',
+        translations: {
+            en: {
+                name: 'Dallas',
+                county: 'Dallas',
+                description: "Navigating total loss claims in DFW requires understanding specific Dallas County valuations. The mix of high-speed tollways and congestion leads to severe multi-vehicle accidents."
+            },
+            es: {
+                name: 'Dallas',
+                county: 'Dallas',
+                description: "Navegar reclamos de pérdida total en DFW requiere entender las valoraciones del condado de Dallas. La mezcla de autopistas y congestión lleva a accidentes graves."
+            }
+        },
         coordinates: { latitude: 32.7767, longitude: -96.7970 },
-        description: "Navigating total loss claims in DFW requires understanding specific Dallas County valuations. The mix of high-speed tollways and congestion leads to severe multi-vehicle accidents.",
         zipCodes: ["75201", "75202", "75203", "75204", "75205"],
         medicalResources: [
             { name: "Accident & Injury Chiropractic", link: "https://accidentandinjury.com/", note: "19 Locations in DFW focusing purely on auto accident recovery." },
@@ -44,10 +66,19 @@ export const cities: CityData[] = [
     },
     {
         slug: 'austin',
-        name: 'Austin',
-        county: 'Travis',
+        translations: {
+            en: {
+                name: 'Austin',
+                county: 'Travis',
+                description: "Austin's rapid growth has increased traffic density on I-35. Travis County juries can be unpredictable, making documented evidence for your totaled car essential."
+            },
+            es: {
+                name: 'Austin',
+                county: 'Travis',
+                description: "El rápido crecimiento de Austin ha aumentado el tráfico en la I-35. Los jurados del condado de Travis pueden ser impredecibles, haciendo esencial la evidencia documentada."
+            }
+        },
         coordinates: { latitude: 30.2672, longitude: -97.7431 },
-        description: "Austin's rapid growth has increased traffic density on I-35 and Mopac. Travis County juries can be unpredictable, making documented evidence for your totaled car essential.",
         zipCodes: ["78701", "78702", "78703", "78704", "78705"],
         medicalResources: [
             { name: "Airrosti Austin", link: "https://www.airrosti.com/locations/austin/", note: "Extensive network in Austin including South Congress and Domain." },
@@ -57,10 +88,19 @@ export const cities: CityData[] = [
     },
     {
         slug: 'san-antonio',
-        name: 'San Antonio',
-        county: 'Bexar',
+        translations: {
+            en: {
+                name: 'San Antonio',
+                county: 'Bexar',
+                description: "In San Antonio and Bexar County, insurance adjusters often undervalue trucks and SUVs. We help you fight for the true replacement value of your vehicle."
+            },
+            es: {
+                name: 'San Antonio',
+                county: 'Bexar',
+                description: "En San Antonio y el condado de Bexar, los ajustadores a menudo subestiman camionetas y SUVs. Ayudamos a luchar por el valor real de reemplazo."
+            }
+        },
         coordinates: { latitude: 29.4241, longitude: -98.4936 },
-        description: "In San Antonio and Bexar County, insurance adjusters often undervalue trucks and SUVs. We help you fight for the true replacement value of your vehicle.",
         zipCodes: ["78201", "78202", "78203", "78204", "78205"],
         medicalResources: [
             { name: "Texas Pain & Injury", link: "https://texaspainandinjury.com/locations/san-antonio/", note: "Dedicated centers for accident injury across San Antonio." },
@@ -70,10 +110,19 @@ export const cities: CityData[] = [
     },
     {
         slug: 'fort-worth',
-        name: 'Fort Worth',
-        county: 'Tarrant',
+        translations: {
+            en: {
+                name: 'Fort Worth',
+                county: 'Tarrant',
+                description: "Tarrant County has its own localized legal landscape. If your car was totaled in Fort Worth, don't rely on generic advice; get help tailored to local carrier tactics."
+            },
+            es: {
+                name: 'Fort Worth',
+                county: 'Tarrant',
+                description: "El condado de Tarrant tiene su propio panorama legal. Si su auto fue pérdida total en Fort Worth, obtenga ayuda adaptada a las tácticas locales."
+            }
+        },
         coordinates: { latitude: 32.7555, longitude: -97.3308 },
-        description: "Tarrant County has its own localized legal landscape. If your car was totaled in Fort Worth, don't rely on generic advice; get help tailored to local carrier tactics.",
         zipCodes: ["76101", "76102", "76103", "76104", "76105"],
         medicalResources: [
             { name: "Accident Centers of Texas", link: "https://accidentcentersoftexas.com/", note: "12 Locations including South Fort Worth." },
@@ -83,10 +132,19 @@ export const cities: CityData[] = [
     },
     {
         slug: 'el-paso',
-        name: 'El Paso',
-        county: 'El Paso',
+        translations: {
+            en: {
+                name: 'El Paso',
+                county: 'El Paso',
+                description: "Drivers in El Paso face unique cross-border traffic challenges. Ensuring your total loss valuation accounts for the specific local market value in West Texas is critical."
+            },
+            es: {
+                name: 'El Paso',
+                county: 'El Paso',
+                description: "Los conductores en El Paso enfrentan desafíos únicos. Asegurar que su valoración de pérdida total cuente con el valor de mercado local es crítico."
+            }
+        },
         coordinates: { latitude: 31.7619, longitude: -106.4850 },
-        description: "Drivers in El Paso face unique cross-border traffic challenges. Ensuring your total loss valuation accounts for the specific local market value in West Texas is critical.",
         zipCodes: ["79901", "79902", "79903", "79904", "79905"],
         medicalResources: [
             { name: "The Joint Chiropractic - El Paso", link: "https://www.thejoint.com/texas/el-paso/", note: "West and East side locations available." },
