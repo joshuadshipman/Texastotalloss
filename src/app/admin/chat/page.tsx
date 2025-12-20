@@ -157,6 +157,26 @@ export default function AdminChatPage() {
         document.title = 'Admin Chat'; // Reset title
     };
 
+    // Status Check
+    const [dbStatus, setDbStatus] = useState<'checking' | 'connected' | 'error'>('checking');
+    const [dbError, setDbError] = useState<string>('');
+
+    useEffect(() => {
+        checkDbConnection();
+    }, [isAuthenticated]);
+
+    const checkDbConnection = async () => {
+        try {
+            const { count, error } = await supabaseClient.from('chat_messages').select('*', { count: 'exact', head: true });
+            if (error) throw error;
+            setDbStatus('connected');
+        } catch (e: any) {
+            console.error('DB Check Failed:', e);
+            setDbStatus('error');
+            setDbError(e.message || 'Unknown error');
+        }
+    };
+
     if (!isAuthenticated) {
         return (
             <div className="flex h-screen items-center justify-center bg-gray-100">
@@ -164,6 +184,38 @@ export default function AdminChatPage() {
                     <h1 className="text-xl mb-4">Admin Login</h1>
                     <input type="password" value={pin} onChange={e => setPin(e.target.value)} className="border p-2 rounded w-full mb-4" placeholder="Enter PIN" />
                     <button onClick={handleLogin} className="bg-blue-600 text-white p-2 rounded w-full">Access</button>
+                </div>
+            </div>
+        );
+    }
+
+    if (dbStatus === 'error') {
+        return (
+            <div className="min-h-screen bg-red-50 p-8">
+                <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-xl p-8 border-l-4 border-red-500">
+                    <h1 className="text-2xl font-bold text-red-600 mb-4">Database Connection Issue</h1>
+                    <p className="text-gray-700 mb-4">Assuming "chat_messages" table does not exist. Please run the following SQL in your Supabase Dashboard SQL Editor:</p>
+
+                    <div className="bg-gray-900 text-gray-100 p-4 rounded overflow-auto mb-4 text-sm font-mono whitespace-pre">
+                        {`-- Run this in Supabase SQL Editor
+CREATE TABLE IF NOT EXISTS public.chat_messages (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    session_id TEXT NOT NULL,
+    sender TEXT NOT NULL,
+    content TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT false,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    metadata JSONB
+);
+
+ALTER PUBLICATION supabase_realtime ADD TABLE public.chat_messages;
+CREATE INDEX IF NOT EXISTS idx_chat_messages_session_id ON public.chat_messages(session_id);
+ALTER TABLE public.chat_messages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public insert" ON public.chat_messages FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public select" ON public.chat_messages FOR SELECT USING (true);`}
+                    </div>
+                    <p className="text-sm text-gray-500 mb-6">Error Detail: {dbError}</p>
+                    <button onClick={() => window.location.reload()} className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">I Have Run The SQL - Retry</button>
                 </div>
             </div>
         );
