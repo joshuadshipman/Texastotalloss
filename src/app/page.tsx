@@ -37,10 +37,10 @@ export default function Home() {
                     </h1>
                     <div className="text-lg md:text-xl font-medium text-blue-100 space-y-4 max-w-3xl mx-auto bg-blue-800/50 p-6 rounded-xl border border-blue-400/30">
                         <p className="text-2xl md:text-3xl font-extrabold text-amber-300 italic leading-snug drop-shadow-sm">
-                            "Worried about the ACV?"
+                            "Concerned about possible injuries or even just getting the kids to school?"
                         </p>
                         <p className="font-bold text-white text-lg">
-                            Don't Worry, <span className="text-yellow-400">Angel</span> (Your TL & Injury Specialist) is here to help with all your concerns.
+                            Don't Worry, <span className="text-yellow-400">Angel</span> is here to help with all your Total Loss & Injury related concerns.
                         </p>
                     </div>
 
