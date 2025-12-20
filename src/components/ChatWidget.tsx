@@ -204,27 +204,57 @@ export default function ChatWidget() {
                 nextStep = 8;
                 break;
             case 8:
-                const isRecent = userText.toLowerCase().includes('yes') || userText.toLowerCase().includes('within') || userText.toLowerCase().includes('today') || userText.toLowerCase().includes('yesterday');
+                const isRecent = userText.toLowerCase().includes('yes') || userText.toLowerCase().includes('today') || userText.toLowerCase().includes('yesterday');
 
                 if (isRecent) {
-                    botText = "Please listen carefully: because it's been less than 48 hours, I strongly recommend you visit an ER or Urgent Care immediately. Adrenaline can mask injuries. The car can wait—your health can't.";
+                    botText = "Please listen carefully: Because it's been less than 48 hours, I strongly recommend you visit an ER or Urgent Care immediately. Adrenaline can mask injuries. Do you need directions to the closest Emergency Room?";
+                    nextStep = 10; // Go to ER directions
                 } else {
-                    botText = "Since it's been a few days, I recommend seeing a Chiropractor or Rehab Specialist to check for hidden soft-tissue injuries. The longer you wait, the harder it is to prove your injuries are related to the crash.";
+                    botText = "Was the accident within the last week?";
+                    nextStep = 11; // Check 1 week
+                }
+                break;
+
+            case 10: // Handle ER Choice
+                if (userText.toLowerCase().includes('yes') || userText.toLowerCase().includes('need') || userText.toLowerCase().includes('please')) {
+                    botText = "Please search 'Emergency Room near me' immediately. Your health is the priority. I will have a specialist contact you to follow up.";
+                } else {
+                    botText = "Understood. Please do not delay seeking care. Even minor pain can be serious.";
+                }
+                // Add closing advice
+                setTimeout(() => {
+                    setMessages(prev => [...prev, {
+                        sender: 'bot',
+                        text: "IMPORTANT: The #1 reason claims are denied is 'Gaps in Treatment'. If you wait to see a doctor, the insurance company will argue you weren't really hurt. Please go today."
+                    }]);
+                    // Final submission
+                    submitLead(newData);
+                }, 2000);
+                nextStep = 15; // End
+                break;
+
+            case 11: // Handle < 1 week
+                const isWithinWeek = userText.toLowerCase().includes('yes');
+                if (isWithinWeek) {
+                    botText = "Since it's been a few days, I recommend seeing a Chiropractor or Rehab Specialist ASAP. They are experts at crash injuries that ERs miss.";
+                } else {
+                    botText = "Since it's been over a week, it is critical you see a doctor immediately. The longer you wait, the harder it is to prove the accident caused your injuries.";
                 }
 
                 // Add closing advice
                 setTimeout(() => {
                     setMessages(prev => [...prev, {
                         sender: 'bot',
-                        text: "Always seek medical attention if you are injured. The insurance company often claims 'gaps in treatment' mean you weren't really hurt. Don't let them do that."
+                        text: "IMPORTANT: If you are found to be 51% responsible for your own damages (because you didn't see a doctor and got worse), you could get $0. Don't let that happen."
                     }]);
-
                     // Final submission
                     submitLead(newData);
-
                 }, 2000);
+                nextStep = 15; // End
+                break;
 
-                nextStep = 9; // End
+            case 15: // Final Confirmation
+                botText = "We have received your details. A specialist will be in touch shortly.";
                 break;
 
             case 9:

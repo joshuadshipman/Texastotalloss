@@ -33,7 +33,7 @@ export default function Home() {
                     </div>
                     <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight mb-4">
                         <span className="block text-white mb-2 text-red-500 font-bold">Total Loss!!! Now to do what!?!</span>
-                        <span className="block text-blue-300">Mitigate Damages? ACV? GAP Coverage? Injuries? Missed Work?</span>
+                        <span className="block text-blue-300">Mitigate Damages? ACV? GAP Cvg? Injuries? Missed Work? Upside Down Loan?</span>
                     </h1>
                     <div className="text-lg md:text-xl font-medium text-blue-100 space-y-4 max-w-3xl mx-auto bg-blue-800/50 p-6 rounded-xl border border-blue-400/30">
                         <p className="text-2xl md:text-3xl font-extrabold text-amber-300 italic leading-snug drop-shadow-sm">
@@ -45,9 +45,12 @@ export default function Home() {
                     </div>
 
                     <div className="grid grid-cols-2 lg:flex lg:flex-row gap-4 pt-6 max-w-4xl mx-auto w-full">
-                        <a href="tel:1-800-555-0199" className="flex-1 h-16 bg-white text-blue-900 hover:bg-gray-100 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base leading-tight px-2">
+                        <button
+                            onClick={() => openChat('callback')}
+                            className="flex-1 h-16 bg-white text-blue-900 hover:bg-gray-100 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base leading-tight px-2"
+                        >
                             <span>📞 Call Now</span>
-                        </a>
+                        </button>
                         <button
                             onClick={() => openChat()}
                             className="flex-1 h-16 bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base leading-tight px-2"
@@ -146,7 +149,7 @@ export default function Home() {
                         {/* 2. Duty to Mitigate Card */}
                         <SectionCard
                             title="Duty to Mitigate"
-                            subtitle="Medical & Property Obligations"
+                            subtitle="Medical Injuries & Property Obligations"
                             icon={<ShieldCheckIcon size={24} />}
                             colorClass="bg-emerald-700"
                         >
@@ -174,7 +177,10 @@ export default function Home() {
                                         <div className="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-bl">CRITICAL</div>
                                         <h3 className="text-2xl font-bold mb-4 text-red-700">2. The "Refusal" Trap</h3>
                                         <p className="mb-4 text-gray-700">
-                                            If you are found &gt;50% at fault for your own damages (e.g., by refusing care), you recover nothing.
+                                            Warning: Texas follows the "51% Bar Rule". If you are found more than 50% responsible for your own damages(injuries)—<strong>even if just by refusing medical care and letting an injury get worse</strong>—you recover $0.
+                                        </p>
+                                        <p className="mb-2 text-sm text-red-600 font-bold">
+                                            Do not give them a reason to shift the blame to you.
                                         </p>
                                         <div className="mt-4">
                                             <LightboxImage src="/images/infographics/fault_bar_rule.png" alt="51% Fault Bar Rule" />
@@ -280,7 +286,7 @@ export default function Home() {
                                         <div>
                                             <p className="text-xs uppercase font-bold text-gray-500">Ask Immediately</p>
                                             <p className="font-bold text-lg text-emerald-800">"Are you recording this call?"</p>
-                                            <p className="text-sm text-gray-600">If yes, be extremely brief and stick to facts.</p>
+                                            <p className="text-sm text-gray-600">If yes, be extremely brief and stick to facts. Never say "I'm Fine" or admit fault. There is no reason for the other driver to need to know what you were doing, going, etc...except to try and find some fault on you!</p>
                                         </div>
                                         <div>
                                             <p className="text-xs uppercase font-bold text-gray-500">Establish Authority</p>
@@ -316,7 +322,7 @@ export default function Home() {
 
                         {/* 5. How do I know if it's a Total Loss? (Moved from #7 - wait, was #5 in prev view, but let's just place it here safely) */}
                         <SectionCard
-                            title="How do I know if it's a Total Loss?"
+                            title="How do I know if my car a Total Loss?"
                             subtitle="The Texas 100% Rule Explained"
                             icon={<AlertTriangleIcon size={24} />}
                             colorClass="bg-blue-900"
@@ -340,13 +346,13 @@ export default function Home() {
 
                         {/* 6. 2025 Market Reality Check (Moved from #4) */}
                         <SectionCard
-                            title="2025 Market Reality Check"
+                            title="2026 Total Loss Market Reality Check!"
                             subtitle="Why Total Loss Values are Dropping"
                             icon={<AlertTriangleIcon size={24} />}
                             colorClass="bg-orange-700"
                         >
                             <div className="text-center mb-8">
-                                <h2 className="text-3xl font-black text-orange-700 mb-2">2025 MARKET REALITY</h2>
+                                <h2 className="text-3xl font-black text-orange-700 mb-2">2026 TOTOL LOSS INSURANCE MARKET REALITY</h2>
                                 <p className="text-lg text-gray-600">Why you need to protect your value now more than ever.</p>
                             </div>
 
@@ -723,7 +729,7 @@ export default function Home() {
 
                 <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400 text-sm">
                     <p>&copy; {new Date().getFullYear()} Texas Total Loss Claim Help. Not Legal Advice.</p>
-                    <p className="mt-2 text-xs text-gray-600">v1.7 - Bot Logic Update</p>
+                    <p className="mt-2 text-xs text-gray-600">v1.8 - Medical Advice Update</p>
                 </div>
             </footer>
             {/* Chat & Mobile Nav */}
