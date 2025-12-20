@@ -160,10 +160,20 @@ export default function AdminChatPage() {
     // Status Check
     const [dbStatus, setDbStatus] = useState<'checking' | 'connected' | 'error'>('checking');
     const [dbError, setDbError] = useState<string>('');
+    const [envStatus, setEnvStatus] = useState<'ok' | 'missing'>('ok');
 
     useEffect(() => {
         checkDbConnection();
+        checkEnv();
     }, [isAuthenticated]);
+
+    const checkEnv = () => {
+        const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+        if (!url || url.includes('placeholder') || !key || key.includes('placeholder')) {
+            setEnvStatus('missing');
+        }
+    };
 
     const checkDbConnection = async () => {
         try {
@@ -184,6 +194,23 @@ export default function AdminChatPage() {
                     <h1 className="text-xl mb-4">Admin Login</h1>
                     <input type="password" value={pin} onChange={e => setPin(e.target.value)} className="border p-2 rounded w-full mb-4" placeholder="Enter PIN" />
                     <button onClick={handleLogin} className="bg-blue-600 text-white p-2 rounded w-full">Access</button>
+                    <div className="mt-4 text-xs text-center text-gray-400">v1.1 - Status Check Build</div>
+                </div>
+            </div>
+        );
+    }
+
+    if (envStatus === 'missing') {
+        return (
+            <div className="min-h-screen bg-yellow-50 p-8">
+                <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-xl p-8 border-l-4 border-yellow-500">
+                    <h1 className="text-2xl font-bold text-yellow-600 mb-4">Configuration Error</h1>
+                    <p className="text-gray-700 mb-4">The Supabase Environment Variables are missing or set to placeholders.</p>
+                    <p className="mb-4">Please ensure you have added the following to your Vercel Project Settings:</p>
+                    <ul className="list-disc pl-5 mb-4 text-sm font-mono">
+                        <li>NEXT_PUBLIC_SUPABASE_URL</li>
+                        <li>NEXT_PUBLIC_SUPABASE_ANON_KEY</li>
+                    </ul>
                 </div>
             </div>
         );
