@@ -3,6 +3,7 @@ import { cities } from '@/data/cities';
 import { notFound } from 'next/navigation';
 import { ShieldCheckIcon, AlertTriangleIcon, CarIcon, MapPinIcon } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { getDictionary } from '../../dictionaries';
 
 // Dynamically import components to keep initial load fast
 const ValuationCalculator = dynamic(() => import('@/components/ValuationCalculator'), { ssr: false });
@@ -10,11 +11,16 @@ const ChatWidget = dynamic(() => import('@/components/ChatWidget'), { ssr: false
 const CaseReviewModal = dynamic(() => import('@/components/CaseReviewModal'), { ssr: false });
 
 type Props = {
-    params: { city: string };
+    params: { city: string; lang: 'en' | 'es' };
 };
 
 // 1. Generate Static Params for Build Time Optimization (SSG)
 export async function generateStaticParams() {
+    // Generate for all cities. Languages handled in root layout params?
+    // Actually, we must return { lang: 'en', city: 'slug' } combo if [lang] is a param.
+    // Since this is inside [lang]/locations/[city], static params might need both?
+    // BUT generateStaticParams acts on the segment it is in. It only needs to return [city].
+    // The [lang] is upstream.
     return cities.map((city) => ({
         city: city.slug,
     }));
@@ -38,37 +44,87 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 }
 
-export default function CityPage({ params }: Props) {
+export default async function CityPage({ params }: Props) {
     const city = cities.find((c) => c.slug === params.city);
+    const dict = await getDictionary(params.lang);
 
     if (!city) {
         notFound();
     }
 
-    // 3. LocalBusiness Schema
+    // 3. LocalBusiness + FAQ + HowTo Schema (Graph)
     const jsonLd = {
         '@context': 'https://schema.org',
-        '@type': 'LegalService', // Or ProfessionalService
-        name: `Texas Total Loss - ${city.name} Assistance`,
-        description: `Assisting ${city.name} residents with total loss vehicle claims, gap insurance disputes, and injury case reviews.`,
-        url: `https://texastotalloss.com/locations/${city.slug}`,
-        address: {
-            '@type': 'PostalAddress',
-            addressLocality: city.name,
-            addressRegion: 'TX',
-            addressCountry: 'US'
-        },
-        geo: {
-            '@type': 'GeoCoordinates',
-            latitude: city.coordinates.latitude,
-            longitude: city.coordinates.longitude
-        },
-        areaServed: {
-            '@type': 'City',
-            name: city.name
-        },
-        telephone: "+1-800-555-0199", // Replace with real number
-        priceRange: "Free Consultation"
+        '@graph': [
+            {
+                '@type': 'LegalService',
+                '@id': `https://texastotalloss.com/locations/${city.slug}#service`,
+                name: `Texas Total Loss - ${city.name} Assistance`,
+                description: `Assisting ${city.name} residents with total loss vehicle claims, gap insurance disputes, and injury case reviews.`,
+                url: `https://texastotalloss.com/locations/${city.slug}`,
+                address: {
+                    '@type': 'PostalAddress',
+                    addressLocality: city.name,
+                    addressRegion: 'TX',
+                    addressCountry: 'US'
+                },
+                geo: {
+                    '@type': 'GeoCoordinates',
+                    latitude: city.coordinates.latitude,
+                    longitude: city.coordinates.longitude
+                },
+                areaServed: {
+                    '@type': 'City',
+                    name: city.name
+                },
+                telephone: "+1-800-555-0199",
+                priceRange: "Free Consultation"
+            },
+            {
+                '@type': 'FAQPage',
+                '@id': `https://texastotalloss.com/locations/${city.slug}#faq`,
+                mainEntity: [
+                    {
+                        '@type': 'Question',
+                        name: `Is ${city.name} in a diminished value state?`,
+                        acceptedAnswer: {
+                            '@type': 'Answer',
+                            text: `Yes, Texas is a diminished value state. If you live in ${city.name} and were in an accident that wasn't your fault, you may be entitled to the lost value of your vehicle.`
+                        }
+                    },
+                    {
+                        '@type': 'Question',
+                        name: `How do I dispute a total loss offer in ${city.name}?`,
+                        acceptedAnswer: {
+                            '@type': 'Answer',
+                            text: "You should invoke the Appraisal Clause in your policy. This allows you to hire an independent appraiser in " + city.county + " County to provide a counter-valuation against the insurance company's offer."
+                        }
+                    }
+                ]
+            },
+            {
+                '@type': 'HowTo',
+                '@id': `https://texastotalloss.com/locations/${city.slug}#howto`,
+                name: `How to Handle a Total Loss in ${city.name}`,
+                step: [
+                    {
+                        '@type': 'HowToStep',
+                        name: 'Get a Valuation',
+                        text: `Don't accept the first offer. Research local dealer prices in ${city.name}.`
+                    },
+                    {
+                        '@type': 'HowToStep',
+                        name: 'Check for Injuries',
+                        text: 'Even minor soreness can indicate serious injury. See a doctor immediately.'
+                    },
+                    {
+                        '@type': 'HowToStep',
+                        name: 'Request Policy Appraisal',
+                        text: 'Demand an appraisal if the offer is too low.'
+                    }
+                ]
+            }
+        ]
     };
 
     return (
@@ -78,7 +134,7 @@ export default function CityPage({ params }: Props) {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <CaseReviewModal />
+            <CaseReviewModal dict={dict} />
             {/* We reuse the main modal, which is global context anyway, but good to ensure it's here */}
 
             {/* City Hero */}
@@ -147,6 +203,8 @@ export default function CityPage({ params }: Props) {
                     <p>Serving {city.name} and surrounding areas including {city.zipCodes.join(', ')}. Keywords: {city.name} car accident lawyer, total loss help {city.name}, gap insurance {city.name}.</p>
                 </div>
             </section>
+
+            <ChatWidget dict={dict} />
         </main>
     );
 }

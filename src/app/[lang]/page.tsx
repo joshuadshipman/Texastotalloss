@@ -24,11 +24,69 @@ export default function Home({ params }: { params: { lang: 'en' | 'es' } }) {
         getDictionary(params.lang).then(d => setDict(d));
     }, [params.lang]);
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@graph': [
+            {
+                '@type': 'Organization',
+                '@id': 'https://texastotalloss.com/#org',
+                name: 'Texas Total Loss Claim Help',
+                url: 'https://texastotalloss.com',
+                logo: 'https://texastotalloss.com/images/logo.png', // Ensure this exists or use text
+                sameAs: [
+                    'https://facebook.com/texastotalloss',
+                    'https://twitter.com/texastotalloss'
+                ],
+                contactPoint: {
+                    '@type': 'ContactPoint',
+                    telephone: '+1-800-555-0199',
+                    contactType: 'customer service',
+                    areaServed: 'US',
+                    availableLanguage: ['en', 'es']
+                }
+            },
+            {
+                '@type': 'FAQPage',
+                '@id': 'https://texastotalloss.com/#faq',
+                mainEntity: [
+                    {
+                        '@type': 'Question',
+                        name: 'What constitutes a total loss in Texas?',
+                        acceptedAnswer: {
+                            '@type': 'Answer',
+                            text: 'In Texas, a car is a total loss if the repair costs equal or exceed 100% of the vehicle’s actual cash value (ACV).'
+                        }
+                    },
+                    {
+                        '@type': 'Question',
+                        name: 'Can I keep my totaled car in Texas?',
+                        acceptedAnswer: {
+                            '@type': 'Answer',
+                            text: 'Yes, this is called "owner retention." The insurance company will deduct the salvage value from your settlement.'
+                        }
+                    },
+                    {
+                        '@type': 'Question',
+                        name: 'Does Texas have a "Right to Appraisal"?',
+                        acceptedAnswer: {
+                            '@type': 'Answer',
+                            text: 'Most standard Texas auto policies include an Appraisal Clause, allowing you to hire an independent appraiser to dispute the lowball offer.'
+                        }
+                    }
+                ]
+            }
+        ]
+    };
+
     if (!dict) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
     return (
         <main className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900 pb-20 md:pb-0">
-            <CaseReviewModal />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <CaseReviewModal dict={dict} />
 
             {/* Hero Section */}
             <header className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white py-12 px-4 text-center relative overflow-hidden">
@@ -86,6 +144,33 @@ export default function Home({ params }: { params: { lang: 'en' | 'es' } }) {
                         <SectionCard title={dict.sections.mitigate.title} subtitle={dict.sections.mitigate.subtitle} icon={<ShieldCheckIcon size={24} />} colorClass="bg-emerald-700">
                             <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.mitigate.main_title}</h2></div>
                         </SectionCard>
+
+                        {/* 3. FAQ Section */}
+                        <SectionCard title={dict.sections.faq.title} subtitle={dict.sections.faq.subtitle} icon={<SearchIcon size={24} />} colorClass="bg-blue-600">
+                            <div className="space-y-6 text-left">
+                                <div>
+                                    <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2">
+                                        <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">?</span>
+                                        {dict.sections.faq.q1}
+                                    </h3>
+                                    <p className="text-gray-600 ml-8 mt-1 border-l-2 border-blue-100 pl-4">{dict.sections.faq.a1}</p>
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2">
+                                        <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">?</span>
+                                        {dict.sections.faq.q2}
+                                    </h3>
+                                    <p className="text-gray-600 ml-8 mt-1 border-l-2 border-blue-100 pl-4">{dict.sections.faq.a2}</p>
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2">
+                                        <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">?</span>
+                                        {dict.sections.faq.q3}
+                                    </h3>
+                                    <p className="text-gray-600 ml-8 mt-1 border-l-2 border-blue-100 pl-4">{dict.sections.faq.a3}</p>
+                                </div>
+                            </div>
+                        </SectionCard>
                     </div>
                 </div>
             </section>
@@ -96,7 +181,7 @@ export default function Home({ params }: { params: { lang: 'en' | 'es' } }) {
                 </div>
             </footer>
 
-            <ChatWidget />
+            <ChatWidget dict={dict} />
             <MobileNav />
         </main>
     );

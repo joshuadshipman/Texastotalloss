@@ -2,16 +2,20 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useChat } from './ChatContext';
+import { supabaseClient } from '@/lib/supabaseClient';
+import { Dictionary } from '@/dictionaries/en';
 
 type Message = {
     sender: 'user' | 'bot';
     text: string;
 };
 
-import { supabaseClient } from '@/lib/supabaseClient';
+interface ChatWidgetProps {
+    dict?: Dictionary | null;
+}
 
-export default function ChatWidget() {
-    const { isOpen, toggleChat, chatMode } = useChat(); // Added chatMode
+export default function ChatWidget({ dict }: ChatWidgetProps) {
+    const { isOpen, toggleChat, chatMode } = useChat();
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [step, setStep] = useState(0);
@@ -19,34 +23,31 @@ export default function ChatWidget() {
     const [sessionId] = useState(() => Math.random().toString(36).substring(7));
     const bottomRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const agentTimeoutRef = useRef<NodeJS.Timeout | null>(null); // Track timeout
+    const agentTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     // Initial greeting
     useEffect(() => {
-        if (isOpen && messages.length === 0) {
+        if (isOpen && messages.length === 0 && dict) {
             if (chatMode === 'sms') {
                 setMessages([{
                     sender: 'bot',
-                    text: "No problem. Let's get this set up so we can text you. To start, please provide your cell phone number."
+                    text: dict.chat.responses.greeting_sms
                 }]);
-                setStep(20); // SMS: Waiting for Cell
+                setStep(20);
             } else if (chatMode === 'live') {
-                // Trigger immediate live agent handoff simulation
                 setMessages([{
                     sender: 'bot',
-                    text: "I am connecting you to a live specialist now. Please hold on, someone will be with you shortly."
+                    text: dict.chat.responses.greeting_live
                 }]);
 
-                // Set timeout logic similar to the interrupt
                 agentTimeoutRef.current = setTimeout(() => {
                     setMessages(prev => [...prev, {
                         sender: 'bot',
-                        text: "All our agents are currently busy. An agent will text you as soon as they are available. What is the best time to text you?"
+                        text: dict.chat.responses.busy_agents
                     }]);
                     setStep(30);
                 }, 20000);
 
-                // Notify admin
                 supabaseClient.from('chat_messages').insert({
                     session_id: sessionId,
                     sender: 'bot',
@@ -58,12 +59,12 @@ export default function ChatWidget() {
             } else {
                 setMessages([{
                     sender: 'bot',
-                    text: "Hi, I'm Angel. I understand this is a stressful time, and I'm here to help you get through this. To start, may I have your name? I want to make this as quick as possible so I will ask you a few questions but you can always just say \"live agent\" and I will go ahead and connect you."
+                    text: dict.chat.responses.greeting_standard
                 }]);
-                setStep(1); // Standard: Waiting for Name
+                setStep(1);
             }
         }
-    }, [isOpen, chatMode]);
+    }, [isOpen, chatMode, dict]);
 
     // Auto-scroll
     useEffect(() => {
@@ -81,7 +82,6 @@ export default function ChatWidget() {
             .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: `session_id=eq.${sessionId}` }, (payload) => {
                 const newMsg = payload.new as any;
                 if (newMsg.sender === 'agent') {
-                    // Agent replied, clear timeout
                     if (agentTimeoutRef.current) {
                         clearTimeout(agentTimeoutRef.current);
                         agentTimeoutRef.current = null;
@@ -98,14 +98,12 @@ export default function ChatWidget() {
     }, [isOpen, sessionId]);
 
     const handleSend = async (text: string = input) => {
-        if (!text.trim()) return;
+        if (!text.trim() || !dict) return;
 
-        // User Message (Optimistic)
         const newMessages = [...messages, { sender: 'user', text } as Message];
         setMessages(newMessages);
         setInput('');
 
-        // 1. Save to DB for Admin to see
         try {
             await supabaseClient.from('chat_messages').insert({
                 session_id: sessionId,
@@ -116,204 +114,139 @@ export default function ChatWidget() {
             console.error('Failed to save message', e);
         }
 
-        // 2. Bot Logic
-        setTimeout(() => processBotResponse(text, newMessages), 600);
+        setTimeout(() => processBotResponse(text, newMessages, dict), 600);
     };
 
-    const processBotResponse = async (userText: string, currentMessages: Message[]) => {
+    const processBotResponse = async (userText: string, currentMessages: Message[], d: Dictionary) => {
         let botText = '';
         let nextStep = step;
         let newData = { ...userData };
 
-        // Global Interrupt: Live Agent (only if not already in SMS flow or waiting)
         const lowerText = userText.toLowerCase();
-        if (step < 20 && (
-            lowerText.includes('live agent') ||
-            lowerText.includes('agent') ||
-            lowerText.includes('human') ||
-            lowerText.includes('person') ||
-            lowerText.includes('representative') ||
-            lowerText.includes('talk to someone')
-        )) {
+
+        const isLiveAgentRequest = d.chat.keywords.live_agent.some(k => lowerText.includes(k));
+
+        if (step < 20 && isLiveAgentRequest) {
             setMessages(prev => [...prev, {
                 sender: 'bot',
-                text: "I am connecting you to a live specialist now. Please hold on, someone will be with you shortly."
+                text: d.chat.responses.greeting_live
             }]);
 
-            // Notify admin via system message
             await supabaseClient.from('chat_messages').insert({
                 session_id: sessionId,
                 sender: 'bot',
                 content: '[SYSTEM]: User requested Live Agent.'
             });
 
-            // Set 20s timeout
             if (agentTimeoutRef.current) clearTimeout(agentTimeoutRef.current);
             agentTimeoutRef.current = setTimeout(() => {
                 setMessages(prev => [...prev, {
                     sender: 'bot',
-                    text: "All our agents are currently busy assisting others. An agent will text you as soon as they are available. What is the best time to text you?"
+                    text: d.chat.responses.busy_agents
                 }]);
-                setStep(30); // Special step: Waiting for Text Time
-            }, 20000); // 20 seconds
+                setStep(30);
+            }, 20000);
 
-            return; // Stop standard bot flow
+            return;
         }
 
+        const isYes = d.chat.keywords.yes.some(k => lowerText.includes(k));
+
         switch (step) {
-            // ... (Standard flows 1-9 remain) ...
             case 1:
                 newData.full_name = userText;
-                botText = `Thank you, ${userText}. In case we get disconnected, what is your cell phone number?`;
+                botText = d.chat.responses.ask_phone.replace('{name}', userText);
                 nextStep = 2;
                 break;
             case 2:
                 newData.phone = userText;
-                botText = "Thanks. Do you prefer we contact you via Text or Call?";
+                botText = d.chat.responses.ask_contact_method;
                 nextStep = 3;
                 break;
             case 3:
-                newData.contact_pref = userText.toLowerCase().includes('text') ? 'text' : 'call';
+                newData.contact_pref = userText.toLowerCase().includes('text') || userText.toLowerCase().includes('texto') ? 'text' : 'call';
                 if (newData.contact_pref === 'call') {
-                    botText = "What is the best time for us to call you? I'll send a text to confirm the appointment time.";
+                    botText = d.chat.responses.ask_call_time;
                     nextStep = 4;
                 } else {
-                    botText = "Understood. Now, could you please share what happened? Was it a total loss, were there injuries, or both?";
+                    botText = d.chat.responses.ask_incident;
                     nextStep = 5;
                 }
                 break;
             case 4:
                 newData.best_time = userText;
-                botText = "Perfect. Now, could you please share me briefly what happened? Was it a total loss, were there injuries, or both?";
+                botText = d.chat.responses.ask_incident;
                 nextStep = 5;
                 break;
-            case 5: // Incident -> Ask Fault
+            case 5:
                 newData.incident_details = userText;
-                newData.has_injury = userText.toLowerCase().includes('pain') || userText.toLowerCase().includes('hurt') || userText.toLowerCase().includes('injur');
-                botText = "I see. I'm so sorry you're going through this. Did the police confirm fault?";
+                const painKeywords = d.chat.keywords.pain;
+                newData.has_injury = painKeywords.some(k => lowerText.includes(k));
+                botText = d.chat.responses.ask_fault;
                 nextStep = 6;
                 break;
             case 6:
                 newData.fault_info = userText;
-                botText = "Do you have any photos of the damage or a police report you can share? (You can upload them using the camera icon below, or just say 'No')";
+                botText = d.chat.responses.ask_photos;
                 nextStep = 7;
                 break;
             case 7:
-                // Logic for photos handled by upload button, but text response moves us forward
-                botText = "One last important question: Was the accident within the last 48 hours?";
+                botText = d.chat.responses.ask_recent;
                 nextStep = 8;
                 break;
             case 8:
-                const isRecent = userText.toLowerCase().includes('yes') || userText.toLowerCase().includes('today') || userText.toLowerCase().includes('yesterday');
+                const isRecent = isYes || lowerText.includes('today') || lowerText.includes('hoy') || lowerText.includes('yesterday') || lowerText.includes('ayer');
 
                 if (isRecent) {
-                    botText = "Please listen carefully: Because it's been less than 48 hours, I strongly recommend you visit an ER or Urgent Care immediately. Adrenaline can mask injuries. Do you need directions to the closest Emergency Room?";
-                    nextStep = 10; // Go to ER directions
+                    botText = d.chat.responses.advice_er;
+                    nextStep = 10;
                 } else {
-                    botText = "Was the accident within the last week?";
-                    nextStep = 11; // Check 1 week
+                    botText = d.chat.responses.advice_chiro;
+                    nextStep = 11;
                 }
                 break;
 
-            case 10: // Handle ER Choice
-                if (userText.toLowerCase().includes('yes') || userText.toLowerCase().includes('need') || userText.toLowerCase().includes('please')) {
-                    botText = "Please search 'Emergency Room near me' immediately. Your health is the priority. I will have a specialist contact you to follow up.";
-                } else {
-                    botText = "Understood. Please do not delay seeking care. Even minor pain can be serious.";
-                }
-                // Add closing advice
-                setTimeout(() => {
-                    setMessages(prev => [...prev, {
-                        sender: 'bot',
-                        text: "IMPORTANT: The #1 reason claims are denied is 'Gaps in Treatment'. If you wait to see a doctor, the insurance company will argue you weren't really hurt. Please go today."
-                    }]);
-                    // Final submission
-                    submitLead(newData);
-                }, 2000);
-                nextStep = 15; // End
+            case 10:
+                botText = d.chat.responses.confirmation;
+                setTimeout(() => submitLead(newData), 2000);
+                nextStep = 15;
                 break;
 
-            case 11: // Handle < 1 week
-                const isWithinWeek = userText.toLowerCase().includes('yes');
-                if (isWithinWeek) {
-                    botText = "Since it's been a few days, I recommend seeing a Chiropractor or Rehab Specialist ASAP. They are experts at crash injuries that ERs miss.";
-                } else {
-                    botText = "Since it's been over a week, it is critical you see a doctor immediately. The longer you wait, the harder it is to prove the accident caused your injuries.";
-                }
-
-                // Add closing advice
-                setTimeout(() => {
-                    setMessages(prev => [...prev, {
-                        sender: 'bot',
-                        text: "IMPORTANT: If you are found to be 51% responsible for your own damages (because you didn't see a doctor and got worse), you could get $0. Don't let that happen."
-                    }]);
-                    // Final submission
-                    submitLead(newData);
-                }, 2000);
-                nextStep = 15; // End
+            case 11:
+                botText = d.chat.responses.confirmation;
+                setTimeout(() => submitLead(newData), 2000);
+                nextStep = 15;
                 break;
 
-            case 15: // Final Confirmation
-                botText = "We have received your details. A specialist will be in touch shortly.";
+            case 15:
+                botText = d.chat.responses.confirmation;
                 break;
 
-            case 9:
-                botText = "We have received your details and a specialist will be in touch shortly. Is there anything else you'd like to share?";
-                break;
-
-            // --- SMS FLOW ---
-            case 20: // SMS: Cell -> Ask Loss
+            case 20:
                 newData.phone = userText;
-                newData.contact_pref = 'text'; // Implicit
-                botText = "Got it. Could you briefly describe the loss or accident?";
+                botText = d.chat.responses.ask_incident;
                 nextStep = 21;
                 break;
-            case 21: // SMS: Loss -> Ask Time
+            case 21:
                 newData.incident_details = userText;
-                botText = "Thank you. What is the best time for us to text you inside the next 24 hours?";
+                botText = d.chat.responses.busy_agents;
                 nextStep = 22;
                 break;
-            case 22: // SMS: Time -> Ask Review Info
+            case 22:
                 newData.best_time = userText;
-                botText = "Understood. Finally, what information would you like the firm to review prior to texting?";
-                nextStep = 23;
-                break;
-            case 23: // SMS: Info -> Confirm
-                newData.notes = userText; // Store in notes or extra field
-                botText = "Thank you. I have confirmed your number and details. Someone will be reaching out via text in the next 24 hours.";
-
-                setTimeout(() => {
-                    submitLead(newData);
-                }, 1000);
-
+                botText = d.chat.responses.confirmation;
+                setTimeout(() => submitLead(newData), 1000);
                 nextStep = 24;
                 break;
-            case 24:
-                botText = "Your request is confirmed. We will reach out soon.";
-                break;
 
-            case 24:
-                botText = "Your request is confirmed. We will reach out soon.";
-                break;
-
-            // --- FALLBACK from Live Agent ---
-            case 30: // Waiting for Text Time
-                // Improve validation slightly
-                const isShort = userText.length < 3;
-                newData.best_time = userText;
-
-                if (isShort || userText.toLowerCase().includes('hello') || userText.toLowerCase().includes('hi ')) {
-                    botText = "Thanks. I've noted that you are available now. We have your details and an agent will text you shortly.";
-                } else {
-                    botText = "Thank you. An agent will text you around that time. We have your details.";
-                }
-
-                setTimeout(() => { submitLead(newData); }, 1000);
-                nextStep = 9; // End
+            case 30:
+                botText = d.chat.responses.confirmation;
+                setTimeout(() => submitLead(newData), 1000);
+                nextStep = 9;
                 break;
 
             default:
-                botText = "Thanks. We'll be in touch.";
+                botText = d.chat.responses.confirmation;
         }
 
         setUserData(newData);
@@ -337,6 +270,7 @@ export default function ChatWidget() {
     };
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!dict) return;
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -350,44 +284,36 @@ export default function ChatWidget() {
 
             if (uploadError) throw uploadError;
 
-            const { data: { publicUrl } } = supabaseClient.storage
-                .from('vehicle-photos')
-                .getPublicUrl(fileName);
+            setMessages(prev => [...prev, { sender: 'user', text: dict.chat.responses.upload_success }]);
 
-            setMessages(prev => [...prev, { sender: 'user', text: `✅ Photo uploaded!` }]);
-
-            // Advance step if waiting for photos
             if (step === 7) {
-                // Determine if we trigger the text flow manually or wait for user input? 
-                // Let's prompt user to continue or just auto-advance after short delay
-                setMessages(prev => [...prev, { sender: 'bot', text: "Photo received. Was the accident within the last 48 hours?" }]);
+                setMessages(prev => [...prev, { sender: 'bot', text: dict.chat.responses.ask_recent }]);
                 setStep(8);
             }
 
         } catch (error) {
             console.error('Upload error:', error);
-            setMessages(prev => [...prev, { sender: 'bot', text: 'Failed to upload photo. Please try again.' }]);
+            setMessages(prev => [...prev, { sender: 'bot', text: dict.chat.responses.upload_fail }]);
         }
     };
 
+    if (!dict) return null;
+
     return (
         <>
-            {/* Trigger Button - HIDDEN per request, but kept in code for potential future use or manual testing via devtools */}
             <button
                 onClick={toggleChat}
                 className="hidden fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition z-50 font-bold"
-                id="chat-trigger-btn"
             >
-                {isOpen ? 'Close' : 'Chat Support'}
+                {dict.chat.trigger}
             </button>
 
-            {/* Chat Window */}
             {isOpen && (
                 <div className="fixed inset-0 md:inset-auto md:bottom-4 md:right-4 md:w-96 md:h-[600px] bg-white md:rounded-lg shadow-2xl flex flex-col z-50 border border-gray-200 overflow-hidden font-sans">
                     <div className="bg-gradient-to-r from-blue-700 to-blue-900 text-white p-4 rounded-t-none md:rounded-t-lg font-bold flex justify-between items-center shadow-md">
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                            <span>Angel - Claims Specialist</span>
+                            <span>{dict.chat.header_title}</span>
                         </div>
                         <button onClick={toggleChat} className="text-white hover:text-gray-200 text-xl font-bold">×</button>
                     </div>
@@ -412,7 +338,7 @@ export default function ChatWidget() {
                     </div>
 
                     <div className="p-3 border-t border-gray-100 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex gap-2 items-center">
-                        <label className="cursor-pointer text-gray-400 hover:text-blue-600 p-2 transition-colors" title="Upload Photo">
+                        <label className="cursor-pointer text-gray-400 hover:text-blue-600 p-2 transition-colors" title={dict.chat.upload_tooltip}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>
                             <input
                                 type="file"
@@ -427,7 +353,7 @@ export default function ChatWidget() {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                            placeholder="Type a message..."
+                            placeholder={dict.chat.input_placeholder}
                             className="flex-1 p-3 bg-gray-100 border-0 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-100 text-gray-800 placeholder-gray-400"
                         />
                         <button

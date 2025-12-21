@@ -24,11 +24,18 @@ export async function POST(req: NextRequest) {
                 can_text: body.contact_pref === 'text',
                 preferred_contact_time: body.best_time,
                 description: body.incident_details,
-                // Fault info stored in 'role' or description for now
-                role: body.fault_info,
+                role: body.role || body.fault_info, // Handle both
                 has_injury: body.has_injury,
-                // Photos handled separately via update but we can log them if sent
-                // photos: body.photos 
+
+                // New Structured Fields
+                language: body.language || 'en',
+                score: body.score || 0,
+                pain_level: body.pain_level || 0,
+                accident_date: body.accident_date,
+                city: body.city,
+                injury_summary: body.injury_summary,
+                liability_summary: body.liability_summary,
+                files_count: body.files_count || 0
             }, { onConflict: 'dialogflow_session_id' })
             .select()
             .single();
