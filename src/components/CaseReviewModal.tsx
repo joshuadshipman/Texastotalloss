@@ -270,9 +270,9 @@ Concerns: ${formData.biggestConcern.join(', ')}
                                 <option value="other">Other</option>
                             </select>
                             <select name="role" value={formData.role} onChange={handleChange} className="p-3 border rounded w-full bg-white">
-                                <option value="driver">Driver</option>
-                                <option value="passenger">Passenger</option>
-                                <option value="pedestrian">Pedestrian</option>
+                                <option value="driver">{d.options.driver}</option>
+                                <option value="passenger">{d.options.passenger}</option>
+                                <option value="pedestrian">{d.options.pedestrian}</option>
                             </select>
                             <input name="vehicle" placeholder={d.steps.accident.vehicle} value={formData.vehicle} onChange={handleChange} className="p-3 border rounded w-full md:col-span-2" />
                             <div className="md:col-span-2 grid grid-cols-2 gap-4">
@@ -401,13 +401,19 @@ Concerns: ${formData.biggestConcern.join(', ')}
                             <div>
                                 <label className="block text-sm font-bold mb-2">{d.steps.impact.concerns}</label>
                                 <div className="flex flex-wrap gap-2">
-                                    {['Pain/Health', 'Medical Bills', 'Lost Income', 'Car Repair', 'Insurance Calls'].map(c => (
+                                    {[
+                                        { key: 'Pain/Health', label: d.concerns.pain },
+                                        { key: 'Medical Bills', label: d.concerns.bills },
+                                        { key: 'Lost Income', label: d.concerns.income },
+                                        { key: 'Car Repair', label: d.concerns.repair },
+                                        { key: 'Insurance Calls', label: d.concerns.calls }
+                                    ].map(c => (
                                         <button
-                                            key={c}
-                                            onClick={() => toggleArrayItem('biggestConcern', c)}
-                                            className={`px - 3 py - 1 rounded - full text - sm border ${formData.biggestConcern.includes(c) ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-700 border-gray-300'}`}
+                                            key={c.key}
+                                            onClick={() => toggleArrayItem('biggestConcern', c.key)}
+                                            className={`px - 3 py - 1 rounded - full text - sm border ${formData.biggestConcern.includes(c.key) ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-700 border-gray-300'}`}
                                         >
-                                            {c}
+                                            {c.label}
                                         </button>
                                     ))}
                                 </div>
@@ -427,12 +433,12 @@ Concerns: ${formData.biggestConcern.join(', ')}
                         <div className="border-2 border-dashed border-blue-200 rounded-xl p-8 text-center bg-blue-50 hover:bg-blue-100 transition cursor-pointer relative">
                             <input type="file" onChange={handleFileUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                             <p className="font-bold text-blue-700">{d.steps.docs.cta}</p>
-                            <p className="text-xs text-blue-400">Secure & Confidential</p>
+                            <p className="text-xs text-blue-400">{d.upload.secure}</p>
                         </div>
 
                         {formData.uploadedFiles.length > 0 && (
                             <div className="bg-white p-4 rounded border">
-                                <h4 className="font-bold text-xs mb-2">Attached:</h4>
+                                <h4 className="font-bold text-xs mb-2">{d.upload.attached}</h4>
                                 {formData.uploadedFiles.map((f, i) => (
                                     <div key={i} className="text-xs text-gray-600 truncate">📄 {f}</div>
                                 ))}
@@ -473,8 +479,8 @@ Concerns: ${formData.biggestConcern.join(', ')}
                     <div className="flex items-center gap-2">
                         <span className="bg-blue-500/20 p-2 rounded-full"><span className="animate-pulse">⚡</span></span>
                         <div>
-                            <h2 className="font-bold text-lg">{dict.caseReview.title}</h2>
-                            <p className="text-xs text-blue-200">{dict.caseReview.subtitle}</p>
+                            <h2 className="font-bold text-lg">{dict.caseReview.banner.title}</h2>
+                            <p className="text-xs text-blue-200">{dict.caseReview.banner.subtitle}</p>
                         </div>
                     </div>
                     <button onClick={closeReview} className="p-2 hover:bg-blue-800 rounded"><XIcon size={20} /></button>

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useChat } from './ChatContext';
 import { supabaseClient } from '@/lib/supabaseClient';
 import { Dictionary } from '@/dictionaries/en';
+import { XIcon, SendIcon, AlertTriangleIcon, MessageCircleIcon } from 'lucide-react';
 
 type Message = {
     sender: 'user' | 'bot';
@@ -28,23 +29,17 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
     // Initial greeting
     useEffect(() => {
         if (isOpen && messages.length === 0 && dict) {
+            let initialMsgs: Message[] = [];
+            let initialStep = 0;
+
             if (chatMode === 'sms') {
-                setMessages([{
-                    sender: 'bot',
-                    text: dict.chat.responses.greeting_sms
-                }]);
-                setStep(20);
+                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_sms }];
+                initialStep = 20;
             } else if (chatMode === 'live') {
-                setMessages([{
-                    sender: 'bot',
-                    text: dict.chat.responses.greeting_live
-                }]);
+                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_live }];
 
                 agentTimeoutRef.current = setTimeout(() => {
-                    setMessages(prev => [...prev, {
-                        sender: 'bot',
-                        text: dict.chat.responses.busy_agents
-                    }]);
+                    addMessage('bot', dict.chat.responses.busy_agents);
                     setStep(30);
                 }, 20000);
 
@@ -52,17 +47,29 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
                     session_id: sessionId,
                     sender: 'bot',
                     content: '[SYSTEM]: User clicked Live Agent button.'
-                }).then(({ error }) => {
-                    if (error) console.error(error);
                 });
-
+            } else if (chatMode === 'call') {
+                initialMsgs = [
+                    { sender: 'bot', text: dict.chat.responses.intro_call },
+                    { sender: 'bot', text: dict.chat.responses.ask_disconnect_pref }
+                ];
+                initialStep = 100;
             } else {
-                setMessages([{
-                    sender: 'bot',
-                    text: dict.chat.responses.greeting_standard
-                }]);
-                setStep(1);
+                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_standard }];
+                initialStep = 1;
             }
+
+            setMessages(initialMsgs);
+            setStep(initialStep);
+
+            // Save initial messages
+            initialMsgs.forEach(msg => {
+                supabaseClient.from('chat_messages').insert({
+                    session_id: sessionId,
+                    sender: 'bot',
+                    content: msg.text
+                });
+            });
         }
     }, [isOpen, chatMode, dict]);
 
@@ -86,7 +93,10 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
                         clearTimeout(agentTimeoutRef.current);
                         agentTimeoutRef.current = null;
                     }
-                    setMessages(prev => [...prev, { sender: 'bot', text: newMsg.content }]);
+                    setMessages(prev => {
+                        // Avoid duplicates if we already added it optimistically (agent likely won't be optimistic though)
+                        return [...prev, { sender: 'bot', text: newMsg.content }];
+                    });
                 }
             })
             .subscribe();
@@ -97,170 +107,18 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
         };
     }, [isOpen, sessionId]);
 
-    const handleSend = async (text: string = input) => {
-        if (!text.trim() || !dict) return;
+    const addMessage = (sender: 'user' | 'bot', text: string) => {
+        setMessages(prev => [...prev, { sender, text }]);
 
-        const newMessages = [...messages, { sender: 'user', text } as Message];
-        setMessages(newMessages);
-        setInput('');
-
-        try {
-            await supabaseClient.from('chat_messages').insert({
-                session_id: sessionId,
-                sender: 'user',
-                content: text
-            });
-        } catch (e) {
-            console.error('Failed to save message', e);
-        }
-
-        setTimeout(() => processBotResponse(text, newMessages, dict), 600);
-    };
-
-    const processBotResponse = async (userText: string, currentMessages: Message[], d: Dictionary) => {
-        let botText = '';
-        let nextStep = step;
-        let newData = { ...userData };
-
-        const lowerText = userText.toLowerCase();
-
-        const isLiveAgentRequest = d.chat.keywords.live_agent.some(k => lowerText.includes(k));
-
-        if (step < 20 && isLiveAgentRequest) {
-            setMessages(prev => [...prev, {
-                sender: 'bot',
-                text: d.chat.responses.greeting_live
-            }]);
-
-            await supabaseClient.from('chat_messages').insert({
-                session_id: sessionId,
-                sender: 'bot',
-                content: '[SYSTEM]: User requested Live Agent.'
-            });
-
-            if (agentTimeoutRef.current) clearTimeout(agentTimeoutRef.current);
-            agentTimeoutRef.current = setTimeout(() => {
-                setMessages(prev => [...prev, {
-                    sender: 'bot',
-                    text: d.chat.responses.busy_agents
-                }]);
-                setStep(30);
-            }, 20000);
-
-            return;
-        }
-
-        const isYes = d.chat.keywords.yes.some(k => lowerText.includes(k));
-
-        switch (step) {
-            case 1:
-                newData.full_name = userText;
-                botText = d.chat.responses.ask_phone.replace('{name}', userText);
-                nextStep = 2;
-                break;
-            case 2:
-                // Phone Validation
-                const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
-                if (!phoneRegex.test(userText) && userText.length < 7) {
-                    setMessages(prev => [...prev, { sender: 'bot', text: "Please enter a valid phone number so we can reach you." }]);
-                    return; // BLOCK PROGRESS
-                }
-                newData.phone = userText;
-                botText = d.chat.responses.ask_contact_method;
-                nextStep = 3;
-                break;
-            case 3:
-                const isText = d.chat.keywords.yes.some(k => lowerText.includes(k)) || lowerText.includes('text') || lowerText.includes('texto') || lowerText.includes('sms');
-                newData.contact_pref = isText ? 'text' : 'call';
-                if (newData.contact_pref === 'call') {
-                    botText = d.chat.responses.ask_call_time;
-                    nextStep = 4;
-                } else {
-                    botText = d.chat.responses.ask_incident;
-                    nextStep = 5;
-                }
-                break;
-            case 4:
-                newData.best_time = userText;
-                botText = d.chat.responses.ask_incident;
-                nextStep = 5;
-                break;
-            case 5:
-                newData.incident_details = userText;
-                const painKeywords = d.chat.keywords.pain;
-                newData.has_injury = painKeywords.some(k => lowerText.includes(k));
-                botText = d.chat.responses.ask_fault;
-                nextStep = 6;
-                break;
-            case 6:
-                newData.fault_info = userText;
-                botText = d.chat.responses.ask_photos;
-                nextStep = 7;
-                break;
-            case 7:
-                botText = d.chat.responses.ask_recent;
-                nextStep = 8;
-                break;
-            case 8:
-                const isRecent = isYes || lowerText.includes('today') || lowerText.includes('hoy') || lowerText.includes('yesterday') || lowerText.includes('ayer');
-
-                if (isRecent) {
-                    botText = d.chat.responses.advice_er;
-                    nextStep = 10;
-                } else {
-                    botText = d.chat.responses.advice_chiro;
-                    nextStep = 11;
-                }
-                break;
-
-            case 10:
-                botText = d.chat.responses.confirmation;
-                setTimeout(() => submitLead(newData), 2000);
-                nextStep = 15;
-                break;
-
-            case 11:
-                botText = d.chat.responses.confirmation;
-                setTimeout(() => submitLead(newData), 2000);
-                nextStep = 15;
-                break;
-
-            case 15:
-                botText = d.chat.responses.confirmation;
-                break;
-
-            case 20:
-                newData.phone = userText;
-                botText = d.chat.responses.ask_incident;
-                nextStep = 21;
-                break;
-            case 21:
-                newData.incident_details = userText;
-                botText = d.chat.responses.busy_agents;
-                nextStep = 22;
-                break;
-            case 22:
-                newData.best_time = userText;
-                botText = d.chat.responses.confirmation;
-                setTimeout(() => submitLead(newData), 1000);
-                nextStep = 24;
-                break;
-
-            case 30:
-                botText = d.chat.responses.confirmation;
-                setTimeout(() => submitLead(newData), 1000);
-                nextStep = 9;
-                break;
-
-            default:
-                botText = d.chat.responses.confirmation;
-        }
-
-        setUserData(newData);
-        setStep(nextStep);
-        if (botText) {
-            setMessages(prev => [...prev, { sender: 'bot', text: botText }]);
-        }
+        // Save to Supabase
+        supabaseClient.from('chat_messages').insert({
+            session_id: sessionId,
+            sender,
+            content: text,
+            created_at: new Date().toISOString()
+        }).then(({ error }) => {
+            if (error) console.error('Error saving chat:', error);
+        });
     };
 
     const submitLead = async (data: any) => {
@@ -276,12 +134,132 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
         }
     };
 
+    const handleScoreAndProceed = (currentData: any) => {
+        if (!dict) return;
+        let score = 0;
+        if (currentData.fault === 'other') score += 30;
+        if (currentData.has_injury) score += 30;
+        if (currentData.year && parseInt(currentData.year) > 2015) score += 10;
+
+        const finalData = { ...currentData, score };
+        submitLead(finalData);
+
+        if (score >= 50) {
+            addMessage('bot', dict.chat.responses.qualify_high || "Connecting to Senior Specialist...");
+            setStep(999); // Live Agent State
+        } else {
+            addMessage('bot', dict.chat.responses.qualify_low || "Sending Accident Packet...");
+            setStep(998); // End State
+        }
+    };
+
+    const handleAtTheScene = () => {
+        if (!dict) return;
+        addMessage('bot', dict.chat.responses.scene_safety || "Are you safe?");
+        setStep(200);
+    };
+
+    const handleSend = async (textOverride?: string) => {
+        const userText = textOverride || input;
+        if (!userText.trim() || !dict) return;
+
+        setInput('');
+        addMessage('user', userText);
+
+        setTimeout(() => {
+            const lowerText = userText.toLowerCase();
+            const d = dict!;
+            let nextStep = step;
+            let botText = '';
+            let newData = { ...userData };
+
+            // --- At The Scene Flow ---
+            if (step === 200) { // Safety Answer
+                botText = d.chat.responses.scene_photo_plates || "Upload plates";
+                nextStep = 201;
+            }
+            else if (step === 201) { // Plates
+                botText = d.chat.responses.scene_photo_scene || "Scene photos";
+                nextStep = 202;
+            }
+            else if (step === 202) { // Scene
+                botText = d.chat.responses.scene_photo_docs || "Docs photos";
+                nextStep = 203;
+            }
+            else if (step === 203) { // Docs
+                botText = d.chat.responses.scene_processing || "Processing...";
+                nextStep = 5; // Go to Incident Description
+                setTimeout(() => {
+                    addMessage('bot', d.chat.responses.ask_incident);
+                }, 1500);
+            }
+
+            // --- Standard Flow ---
+            else if (step === 0 || step === 1) { // Intro -> Name
+                newData.full_name = userText;
+                botText = d.chat.responses.ask_phone.replace('{name}', userText);
+                nextStep = 2;
+            }
+            else if (step === 2) { // Phone
+                newData.phone = userText;
+                botText = d.chat.responses.ask_contact_method;
+                nextStep = 3;
+            }
+            else if (step === 3) { // Method
+                newData.contact_pref = lowerText.includes('text') ? 'text' : 'call';
+                botText = d.chat.responses.ask_incident;
+                nextStep = 4; // Skip to incident?
+                if (newData.contact_pref === 'call') {
+                    botText = d.chat.responses.ask_call_time;
+                    nextStep = 4;
+                } else {
+                    botText = d.chat.responses.ask_incident;
+                    nextStep = 5;
+                }
+            }
+            else if (step === 4) { // Time
+                newData.best_time = userText;
+                botText = d.chat.responses.ask_incident;
+                nextStep = 5;
+            }
+            else if (step === 5) { // Incident
+                newData.incident_details = userText;
+                botText = d.chat.responses.ask_fault;
+                nextStep = 6;
+            }
+            else if (step === 6) { // Fault
+                newData.fault = lowerText.includes('me') ? 'me' : 'other';
+                botText = "Was anyone injured? (Yes/No)";
+                nextStep = 7;
+            }
+            else if (step === 7) { // Injury
+                newData.has_injury = lowerText.includes('yes');
+                handleScoreAndProceed(newData);
+                return; // End flow handling here
+            }
+
+            // --- Call Flow ---
+            else if (step === 100) {
+                // ... (Simplified for brevity, can expand if needed)
+                botText = d.chat.responses.ask_incident;
+                nextStep = 5;
+            }
+
+            setUserData(newData);
+            setStep(nextStep);
+
+            if (botText) {
+                addMessage('bot', botText);
+            }
+        }, 800);
+    };
+
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!dict) return;
         const file = e.target.files?.[0];
         if (!file) return;
 
-        setMessages(prev => [...prev, { sender: 'user', text: `Uploading ${file.name}...` }]);
+        addMessage('user', `Uploading ${file.name}...`);
 
         try {
             const fileName = `${sessionId}/${Date.now()}-${file.name}`;
@@ -291,88 +269,108 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
 
             if (uploadError) throw uploadError;
 
-            setMessages(prev => [...prev, { sender: 'user', text: dict.chat.responses.upload_success }]);
+            addMessage('bot', dict.chat.responses.upload_success);
 
-            if (step === 7) {
-                setMessages(prev => [...prev, { sender: 'bot', text: dict.chat.responses.ask_recent }]);
+            // Auto-advance if in Scene Flow
+            if (step >= 200 && step <= 203) {
+                handleSend("Image Uploaded"); // Trigger next step
+            }
+            else if (step === 7) {
+                // Legacy flow
+                addMessage('bot', dict.chat.responses.ask_recent);
                 setStep(8);
             }
 
         } catch (error) {
             console.error('Upload error:', error);
-            setMessages(prev => [...prev, { sender: 'bot', text: dict.chat.responses.upload_fail }]);
+            addMessage('bot', dict.chat.responses.upload_fail);
         }
     };
 
     if (!dict) return null;
 
     return (
-        <>
-            <button
-                onClick={toggleChat}
-                className="hidden fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition z-50 font-bold"
-            >
-                {dict.chat.trigger}
-            </button>
+        <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end">
+            {/* Trigger Button */}
+            {!isOpen && (
+                <button
+                    onClick={toggleChat}
+                    className="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition animate-bounce-subtle"
+                >
+                    <MessageCircleIcon size={28} />
+                </button>
+            )}
 
             {isOpen && (
-                <div className="fixed inset-0 md:inset-auto md:bottom-4 md:right-4 md:w-96 md:h-[600px] bg-white md:rounded-lg shadow-2xl flex flex-col z-50 border border-gray-200 overflow-hidden font-sans">
-                    <div className="bg-gradient-to-r from-blue-700 to-blue-900 text-white p-4 rounded-t-none md:rounded-t-lg font-bold flex justify-between items-center shadow-md">
-                        <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                            <span>{dict.chat.header_title}</span>
+                <div className="bg-white w-[350px] md:w-[400px] h-[500px] md:h-[600px] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200 animate-in slide-in-from-bottom-5">
+
+                    {/* Header */}
+                    <div className="bg-blue-900 text-white p-4 flex justify-between items-center shrink-0">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center font-bold">A</div>
+                            <div>
+                                <h3 className="font-bold">Angel (AI Specialist)</h3>
+                                <p className="text-xs text-blue-200 flex items-center gap-1"><span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> Online</p>
+                            </div>
                         </div>
-                        <button onClick={toggleChat} className="text-white hover:text-gray-200 text-xl font-bold">×</button>
+                        <button onClick={toggleChat} className="p-2 hover:bg-white/20 rounded-full"><XIcon size={20} /></button>
                     </div>
 
+                    {/* Messages Area */}
                     <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
-                        {messages.map((m, i) => (
-                            <div
-                                key={i}
-                                className={`flex ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                            >
-                                <div
-                                    className={`max-w-[85%] p-3 rounded-2xl text-sm shadow-sm leading-relaxed ${m.sender === 'user'
-                                        ? 'bg-blue-600 text-white rounded-br-none'
-                                        : 'bg-white text-gray-800 border border-gray-100 rounded-bl-none text-left'
-                                        }`}
+
+                        {/* Start Options */}
+                        {messages.length < 2 && (
+                            <div className="mb-6">
+                                <button
+                                    onClick={handleAtTheScene}
+                                    className="w-full bg-red-600 hover:bg-red-700 text-white p-4 rounded-xl shadow-lg border border-red-500 flex items-center justify-between group transition-all mb-4 text-left"
                                 >
-                                    {m.text}
+                                    <div>
+                                        <span className="block text-xs font-bold text-red-100 uppercase tracking-wider animate-pulse">Just Crashed?</span>
+                                        <span className="text-lg font-black">At The Scene? Do This!</span>
+                                    </div>
+                                    <AlertTriangleIcon size={24} />
+                                </button>
+                            </div>
+                        )}
+
+                        {messages.map((msg, i) => (
+                            <div key={i} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${msg.sender === 'user'
+                                        ? 'bg-blue-600 text-white rounded-tr-none'
+                                        : 'bg-white text-gray-800 border border-gray-200 shadow-sm rounded-tl-none'
+                                    }`}>
+                                    {msg.text}
                                 </div>
                             </div>
                         ))}
                         <div ref={bottomRef} />
                     </div>
 
-                    <div className="p-3 border-t border-gray-100 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex gap-2 items-center">
-                        <label className="cursor-pointer text-gray-400 hover:text-blue-600 p-2 transition-colors" title={dict.chat.upload_tooltip}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>
-                            <input
-                                type="file"
-                                className="hidden"
-                                accept="image/*"
-                                onChange={handleFileUpload}
-                                ref={fileInputRef}
-                            />
+                    {/* Input Area */}
+                    <div className="p-4 bg-white border-t border-gray-100 flex gap-2 shrink-0">
+                        <label className="p-3 bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 cursor-pointer">
+                            <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} ref={fileInputRef} />
+                            <span className="text-xl">📷</span>
                         </label>
+
                         <input
-                            type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                            placeholder={dict.chat.input_placeholder}
-                            className="flex-1 p-3 bg-gray-100 border-0 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-100 text-gray-800 placeholder-gray-400"
+                            placeholder="Type your message..."
+                            className="flex-1 bg-gray-100 border-0 rounded-full px-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                         />
                         <button
                             onClick={() => handleSend()}
-                            className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition shadow-md disabled:opacity-50"
-                            disabled={!input.trim()}
+                            className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 shadow-md transition transform active:scale-95"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                            <SendIcon size={18} />
                         </button>
                     </div>
                 </div>
             )}
-        </>
+        </div>
     );
 }

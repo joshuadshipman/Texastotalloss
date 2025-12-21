@@ -145,14 +145,53 @@ export default async function CityPage({ params }: Props) {
                     <div className="inline-flex items-center gap-2 bg-blue-800/80 px-4 py-1 rounded-full text-blue-200 text-sm font-bold mb-4 border border-blue-700">
                         <MapPinIcon size={14} /> Local Assistance for {city.county} County
                     </div>
+
                     <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
                         {city.name} Total Loss & <br /><span className="text-red-500">Injury Claim Help</span>
                     </h1>
-                    <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+
+                    {/* Hotspot Links (SEO) */}
+                    {city.hotspots && (
+                        <div className="mt-6 flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
+                            <span className="text-xs font-bold text-blue-300 uppercase tracking-widest pt-1">Crash Hotspots:</span>
+                            {city.hotspots.map(spot => (
+                                <a key={spot.slug} href={`/${lang}/locations/${city.slug}/${spot.slug}`} className="text-xs bg-blue-800/50 hover:bg-blue-700 text-white px-2 py-1 rounded border border-blue-500/30 transition">
+                                    {spot.name}
+                                </a>
+                            ))}
+                        </div>
+                    )}
+
+                    <p className="text-xl text-blue-100 max-w-2xl mx-auto mt-6">
                         Don't let {city.name} insurance adjusters underpay you. Get your free valuation and legal review today.
                     </p>
                 </div>
             </header>
+
+            {/* Sub-City & Parent Link Navigation */}
+            {
+                (city.subCities || city.parentCity) && (
+                    <div className="max-w-4xl mx-auto px-4 py-4 mb-4">
+                        {city.parentCity && (
+                            <a href={`/${lang}/locations/${city.parentCity}`} className="text-blue-600 hover:underline flex items-center gap-1 font-bold mb-4">
+                                &larr; Back to {city.parentCity.charAt(0).toUpperCase() + city.parentCity.slice(1)} Metro Area
+                            </a>
+                        )}
+                        {city.subCities && city.subCities.length > 0 && (
+                            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                                <h3 className="font-bold text-gray-800 mb-3">Serving Nearby {city.name} Communities:</h3>
+                                <div className="flex flex-wrap gap-2">
+                                    {city.subCities.map(sc => (
+                                        <a key={sc} href={`/${lang}/locations/${sc}`} className="bg-gray-100 hover:bg-blue-50 text-gray-700 hover:text-blue-700 px-3 py-1 rounded-full text-sm font-medium transition cursor-pointer">
+                                            {sc.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ')}
+                                        </a>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )
+            }
 
             {/* Local Context Section */}
             <section className="py-12 px-4 bg-white">
@@ -172,6 +211,56 @@ export default async function CityPage({ params }: Props) {
                                 If your car is at a tow lot in {city.county} County, you are accruing daily storage fees. Mitigation is critical.
                             </p>
                         </div>
+
+                        {/* TRUSTED RESOURCES BLOCK */}
+                        {city.resources && (
+                            <div className="mt-8 space-y-6">
+                                <h3 className="text-2xl font-bold text-gray-900 border-b pb-2">Top Rated {city.name} Resources</h3>
+
+                                {/* Towing */}
+                                {city.resources.towing && (
+                                    <div className="bg-white border rounded-lg p-4 shadow-sm">
+                                        <h4 className="font-bold text-red-600 flex items-center gap-2 mb-3"><AlertTriangleIcon size={18} /> Emergency Towing</h4>
+                                        <div className="space-y-3">
+                                            {city.resources.towing.map((r, i) => (
+                                                <div key={i} className="flex justify-between items-start border-b border-gray-50 last:border-0 pb-2 last:pb-0">
+                                                    <div>
+                                                        <div className="font-bold text-gray-800">{r.name}</div>
+                                                        <div className="text-xs text-gray-500">{r.note}</div>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <div className="text-yellow-500 text-sm font-bold">★ {r.rating}</div>
+                                                        <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">View</a>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Repair */}
+                                {city.resources.repair && (
+                                    <div className="bg-white border rounded-lg p-4 shadow-sm">
+                                        <h4 className="font-bold text-blue-600 flex items-center gap-2 mb-3"><CarIcon size={18} /> Trusted Repair Facilities</h4>
+                                        <div className="space-y-3">
+                                            {city.resources.repair.map((r, i) => (
+                                                <div key={i} className="flex justify-between items-start border-b border-gray-50 last:border-0 pb-2 last:pb-0">
+                                                    <div>
+                                                        <div className="font-bold text-gray-800">{r.name}</div>
+                                                        <div className="text-xs text-gray-500">{r.note}</div>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <div className="text-yellow-500 text-sm font-bold">★ {r.rating}</div>
+                                                        <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">View</a>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
                     </div>
 
                     {/* Quick Stats / Sidebar */}
@@ -185,6 +274,22 @@ export default async function CityPage({ params }: Props) {
                         <button className="mt-6 w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">
                             Compare {city.name} Market Values
                         </button>
+
+                        {/* Rental Link */}
+                        {city.resources?.rental && (
+                            <div className="mt-6 pt-4 border-t border-gray-200">
+                                <h4 className="font-bold text-xs text-gray-500 uppercase mb-2">Need a Rental?</h4>
+                                {city.resources.rental.map((r, i) => (
+                                    <a key={i} href={r.link} target="_blank" className="block bg-white border border-gray-200 p-2 rounded mb-2 hover:bg-blue-50 transition">
+                                        <div className="font-bold text-gray-800 text-sm">{r.name}</div>
+                                        <div className="flex justify-between text-xs text-gray-500">
+                                            <span>{r.note}</span>
+                                            <span className="text-yellow-600">★ {r.rating}</span>
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             </section>
@@ -206,7 +311,7 @@ export default async function CityPage({ params }: Props) {
             </section>
 
             <ChatWidget dict={dict} />
-        </main>
+        </main >
     );
 }
 

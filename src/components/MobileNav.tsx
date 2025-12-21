@@ -41,10 +41,10 @@ export default function MobileNav() {
                     <span className="text-[10px] font-medium">Checklist</span>
                 </Link>
 
-                <button onClick={() => scrollToSection('faq')} className="flex flex-col items-center gap-1 text-gray-500 hover:text-blue-600">
+                <Link href="#resources" className="flex flex-col items-center gap-1 text-gray-500 hover:text-blue-600">
                     <SearchIcon size={20} />
-                    <span className="text-[10px] font-medium">Search</span>
-                </button>
+                    <span className="text-[10px] font-medium">Resources</span>
+                </Link>
             </div>
         </div>
     );

@@ -1,11 +1,11 @@
 export const en = {
     hero: {
         badge: "Free Texas Auto Claim Help",
-        title_main: "Total Loss!?! Injuries?!?",
-        title_sub: "Now what!?!",
-        quote_main: "Concerned about possible injuries or even just getting the kids to school?",
+        title_main: "Total Loss!?! Injuries?!? Rental Car? Missed Work?",
+        title_sub: "Now what!?! Don't worry, we are here to help you through this stressful situation.",
+        quote_main: "Concerned about possible injuries, treatment, vehicle or even just getting the kids to school?",
         quote_sub: "Don't Worry, Angel is here to help with all your Total Loss & Injury related concerns.",
-        help_text: "Here to help you with the stress."
+        help_text: "Here to help you nativate the stress an accident can cause on your daily life."
     },
     buttons: {
         ai_review: "Free Instant AI Case Review",
@@ -100,7 +100,7 @@ export const en = {
             live_agent: ["live agent", "agent", "human", "person", "representative", "talk", "representative"],
             yes: ["yes", "yeah", "yep", "sure", "ok", "correct"],
             no: ["no", "nope", "nah", "incorrect"],
-            pain: ["pain", "hurt", "injury", "ache", "sore", "broken", "fracture", "bleed"],
+            pain: ["pain", "hurt", "injury", "stress", "anxiety", "ache", "sore", "broken", "fracture", "bleed"],
         },
         responses: {
             // Greetings
@@ -129,7 +129,23 @@ export const en = {
 
             // System
             busy_agents: "All our agents are busy. An agent will text you shortly. What is the best time to text you?",
-            live_connect: "Connecting to live agent..."
+            live_connect: "Connecting to live agent...",
+
+            // New Call/Chat Flow
+            intro_call: "Hi, I'm Angel, your intake specialist. I can help connect you with our team immediately.",
+            ask_disconnect_pref: "In case we get disconnected, would you prefer a Callback or a Text Message?",
+            ask_goal: "Are you looking to find medical or legal information today regarding the loss?",
+
+            // At The Scene Flow
+            scene_safety: "🚨 First priority: Is everyone safe? If anyone is injured or there is immediate danger, please call 911 immediately. Are you in a safe place to chat?",
+            scene_photo_plates: "Good. Let's document the evidence before it's moved. Please upload a photo of the **License Plates** (Other Driver's & Yours).",
+            scene_photo_scene: "Got it. Now, please take 2-3 **wide photos of the scene** showing the position of both vehicles.",
+            scene_photo_docs: "Next: Please upload a photo of the **Other Driver's Insurance Card** and **Driver's License** (if they allow it).",
+            scene_processing: "Perfect. We are securing these images into your **Digital Case File**. We will email you a timestamped copy for your records.",
+
+            // Outcome
+            qualify_high: "Based on the details, you have a strong case for compensation. I am connecting you to a Senior Claims Specialist NOW.",
+            qualify_low: "Based on Texas regulations, this may be a standard claim. We have generated a **Professional Accident Packet** with steps to handle this yourself. Sending it to your email now."
         }
     },
     caseReview: {
@@ -204,7 +220,33 @@ export const en = {
             unsure: "Unsure",
             text: "Text",
             call: "Call",
-            email: "Email"
+            email: "Email",
+            driver: "Driver",
+            passenger: "Passenger",
+            pedestrian: "Pedestrian",
+            other: "Other"
+        },
+        banner: {
+            title: "Free AI Case Analysis for Total Loss and Injury Review",
+            subtitle: "It takes less than two minutes to evaluate your case and vehicle evaluation."
+        },
+        placeholders: {
+            vin: "17-Digit VIN",
+            year: "Select Year",
+            make: "e.g. Ford, Toyota",
+            model: "e.g. F-150, Camry",
+            condition: "Condition"
+        },
+        concerns: {
+            pain: "Pain/Health",
+            bills: "Medical Bills",
+            income: "Lost Income",
+            repair: "Car Repair",
+            calls: "Insurance Calls"
+        },
+        upload: {
+            attached: "Attached:",
+            secure: "Secure & Confidential"
         }
     }
 };

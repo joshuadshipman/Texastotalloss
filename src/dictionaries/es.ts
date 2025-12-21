@@ -11,7 +11,7 @@ export const es: Dictionary = {
     },
     buttons: {
         ai_review: "Revisión de Caso con IA",
-        call_now: "📞 Llamar Ahora",
+        call_now: "Llamar / Chat en Vivo",
         live_chat: "💬 Chat en Vivo",
         sms: "💬 Texto / SMS",
         schedule: "⏱ Agendar Consulta"
@@ -126,7 +126,23 @@ export const es: Dictionary = {
             upload_fail: "Error al subir foto.",
 
             busy_agents: "Todos nuestros agentes están ocupados. Te enviaremos un texto pronto. ¿Cuál es la mejor hora para escribirte?",
-            live_connect: "Conectando con agente..."
+            live_connect: "Conectando con agente...",
+
+            // New Call/Chat Flow
+            intro_call: "Hola, soy Angel. Puedo conectarte con nuestro equipo de inmediato.",
+            ask_disconnect_pref: "En caso de que nos desconectemos, ¿prefieres una Llamada o un Mensaje de Texto?",
+            ask_goal: "¿Buscas información médica o legal sobre tu pérdida hoy?",
+
+            // At The Scene Flow
+            scene_safety: "🚨 Primera prioridad: ¿Están todos a salvo? Si hay heridos o peligro inmediato, llama al 911. ¿Estás en un lugar seguro para chatear?",
+            scene_photo_plates: "Bien. Documentemos la evidencia antes de que se mueva. Por favor sube una foto de las **Placas** (del otro conductor y tuyas).",
+            scene_photo_scene: "Entendido. Ahora, toma 2-3 **fotos amplias de la escena** mostrando la posición de ambos vehículos.",
+            scene_photo_docs: "Siguiente: Sube una foto de la **Tarjeta de Seguro** del otro conductor y su **Licencia** (si lo permiten).",
+            scene_processing: "Perfecto. Estamos guardando estas imágenes en tu **Expediente Digital**. Te enviaremos una copia con marca de tiempo.",
+
+            // Outcome
+            qualify_high: "Basado en los detalles, tienes un caso fuerte para compensación. Te estoy conectando con un Especialista Senior AHORA.",
+            qualify_low: "Basado en las regulaciones de Texas, este puede ser un reclamo estándar. Hemos generado un **Paquete de Accidente Profesional** con pasos para manejar esto tú mismo. Enviándolo a tu correo ahora."
         }
     },
     caseReview: {
@@ -201,7 +217,33 @@ export const es: Dictionary = {
             unsure: "No estoy seguro",
             text: "Texto",
             call: "Llamada",
-            email: "Email"
+            email: "Correo",
+            driver: "Conductor",
+            passenger: "Pasajero",
+            pedestrian: "Peatón",
+            other: "Otro"
+        },
+        banner: {
+            title: "Análisis de Caso Gratuito con IA para Pérdida Total y Lesiones",
+            subtitle: "Toma menos de dos minutos evaluar su caso y la valoración de su vehículo."
+        },
+        placeholders: {
+            vin: "VIN de 17 Dígitos",
+            year: "Seleccionar Año",
+            make: "ej. Ford, Toyota",
+            model: "ej. F-150, Camry",
+            condition: "Condición"
+        },
+        concerns: {
+            pain: "Dolor/Salud",
+            bills: "Facturas Médicas",
+            income: "Pérdida de Ingresos",
+            repair: "Reparación de Auto",
+            calls: "Llamadas de Seguros"
+        },
+        upload: {
+            attached: "Adjunto:",
+            secure: "Seguro y Confidencial"
         }
     }
 };

@@ -12,36 +12,30 @@ export interface CityData {
         longitude: number;
     };
     zipCodes: string[];
-    medicalResources: {
+    subCities?: string[]; // Slugs of child cities
+    parentCity?: string; // Slug of parent city
+    resources?: {
+        towing: LocalBusiness[];
+        repair: LocalBusiness[];
+        rental: LocalBusiness[];
+    };
+    medicalResources: LocalBusiness[];
+    hotspots?: {
         name: string;
-        link: string;
-        note: string;
+        slug: string;
     }[];
 }
 
+export interface LocalBusiness {
+    name: string;
+    link: string;
+    note: string;
+    rating?: number; // 4.5 etc
+    phone?: string;
+}
+
 export const cities: CityData[] = [
-    {
-        slug: 'houston',
-        translations: {
-            en: {
-                name: 'Houston',
-                county: 'Harris',
-                description: "As the largest city in Texas, Houston's busy highways like I-45 and the 610 Loop see thousands of accidents annually. Harris County courts are notoriously tough on injury claims."
-            },
-            es: {
-                name: 'Houston',
-                county: 'Harris',
-                description: "Como la ciudad más grande de Texas, las autopistas de Houston como la I-45 ven miles de accidentes anualmente. Los tribunales del condado de Harris son notoriamente duros con los reclamos de lesiones."
-            }
-        },
-        coordinates: { latitude: 29.7604, longitude: -95.3698 },
-        zipCodes: ["77002", "77003", "77004", "77005", "77006"],
-        medicalResources: [
-            { name: "The Joint Chiropractic - Houston", link: "https://www.thejoint.com/texas/houston/", note: "Multiple locations including Midtown, Heights, and Montrose." },
-            { name: "Airrosti Houston", link: "https://www.airrosti.com/locations/houston/", note: "Specialists in soft tissue injury and rapid recovery." },
-            { name: "Citywide Injury & Accident", link: "https://www.citywideinjury.com/", note: "Specialized auto injury chiropractors with 8+ Houston locations." }
-        ]
-    },
+    // --- DALLAS METRO ---
     {
         slug: 'dallas',
         translations: {
@@ -58,12 +52,77 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 32.7767, longitude: -96.7970 },
         zipCodes: ["75201", "75202", "75203", "75204", "75205"],
+        subCities: ['plano', 'mesquite', 'desoto', 'irving', 'garland'],
         medicalResources: [
             { name: "Accident & Injury Chiropractic", link: "https://accidentandinjury.com/", note: "19 Locations in DFW focusing purely on auto accident recovery." },
-            { name: "The Joint Chiropractic - Dallas", link: "https://www.thejoint.com/texas/dallas/", note: "Convenient locations in Uptown, Preston Hollow, and White Rock." },
-            { name: "Airrosti Dallas", link: "https://www.airrosti.com/locations/dallas/", note: "Trusted providers for back and neck pain relief." }
-        ]
+            { name: "The Joint Chiropractic - Dallas", link: "https://www.thejoint.com/texas/dallas/", note: "Convenient locations in Uptown, Preston Hollow, and White Rock." }
+        ],
+        resources: {
+            towing: [
+                { name: "Walnut Hill Wrecker", link: "https://walnuthillwrecker.com", note: "24/7 Service", rating: 4.8 },
+                { name: "Dallas Tow Boys", link: "#", note: "Fast response in downtown", rating: 4.7 }
+            ],
+            repair: [
+                { name: "Service King Collision", link: "https://www.serviceking.com", note: "National warranty", rating: 4.5 }
+            ],
+            rental: [
+                { name: "Enterprise Rent-A-Car", link: "https://www.enterprise.com", note: "Multiple DFW locations", rating: 4.6 }
+            ]
+        }
     },
+    // --- FRISCO (Primary) ---
+    {
+        slug: 'frisco',
+        translations: {
+            en: {
+                name: 'Frisco', county: 'Collin',
+                description: "Frisco's rapid expansion along the Dallas North Tollway has led to increased high-speed accidents. We help Frisco residents get fair value for their luxury and family vehicles."
+            },
+            es: {
+                name: 'Frisco', county: 'Collin',
+                description: "La rápida expansión de Frisco a lo largo de Dallas North Tollway ha llevado a más accidentes de alta velocidad. Ayudamos a los residentes de Frisco a obtener un valor justo."
+            }
+        },
+        coordinates: { latitude: 33.1507, longitude: -96.8236 },
+        zipCodes: ["75033", "75034", "75035"],
+        subCities: ['little-elm', 'prosper', 'celina', 'the-colony'],
+        medicalResources: [
+            { name: "Airrosti Frisco", link: "https://www.airrosti.com", note: "Soft tissue therapy" }
+        ],
+        resources: {
+            towing: [{ name: "Frisco Towing Service", link: "#", note: "Local expert", rating: 4.9 }],
+            repair: [{ name: "Frisco Paint & Body", link: "#", note: "High-end repairs", rating: 4.8 }],
+            rental: [{ name: "Hertz Frisco", link: "#", note: "Near Stonebriar", rating: 4.5 }]
+        }
+    },
+    // --- HOUSTON METRO ---
+    {
+        slug: 'houston',
+        translations: {
+            en: {
+                name: 'Houston',
+                county: 'Harris',
+                description: "As the largest city in Texas, Houston's busy highways like I-45 and the 610 Loop see thousands of accidents annually. Harris County courts are notoriously tough on injury claims."
+            },
+            es: {
+                name: 'Houston',
+                county: 'Harris',
+                description: "Como la ciudad más grande de Texas, las autopistas de Houston como la I-45 ven miles de accidentes anualmente."
+            }
+        },
+        coordinates: { latitude: 29.7604, longitude: -95.3698 },
+        zipCodes: ["77002", "77003"],
+        subCities: ['the-woodlands', 'katy', 'sugar-land', 'pearland', 'pasadena'],
+        medicalResources: [
+            { name: "The Joint Chiropractic", link: "https://www.thejoint.com", note: "Houston wide" }
+        ],
+        resources: {
+            towing: [{ name: "Milam's Towing", link: "#", note: "Heavy duty specialists", rating: 4.7 }],
+            repair: [{ name: "Caliber Collision", link: "#", note: "Lifetime warranty", rating: 4.6 }],
+            rental: [{ name: "Enterprise", link: "#", note: "Downtown & Airports", rating: 4.5 }]
+        }
+    },
+    // --- AUSTIN METRO ---
     {
         slug: 'austin',
         translations: {
@@ -75,17 +134,22 @@ export const cities: CityData[] = [
             es: {
                 name: 'Austin',
                 county: 'Travis',
-                description: "El rápido crecimiento de Austin ha aumentado el tráfico en la I-35. Los jurados del condado de Travis pueden ser impredecibles, haciendo esencial la evidencia documentada."
+                description: "El rápido crecimiento de Austin ha aumentado el tráfico en la I-35."
             }
         },
         coordinates: { latitude: 30.2672, longitude: -97.7431 },
-        zipCodes: ["78701", "78702", "78703", "78704", "78705"],
+        zipCodes: ["78701", "78704"],
+        subCities: ['bastrop', 'round-rock', 'pflugerville', 'cedar-park'],
         medicalResources: [
-            { name: "Airrosti Austin", link: "https://www.airrosti.com/locations/austin/", note: "Extensive network in Austin including South Congress and Domain." },
-            { name: "The Joint Chiropractic - Austin", link: "https://www.thejoint.com/texas/austin/", note: "Walk-in adjustments available at Arboretum and Muller." },
-            { name: "Kapsner Chiropractic Centers", link: "https://kapsner.com/", note: "5 Locations serving North and South Austin area." }
-        ]
+            { name: "Airrosti Austin", link: "https://www.airrosti.com", note: "Austin wide" }
+        ],
+        resources: {
+            towing: [{ name: "Bulldog Towing", link: "#", note: "Quick response", rating: 4.8 }],
+            repair: [{ name: "Austin Body Works", link: "#", note: "Local favorite", rating: 4.9 }],
+            rental: [{ name: "Enterprise", link: "#", note: "South Congress", rating: 4.6 }]
+        }
     },
+    // --- SAN ANTONIO METRO ---
     {
         slug: 'san-antonio',
         translations: {
@@ -108,6 +172,7 @@ export const cities: CityData[] = [
             { name: "Airrosti San Antonio", link: "https://www.airrosti.com/locations/san-antonio/", note: "Headquartered in SA with broad city-wide coverage." }
         ]
     },
+    // --- FORT WORTH METRO ---
     {
         slug: 'fort-worth',
         translations: {

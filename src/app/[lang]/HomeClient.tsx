@@ -11,6 +11,7 @@ import { ShieldCheckIcon, AlertTriangleIcon, FileTextIcon, CarIcon, DollarSignIc
 const ValuationCalculator = dynamic(() => import('@/components/ValuationCalculator'), { ssr: false });
 const MobileNav = dynamic(() => import('@/components/MobileNav'), { ssr: false });
 const SectionCard = dynamic(() => import('@/components/SectionCard'));
+import VideoPromo from '@/components/VideoPromo';
 const LightboxImage = dynamic(() => import('@/components/ui/LightboxImage'));
 
 const CaseReviewModal = dynamic(() => import('@/components/CaseReviewModal'), { ssr: false });
@@ -63,7 +64,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                         name: 'Can I keep my totaled car in Texas?',
                         acceptedAnswer: {
                             '@type': 'Answer',
-                            text: 'Yes, this is called "owner retention." The insurance company will deduct the salvage value from your settlement.'
+                            text: 'Yes, this is called "owner retention." The insurance company will deduct the salvage value from your settlement. Typically hard to do if a lienholder exists on the vehicle.'
                         }
                     },
                     {
@@ -71,7 +72,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                         name: 'Does Texas have a "Right to Appraisal"?',
                         acceptedAnswer: {
                             '@type': 'Answer',
-                            text: 'Most standard Texas auto policies include an Appraisal Clause, allowing you to hire an independent appraiser to dispute the lowball offer.'
+                            text: 'Most standard Texas auto policies include an Appraisal Clause, allowing you to hire an independent appraiser to dispute the lowball offer. This option may only be available through your 1st party coverage.'
                         }
                     }
                 ]
@@ -115,8 +116,20 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                             <SparklesIcon size={20} className="text-yellow-300" />
                             <span>{dict.buttons.ai_review}</span>
                         </button>
-                        <button onClick={() => openChat('callback')} className="flex-1 h-16 bg-white text-blue-900 hover:bg-gray-100 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base leading-tight px-2">
+                        <button onClick={() => openChat('call')} className="flex-1 h-16 bg-white text-blue-900 hover:bg-gray-100 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base leading-tight px-2">
                             <span>{dict.buttons.call_now}</span>
+                        </button>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2 max-w-4xl mx-auto w-full pt-2">
+                        <button onClick={() => openChat('sms')} className="bg-blue-800/60 hover:bg-blue-700 text-white py-3 rounded-lg font-bold text-sm backdrop-blur-sm border border-blue-500/30">
+                            {dict.buttons.sms}
+                        </button>
+                        <button onClick={() => openChat('live')} className="bg-blue-800/60 hover:bg-blue-700 text-white py-3 rounded-lg font-bold text-sm backdrop-blur-sm border border-blue-500/30">
+                            {dict.buttons.live_chat}
+                        </button>
+                        <button onClick={() => openChat('schedule')} className="bg-blue-800/60 hover:bg-blue-700 text-white py-3 rounded-lg font-bold text-sm backdrop-blur-sm border border-blue-500/30">
+                            {dict.buttons.schedule}
                         </button>
                     </div>
                     <p className="text-xs text-blue-300 mt-4">{dict.hero.help_text}</p>
@@ -126,6 +139,60 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             <div id="calculator">
                 <ValuationCalculator />
             </div>
+
+            {/* Recognized for Excellence - Trust Badges */}
+            <section className="bg-white py-12 border-b border-gray-200">
+                <div className="max-w-6xl mx-auto px-4 text-center">
+                    <h3 className="text-2xl font-bold text-blue-900 mb-8 uppercase tracking-wide">Recognized for Excellence</h3>
+                    <div className="flex justify-center items-center opacity-90 hover:opacity-100 transition-opacity duration-300">
+                        <img
+                            src="/images/trust-badges.png"
+                            alt="Legal Excellence Awards: Best Lawyers, Million Dollar Advocates, Super Lawyers"
+                            className="max-w-full h-auto max-h-24 md:max-h-32 object-contain"
+                        />
+                    </div>
+                    <p className="mt-4 text-xs text-gray-400 font-medium">Partner Firm Accolades & Recognition</p>
+                </div>
+            </section>
+
+            {/* Video Knowledge Library */}
+            <section className="bg-gray-900 py-16 px-4">
+                <div className="max-w-6xl mx-auto">
+                    <h2 className="text-3xl md:text-4xl font-black text-white text-center mb-12 uppercase italic tracking-tighter">
+                        <span className="text-red-600">Video Evidence</span> Library
+                    </h2>
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+                        <VideoPromo
+                            title="Hit by a Drunk Driver?"
+                            subtitle="They drank. You paid. It's time to fight back."
+                            thumbnailUrl="/images/drunk.png"
+                        />
+                        <VideoPromo
+                            title="18-Wheeler Negligence"
+                            subtitle="Fighting the billion-dollar trucking insurance giants."
+                            thumbnailUrl="/images/truck.png"
+                        />
+                    </div>
+                    <div className="grid md:grid-cols-3 gap-6 mt-8">
+                        <VideoPromo
+                            title="Uninsured Driver?"
+                            subtitle="Finding coverage when they have none."
+                            thumbnailUrl="/images/uninsured.png"
+                        />
+                        <VideoPromo
+                            title="Distracted / Texting"
+                            subtitle="Proving they weren't watching the road."
+                            thumbnailUrl="/images/distracted.png"
+                        />
+                        <VideoPromo
+                            title="Rideshare Accidents"
+                            subtitle="Uber/Lyft corporate policy limits explained."
+                            thumbnailUrl="/images/rideshare.png" // Placeholder if gen failed
+                        />
+                    </div>
+                </div>
+            </section >
 
             <section className="py-12 px-4 bg-white" id="resources">
                 <div className="max-w-4xl mx-auto">
@@ -186,6 +253,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                                     </h3>
                                     <p className="text-gray-600 ml-8 mt-1 border-l-2 border-blue-100 pl-4">{dict.sections.faq.a1}</p>
                                 </div>
+
                                 <div>
                                     <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2">
                                         <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">?</span>
@@ -202,6 +270,17 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                                 </div>
                             </div>
                         </SectionCard>
+                        {/* 2. Demand Letter Tool (New) */}
+                        <div className="bg-gradient-to-br from-blue-900 to-blue-800 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden group cursor-pointer hover:shadow-2xl transition-all">
+                            <div className="absolute right-0 top-0 opacity-10 transform translate-x-10 -translate-y-10">
+                                <FileTextIcon size={150} />
+                            </div>
+                            <h3 className="text-xl font-bold mb-2 flex items-center gap-2"><FileTextIcon /> Challenge Low Offers</h3>
+                            <p className="text-blue-200 mb-6">Received a lowball offer? Don't argue on the phone. Send a formal legal demand letter.</p>
+                            <a href="/tools/demand-letter" className="bg-white text-blue-900 font-bold py-3 px-6 rounded-lg inline-block w-full text-center hover:bg-blue-50 transition">
+                                Generate Free Demand PDF &rarr;
+                            </a>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -220,6 +299,6 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
 
             <ChatWidget dict={dict} />
             <MobileNav />
-        </main>
+        </main >
     );
 }

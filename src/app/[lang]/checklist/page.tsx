@@ -7,7 +7,10 @@ export default function ChecklistPage() {
         <div className="min-h-screen bg-gray-50 py-12 px-4 print:bg-white print:p-0">
             <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-200 print:shadow-none print:border-0">
 
-                <div className="text-center border-b-4 border-gray-900 pb-6 mb-8">
+                <div className="text-center border-b-4 border-gray-900 pb-6 mb-8 relative">
+                    <a href="/" className="absolute left-0 top-0 text-gray-500 hover:text-blue-600 flex items-center gap-1 font-bold text-sm print:hidden">
+                        &larr; Home
+                    </a>
                     <h1 className="text-4xl font-black text-gray-900 uppercase tracking-tighter mb-2">🚨 Post-Accident Action Plan</h1>
                     <p className="text-gray-600 font-bold">Keep this in your glovebox. Follow it strictly to protect your rights.</p>
                 </div>
