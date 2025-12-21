@@ -4,6 +4,7 @@ import ChatWidget from '@/components/ChatWidget';
 import Link from 'next/link';
 import { useChat } from '@/components/ChatContext';
 import dynamic from 'next/dynamic';
+// Force deploy: v0.1.2 - Resetting cache
 import { useEffect, useState } from 'react';
 import { getDictionary } from './dictionaries';
 import { Dictionary } from '@/dictionaries/en'; // Type
