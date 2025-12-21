@@ -1,53 +1,73 @@
 import { supabaseClient } from '@/lib/supabaseClient';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import ReactMarkdown from 'react-markdown'; // Ensure this package is installed or use a simple renderer
+// import ReactMarkdown from 'react-markdown'; // Ensure this package is installed or use a simple renderer
 import { Metadata } from 'next';
 
 type Props = {
-    params: { slug: string };
+    params: Promise<{ slug: string }>;
 };
 
-// 1. Generate Metadata
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const { data: post } = await supabaseClient
-        .from('posts')
-        .select('title, excerpt, published_at')
-        .eq('slug', params.slug)
-        .single();
+    const { slug } = await params;
 
-    if (!post) return {};
+    try {
+        const { data: post } = await supabaseClient
+            .from('posts')
+            .select('title, excerpt, published_at')
+            .eq('slug', slug)
+            .single();
 
-    return {
-        title: `${post.title} | Texas Total Loss Blog`,
-        description: post.excerpt,
-        openGraph: {
-            title: post.title,
+        if (!post) return {};
+
+        return {
+            title: `${post.title} | Texas Total Loss Blog`,
             description: post.excerpt,
-            type: 'article',
-            publishedTime: post.published_at,
-        }
-    };
+            openGraph: {
+                title: post.title,
+                description: post.excerpt,
+                type: 'article',
+                publishedTime: post.published_at,
+            }
+        };
+    } catch (e) {
+        return {
+            title: 'Texas Total Loss Blog'
+        };
+    }
 }
 
 // 2. SSG Params
 export async function generateStaticParams() {
-    const { data: posts } = await supabaseClient
-        .from('posts')
-        .select('slug')
-        .eq('status', 'published');
+    try {
+        const { data: posts } = await supabaseClient
+            .from('posts')
+            .select('slug')
+            .eq('status', 'published');
 
-    return (posts || []).map((post) => ({
-        slug: post.slug,
-    }));
+        return (posts || []).map((post) => ({
+            slug: post.slug,
+        }));
+    } catch (e) {
+        console.warn('Error generating static params for blog:', e);
+        return [];
+    }
 }
 
 export default async function BlogPost({ params }: Props) {
-    const { data: post } = await supabaseClient
-        .from('posts')
-        .select('*')
-        .eq('slug', params.slug)
-        .single();
+    const { slug } = await params;
+    let post = null;
+
+    try {
+        const { data } = await supabaseClient
+            .from('posts')
+            .select('*')
+            .eq('slug', slug)
+            .single();
+        post = data;
+    } catch (e) {
+        console.error('Error fetching post:', e);
+    }
 
     if (!post) notFound();
 

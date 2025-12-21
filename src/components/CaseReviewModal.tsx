@@ -186,12 +186,12 @@ Concerns: ${formData.biggestConcern.join(', ')}
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    session: \`review-\${Date.now()}\`,
+                    session: `review-${Date.now()}`,
                     full_name: formData.fullName,
                     phone: formData.phone,
                     contact_pref: formData.contactMethod,
                     best_time: formData.bestTime,
-                    incident_details: \`Type: \${formData.incidentType}. Vehicle: \${formData.vehicle}\`,
+                    incident_details: `Type: ${formData.incidentType}. Vehicle: ${formData.vehicle}`,
                     role: formData.role,
                     has_injury: formData.isInjured === 'yes',
                     // New Fields
@@ -207,7 +207,7 @@ Concerns: ${formData.biggestConcern.join(', ')}
             });
 
             // 2. Add Chat Log (Optional, for continuity)
-            const sessionId = \`review-\${Date.now()}\`; // This might duplicate session IDs if we aren't careful. 
+            const sessionId = `review-${Date.now()}`; // This might duplicate session IDs if we aren't careful. 
             // Ideally use same ID. For now let's just log.
             await supabaseClient.from('chat_messages').insert({
                 session_id: sessionId,
@@ -331,7 +331,7 @@ Concerns: ${formData.biggestConcern.join(', ')}
                                             <button
                                                 key={part}
                                                 onClick={() => toggleArrayItem('bodyParts', part)}
-                                                className={`px - 3 py - 1 rounded - full text - sm border ${ formData.bodyParts.includes(part) ? 'bg-red-500 text-white border-red-500' : 'bg-white text-gray-700 border-gray-300' }`}
+                                                className={`px - 3 py - 1 rounded - full text - sm border ${formData.bodyParts.includes(part) ? 'bg-red-500 text-white border-red-500' : 'bg-white text-gray-700 border-gray-300'}`}
                                             >
                                                 {part}
                                             </button>
@@ -405,7 +405,7 @@ Concerns: ${formData.biggestConcern.join(', ')}
                                         <button
                                             key={c}
                                             onClick={() => toggleArrayItem('biggestConcern', c)}
-                                            className={`px - 3 py - 1 rounded - full text - sm border ${ formData.biggestConcern.includes(c) ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-700 border-gray-300' }`}
+                                            className={`px - 3 py - 1 rounded - full text - sm border ${formData.biggestConcern.includes(c) ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-700 border-gray-300'}`}
                                         >
                                             {c}
                                         </button>

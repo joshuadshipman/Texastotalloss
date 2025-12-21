@@ -1,18 +1,18 @@
 export const en = {
     hero: {
         badge: "Free Texas Auto Claim Help",
-        title_main: "Total Loss!!!",
-        title_sub: "Now to do what!?!",
+        title_main: "Total Loss!?! Injuries?!?",
+        title_sub: "Now what!?!",
         quote_main: "Concerned about possible injuries or even just getting the kids to school?",
         quote_sub: "Don't Worry, Angel is here to help with all your Total Loss & Injury related concerns.",
         help_text: "Here to help you with the stress."
     },
     buttons: {
-        ai_review: "Instant AI Case Review",
+        ai_review: "Free Instant AI Case Review",
         call_now: "📞 Call Now",
         live_chat: "💬 Live Chat",
         sms: "💬 Text / SMS",
-        schedule: "⏱ Schedule Consult"
+        schedule: "⏱ Schedule Free Consult"
     },
     sections: {
         resources_title: "Critical Resources",

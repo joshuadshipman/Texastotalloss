@@ -23,6 +23,9 @@ type Lead = {
     description: string;
     files_count: number;
     dialogflow_session_id: string; // link to chat
+    preferred_contact_time?: string;
+    liability_summary?: string;
+    accident_date?: string;
 };
 
 export default function AdminDashboard() {

@@ -14,15 +14,16 @@ export async function generateStaticParams() {
     return [{ lang: 'en' }, { lang: 'es' }]
 }
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
     params
 }: {
     children: React.ReactNode;
-    params: { lang: string }
+    params: Promise<{ lang: string }>
 }) {
+    const { lang } = await params;
     return (
-        <html lang={params.lang}>
+        <html lang={lang}>
             <body className={inter.className}>
                 <ChatProvider>
                     <div className="absolute top-4 right-4 z-50">

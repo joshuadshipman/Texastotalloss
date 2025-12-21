@@ -2,34 +2,31 @@ import type { Metadata } from 'next';
 import { cities } from '@/data/cities';
 import { notFound } from 'next/navigation';
 import { ShieldCheckIcon, AlertTriangleIcon, CarIcon, MapPinIcon } from 'lucide-react';
-import dynamic from 'next/dynamic';
+// Static imports to debug build issues
+import ValuationCalculator from '@/components/ValuationCalculator';
+import ChatWidget from '@/components/ChatWidget';
+import CaseReviewModal from '@/components/CaseReviewModal';
 import { getDictionary } from '../../dictionaries';
 
-// Dynamically import components to keep initial load fast
-const ValuationCalculator = dynamic(() => import('@/components/ValuationCalculator'), { ssr: false });
-const ChatWidget = dynamic(() => import('@/components/ChatWidget'), { ssr: false });
-const CaseReviewModal = dynamic(() => import('@/components/CaseReviewModal'), { ssr: false });
-
 type Props = {
-    params: { city: string; lang: 'en' | 'es' };
+    params: Promise<{ city: string; lang: 'en' | 'es' }>;
 };
 
 // 1. Generate Static Params for Build Time Optimization (SSG)
-export async function generateStaticParams() {
-    // Generate for all cities. Languages handled in root layout params?
-    // Actually, we must return { lang: 'en', city: 'slug' } combo if [lang] is a param.
-    // Since this is inside [lang]/locations/[city], static params might need both?
-    // BUT generateStaticParams acts on the segment it is in. It only needs to return [city].
-    // The [lang] is upstream.
-    return cities.map((city) => ({
-        city: city.slug,
-    }));
-}
+// export async function generateStaticParams() {
+//    return cities.map((city) => ({
+//        city: city.slug,
+//    }));
+// }
 
 // 2. Dynamic Metadata
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const city = cities.find((c) => c.slug === params.city);
-    if (!city) return {};
+    const { city: citySlug, lang } = await params;
+    const cityRaw = cities.find((c) => c.slug === citySlug);
+    if (!cityRaw) return {};
+
+    const t = cityRaw.translations[lang] || cityRaw.translations['en'];
+    const city = { ...cityRaw, ...t };
 
     return {
         title: `${city.name} Total Loss & Gap Insurance Help | Free Injury Check`,
@@ -45,12 +42,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CityPage({ params }: Props) {
-    const city = cities.find((c) => c.slug === params.city);
-    const dict = await getDictionary(params.lang);
+    const { city: citySlug, lang } = await params;
+    const cityRaw = cities.find((c) => c.slug === citySlug);
+    const dict = await getDictionary(lang);
 
-    if (!city) {
+    if (!cityRaw) {
         notFound();
     }
+
+    const t = cityRaw.translations[lang] || cityRaw.translations['en'];
+    const city = { ...cityRaw, ...t };
 
     // 3. LocalBusiness + FAQ + HowTo Schema (Graph)
     const jsonLd = {
@@ -208,3 +209,4 @@ export default async function CityPage({ params }: Props) {
         </main>
     );
 }
+
