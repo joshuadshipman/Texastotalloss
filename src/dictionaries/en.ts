@@ -32,6 +32,36 @@ export const en = {
             main_title: "STOP THE BLEEDING",
             trap_title: "The Daily Cost Trap"
         },
+        adjuster: {
+            title: "Adjuster Tricks",
+            subtitle: "They are NOT your friend",
+            main_title: "Tactics Used to Deny Claims"
+        },
+        total_loss: {
+            title: "Total Loss Law",
+            subtitle: "100% Threshold Rule",
+            main_title: "Understanding ACV vs. Repair Cost"
+        },
+        market: {
+            title: "Fair Market Value",
+            subtitle: "Dealer Quotes vs. CCC Reports",
+            main_title: "Don't Accept the First Offer"
+        },
+        fault: {
+            title: "Determining Fault",
+            subtitle: "Texas 51% Bar Rule",
+            main_title: "Comparative Negligence Explained"
+        },
+        coverage: {
+            title: "Policy Limits",
+            subtitle: "Liability, PIP, & MedPay",
+            main_title: "Know What You Are Owed"
+        },
+        um_law: {
+            title: "Uninsured Motorist",
+            subtitle: "Hit & Run / No Insurance",
+            main_title: "UM/UIM Coverage Claims"
+        },
         read_more: "Read Full Details",
         faq: {
             title: "Common Questions",

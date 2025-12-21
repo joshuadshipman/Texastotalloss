@@ -136,8 +136,6 @@ export default function Home({ params }: { params: { lang: 'en' | 'es' } }) {
                         {/* 1. Accident Checklist */}
                         <SectionCard title={dict.sections.checklist.title} subtitle={dict.sections.checklist.subtitle} icon={<CarIcon size={24} />} colorClass="bg-red-600">
                             <div className="text-center mb-8"><h2 className="text-3xl font-black text-red-600 mb-2 uppercase">{dict.sections.checklist.card_title}</h2></div>
-                            {/* ... content ... */}
-                            <div className="text-center"><p className="text-gray-500 italic">(Checklist content localized...)</p></div>
                         </SectionCard>
 
                         {/* 2. Mitigation */}
@@ -145,7 +143,42 @@ export default function Home({ params }: { params: { lang: 'en' | 'es' } }) {
                             <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.mitigate.main_title}</h2></div>
                         </SectionCard>
 
-                        {/* 3. FAQ Section */}
+                        {/* 3. Storage */}
+                        <SectionCard title={dict.sections.storage.title} subtitle={dict.sections.storage.subtitle} icon={<DollarSignIcon size={24} />} colorClass="bg-orange-600">
+                            <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.storage.main_title}</h2></div>
+                        </SectionCard>
+
+                        {/* 4. Adjuster */}
+                        <SectionCard title={dict.sections.adjuster.title} subtitle={dict.sections.adjuster.subtitle} icon={<AlertTriangleIcon size={24} />} colorClass="bg-gray-700">
+                            <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.adjuster.main_title}</h2></div>
+                        </SectionCard>
+
+                        {/* 5. Total Loss */}
+                        <SectionCard title={dict.sections.total_loss.title} subtitle={dict.sections.total_loss.subtitle} icon={<CarIcon size={24} />} colorClass="bg-red-700">
+                            <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.total_loss.main_title}</h2></div>
+                        </SectionCard>
+
+                        {/* 6. Market Value */}
+                        <SectionCard title={dict.sections.market.title} subtitle={dict.sections.market.subtitle} icon={<DollarSignIcon size={24} />} colorClass="bg-green-600">
+                            <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.market.main_title}</h2></div>
+                        </SectionCard>
+
+                        {/* 7. Fault */}
+                        <SectionCard title={dict.sections.fault.title} subtitle={dict.sections.fault.subtitle} icon={<AlertTriangleIcon size={24} />} colorClass="bg-purple-700">
+                            <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.fault.main_title}</h2></div>
+                        </SectionCard>
+
+                        {/* 8. Coverage */}
+                        <SectionCard title={dict.sections.coverage.title} subtitle={dict.sections.coverage.subtitle} icon={<FileTextIcon size={24} />} colorClass="bg-blue-700">
+                            <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.coverage.main_title}</h2></div>
+                        </SectionCard>
+
+                        {/* 9. UM Law */}
+                        <SectionCard title={dict.sections.um_law.title} subtitle={dict.sections.um_law.subtitle} icon={<ShieldCheckIcon size={24} />} colorClass="bg-indigo-700">
+                            <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.um_law.main_title}</h2></div>
+                        </SectionCard>
+
+                        {/* 10. FAQ Section */}
                         <SectionCard title={dict.sections.faq.title} subtitle={dict.sections.faq.subtitle} icon={<SearchIcon size={24} />} colorClass="bg-blue-600">
                             <div className="space-y-6 text-left">
                                 <div>

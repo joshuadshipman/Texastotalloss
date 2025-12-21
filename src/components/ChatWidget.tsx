@@ -159,12 +159,19 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
                 nextStep = 2;
                 break;
             case 2:
+                // Phone Validation
+                const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+                if (!phoneRegex.test(userText) && userText.length < 7) {
+                    setMessages(prev => [...prev, { sender: 'bot', text: "Please enter a valid phone number so we can reach you." }]);
+                    return; // BLOCK PROGRESS
+                }
                 newData.phone = userText;
                 botText = d.chat.responses.ask_contact_method;
                 nextStep = 3;
                 break;
             case 3:
-                newData.contact_pref = userText.toLowerCase().includes('text') || userText.toLowerCase().includes('texto') ? 'text' : 'call';
+                const isText = d.chat.keywords.yes.some(k => lowerText.includes(k)) || lowerText.includes('text') || lowerText.includes('texto') || lowerText.includes('sms');
+                newData.contact_pref = isText ? 'text' : 'call';
                 if (newData.contact_pref === 'call') {
                     botText = d.chat.responses.ask_call_time;
                     nextStep = 4;

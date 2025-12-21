@@ -34,6 +34,36 @@ export const es: Dictionary = {
             main_title: "DETENGA LA SANGRÍA",
             trap_title: "La Trampa del Costo Diario"
         },
+        adjuster: {
+            title: "Trucos del Ajustador",
+            subtitle: "NO son sus amigos",
+            main_title: "Tácticas para Dengar Reclamos"
+        },
+        total_loss: {
+            title: "Ley de Pérdida Total",
+            subtitle: "Regla del 100% del Umbral",
+            main_title: "ACV vs. Costo de Reparación"
+        },
+        market: {
+            title: "Valor Justo de Mercado",
+            subtitle: "Cotizaciones de Concesionarios vs. CCC",
+            main_title: "No Acepte la Primera Oferta"
+        },
+        fault: {
+            title: "Determinando la Culpa",
+            subtitle: "Regla del 51% de Texas",
+            main_title: "Negligencia Comparativa Explicada"
+        },
+        coverage: {
+            title: "Límites de Póliza",
+            subtitle: "Responsabilidad, PIP y MedPay",
+            main_title: "Sepa lo que se le Debe"
+        },
+        um_law: {
+            title: "Conductor Sin Seguro",
+            subtitle: "Chocar y Huir / Sin Seguro",
+            main_title: "Reclamos de Cobertura UM/UIM"
+        },
         read_more: "Leer Detalles Completos",
         faq: {
             title: "Preguntas Frecuentes",
