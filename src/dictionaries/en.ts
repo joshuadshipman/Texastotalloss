@@ -1,8 +1,8 @@
 export const en = {
     hero: {
         badge: "Free Texas Auto Claim Help",
-        title_main: "Total Loss!!! Now to do what!?!",
-        title_sub: "Mitigate Damages? ACV? GAP Cvg? Injuries? Missed Work? Upside Down Loan?",
+        title_main: "Total Loss!!!",
+        title_sub: "Now to do what!?!",
         quote_main: "Concerned about possible injuries or even just getting the kids to school?",
         quote_sub: "Don't Worry, Angel is here to help with all your Total Loss & Injury related concerns.",
         help_text: "Here to help you with the stress."

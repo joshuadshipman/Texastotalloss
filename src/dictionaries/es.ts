@@ -3,8 +3,8 @@ import { Dictionary } from './en';
 export const es: Dictionary = {
     hero: {
         badge: "Ayuda Gratuita para Reclamos de Auto en Texas",
-        title_main: "¡Pérdida Total! ¿¡Y ahora qué!?",
-        title_sub: "¿Mitigar Daños? ¿Valor Real? ¿GAP? ¿Lesiones? ¿Trabajo Perdido? ¿Préstamo Alto?",
+        title_main: "¡Pérdida Total!",
+        title_sub: "¿¡Y ahora qué!?",
         quote_main: "¿Preocupado por lesiones o simplemente cómo llevar a los niños a la escuela?",
         quote_sub: "No se preocupe, Ángel está aquí para ayudarle con todas sus dudas de Pérdida Total y Lesiones.",
         help_text: "Estamos aquí para ayudarle con el estrés."
