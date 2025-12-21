@@ -67,10 +67,10 @@ export default function DemandLetterGenerator() {
         doc.text(`Sincerely,`, 20, 170);
         doc.text(formData.name, 20, 180);
 
-        // Footer / Watermark
-        doc.setFontSize(10);
-        doc.setTextColor(150);
-        doc.text('Generated via TexasTotalLoss.com - Free Consumer Advocacy Tools', 20, 280);
+        // Footer / Watermark - REMOVED per user request
+        // doc.setFontSize(10);
+        // doc.setTextColor(150);
+        // doc.text('Generated via TexasTotalLoss.com - Free Consumer Advocacy Tools', 20, 280);
 
         doc.save(`Demand_Letter_${formData.claimNumber}.pdf`);
     };
