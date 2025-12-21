@@ -142,9 +142,7 @@ export const es: Dictionary = {
             ask_disconnect_pref: "En caso de que nos desconectemos, ¿prefieres una Llamada o un Mensaje de Texto?",
             ask_goal: "¿Buscas información médica o legal sobre tu pérdida hoy?",
 
-            // Outcome
-            qualify_high: "Entiendo. Basado en esos detalles, probablemente califique para una compensación significativa. Lo estoy conectando con un Especialista Senior ahora.",
-            qualify_low: "Gracias. Estoy preparando un Paquete de Información de Accidentes para usted. Un miembro del equipo revisará sus detalles en breve.",
+            // Outcome (Consolidated)
 
             // Specific Mode Greetings
             greeting_schedule: "Puedo ayudarle a reservar una cita de inmediato. Primero, ¿cuál es su emergencia? (ej. Pérdida Total, Lesiones, Ambos)",
