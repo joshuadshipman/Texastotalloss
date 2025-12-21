@@ -175,8 +175,14 @@ export default function Home({ params }: { params: { lang: 'en' | 'es' } }) {
                 </div>
             </section>
 
-            <footer className="bg-gray-900 text-gray-400 py-8 px-4 text-center text-sm">
-                <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400 text-sm">
+            <footer className="bg-gray-900 text-gray-400 py-12 px-4 text-center text-sm">
+                <div className="max-w-4xl mx-auto space-y-4">
+                    <div className="border border-gray-800 p-4 rounded bg-gray-900/50">
+                        <p className="font-bold text-gray-500 uppercase text-xs mb-2">{dict.footer.disclaimer_title}</p>
+                        <p className="text-xs text-gray-600 leading-relaxed">{dict.footer.disclaimer_text}</p>
+                    </div>
+                </div>
+                <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-xs">
                     <p>&copy; {new Date().getFullYear()} Texas Total Loss Claim Help. {dict.footer.rights}</p>
                 </div>
             </footer>
