@@ -67,13 +67,22 @@ export const es: Dictionary = {
         read_more: "Leer Detalles Completos",
         faq: {
             title: "Preguntas Frecuentes",
-            subtitle: "Leyes de Pérdida Total en Texas",
-            q1: "¿Qué es una Pérdida Total en Texas?",
-            a1: "En Texas, un auto es pérdida total si los costos de reparación igualan o superan el 100% del valor real en efectivo (ACV) del vehículo.",
-            q2: "¿Puedo quedarme con mi auto chocado?",
-            a2: "Sí (Retención del Propietario). La aseguradora deducirá el valor de salvamento de su cheque de liquidación.",
-            q3: "¿Qué es la Cláusula de Tasación?",
-            a3: "Un derecho de póliza que le permite contratar a un tasador independiente para disputar una oferta baja."
+            subtitle: "Dudas comunes sobre reclamos en Texas",
+            q1: "¿Qué constituye una pérdida total en Texas?",
+            a1: "En Texas, un auto es pérdida total si los costos de reparación igualan o superan el 100% del valor real en efectivo (ACV).",
+            q2: "¿Puedo quedarme con mi auto totalizado?",
+            a2: "Sí, esto se llama 'retención del propietario'. La aseguradora deducirá el valor de salvamento de su liquidación.",
+            q3: "¿Texas tiene 'Derecho a Tasación'?",
+            a3: "La mayoría de las pólizas incluyen una Cláusula de Tasación, permitiéndole contratar un tasador independiente.",
+            // New FAQs Translated
+            q4: "¿Qué debo hacer inmediatamente después de un accidente?",
+            a4: "Primero, asegure la seguridad y llame al 911 si hay heridos. Intercambie información de seguro, tome fotos y busque atención médica de inmediato. Informe a su aseguradora pero evite declaraciones grabadas sin asesoría.",
+            q5: "¿Cuánto tiempo tengo para presentar un reclamo en Texas?",
+            a5: "Texas tiene un límite de 2 años para reclamos por lesiones. Sin embargo, esperar puede dañar su caso ya que la evidencia desaparece.",
+            q6: "¿Qué daños puedo recuperar?",
+            a6: "Puede recuperar facturas médicas, salarios perdidos, daños a la propiedad, dolor y sufrimiento. El monto depende de la responsabilidad y los límites de la póliza.",
+            q7: "¿Cuánto tiempo toma llegar a un acuerdo?",
+            a7: "Reclamos simples pueden tardar unos meses. Casos complejos pueden tardar más. Presionamos por una resolución justa y oportuna."
         }
     },
     city_page: {
@@ -133,14 +142,19 @@ export const es: Dictionary = {
             ask_disconnect_pref: "En caso de que nos desconectemos, ¿prefieres una Llamada o un Mensaje de Texto?",
             ask_goal: "¿Buscas información médica o legal sobre tu pérdida hoy?",
 
+            // Outcome
+            qualify_high: "Entiendo. Basado en esos detalles, probablemente califique para una compensación significativa. Lo estoy conectando con un Especialista Senior ahora.",
+            qualify_low: "Gracias. Estoy preparando un Paquete de Información de Accidentes para usted. Un miembro del equipo revisará sus detalles en breve.",
+
+            // Specific Mode Greetings
+            greeting_schedule: "Puedo ayudarle a reservar una cita de inmediato. Primero, ¿cuál es su emergencia? (ej. Pérdida Total, Lesiones, Ambos)",
+            greeting_call: "Por favor proporcione su número de teléfono abajo, y nuestra mesa de admisión le llamará inmediatamente.",
+
             // At The Scene Flow
-            scene_safety: "🚨 Primera prioridad: ¿Están todos a salvo? Si hay heridos o peligro inmediato, llama al 911. ¿Estás en un lugar seguro para chatear?",
+            scene_safety: "🚨 Primera prioridad: ¿Están todos a salvo? Si hay heridos o peligro inmediato, llama al 911. ¿Está en un lugar seguro para chatear?",
             scene_photo_plates: "Bien. Documentemos la evidencia antes de que se mueva. Por favor sube una foto de las **Placas** (del otro conductor y tuyas).",
             scene_photo_scene: "Entendido. Ahora, toma 2-3 **fotos amplias de la escena** mostrando la posición de ambos vehículos.",
             scene_photo_docs: "Siguiente: Sube una foto de la **Tarjeta de Seguro** del otro conductor y su **Licencia** (si lo permiten).",
-            scene_processing: "Perfecto. Estamos guardando estas imágenes en tu **Expediente Digital**. Te enviaremos una copia con marca de tiempo.",
-
-            // Outcome
             qualify_high: "Basado en los detalles, tienes un caso fuerte para compensación. Te estoy conectando con un Especialista Senior AHORA.",
             qualify_low: "Basado en las regulaciones de Texas, este puede ser un reclamo estándar. Hemos generado un **Paquete de Accidente Profesional** con pasos para manejar esto tú mismo. Enviándolo a tu correo ahora."
         }

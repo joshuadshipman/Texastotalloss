@@ -64,15 +64,24 @@ export const en = {
         },
         read_more: "Read Full Details",
         faq: {
-            title: "Common Questions",
-            subtitle: "Texas Total Loss Laws",
-            q1: "What is a Total Loss in Texas?",
+            title: "Frequently Asked Questions",
+            subtitle: "Common questions about Texas auto claims",
+            q1: "What constitutes a total loss in Texas?",
             a1: "In Texas, a car is a total loss if the repair costs equal or exceed 100% of the vehicle’s actual cash value (ACV).",
-            q2: "Can I keep my totaled car?",
-            a2: "Yes (Owner Retention). The insurance company will deduct the salvage value from your settlement check.",
-            q3: "What is the Appraisal Clause?",
-            a3: "A policy right allowing you to hire an independent appraiser to dispute a lowball offer."
-        }
+            q2: "Can I keep my totaled car in Texas?",
+            a2: "Yes, this is called 'owner retention'. The insurance company will deduct the salvage value from your settlement.",
+            q3: "Does Texas have a 'Right to Appraisal'?",
+            a3: "Most policies include an Appraisal Clause, allowing you to hire an independent appraiser to dispute low offers.",
+            // New FAQs
+            q4: "What should I do immediately after an accident?",
+            a4: "First, ensure safety and call 911 if injured. Exchange insurance info, take photos of the scene and plates, and seek medical attention immediately, even if you feel fine. Report the incident to your insurer but do not give a recorded statement without advice.",
+            q5: "How long do I have to file a claim in Texas?",
+            a5: "Texas has a 2-year Statute of Limitations for injury claims. However, waiting can hurt your case as evidence disappears. It is vital to act quickly.",
+            q6: "What damages can I recover?",
+            a6: "You may recover Medical Bills, Lost Wages, Property Damage, Pain & Suffering, and sometimes Diminished Value. The specific amount depends on liability and policy limits.",
+            q7: "How long does it take to settle?",
+            a7: "Simple claims may settle in a few months. Complex injury cases or those requiring litigation can take longer. We push for a timely but fair resolution, not a quick lowball."
+        },
     },
     city_page: {
         hero_badge: "Local Assistance for {county} County",
@@ -133,6 +142,14 @@ export const en = {
 
             // New Call/Chat Flow
             intro_call: "Hi, I'm Angel, your intake specialist. I can help connect you with our team immediately.",
+            qualify_high: "I see. Based on those details, you likely qualify for significant compensation. I am connecting you to a Senior Specialist now.",
+            qualify_low: "Thank you. I'm preparing an Accident Information Packet for you now. A team member will review your details shortly.",
+
+            // Specific Mode Greetings
+            greeting_schedule: "I can help you obtain an appointment immediately. First, what constitutes your emergency? (e.g. Total Loss, Injury, Both)",
+            greeting_call: "Please provide your phone number below, and our intake desk will call you immediately.",
+            greeting_sms: "Please enter your mobile number. We will text you a secure link to start your case.",
+
             ask_disconnect_pref: "In case we get disconnected, would you prefer a Callback or a Text Message?",
             ask_goal: "Are you looking to find medical or legal information today regarding the loss?",
 

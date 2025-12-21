@@ -34,26 +34,20 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
 
             if (chatMode === 'sms') {
                 initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_sms }];
-                initialStep = 20;
+                initialStep = 300; // SMS Flow Start
+            } else if (chatMode === 'call') {
+                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_call }];
+                initialStep = 400; // Call Flow Start
+            } else if (chatMode === 'schedule') {
+                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_schedule }];
+                initialStep = 500; // Schedule Flow Start
             } else if (chatMode === 'live') {
                 initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_live }];
-
+                // ... (Existing live logic kept separate if needed, or merged)
                 agentTimeoutRef.current = setTimeout(() => {
                     addMessage('bot', dict.chat.responses.busy_agents);
                     setStep(30);
-                }, 20000);
-
-                supabaseClient.from('chat_messages').insert({
-                    session_id: sessionId,
-                    sender: 'bot',
-                    content: '[SYSTEM]: User clicked Live Agent button.'
-                });
-            } else if (chatMode === 'call') {
-                initialMsgs = [
-                    { sender: 'bot', text: dict.chat.responses.intro_call },
-                    { sender: 'bot', text: dict.chat.responses.ask_disconnect_pref }
-                ];
-                initialStep = 100;
+                }, 15000);
             } else {
                 initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_standard }];
                 initialStep = 1;
@@ -205,6 +199,49 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
                 botText = d.chat.responses.ask_contact_method;
                 nextStep = 3;
             }
+
+            // --- SMS Flow (300) ---
+            else if (step === 300) {
+                newData.phone = userText;
+                newData.contact_pref = 'text';
+                botText = "Thanks. I've sent a link. Meanwhile, do you have photos of the accident? (Yes/No)";
+                nextStep = 301;
+            }
+            else if (step === 301) {
+                if (lowerText.includes('yes')) {
+                    botText = d.chat.responses.scene_photo_plates || "Please upload them now.";
+                    nextStep = 201; // Jump to existing evidence flow
+                } else {
+                    botText = d.chat.responses.ask_incident;
+                    nextStep = 5;
+                }
+            }
+
+            // --- Call Flow (400) ---
+            else if (step === 400) {
+                newData.phone = userText;
+                newData.contact_pref = 'call';
+                botText = "Got it. We are dialing you now. While you wait, do you have any photos of the damage? (Yes/No)";
+                nextStep = 301; // Re-use the photo check logic
+            }
+
+            // --- Schedule Flow (500) ---
+            else if (step === 500) {
+                newData.incident_details = userText; // They described emergency
+                botText = d.chat.responses.ask_call_time || "When is the best time for us to call you?";
+                nextStep = 501;
+            }
+            else if (step === 501) {
+                newData.best_time = userText;
+                botText = d.chat.responses.ask_phone.replace('{name}', 'there');
+                nextStep = 502;
+            }
+            else if (step === 502) {
+                newData.phone = userText;
+                botText = "Appointment Confirmed. Do you have scene photos to help the attorney prepare? (Yes/No)";
+                nextStep = 301; // Re-use photo check
+            }
+
             else if (step === 3) { // Method
                 newData.contact_pref = lowerText.includes('text') ? 'text' : 'call';
                 botText = d.chat.responses.ask_incident;
@@ -219,6 +256,11 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
             }
             else if (step === 4) { // Time
                 newData.best_time = userText;
+                botText = d.chat.responses.ask_incident;
+                nextStep = 5;
+            }
+            else if (step === 100) { // Legacy Call (Safe fallback)
+                newData.phone = userText;
                 botText = d.chat.responses.ask_incident;
                 nextStep = 5;
             }
@@ -338,8 +380,8 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
                         {messages.map((msg, i) => (
                             <div key={i} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                                 <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${msg.sender === 'user'
-                                        ? 'bg-blue-600 text-white rounded-tr-none'
-                                        : 'bg-white text-gray-800 border border-gray-200 shadow-sm rounded-tl-none'
+                                    ? 'bg-blue-600 text-white rounded-tr-none'
+                                    : 'bg-white text-gray-800 border border-gray-200 shadow-sm rounded-tl-none'
                                     }`}>
                                     {msg.text}
                                 </div>

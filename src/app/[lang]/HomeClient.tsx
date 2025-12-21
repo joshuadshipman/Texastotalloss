@@ -2,6 +2,8 @@
 
 import ChatWidget from '@/components/ChatWidget';
 import Link from 'next/link';
+import AccidentGrid from '@/components/AccidentGrid';
+import InfoSections from '@/components/InfoSections';
 import { useChat } from '@/components/ChatContext';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
@@ -111,25 +113,27 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:flex lg:flex-row gap-4 pt-6 max-w-4xl mx-auto w-full">
-                        <button onClick={openReview} className="flex-1 h-16 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-black rounded-xl shadow-xl transition flex items-center justify-center gap-2 text-sm md:text-base leading-tight px-2 animate-pulse border-2 border-white/20">
-                            <SparklesIcon size={20} className="text-yellow-300" />
+                    {/* Primary Call to Action - Centered & Pulsing */}
+                    <div className="flex justify-center pt-8 pb-6">
+                        <button onClick={openReview} className="w-full max-w-lg h-20 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-black rounded-2xl shadow-2xl transition flex items-center justify-center gap-3 text-lg md:text-xl leading-tight animate-pulse border-4 border-white/20 transform hover:scale-105 duration-200">
+                            <SparklesIcon size={28} className="text-yellow-300" />
                             <span>{dict.buttons.ai_review}</span>
-                        </button>
-                        <button onClick={() => openChat('call')} className="flex-1 h-16 bg-white text-blue-900 hover:bg-gray-100 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm md:text-base leading-tight px-2">
-                            <span>{dict.buttons.call_now}</span>
                         </button>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-2 max-w-4xl mx-auto w-full pt-2">
-                        <button onClick={() => openChat('sms')} className="bg-blue-800/60 hover:bg-blue-700 text-white py-3 rounded-lg font-bold text-sm backdrop-blur-sm border border-blue-500/30">
-                            {dict.buttons.sms}
+                    {/* Secondary Actions - 4 Button Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto w-full">
+                        <button onClick={() => openChat('call')} className="h-16 bg-white text-blue-900 hover:bg-blue-50 font-bold rounded-xl shadow-lg transition flex flex-col items-center justify-center border border-blue-100">
+                            <span className="text-base">{dict.buttons.call_now}</span>
                         </button>
-                        <button onClick={() => openChat('live')} className="bg-blue-800/60 hover:bg-blue-700 text-white py-3 rounded-lg font-bold text-sm backdrop-blur-sm border border-blue-500/30">
-                            {dict.buttons.live_chat}
+                        <button onClick={() => openChat('schedule')} className="h-16 bg-blue-800/80 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition flex flex-col items-center justify-center backdrop-blur-sm border border-blue-500/30">
+                            <span className="text-base">{dict.buttons.schedule}</span>
                         </button>
-                        <button onClick={() => openChat('schedule')} className="bg-blue-800/60 hover:bg-blue-700 text-white py-3 rounded-lg font-bold text-sm backdrop-blur-sm border border-blue-500/30">
-                            {dict.buttons.schedule}
+                        <button onClick={() => openChat('sms')} className="h-16 bg-blue-800/80 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition flex flex-col items-center justify-center backdrop-blur-sm border border-blue-500/30">
+                            <span className="text-base">{dict.buttons.sms}</span>
+                        </button>
+                        <button onClick={() => openChat('live')} className="h-16 bg-blue-800/80 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition flex flex-col items-center justify-center backdrop-blur-sm border border-blue-500/30">
+                            <span className="text-base">{dict.buttons.live_chat}</span>
                         </button>
                     </div>
                     <p className="text-xs text-blue-300 mt-4">{dict.hero.help_text}</p>
@@ -154,6 +158,12 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                     <p className="mt-4 text-xs text-gray-400 font-medium">Partner Firm Accolades & Recognition</p>
                 </div>
             </section>
+
+            {/* Accident Types Grid */}
+            <AccidentGrid />
+
+            {/* Informational Sections (Why Hire, Liability, Urgency) */}
+            <InfoSections />
 
             {/* Video Knowledge Library */}
             <section className="bg-gray-900 py-16 px-4">
@@ -267,6 +277,29 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                                         {dict.sections.faq.q3}
                                     </h3>
                                     <p className="text-gray-600 ml-8 mt-1 border-l-2 border-blue-100 pl-4">{dict.sections.faq.a3}</p>
+                                </div>
+
+                                {/* Expanded FAQs */}
+                                <div>
+                                    <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2">
+                                        <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">?</span>
+                                        {dict.sections.faq.q4}
+                                    </h3>
+                                    <p className="text-gray-600 ml-8 mt-1 border-l-2 border-blue-100 pl-4">{dict.sections.faq.a4}</p>
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2">
+                                        <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">?</span>
+                                        {dict.sections.faq.q5}
+                                    </h3>
+                                    <p className="text-gray-600 ml-8 mt-1 border-l-2 border-blue-100 pl-4">{dict.sections.faq.a5}</p>
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2">
+                                        <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">?</span>
+                                        {dict.sections.faq.q6}
+                                    </h3>
+                                    <p className="text-gray-600 ml-8 mt-1 border-l-2 border-blue-100 pl-4">{dict.sections.faq.a6}</p>
                                 </div>
                             </div>
                         </SectionCard>
