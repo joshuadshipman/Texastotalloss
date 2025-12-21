@@ -8,10 +8,10 @@ export default function LanguageSwitcher() {
 
     // For now, let's just make it a client component that swaps the first segment
     return (
-        <div className="flex items-center space-x-2 text-sm font-bold">
-            <a href="/en" className="hover:text-amber-400">EN</a>
-            <span className="text-gray-400">|</span>
-            <a href="/es" className="hover:text-amber-400">ES</a>
+        <div className="flex items-center space-x-3 text-sm font-bold bg-black/30 backdrop-blur-md text-white px-4 py-2 rounded-full border border-white/20 shadow-lg transition-all hover:bg-black/40">
+            <a href="/en" className="hover:text-amber-300 transition-colors">EN</a>
+            <span className="text-white/40">|</span>
+            <a href="/es" className="hover:text-amber-300 transition-colors">ES</a>
         </div>
     );
 }
