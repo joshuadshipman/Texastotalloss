@@ -1,5 +1,5 @@
 import { Inter } from "next/font/google";
-import "../../globals.css";
+import "../globals.css";
 import { ChatProvider } from "@/components/ChatContext";
 import ChatWidget from "@/components/ChatWidget";
 import { getDictionary } from "@/app/[lang]/dictionaries";

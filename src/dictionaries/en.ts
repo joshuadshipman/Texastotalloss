@@ -106,14 +106,13 @@ export const en = {
         input_placeholder: "Type a message...",
         upload_tooltip: "Upload Photo",
         keywords: {
-            live_agent: ["live agent", "agent", "human", "person", "representative", "talk", "representative"],
+            live_agent: ["live agent", "agent", "human", "person", "representative", "talk"],
             yes: ["yes", "yeah", "yep", "sure", "ok", "correct"],
             no: ["no", "nope", "nah", "incorrect"],
             pain: ["pain", "hurt", "injury", "stress", "anxiety", "ache", "sore", "broken", "fracture", "bleed"],
         },
         responses: {
             // Greetings
-            greeting_sms: "No problem. Let's get this set up so we can text you. To start, please provide your cell phone number.",
             greeting_live: "I am connecting you to a live specialist now. Please hold on...",
             greeting_standard: "Hi, I'm Angel. I understand this is a stressful time, and I'm here to help. To start, may I have your name?",
 
@@ -142,16 +141,13 @@ export const en = {
 
             // New Call/Chat Flow
             intro_call: "Hi, I'm Angel, your intake specialist. I can help connect you with our team immediately.",
-            qualify_high: "I see. Based on those details, you likely qualify for significant compensation. I am connecting you to a Senior Specialist now.",
-            qualify_low: "Thank you. I'm preparing an Accident Information Packet for you now. A team member will review your details shortly.",
+            ask_disconnect_pref: "In case we get disconnected, would you prefer a Callback or a Text Message?",
+            ask_goal: "Are you looking to find medical or legal information today regarding the loss?",
 
             // Specific Mode Greetings
             greeting_schedule: "I can help you obtain an appointment immediately. First, what constitutes your emergency? (e.g. Total Loss, Injury, Both)",
             greeting_call: "Please provide your phone number below, and our intake desk will call you immediately.",
             greeting_sms: "Please enter your mobile number. We will text you a secure link to start your case.",
-
-            ask_disconnect_pref: "In case we get disconnected, would you prefer a Callback or a Text Message?",
-            ask_goal: "Are you looking to find medical or legal information today regarding the loss?",
 
             // At The Scene Flow
             scene_safety: "🚨 First priority: Is everyone safe? If anyone is injured or there is immediate danger, please call 911 immediately. Are you in a safe place to chat?",
@@ -161,8 +157,8 @@ export const en = {
             scene_processing: "Perfect. We are securing these images into your **Digital Case File**. We will email you a timestamped copy for your records.",
 
             // Outcome
-            qualify_high: "Based on the details, you have a strong case for compensation. I am connecting you to a Senior Claims Specialist NOW.",
-            qualify_low: "Based on Texas regulations, this may be a standard claim. We have generated a **Professional Accident Packet** with steps to handle this yourself. Sending it to your email now."
+            qualify_high: "I see. Based on those details, you likely qualify for significant compensation. I am connecting you to a Senior Specialist now.",
+            qualify_low: "Thank you. I'm preparing an Accident Information Packet for you now. A team member will review your details shortly."
         }
     },
     caseReview: {

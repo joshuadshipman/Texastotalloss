@@ -114,10 +114,11 @@ export const es: Dictionary = {
             pain: ["dolor", "herida", "lastimado", "roto", "fractura", "sangre", "duele"],
         },
         responses: {
-            greeting_sms: "Ningún problema. Vamos a configurarlo para enviarte mensajes de texto. Para empezar, por favor dame tu número de celular.",
+            // Greetings
             greeting_live: "Te estoy conectando con un especialista en vivo ahora. Por favor espera...",
             greeting_standard: "Hola, soy Angel. Entiendo que este es un momento estresante y estoy aquí para ayudarte. Para empezar, ¿me podrías dar tu nombre?",
 
+            // Steps
             ask_phone: "Gracias, {name}. En caso de que nos desconectemos, ¿cuál es tu número de celular?",
             ask_contact_method: "Gracias. ¿Prefieres que te contactemos por Texto o Llamada?",
             ask_call_time: "¿Cuál es la mejor hora para llamarte?",
@@ -126,14 +127,17 @@ export const es: Dictionary = {
             ask_photos: "¿Tienes fotos de los daños o un reporte policial? (Puedes subirlas usando el icono de cámara, o decir 'No')",
             ask_recent: "Una última pregunta importante: ¿El accidente fue en las últimas 48 horas?",
 
+            // Advice
             advice_er: "Por favor escucha: Como han pasado menos de 48 horas, te recomiendo encarecidamente ir a Urgencias de inmediato. La adrenalina puede ocultar lesiones.",
             advice_doc_urgent: "Como ha pasado más de una semana, es crítico que veas a un médico inmediatamente. Las lagunas en el tratamiento son la razón #1 por la que se niegan los reclamos.",
             advice_chiro: "Como han pasado unos días, recomiendo ver a un Quiropráctico o Especialista en Rehabilitación lo antes posible.",
 
+            // Closing
             confirmation: "Hemos recibido tus detalles. Un especialista se pondrá en contacto pronto.",
             upload_success: "✅ ¡Foto subida!",
             upload_fail: "Error al subir foto.",
 
+            // System
             busy_agents: "Todos nuestros agentes están ocupados. Te enviaremos un texto pronto. ¿Cuál es la mejor hora para escribirte?",
             live_connect: "Conectando con agente...",
 
@@ -142,17 +146,19 @@ export const es: Dictionary = {
             ask_disconnect_pref: "En caso de que nos desconectemos, ¿prefieres una Llamada o un Mensaje de Texto?",
             ask_goal: "¿Buscas información médica o legal sobre tu pérdida hoy?",
 
-            // Outcome (Consolidated)
-
             // Specific Mode Greetings
             greeting_schedule: "Puedo ayudarle a reservar una cita de inmediato. Primero, ¿cuál es su emergencia? (ej. Pérdida Total, Lesiones, Ambos)",
             greeting_call: "Por favor proporcione su número de teléfono abajo, y nuestra mesa de admisión le llamará inmediatamente.",
+            greeting_sms: "Por favor ingrese su número de móvil. Le enviaremos un enlace seguro para iniciar su caso.",
 
             // At The Scene Flow
             scene_safety: "🚨 Primera prioridad: ¿Están todos a salvo? Si hay heridos o peligro inmediato, llama al 911. ¿Está en un lugar seguro para chatear?",
             scene_photo_plates: "Bien. Documentemos la evidencia antes de que se mueva. Por favor sube una foto de las **Placas** (del otro conductor y tuyas).",
             scene_photo_scene: "Entendido. Ahora, toma 2-3 **fotos amplias de la escena** mostrando la posición de ambos vehículos.",
             scene_photo_docs: "Siguiente: Sube una foto de la **Tarjeta de Seguro** del otro conductor y su **Licencia** (si lo permiten).",
+            scene_processing: "Perfecto. Estamos asegurando estas imágenes en su **Expediente Digital**. Le enviaremos una copia con marca de tiempo para sus registros.",
+
+            // Outcome
             qualify_high: "Basado en los detalles, tienes un caso fuerte para compensación. Te estoy conectando con un Especialista Senior AHORA.",
             qualify_low: "Basado en las regulaciones de Texas, este puede ser un reclamo estándar. Hemos generado un **Paquete de Accidente Profesional** con pasos para manejar esto tú mismo. Enviándolo a tu correo ahora."
         }
