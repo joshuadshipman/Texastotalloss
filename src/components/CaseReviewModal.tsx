@@ -8,9 +8,10 @@ import { Dictionary } from '@/dictionaries/en';
 
 interface CaseReviewModalProps {
     dict?: Dictionary | null;
+    lang?: string;
 }
 
-export default function CaseReviewModal({ dict }: CaseReviewModalProps) {
+export default function CaseReviewModal({ dict, lang }: CaseReviewModalProps) {
     const { isReviewOpen, closeReview } = useChat();
     const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,7 +24,7 @@ export default function CaseReviewModal({ dict }: CaseReviewModalProps) {
         permissionText: false,
         email: '',
         contactMethod: 'text',
-        language: 'English',
+        language: lang === 'es' ? 'Spanish' : 'English',
         bestTime: '',
         // 2. Accident
         dateOfAccident: '',

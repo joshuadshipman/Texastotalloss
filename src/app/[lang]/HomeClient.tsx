@@ -88,7 +88,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <CaseReviewModal dict={dict} />
+            <CaseReviewModal dict={dict} lang={lang} />
 
             {/* Hero Section */}
             <header className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white py-12 px-4 text-center relative overflow-hidden">
@@ -148,12 +148,8 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             <section className="bg-white py-12 border-b border-gray-200">
                 <div className="max-w-6xl mx-auto px-4 text-center">
                     <h3 className="text-2xl font-bold text-blue-900 mb-8 uppercase tracking-wide">Recognized for Excellence</h3>
-                    <div className="flex justify-center items-center opacity-90 hover:opacity-100 transition-opacity duration-300">
-                        <img
-                            src="/images/trust-badges.png"
-                            alt="Legal Excellence Awards: Best Lawyers, Million Dollar Advocates, Super Lawyers"
-                            className="max-w-full h-auto max-h-24 md:max-h-32 object-contain"
-                        />
+                    <div className="flex justify-center items-center p-8 bg-gray-50 border border-dashed border-gray-300 rounded-xl">
+                        <p className="text-gray-400 font-bold text-sm uppercase tracking-widest">[ Trust Badges Image Placeholder ]</p>
                     </div>
                     <p className="mt-4 text-xs text-gray-400 font-medium">Partner Firm Accolades & Recognition</p>
                 </div>
