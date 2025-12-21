@@ -22,6 +22,7 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
     const [step, setStep] = useState(0);
     const [userData, setUserData] = useState<any>({});
     const [sessionId] = useState(() => Math.random().toString(36).substring(7));
+    const [isLiveMode, setIsLiveMode] = useState(false);
     const bottomRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const agentTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -74,12 +75,13 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
         }
     }, [messages, isOpen]);
 
-    // Realtime Subscription
+    // Realtime Session Status & Messages
     useEffect(() => {
         if (!isOpen) return;
 
-        const channel = supabaseClient
-            .channel(`session-${sessionId}`)
+        // 1. Subscribe to Messages
+        const msgChannel = supabaseClient
+            .channel(`session-msgs-${sessionId}`)
             .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: `session_id=eq.${sessionId}` }, (payload) => {
                 const newMsg = payload.new as any;
                 if (newMsg.sender === 'agent') {
@@ -87,19 +89,48 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
                         clearTimeout(agentTimeoutRef.current);
                         agentTimeoutRef.current = null;
                     }
-                    setMessages(prev => {
-                        // Avoid duplicates if we already added it optimistically (agent likely won't be optimistic though)
-                        return [...prev, { sender: 'bot', text: newMsg.content }];
-                    });
+                    setMessages(prev => [...prev, { sender: 'bot', text: newMsg.content }]);
                 }
             })
             .subscribe();
 
+        // 2. Subscribe to Session Status (Live Mode Takeover)
+        const sessionChannel = supabaseClient
+            .channel(`session-status-${sessionId}`)
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'chat_sessions', filter: `session_id=eq.${sessionId}` }, (payload) => {
+                const newState = payload.new as any;
+                if (newState.status === 'live') {
+                    setIsLiveMode(true);
+                }
+            })
+            .subscribe();
+
+        // 3. Create/Init Session in DB
+        const initSession = async () => {
+            const { error } = await supabaseClient.from('chat_sessions').upsert({
+                session_id: sessionId,
+                status: 'bot',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            }, { onConflict: 'session_id' });
+            if (error) console.error("Session Init Error:", error);
+        };
+        initSession();
+
         return () => {
             if (agentTimeoutRef.current) clearTimeout(agentTimeoutRef.current);
-            supabaseClient.removeChannel(channel);
+            supabaseClient.removeChannel(msgChannel);
+            supabaseClient.removeChannel(sessionChannel);
         };
     }, [isOpen, sessionId]);
+
+    // Update Session Data Helper
+    const updateSessionData = async (newData: any) => {
+        await supabaseClient.from('chat_sessions').update({
+            user_data: newData,
+            updated_at: new Date().toISOString()
+        }).eq('session_id', sessionId);
+    };
 
     const addMessage = (sender: 'user' | 'bot', text: string) => {
         setMessages(prev => [...prev, { sender, text }]);
@@ -287,7 +318,15 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
                 nextStep = 5;
             }
 
+            // If Live Mode is active, do NOT run bot logic
+            if (isLiveMode) {
+                setUserData(newData); // Still keep local state up to date just in case
+                updateSessionData(newData); // Sync data
+                return;
+            }
+
             setUserData(newData);
+            updateSessionData(newData); // Sync to DB
             setStep(nextStep);
 
             if (botText) {
