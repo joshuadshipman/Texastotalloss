@@ -15,7 +15,7 @@ export default function InfoSections() {
             <section className="max-w-6xl mx-auto px-4">
                 <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 flex flex-col md:flex-row">
                     <div className="bg-blue-900 text-white p-8 md:w-1/3 flex flex-col justify-center">
-                        <h2 className="text-3xl font-black mb-4 uppercase leading-tight">Why Hire A Specialist?</h2>
+                        <h2 className="text-3xl font-black mb-4 uppercase leading-tight">Why You Need a Partner</h2>
                         <p className="text-blue-200 mb-6">Motor vehicle accidents are common, but fair settlements are not. Insurance companies have teams of lawyers. You should too.</p>
                         <hr className="border-blue-700 w-12 mb-6" />
                         <div className="flex items-center gap-3">
@@ -37,7 +37,7 @@ export default function InfoSections() {
                             <p className="text-sm text-gray-600">We accurately calculate your total damages, including hidden costs like diminished value.</p>
                         </div>
                         <div className="space-y-2">
-                            <h3 className="font-bold text-blue-900 flex items-center gap-2"><FileTextIcon size={18} className="text-blue-600" /> Litigation</h3>
+                            <h3 className="font-bold text-blue-900 flex items-center gap-2"><FileTextIcon size={18} className="text-blue-600" /> Court Representation</h3>
                             <p className="text-sm text-gray-600">If they refuse a fair offer, we are prepared to fight for maximum compensation in court.</p>
                         </div>
                     </div>

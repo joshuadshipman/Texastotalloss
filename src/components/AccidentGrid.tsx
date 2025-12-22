@@ -33,7 +33,7 @@ export default function AccidentGrid() {
                             >
                                 <div className="space-y-6">
                                     {/* Stats Row */}
-                                    <div className="grid grid-cols-3 gap-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         {type.stats.map((stat, idx) => (
                                             <div key={idx} className="text-center p-4 bg-gray-50 rounded-lg border border-gray-100">
                                                 <div className={`text-2xl font-black ${type.color.replace('bg-', 'text-')}`}>

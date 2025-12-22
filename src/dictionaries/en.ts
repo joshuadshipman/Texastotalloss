@@ -22,7 +22,7 @@ export const en = {
             card_title: "🚨 Post-Accident Checklist"
         },
         mitigate: {
-            title: "Duty to Mitigate",
+            title: "Protect Your Rights",
             subtitle: "Medical Injuries & Property Obligations",
             main_title: "Your Duty: Don't Make It Worse"
         },
