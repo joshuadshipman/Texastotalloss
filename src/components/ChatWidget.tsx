@@ -54,19 +54,46 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
                 initialStep = 1;
             }
 
+            // Reset logic if mode changed or first open
             setMessages(initialMsgs);
             setStep(initialStep);
 
-            // Save initial messages
-            initialMsgs.forEach(msg => {
-                supabaseClient.from('chat_messages').insert({
-                    session_id: sessionId,
-                    sender: 'bot',
-                    content: msg.text
-                });
-            });
+            // Only save initial if we don't have messages? 
+            // Actually, we should always reset if the user clicks a specific button (changing intent)
         }
-    }, [isOpen, chatMode, dict]);
+    }, [isOpen, chatMode, dict]); // Added chatMode to dependency array to trigger reset
+
+    // Effect to handle "Start Over" when switching modes while already open
+    useEffect(() => {
+        if (isOpen && dict) {
+            let initialMsgs: Message[] = [];
+            let initialStep = 0;
+
+            if (chatMode === 'sms') {
+                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_sms }];
+                initialStep = 300;
+            } else if (chatMode === 'call') {
+                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_call }];
+                initialStep = 400;
+            } else if (chatMode === 'schedule') {
+                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_schedule }];
+                initialStep = 500;
+            } else {
+                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_standard }];
+                initialStep = 1;
+            }
+
+            setMessages(initialMsgs);
+            setStep(initialStep);
+
+            // Sync reset to Supabase if valid session
+            /* 
+               We typically don't spam Supabase on every mode switch reset unless user typed.
+               But if we want a clean slate in the DB, we might ignoring the old messages.
+               For now, we just reset the UI. 
+            */
+        }
+    }, [chatMode]);
 
     // Auto-scroll
     useEffect(() => {

@@ -13,7 +13,7 @@ import { ShieldCheckIcon, AlertTriangleIcon, FileTextIcon, CarIcon, DollarSignIc
 const ValuationCalculator = dynamic(() => import('@/components/ValuationCalculator'), { ssr: false });
 const MobileNav = dynamic(() => import('@/components/MobileNav'), { ssr: false });
 const SectionCard = dynamic(() => import('@/components/SectionCard'));
-import VideoPromo from '@/components/VideoPromo';
+import VideoGallery from '@/components/VideoGallery';
 const LightboxImage = dynamic(() => import('@/components/ui/LightboxImage'));
 
 const CaseReviewModal = dynamic(() => import('@/components/CaseReviewModal'), { ssr: false });
@@ -90,53 +90,59 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             />
             <CaseReviewModal dict={dict} lang={lang} />
 
-            {/* Hero Section */}
-            <header className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white py-12 px-4 text-center relative overflow-hidden">
-                <div className="absolute inset-0 z-0">
-                    <img src="/images/worried_customer.png" alt="Worried driver" className="w-full h-full object-cover opacity-20" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-900 via-blue-900/90 to-blue-900/50"></div>
-                </div>
-                <div className="max-w-4xl mx-auto space-y-4 relative z-10">
-                    <div className="inline-block bg-blue-700/50 backdrop-blur-sm border border-blue-500/30 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
-                        {dict.hero.badge}
-                    </div>
-                    <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight mb-4">
-                        <span className="block text-white mb-2 text-red-500 font-bold">{dict.hero.title_main}</span>
-                        <span className="block text-blue-300">{dict.hero.title_sub}</span>
-                    </h1>
-                    <div className="text-lg md:text-xl font-medium text-blue-100 space-y-4 max-w-3xl mx-auto bg-blue-800/50 p-6 rounded-xl border border-blue-400/30">
-                        <p className="text-2xl md:text-3xl font-extrabold text-amber-300 italic leading-snug drop-shadow-sm">
-                            "{dict.hero.quote_main}"
-                        </p>
-                        <p className="font-bold text-white text-lg">
-                            {dict.hero.quote_sub}
-                        </p>
+            {/* Hero Section (Premium Glass Redesign) */}
+            <header className="bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900 via-slate-900 to-black text-white pt-20 pb-16 px-4 text-center relative overflow-hidden">
+                {/* Abstract Background Noise */}
+                <div className="absolute inset-0 opacity-10 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+
+                <div className="max-w-4xl mx-auto space-y-6 relative z-10">
+                    {/* Badge */}
+                    <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full shadow-xl animate-fade-in-up">
+                        <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                        <span className="text-xs font-bold uppercase tracking-widest text-blue-100">{dict.hero.badge}</span>
                     </div>
 
-                    {/* Primary Call to Action - Centered & Pulsing */}
-                    <div className="flex justify-center pt-8 pb-6">
-                        <button onClick={openReview} className="w-full max-w-lg h-20 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-black rounded-2xl shadow-2xl transition flex items-center justify-center gap-3 text-lg md:text-xl leading-tight animate-pulse border-4 border-white/20 transform hover:scale-105 duration-200">
-                            <SparklesIcon size={28} className="text-yellow-300" />
+                    {/* Main Title (Clean White & Gradient Gold) */}
+                    <h1 className="text-4xl md:text-7xl font-black tracking-tight leading-none drop-shadow-2xl">
+                        <span className="block text-white mb-2">{dict.hero.title_main}</span>
+                        <span className="block bg-gradient-to-r from-amber-200 to-yellow-500 bg-clip-text text-transparent">
+                            {dict.hero.title_sub}
+                        </span>
+                    </h1>
+
+                    {/* Subtext (Concise) */}
+                    <p className="text-lg md:text-2xl font-medium text-blue-200/80 max-w-2xl mx-auto leading-relaxed">
+                        Don't let insurance adjusters underpay you. Get your <span className="text-white font-bold decoration-blue-500 underline underline-offset-4 decoration-2">True Market Value</span> instantly.
+                    </p>
+
+                    {/* Primary Call to Action - Glass Container */}
+                    <div className="py-8 relative group">
+                        <div className="absolute inset-0 bg-blue-500/20 blur-3xl opacity-30 rounded-full group-hover:opacity-50 transition duration-500"></div>
+                        <button
+                            onClick={openReview}
+                            className="relative w-full max-w-md h-20 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-orange-500 text-white font-black rounded-2xl shadow-[0_0_40px_-10px_rgba(220,38,38,0.5)] transition-all flex items-center justify-center gap-4 text-xl md:text-2xl transform hover:scale-[1.02] border border-red-400/30"
+                        >
+                            <SparklesIcon size={32} className="text-yellow-200 animate-pulse" />
                             <span>{dict.buttons.ai_review}</span>
                         </button>
+                        <p className="mt-3 text-xs text-blue-400/60 font-medium uppercase tracking-widest">{dict.hero.help_text}</p>
                     </div>
 
-                    {/* Secondary Actions - 4 Button Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto w-full">
-                        <button onClick={() => openChat('call')} className="h-16 bg-white text-blue-900 hover:bg-blue-50 font-bold rounded-xl shadow-lg transition flex flex-col items-center justify-center border border-blue-100">
-                            <span className="text-base">{dict.buttons.call_now}</span>
+                    {/* Secondary Actions - Clean Glass Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto pt-4 border-t border-white/10">
+                        <button onClick={() => openChat('call')} className="group flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 transition-all">
+                            <span className="text-white/90 font-bold text-sm group-hover:text-blue-300">{dict.buttons.call_now}</span>
                         </button>
-                        <button onClick={() => openChat('schedule')} className="h-16 bg-blue-800/80 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition flex flex-col items-center justify-center backdrop-blur-sm border border-blue-500/30">
-                            <span className="text-base">{dict.buttons.schedule}</span>
+                        <button onClick={() => openChat('schedule')} className="group flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 transition-all">
+                            <span className="text-white/90 font-bold text-sm group-hover:text-blue-300">{dict.buttons.schedule}</span>
                         </button>
-                        <button onClick={() => openChat('sms')} className="h-16 bg-blue-800/80 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition flex flex-col items-center justify-center backdrop-blur-sm border border-blue-500/30">
-                            <span className="text-base">{dict.buttons.sms}</span>
+                        <button onClick={() => openChat('sms')} className="group flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 transition-all">
+                            <span className="text-white/90 font-bold text-sm group-hover:text-blue-300">{dict.buttons.sms}</span>
                         </button>
-                        <button onClick={() => openChat('live')} className="h-16 bg-blue-800/80 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition flex flex-col items-center justify-center backdrop-blur-sm border border-blue-500/30">
-                            <span className="text-base">{dict.buttons.live_chat}</span>
+                        <button onClick={() => openChat('live')} className="group flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 transition-all">
+                            <span className="text-white/90 font-bold text-sm group-hover:text-blue-300">{dict.buttons.live_chat}</span>
                         </button>
                     </div>
-                    <p className="text-xs text-blue-300 mt-4">{dict.hero.help_text}</p>
                 </div>
             </header>
 
@@ -161,44 +167,9 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             {/* Informational Sections (Why Hire, Liability, Urgency) */}
             <InfoSections />
 
-            {/* Video Knowledge Library */}
-            <section className="bg-gray-900 py-16 px-4">
-                <div className="max-w-6xl mx-auto">
-                    <h2 className="text-3xl md:text-4xl font-black text-white text-center mb-12 uppercase italic tracking-tighter">
-                        <span className="text-red-600">Video Evidence</span> Library
-                    </h2>
+            {/* Video Knowledge Library (Interactive) */}
+            <VideoGallery />
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-                        <VideoPromo
-                            title="Hit by a Drunk Driver?"
-                            subtitle="They drank. You paid. It's time to fight back."
-                            thumbnailUrl="/images/drunk.png"
-                        />
-                        <VideoPromo
-                            title="18-Wheeler Negligence"
-                            subtitle="Fighting the billion-dollar trucking insurance giants."
-                            thumbnailUrl="/images/truck.png"
-                        />
-                    </div>
-                    <div className="grid md:grid-cols-3 gap-6 mt-8">
-                        <VideoPromo
-                            title="Uninsured Driver?"
-                            subtitle="Finding coverage when they have none."
-                            thumbnailUrl="/images/uninsured.png"
-                        />
-                        <VideoPromo
-                            title="Distracted / Texting"
-                            subtitle="Proving they weren't watching the road."
-                            thumbnailUrl="/images/distracted.png"
-                        />
-                        <VideoPromo
-                            title="Rideshare Accidents"
-                            subtitle="Uber/Lyft corporate policy limits explained."
-                            thumbnailUrl="/images/rideshare.png" // Placeholder if gen failed
-                        />
-                    </div>
-                </div>
-            </section >
 
             <section className="py-12 px-4 bg-white" id="resources">
                 <div className="max-w-4xl mx-auto">

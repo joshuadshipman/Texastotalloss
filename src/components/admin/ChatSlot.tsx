@@ -97,41 +97,46 @@ export default function ChatSlot({ session, onClose }: ChatSlotProps) {
     return (
         <div className="flex flex-col h-full bg-white border-l border-r border-gray-200 shadow-xl overflow-hidden relative">
             {/* Header: User Data (The "Text above the chat") */}
-            <div className={`p-4 ${isLive ? 'bg-amber-50' : 'bg-gray-50'} border-b border-gray-200`}>
+            <div className={`p-3 ${isLive ? 'bg-amber-50' : 'bg-white'} border-b border-gray-200 shadow-sm shrink-0`}>
                 <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center gap-2">
-                        <div className="bg-blue-100 p-2 rounded-full text-blue-700">
-                            <UserIcon size={16} />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-gray-900 text-sm">{session.user_name || 'Anonymous User'}</h3>
-                            <p className="text-xs text-gray-500 flex items-center gap-1">
-                                <PhoneIcon size={10} /> {session.user_phone || 'No Phone'}
-                            </p>
+                        <span className="bg-blue-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">
+                            INTAKE FORMULA
+                        </span>
+                        <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${isLive ? 'bg-green-100 text-green-700 border-green-200' : 'bg-gray-100 text-gray-500 border-gray-200'}`}>
+                            {isLive ? 'LIVE AGENT' : 'BOT ACTIVE'}
                         </div>
                     </div>
-                    <button onClick={onClose} className="text-gray-400 hover:text-red-500">
-                        <XCircleIcon size={20} />
-                    </button>
-                </div>
-
-                {/* Intent / Summary */}
-                <div className="bg-white p-2 rounded border border-gray-100 text-xs text-gray-700 mb-2">
-                    <span className="font-bold text-blue-600 uppercase text-[10px]">Intent:</span> {session.incident_summary || 'Unknown Intent'}
-                </div>
-
-                {/* Status Toggle */}
-                <div className="flex items-center justify-between">
-                    <div className={`flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full ${isLive ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
-                        {isLive ? <CheckCircleIcon size={12} /> : <AlertTriangleIcon size={12} />}
-                        {isLive ? 'LIVE AGENT ACTIVE' : 'BOT HANDELING'}
+                    <div className="flex gap-2">
+                        <button onClick={toggleLiveStatus} className="text-[10px] font-bold text-blue-600 hover:underline">
+                            {isLive ? 'Embed Bot' : 'Take Over'}
+                        </button>
+                        <button onClick={onClose} className="text-gray-300 hover:text-red-500">
+                            <XCircleIcon size={18} />
+                        </button>
                     </div>
-                    <button
-                        onClick={toggleLiveStatus}
-                        className={`text-xs font-bold underline ${isLive ? 'text-gray-500' : 'text-blue-600'}`}
-                    >
-                        {isLive ? 'Return to Bot' : 'Take Over Now'}
-                    </button>
+                </div>
+
+                {/* Formula Grid */}
+                <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-xs bg-blue-50/50 p-2 rounded border border-blue-100">
+                    <div className="flex flex-col">
+                        <span className="text-[9px] text-blue-400 uppercase font-bold">Client Name</span>
+                        <span className="font-bold text-gray-800">{session.user_name || 'Anonymous'}</span>
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-[9px] text-blue-400 uppercase font-bold">Phone</span>
+                        <span className="font-mono text-blue-700">{session.user_phone || 'N/A'}</span>
+                    </div>
+                    <div className="col-span-2 flex flex-col mt-1 pt-1 border-t border-blue-100">
+                        <span className="text-[9px] text-blue-400 uppercase font-bold">Incident Context</span>
+                        <span className="text-gray-700 leading-tight">
+                            {session.incident_summary || 'No summary available yet.'}
+                        </span>
+                    </div>
+                    <div className="col-span-2 flex justify-between items-center mt-1 pt-1 border-t border-blue-100 text-[9px] text-gray-400">
+                        <span>Session ID: {session.session_id.substring(0, 8)}</span>
+                        <span>{new Date(session.created_at).toLocaleTimeString()}</span>
+                    </div>
                 </div>
             </div>
 
@@ -143,8 +148,8 @@ export default function ChatSlot({ session, onClose }: ChatSlotProps) {
                     return (
                         <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                             <div className={`max-w-[85%] rounded-lg p-3 text-sm shadow-sm ${isMe ? 'bg-blue-600 text-white' :
-                                    isBot ? 'bg-gray-200 text-gray-800 border border-gray-300' :
-                                        'bg-white text-gray-900 border border-gray-200'
+                                isBot ? 'bg-gray-200 text-gray-800 border border-gray-300' :
+                                    'bg-white text-gray-900 border border-gray-200'
                                 }`}>
                                 {isBot && <span className="text-[10px] font-bold text-gray-500 block mb-1">BOT</span>}
                                 {msg.text}

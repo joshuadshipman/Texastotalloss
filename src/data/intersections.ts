@@ -7,7 +7,44 @@ export interface Intersection {
 }
 
 export const intersections: Intersection[] = [
-    // --- Dallas & Suburbs (Original Batch) ---
+    // --- Statewide Standouts (NEW) ---
+    {
+        slug: 'us-90-fm-1413-liberty-county',
+        title: 'US-90 & FM 1413',
+        city: 'Dayton (Liberty County)',
+        region: 'Texas Statewide',
+        description: 'Identified in national studies as one of the deadliest intersections in the U.S. due to high-speed collisions.'
+    },
+    {
+        slug: 'fm-866-sh-302-ector-county',
+        title: 'FM 866 & SH-302',
+        city: 'Odessa (Ector County)',
+        region: 'Texas Statewide',
+        description: 'A notorious oilfield corridor with multiple fatal 18-wheeler crashes and heavy industrial traffic.'
+    },
+    {
+        slug: 'fm-1960-sh-249-houston',
+        title: 'FM 1960 & SH-249',
+        city: 'Houston',
+        region: 'Houston Area',
+        description: 'Very high crash counts at this busy suburban commercial node in Harris County.'
+    },
+    {
+        slug: 'i-35-ben-white-austin',
+        title: 'I-35 & Ben White Blvd (US-290)',
+        city: 'Austin',
+        region: 'Austin Area',
+        description: 'One of Austin’s highest-crash freeway interchanges, frequented by heavy commuter and traveler traffic.'
+    },
+    {
+        slug: 'buckner-elam-dallas',
+        title: 'Buckner Blvd & Elam Rd',
+        city: 'Dallas',
+        region: 'Dallas Area',
+        description: 'A specific high-crash intersection along the dangerous Buckner loop, known for pedestrian incidents.'
+    },
+
+    // --- Dallas & Suburbs ---
     {
         slug: 'i-635-skillman-dallas',
         title: 'I-635 (LBJ Fwy) & Skillman St',
@@ -253,7 +290,7 @@ export const intersections: Intersection[] = [
         description: 'Busy arterial intersection with a history of serious collisions.'
     },
 
-    // --- Austin Hotspots (New) ---
+    // --- Austin Hotspots ---
     {
         slug: 'i-35-east-riverside-austin',
         title: 'I-35 & East Riverside Dr',
@@ -304,7 +341,7 @@ export const intersections: Intersection[] = [
         description: 'Repeatedly described as one of the worst pedestrian-crash intersections in Texas.'
     },
 
-    // --- Houston Hotspots (New) ---
+    // --- Houston Hotspots ---
     {
         slug: 'bissonnet-beltway-8-houston',
         title: 'Bissonnet St & Beltway 8',
@@ -362,7 +399,7 @@ export const intersections: Intersection[] = [
         description: 'Memorial area intersection seeing dozens of crashes per year.'
     },
 
-    // --- San Antonio Hotspots (New) ---
+    // --- San Antonio Hotspots ---
     {
         slug: 'loop-1604-us-281-san-antonio',
         title: 'Loop 1604 & US-281',
