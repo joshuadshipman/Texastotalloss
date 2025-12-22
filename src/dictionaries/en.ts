@@ -1,11 +1,11 @@
 export const en = {
     hero: {
-        badge: "Free Texas Auto Claim Help",
-        title_main: "Total Loss!?! Injuries?!? Rental Car? Missed Work?",
-        title_sub: "Now what!?! Don't worry, we are here to help you through this stressful situation.",
-        quote_main: "Concerned about possible injuries, treatment, vehicle or even just getting the kids to school?",
-        quote_sub: "Don't Worry, Angel is here to help with all your Total Loss & Injury related concerns.",
-        help_text: "Here to help you nativate the stress an accident can cause on your daily life."
+        badge: "Free 24/7 Texas Auto Claim Help",
+        title_main: "Car Totaled? Injured? Overwhelmed?",
+        title_sub: "Take a deep breath. We are here to guide you through this.",
+        quote_main: "Are you worried about medical bills, your vehicle's value, or just getting your life back to normal?",
+        quote_sub: "I'm Angel. My team and I will handle the stress so you can focus on healing.",
+        help_text: "Clear answers. No pressure. Just help."
     },
     buttons: {
         ai_review: "Free Instant AI Case Review",

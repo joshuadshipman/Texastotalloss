@@ -90,10 +90,10 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             />
             <CaseReviewModal dict={dict} lang={lang} />
 
-            {/* Hero Section (Premium Glass Redesign) */}
-            <header className="bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900 via-slate-900 to-black text-white pt-20 pb-16 px-4 text-center relative overflow-hidden">
-                {/* Abstract Background Noise */}
-                <div className="absolute inset-0 opacity-10 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+            {/* Hero Section (Premium Glass Redesign V2.1 - Safe Gradients) */}
+            <header className="bg-gradient-to-b from-blue-950 via-slate-900 to-black text-white pt-20 pb-16 px-4 text-center relative overflow-hidden">
+
+                {/* Abstract Background Noise - Removed for purity/speed */}
 
                 <div className="max-w-4xl mx-auto space-y-6 relative z-10">
                     {/* Badge */}
