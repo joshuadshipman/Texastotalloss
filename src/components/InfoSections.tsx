@@ -83,25 +83,25 @@ export default function InfoSections() {
             </section>
 
             {/* Urgency / Prompt Action */}
-            <section className="bg-blue-900 text-white py-16">
-                <div className="max-w-4xl mx-auto px-4 text-center">
+            <section className="max-w-6xl mx-auto px-4">
+                <div className="bg-blue-900 text-white rounded-2xl shadow-xl overflow-hidden p-10 md:p-16 text-center">
                     <ClockIcon size={48} className="text-yellow-400 mx-auto mb-6" />
-                    <h2 className="text-3xl font-black mb-6 uppercase">Why Timing Is Critical</h2>
-                    <p className="text-xl text-blue-100 max-w-2xl mx-auto mb-10">
+                    <h2 className="text-3xl md:text-4xl font-black mb-6 uppercase tracking-tight">Why Timing Is Critical</h2>
+                    <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-12 leading-relaxed">
                         In Texas, delaying your claim can cost you thousands. Evidence disappears, and statutory deadlines expire.
                     </p>
                     <div className="grid md:grid-cols-3 gap-6 text-left">
-                        <div className="bg-blue-800 p-6 rounded-xl border border-blue-700">
-                            <h3 className="font-bold text-yellow-300 mb-2">Preserve Evidence</h3>
-                            <p className="text-sm text-blue-100">CCTV footage relies on short retention policies. Skid marks fade. Witnesses forget.</p>
+                        <div className="bg-blue-800/50 p-6 rounded-xl border border-blue-700 hover:bg-blue-800 transition-colors">
+                            <h3 className="font-bold text-yellow-300 mb-2 text-lg">Preserve Evidence</h3>
+                            <p className="text-sm text-blue-100/90 leading-relaxed">CCTV footage relies on short retention policies. Skid marks fade. Witnesses forget.</p>
                         </div>
-                        <div className="bg-blue-800 p-6 rounded-xl border border-blue-700">
-                            <h3 className="font-bold text-yellow-300 mb-2">Statute of Limitations</h3>
-                            <p className="text-sm text-blue-100">Every state has a deadline. Missing the Texas 2-year filing window generally bars recovery forever.</p>
+                        <div className="bg-blue-800/50 p-6 rounded-xl border border-blue-700 hover:bg-blue-800 transition-colors">
+                            <h3 className="font-bold text-yellow-300 mb-2 text-lg">Statute of Limitations</h3>
+                            <p className="text-sm text-blue-100/90 leading-relaxed">Every state has a deadline. Missing the Texas 2-year filing window generally bars recovery forever.</p>
                         </div>
-                        <div className="bg-blue-800 p-6 rounded-xl border border-blue-700">
-                            <h3 className="font-bold text-yellow-300 mb-2">Build Leverage</h3>
-                            <p className="text-sm text-blue-100">Insurance companies pay less to unrepresented claimants. Level the playing field early.</p>
+                        <div className="bg-blue-800/50 p-6 rounded-xl border border-blue-700 hover:bg-blue-800 transition-colors">
+                            <h3 className="font-bold text-yellow-300 mb-2 text-lg">Build Leverage</h3>
+                            <p className="text-sm text-blue-100/90 leading-relaxed">Insurance companies pay less to unrepresented claimants. Level the playing field early.</p>
                         </div>
                     </div>
                 </div>

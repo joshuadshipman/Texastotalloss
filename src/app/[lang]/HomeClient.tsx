@@ -129,18 +129,18 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                     </div>
 
                     {/* Secondary Actions - Clean Glass Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto pt-4 border-t border-white/10">
-                        <button onClick={() => openChat('call')} className="group flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 transition-all">
-                            <span className="text-white/90 font-bold text-sm group-hover:text-blue-300">{dict.buttons.call_now}</span>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto pt-4 border-t border-white/20">
+                        <button onClick={() => openChat('call')} className="group flex flex-col items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all backdrop-blur-sm">
+                            <span className="text-white font-bold text-sm group-hover:text-blue-200">{dict.buttons.call_now}</span>
                         </button>
-                        <button onClick={() => openChat('schedule')} className="group flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 transition-all">
-                            <span className="text-white/90 font-bold text-sm group-hover:text-blue-300">{dict.buttons.schedule}</span>
+                        <button onClick={() => openChat('schedule')} className="group flex flex-col items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all backdrop-blur-sm">
+                            <span className="text-white font-bold text-sm group-hover:text-blue-200">{dict.buttons.schedule}</span>
                         </button>
-                        <button onClick={() => openChat('sms')} className="group flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 transition-all">
-                            <span className="text-white/90 font-bold text-sm group-hover:text-blue-300">{dict.buttons.sms}</span>
+                        <button onClick={() => openChat('sms')} className="group flex flex-col items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all backdrop-blur-sm">
+                            <span className="text-white font-bold text-sm group-hover:text-blue-200">{dict.buttons.sms}</span>
                         </button>
-                        <button onClick={() => openChat('live')} className="group flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 transition-all">
-                            <span className="text-white/90 font-bold text-sm group-hover:text-blue-300">{dict.buttons.live_chat}</span>
+                        <button onClick={() => openChat('live')} className="group flex flex-col items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all backdrop-blur-sm">
+                            <span className="text-white font-bold text-sm group-hover:text-blue-200">{dict.buttons.live_chat}</span>
                         </button>
                     </div>
                 </div>
