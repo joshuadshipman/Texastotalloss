@@ -71,7 +71,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                     },
                     {
                         '@type': 'Question',
-                        name: 'Does Texas have a "Right to Appraisal"?',
+                        name: 'Does Texas Auto Policies have a "Right to Appraisal"?',
                         acceptedAnswer: {
                             '@type': 'Answer',
                             text: 'Most standard Texas auto policies include an Appraisal Clause, allowing you to hire an independent appraiser to dispute the lowball offer. This option may only be available through your 1st party coverage.'
@@ -147,22 +147,22 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             </header>
 
             <div id="calculator">
-                <ValuationCalculator />
+                <ValuationCalculator dict={dict} />
             </div>
 
             {/* Recognized for Excellence - Trust Badges */}
             <section className="bg-white py-12 border-b border-gray-200">
                 <div className="max-w-6xl mx-auto px-4 text-center">
-                    <h3 className="text-2xl font-bold text-blue-900 mb-8 uppercase tracking-wide">Recognized for Excellence</h3>
+                    <h3 className="text-2xl font-bold text-blue-900 mb-8 uppercase tracking-wide">{dict.trust_badges.title}</h3>
                     <div className="flex justify-center items-center p-8 bg-gray-50 border border-dashed border-gray-300 rounded-xl">
-                        <p className="text-gray-400 font-bold text-sm uppercase tracking-widest">[ Trust Badges Image Placeholder ]</p>
+                        <p className="text-gray-400 font-bold text-sm uppercase tracking-widest">{dict.trust_badges.placeholder}</p>
                     </div>
-                    <p className="mt-4 text-xs text-gray-400 font-medium">Partner Firm Accolades & Recognition</p>
+                    <p className="mt-4 text-xs text-gray-400 font-medium">{dict.trust_badges.sub}</p>
                 </div>
             </section>
 
             {/* Accident Types Grid */}
-            <AccidentGrid />
+            <AccidentGrid dict={dict} />
 
             {/* Informational Sections (Why Hire, Liability, Urgency) */}
             <InfoSections />
@@ -177,47 +177,146 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                     <div className="flex flex-col gap-4">
                         {/* 1. Accident Checklist */}
                         <SectionCard title={dict.sections.checklist.title} subtitle={dict.sections.checklist.subtitle} icon={<CarIcon size={24} />} colorClass="bg-red-600">
-                            <div className="text-center mb-8"><h2 className="text-3xl font-black text-red-600 mb-2 uppercase">{dict.sections.checklist.card_title}</h2></div>
+                            <div className="text-center mb-6"><h2 className="text-3xl font-black text-red-600 mb-4 uppercase">{dict.sections.checklist.card_title}</h2></div>
+                            {dict.sections.checklist.content && <p className="mb-6 text-gray-700 font-medium">{dict.sections.checklist.content}</p>}
+                            {dict.sections.checklist.bullets && (
+                                <ul className="space-y-3">
+                                    {dict.sections.checklist.bullets.map((item: string, i: number) => (
+                                        <li key={i} className="flex items-start gap-3 text-gray-600">
+                                            <span className="mt-1 min-w-[6px] w-2 h-2 rounded-full bg-red-500"></span>
+                                            <span>{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </SectionCard>
 
                         {/* 2. Mitigation */}
                         <SectionCard title={dict.sections.mitigate.title} subtitle={dict.sections.mitigate.subtitle} icon={<ShieldCheckIcon size={24} />} colorClass="bg-emerald-700">
-                            <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.mitigate.main_title}</h2></div>
+                            <div className="text-center mb-6"><h2 className="text-3xl font-black text-gray-800 mb-4">{dict.sections.mitigate.main_title}</h2></div>
+                            {dict.sections.mitigate.content && <p className="mb-6 text-gray-700 font-medium">{dict.sections.mitigate.content}</p>}
+                            {dict.sections.mitigate.bullets && (
+                                <ul className="space-y-3">
+                                    {dict.sections.mitigate.bullets.map((item: string, i: number) => (
+                                        <li key={i} className="flex items-start gap-3 text-gray-600">
+                                            <span className="mt-1 min-w-[6px] w-2 h-2 rounded-full bg-emerald-500"></span>
+                                            <span>{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </SectionCard>
 
                         {/* 3. Storage */}
                         <SectionCard title={dict.sections.storage.title} subtitle={dict.sections.storage.subtitle} icon={<DollarSignIcon size={24} />} colorClass="bg-orange-600">
-                            <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.storage.main_title}</h2></div>
+                            <div className="text-center mb-6"><h2 className="text-3xl font-black text-gray-800 mb-4">{dict.sections.storage.main_title}</h2></div>
+                            {dict.sections.storage.content && <p className="mb-6 text-gray-700 font-medium">{dict.sections.storage.content}</p>}
+                            {dict.sections.storage.bullets && (
+                                <ul className="space-y-3">
+                                    {dict.sections.storage.bullets.map((item: string, i: number) => (
+                                        <li key={i} className="flex items-start gap-3 text-gray-600">
+                                            <span className="mt-1 min-w-[6px] w-2 h-2 rounded-full bg-orange-500"></span>
+                                            <span>{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </SectionCard>
 
                         {/* 4. Adjuster */}
                         <SectionCard title={dict.sections.adjuster.title} subtitle={dict.sections.adjuster.subtitle} icon={<AlertTriangleIcon size={24} />} colorClass="bg-gray-700">
-                            <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.adjuster.main_title}</h2></div>
+                            <div className="text-center mb-6"><h2 className="text-3xl font-black text-gray-800 mb-4">{dict.sections.adjuster.main_title}</h2></div>
+                            {dict.sections.adjuster.content && <p className="mb-6 text-gray-700 font-medium">{dict.sections.adjuster.content}</p>}
+                            {dict.sections.adjuster.bullets && (
+                                <ul className="space-y-3">
+                                    {dict.sections.adjuster.bullets.map((item: string, i: number) => (
+                                        <li key={i} className="flex items-start gap-3 text-gray-600">
+                                            <span className="mt-1 min-w-[6px] w-2 h-2 rounded-full bg-gray-500"></span>
+                                            <span>{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </SectionCard>
 
                         {/* 5. Total Loss */}
                         <SectionCard title={dict.sections.total_loss.title} subtitle={dict.sections.total_loss.subtitle} icon={<CarIcon size={24} />} colorClass="bg-red-700">
-                            <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.total_loss.main_title}</h2></div>
+                            <div className="text-center mb-6"><h2 className="text-3xl font-black text-gray-800 mb-4">{dict.sections.total_loss.main_title}</h2></div>
+                            {dict.sections.total_loss.content && <p className="mb-6 text-gray-700 font-medium">{dict.sections.total_loss.content}</p>}
+                            {dict.sections.total_loss.bullets && (
+                                <ul className="space-y-3">
+                                    {dict.sections.total_loss.bullets.map((item: string, i: number) => (
+                                        <li key={i} className="flex items-start gap-3 text-gray-600">
+                                            <span className="mt-1 min-w-[6px] w-2 h-2 rounded-full bg-red-500"></span>
+                                            <span>{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </SectionCard>
 
                         {/* 6. Market Value */}
                         <SectionCard title={dict.sections.market.title} subtitle={dict.sections.market.subtitle} icon={<DollarSignIcon size={24} />} colorClass="bg-green-600">
-                            <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.market.main_title}</h2></div>
+                            <div className="text-center mb-6"><h2 className="text-3xl font-black text-gray-800 mb-4">{dict.sections.market.main_title}</h2></div>
+                            {dict.sections.market.content && <p className="mb-6 text-gray-700 font-medium">{dict.sections.market.content}</p>}
+                            {dict.sections.market.bullets && (
+                                <ul className="space-y-3">
+                                    {dict.sections.market.bullets.map((item: string, i: number) => (
+                                        <li key={i} className="flex items-start gap-3 text-gray-600">
+                                            <span className="mt-1 min-w-[6px] w-2 h-2 rounded-full bg-green-500"></span>
+                                            <span>{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </SectionCard>
 
                         {/* 7. Fault */}
                         <SectionCard title={dict.sections.fault.title} subtitle={dict.sections.fault.subtitle} icon={<AlertTriangleIcon size={24} />} colorClass="bg-purple-700">
-                            <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.fault.main_title}</h2></div>
+                            <div className="text-center mb-6"><h2 className="text-3xl font-black text-gray-800 mb-4">{dict.sections.fault.main_title}</h2></div>
+                            {dict.sections.fault.content && <p className="mb-6 text-gray-700 font-medium">{dict.sections.fault.content}</p>}
+                            {dict.sections.fault.bullets && (
+                                <ul className="space-y-3">
+                                    {dict.sections.fault.bullets.map((item: string, i: number) => (
+                                        <li key={i} className="flex items-start gap-3 text-gray-600">
+                                            <span className="mt-1 min-w-[6px] w-2 h-2 rounded-full bg-purple-500"></span>
+                                            <span>{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </SectionCard>
 
                         {/* 8. Coverage */}
                         <SectionCard title={dict.sections.coverage.title} subtitle={dict.sections.coverage.subtitle} icon={<FileTextIcon size={24} />} colorClass="bg-blue-700">
-                            <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.coverage.main_title}</h2></div>
+                            <div className="text-center mb-6"><h2 className="text-3xl font-black text-gray-800 mb-4">{dict.sections.coverage.main_title}</h2></div>
+                            {dict.sections.coverage.content && <p className="mb-6 text-gray-700 font-medium">{dict.sections.coverage.content}</p>}
+                            {dict.sections.coverage.bullets && (
+                                <ul className="space-y-3">
+                                    {dict.sections.coverage.bullets.map((item: string, i: number) => (
+                                        <li key={i} className="flex items-start gap-3 text-gray-600">
+                                            <span className="mt-1 min-w-[6px] w-2 h-2 rounded-full bg-blue-500"></span>
+                                            <span>{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </SectionCard>
 
                         {/* 9. UM Law */}
                         <SectionCard title={dict.sections.um_law.title} subtitle={dict.sections.um_law.subtitle} icon={<ShieldCheckIcon size={24} />} colorClass="bg-indigo-700">
-                            <div className="text-center mb-8"><h2 className="text-3xl font-black text-gray-800 mb-2">{dict.sections.um_law.main_title}</h2></div>
+                            <div className="text-center mb-6"><h2 className="text-3xl font-black text-gray-800 mb-4">{dict.sections.um_law.main_title}</h2></div>
+                            {dict.sections.um_law.content && <p className="mb-6 text-gray-700 font-medium">{dict.sections.um_law.content}</p>}
+                            {dict.sections.um_law.bullets && (
+                                <ul className="space-y-3">
+                                    {dict.sections.um_law.bullets.map((item: string, i: number) => (
+                                        <li key={i} className="flex items-start gap-3 text-gray-600">
+                                            <span className="mt-1 min-w-[6px] w-2 h-2 rounded-full bg-indigo-500"></span>
+                                            <span>{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </SectionCard>
 
                         {/* 10. FAQ Section */}

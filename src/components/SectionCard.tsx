@@ -66,13 +66,12 @@ export default function SectionCard({ title, subtitle, icon, colorClass, childre
                             {children}
                         </div>
 
-                        {/* Footer */}
                         <div className="p-4 border-t border-gray-100 bg-white shrink-0 text-center">
                             <button
                                 onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}
                                 className="text-gray-500 hover:text-gray-900 font-medium text-sm"
                             >
-                                Close Section
+                                Close / Cerrar
                             </button>
                         </div>
                     </div>

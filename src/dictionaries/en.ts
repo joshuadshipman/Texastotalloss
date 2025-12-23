@@ -19,48 +19,138 @@ export const en = {
         checklist: {
             title: "Just in an Accident?",
             subtitle: "10-Step Immediate Action Plan",
-            card_title: "🚨 Post-Accident Checklist"
+            card_title: "🚨 Post-Accident Checklist",
+            content: "The first hour after an accident is critical. Follow these steps to protect your health and your future claim.",
+            bullets: [
+                "Call 911 immediately and request a police report.",
+                "Take photos of ALL vehicles, damage, and the scene.",
+                "Exchange info (Name, Insurance, Phone) but DO NOT admit fault.",
+                "Get witness names and phone numbers.",
+                "Seek medical attention immediately, even for minor pain.",
+                "Do NOT give a recorded statement to insurance.",
+                "Do NOT sign any release forms.",
+                "call a specialist before accepting any offer."
+            ]
         },
         mitigate: {
             title: "Protect Your Rights",
             subtitle: "Medical Injuries & Property Obligations",
-            main_title: "Your Duty: Don't Make It Worse"
+            main_title: "Your Duty: Don't Make It Worse",
+            content: "Texas law requires you to 'mitigate damages.' This means you must take reasonable steps to prevent your situation from getting worse.",
+            bullets: [
+                "See a doctor immediately to prevent injuries from worsening.",
+                "Follow all medical advice and keep appointments.",
+                "Move your vehicle from storage to avoid excessive fees.",
+                "Keep detailed records of all expenses and lost wages."
+            ]
         },
         storage: {
             title: "STOP Storage Fees",
             subtitle: "Avoid daily charges of $100+",
             main_title: "STOP THE BLEEDING",
-            trap_title: "The Daily Cost Trap"
+            trap_title: "The Daily Cost Trap",
+            content: "Tow yards charge massive daily fees. Insurance companies often delay moving your car to let these fees stack up, then blame you.",
+            bullets: [
+                "Release your vehicle to the insurance company immediately.",
+                "Get everything in writing.",
+                "Do not pay fees out of pocket if possible; demand the insurer pay directly.",
+                "If you must pay, keep the receipt for reimbursement."
+            ]
         },
         adjuster: {
             title: "Adjuster Tricks",
             subtitle: "They are NOT your friend",
-            main_title: "Tactics Used to Deny Claims"
+            main_title: "Tactics Used to Deny Claims",
+            content: "Insurance adjusters are trained negotiators. Their goal is to save the company money, not to help you.",
+            bullets: [
+                "Playing 'Good Cops' to gain your trust.",
+                "Asking for a 'Recorded Statement' to use against you.",
+                "Offering a quick 'Inconvenience Check' to release liability.",
+                "Delaying payment to force a desperate settlement."
+            ]
         },
         total_loss: {
             title: "Total Loss Law",
             subtitle: "100% Threshold Rule",
-            main_title: "Understanding ACV vs. Repair Cost"
+            main_title: "Understanding ACV vs. Repair Cost",
+            content: "In Texas, a car is a total loss if the repair cost + salvage value equals or exceeds the Actual Cash Value (ACV).",
+            bullets: [
+                "ACV is the market value, NOT what you owe.",
+                "You have the right to an independent appraisal.",
+                "You can dispute their valuation with comparable listings.",
+                "Understand 'Owner Retain' options if you want to keep the car."
+            ]
         },
         market: {
             title: "Fair Market Value",
             subtitle: "Dealer Quotes vs. CCC Reports",
-            main_title: "Don't Accept the First Offer"
+            main_title: "Don't Accept the First Offer",
+            content: "Insurers use systems like CCC to undervalue cars. They ignore local market realities. You are owed replacement cost.",
+            bullets: [
+                "Demand dealer retail quotes, not private party values.",
+                "Ensure all features and packages are listed.",
+                "Demand 6.25% Sales Tax and Title Fees be included.",
+                "Challenge 'Condition Ratings' that lower value."
+            ]
         },
         fault: {
             title: "Determining Fault",
             subtitle: "Texas 51% Bar Rule",
-            main_title: "Comparative Negligence Explained"
+            main_title: "Comparative Negligence Explained",
+            content: "Texas uses 'Modified Comparative Negligence.' If you are more than 50% at fault, you recover NOTHING.",
+            bullets: [
+                "Insurance will try to pin 51% fault on you.",
+                "Police reports are powerful but not final.",
+                "Scene photos and witness statements are your best defense.",
+                "Never apologize or say 'I didn't see them'."
+            ]
         },
         coverage: {
             title: "Policy Limits",
             subtitle: "Liability, PIP, & MedPay",
-            main_title: "Know What You Are Owed"
+            main_title: "Know What You Are Owed",
+            content: "Understanding your coverage types is essential to maximizing your recovery.",
+            bullets: [
+                "Liability: Pays for the other person (required).",
+                "PIP/MedPay: Pays your medical bills regardless of fault.",
+                "Collision: Fixes your car (minus deductible).",
+                "UM/UIM: Protects you from uninsured drivers."
+            ]
         },
         um_law: {
             title: "Uninsured Motorist",
-            subtitle: "Hit & Run / No Insurance",
-            main_title: "UM/UIM Coverage Claims"
+            subtitle: "Protection from 20% of Drivers",
+            main_title: "Hit & Run / No Insurance",
+            content: "1 in 5 Texas drivers are uninsured. Uninsured Motorist (UM) coverage is a lifesaver.",
+            bullets: [
+                "Covers you if hit by an uninsured driver.",
+                "Covers Hit & Run accidents (must report to police).",
+                "Does NOT raise your rates in Texas (by law).",
+                "You must usually reject this coverage in writing to not have it."
+            ]
+        },
+        val_calc: {
+            title: "Check Your Total Loss Value",
+            subtitle: "See what your car is actually worth vs. what they offered.",
+            labels: {
+                vin: "VIN (Optional)",
+                year: "Year",
+                make: "Make",
+                model: "Model",
+                mileage: "Mileage",
+                condition: "Condition",
+                condition_help: "Good (Clean Retail)",
+                btn_next: "Next: Incident Details »"
+            }
+        },
+        trust_badges: {
+            title: "RECOGNIZED FOR EXCELLENCE",
+            placeholder: "[ Trust Badges Image Placeholder ]",
+            sub: "Partner Firm Accolades & Recognition"
+        },
+        accident_grid: {
+            title: "COMMON AUTO ACCIDENT TYPES",
+            subtitle: "We have specialized strategies for every scenario to maximize your recovery."
         },
         read_more: "Read Full Details",
         faq: {

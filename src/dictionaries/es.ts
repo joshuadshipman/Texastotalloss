@@ -21,48 +21,138 @@ export const es: Dictionary = {
         checklist: {
             title: "¿Acaba de tener un accidente?",
             subtitle: "Plan de Acción Inmediata de 10 Pasos",
-            card_title: "🚨 Lista de Verificación Post-Accidente"
+            card_title: "🚨 Lista de Verificación Post-Accidente",
+            content: "La primera hora después de un accidente es crítica. Siga estos pasos para proteger su salud y su futuro reclamo.",
+            bullets: [
+                "Llame al 911 inmediatamente y solicite un informe policial.",
+                "Tome fotos de TODOS los vehículos, daños y la escena.",
+                "Intercambie información (Nombre, Seguro, Teléfono) pero NO admita culpa.",
+                "Obtenga nombres y números de teléfono de testigos.",
+                "Busque atención médica inmediatamente, incluso por dolor leve.",
+                "NO dé una declaración grabada al seguro.",
+                "NO firme ningún formulario de liberación.",
+                "Llame a un especialista antes de aceptar cualquier oferta."
+            ]
         },
         mitigate: {
-            title: "Deber de Mitigar",
+            title: "Proteja Sus Derechos",
             subtitle: "Lesiones Médicas y Obligaciones de Propiedad",
-            main_title: "Su Deber: No Empeore las Cosas"
+            main_title: "Su Deber: No Empeore las Cosas",
+            content: "La ley de Texas requiere que usted 'mitigue los daños'. Esto significa que debe tomar medidas razonables para evitar que su situación empeore.",
+            bullets: [
+                "Vea a un médico inmediatamente para evitar que las lesiones empeoren.",
+                "Siga todos los consejos médicos y asista a sus citas.",
+                "Mueva su vehículo del depósito para evitar tarifas excesivas.",
+                "Mantenga registros detallados de todos los gastos y salarios perdidos."
+            ]
         },
         storage: {
             title: "DETENGA Tarifas de Corralón",
             subtitle: "Evite cargos diarios de $100+",
             main_title: "DETENGA LA SANGRÍA",
-            trap_title: "La Trampa del Costo Diario"
+            trap_title: "La Trampa del Costo Diario",
+            content: "Los corralones cobran tarifas diarias masivas. Las aseguradoras a menudo demoran en mover su auto para que estas tarifas se acumulen, y luego lo culpan a usted.",
+            bullets: [
+                "Libere su vehículo a la compañía de seguros inmediatamente.",
+                "Obtenga todo por escrito.",
+                "No pague tarifas de su bolsillo si es posible; exija que la aseguradora pague directamente.",
+                "Si debe pagar, guarde el recibo para el reembolso."
+            ]
         },
         adjuster: {
             title: "Trucos del Ajustador",
             subtitle: "NO son sus amigos",
-            main_title: "Tácticas para Dengar Reclamos"
+            main_title: "Tácticas para Negar Reclamos",
+            content: "Los ajustadores de seguros son negociadores entrenados. Su objetivo es ahorrar dinero a la compañía, no ayudarlo a usted.",
+            bullets: [
+                "Jugar al 'Policía Bueno' para ganar su confianza.",
+                "Pedir una 'Declaración Grabada' para usarla en su contra.",
+                "Ofrecer un 'Cheque de Inconveniencia' rápido para liberar responsabilidad.",
+                "Retrasar el pago para forzar un acuerdo desesperado."
+            ]
         },
         total_loss: {
             title: "Ley de Pérdida Total",
             subtitle: "Regla del 100% del Umbral",
-            main_title: "ACV vs. Costo de Reparación"
+            main_title: "ACV vs. Costo de Reparación",
+            content: "En Texas, un auto es pérdida total si el costo de reparación + valor de salvamento iguala o excede el Valor Real en Efectivo (ACV).",
+            bullets: [
+                "El ACV es el valor de mercado, NO lo que usted debe.",
+                "Tiene derecho a una tasación independiente.",
+                "Puede disputar su valoración con listados comparables.",
+                "Entienda las opciones de 'Retención del Propietario' si desea quedarse con el auto."
+            ]
         },
         market: {
             title: "Valor Justo de Mercado",
             subtitle: "Cotizaciones de Concesionarios vs. CCC",
-            main_title: "No Acepte la Primera Oferta"
+            main_title: "No Acepte la Primera Oferta",
+            content: "Las aseguradoras usan sistemas como CCC para subvaluar autos. Ignoran las realidades del mercado local. Se le debe el costo de reemplazo.",
+            bullets: [
+                "Exija cotizaciones de venta al por menor de concesionarios, no valores de particulares.",
+                "Asegúrese de que se enumeren todas las características y paquetes.",
+                "Exija que se incluyan el 6.25% de Impuesto sobre Ventas y Tarifas de Título.",
+                "Dispute las 'Calificaciones de Condición' que reducen el valor."
+            ]
         },
         fault: {
             title: "Determinando la Culpa",
             subtitle: "Regla del 51% de Texas",
-            main_title: "Negligencia Comparativa Explicada"
+            main_title: "Negligencia Comparativa Explicada",
+            content: "Texas usa 'Negligencia Comparativa Modificada'. Si usted tiene más del 50% de culpa, NO recupera NADA.",
+            bullets: [
+                "El seguro tratará de asignarle el 51% de la culpa.",
+                "Los informes policiales son poderosos pero no definitivos.",
+                "Las fotos de la escena y las declaraciones de testigos son su mejor defensa.",
+                "Nunca se disculpe ni diga 'No los vi'."
+            ]
         },
         coverage: {
             title: "Límites de Póliza",
             subtitle: "Responsabilidad, PIP y MedPay",
-            main_title: "Sepa lo que se le Debe"
+            main_title: "Sepa lo que se le Debe",
+            content: "Entender sus tipos de cobertura es esencial para maximizar su recuperación.",
+            bullets: [
+                "Responsabilidad: Paga por la otra persona (obligatorio).",
+                "PIP/MedPay: Paga sus facturas médicas sin importar la culpa.",
+                "Colisión: Arregla su auto (menos el deducible).",
+                "UM/UIM: Lo protege de conductores sin seguro."
+            ]
         },
         um_law: {
             title: "Conductor Sin Seguro",
-            subtitle: "Chocar y Huir / Sin Seguro",
-            main_title: "Reclamos de Cobertura UM/UIM"
+            subtitle: "Protección contra el 20% de Conductores",
+            main_title: "Hit & Run / Sin Seguro",
+            content: "1 de cada 5 conductores en Texas no tiene seguro. La cobertura de Conductor Sin Seguro (UM) es un salvavidas.",
+            bullets: [
+                "Lo cubre si es golpeado por un conductor sin seguro.",
+                "Cubre accidentes de atropello y fuga (debe reportar a la policía).",
+                "NO aumenta sus tarifas en Texas (por ley).",
+                "Por lo general, debe rechazar esta cobertura por escrito para no tenerla."
+            ]
+        },
+        val_calc: {
+            title: "Verifique su Valor de Pérdida Total",
+            subtitle: "Vea cuánto vale realmente su auto vs. lo que le ofrecieron.",
+            labels: {
+                vin: "VIN (Opcional)",
+                year: "Año",
+                make: "Marca",
+                model: "Modelo",
+                mileage: "Millas",
+                condition: "Condición",
+                condition_help: "Bueno (Retail Limpio)",
+                btn_next: "Siguiente: Detalles del Incidente"
+            }
+        },
+        trust_badges: {
+            title: "RECONOCIDO POR EXCELENCIA",
+            placeholder: "[ Marcadores de Confianza ]",
+            sub: "Reconocimientos y Galardones de la Firma Asociada"
+        },
+        accident_grid: {
+            title: "TIPOS COMUNES DE ACCIDENTES DE AUTO",
+            subtitle: "Tenemos estrategias especializadas para cada escenario para maximizar su recuperación."
         },
         read_more: "Leer Detalles Completos",
         faq: {

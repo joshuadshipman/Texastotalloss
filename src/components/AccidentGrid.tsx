@@ -7,16 +7,24 @@ import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import dynamic from 'next/dynamic';
 const SectionCard = dynamic(() => import('@/components/SectionCard'));
 
-export default function AccidentGrid() {
+interface AccidentGridProps {
+    dict: any;
+}
+
+export default function AccidentGrid({ dict }: AccidentGridProps) {
+    // Fallbacks
+    const title = dict?.accident_grid?.title || "Common Auto Accident Types";
+    const sub = dict?.accident_grid?.subtitle || "We have specialized strategies for every scenario to maximize your recovery.";
+
     return (
         <section className="py-16 bg-white border-t border-gray-100">
             <div className="max-w-4xl mx-auto px-4">
                 <div className="text-center mb-12">
                     <h2 className="text-3xl font-black text-blue-900 mb-4 uppercase tracking-wide">
-                        Common Auto Accident Types
+                        {title}
                     </h2>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        We have specialized strategies for every scenario to maximize your recovery.
+                        {sub}
                     </p>
                 </div>
 
