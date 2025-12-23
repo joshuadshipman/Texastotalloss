@@ -154,8 +154,39 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             <section className="bg-white py-12 border-b border-gray-200">
                 <div className="max-w-6xl mx-auto px-4 text-center">
                     <h3 className="text-2xl font-bold text-blue-900 mb-8 uppercase tracking-wide">{dict.trust_badges.title}</h3>
-                    <div className="flex justify-center items-center p-8 bg-gray-50 border border-dashed border-gray-300 rounded-xl">
-                        <p className="text-gray-400 font-bold text-sm uppercase tracking-widest">{dict.trust_badges.placeholder}</p>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+                        {/* Badge 1 */}
+                        <div className="flex flex-col items-center p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition">
+                            <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-2">
+                                <SparklesIcon size={24} />
+                            </div>
+                            <span className="font-extrabold text-gray-900">5.0 Rating</span>
+                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-1">Client Reviews</span>
+                        </div>
+                        {/* Badge 2 */}
+                        <div className="flex flex-col items-center p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition">
+                            <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-2">
+                                <ShieldCheckIcon size={24} />
+                            </div>
+                            <span className="font-extrabold text-gray-900">Verified</span>
+                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-1">Trusted Firm</span>
+                        </div>
+                        {/* Badge 3 */}
+                        <div className="flex flex-col items-center p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition">
+                            <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-2">
+                                <DollarSignIcon size={24} />
+                            </div>
+                            <span className="font-extrabold text-gray-900">No Win No Fee</span>
+                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-1">Guarantee</span>
+                        </div>
+                        {/* Badge 4 */}
+                        <div className="flex flex-col items-center p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition">
+                            <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-2">
+                                <CarIcon size={24} />
+                            </div>
+                            <span className="font-extrabold text-gray-900">Total Loss</span>
+                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-1">Specialists</span>
+                        </div>
                     </div>
                     <p className="mt-4 text-xs text-gray-400 font-medium">{dict.trust_badges.sub}</p>
                 </div>
