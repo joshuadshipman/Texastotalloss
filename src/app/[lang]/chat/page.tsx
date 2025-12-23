@@ -6,6 +6,10 @@ type Props = {
     params: Promise<{ lang: 'en' | 'es' }>;
 };
 
+export async function generateStaticParams() {
+    return [{ lang: 'en' }, { lang: 'es' }];
+}
+
 export default async function StandardChatPage({ params }: Props) {
     const { lang } = await params;
     const dict = await getDictionary(lang);

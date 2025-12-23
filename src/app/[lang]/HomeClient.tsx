@@ -150,6 +150,26 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                 <ValuationCalculator dict={dict} />
             </div>
 
+            {/* 2. Demand Letter Tool (Moved to Top) */}
+            <section className="bg-white py-8 border-b border-gray-100">
+                <div className="max-w-4xl mx-auto px-4">
+                    <div className="bg-gradient-to-br from-blue-900 to-blue-800 text-white rounded-2xl p-8 shadow-xl relative overflow-hidden group hover:shadow-2xl transition-all">
+                        <div className="absolute right-0 top-0 opacity-10 transform translate-x-10 -translate-y-10">
+                            <FileTextIcon size={200} />
+                        </div>
+                        <div className="relative z-10 flex flex-col md:flex-row items-center gap-6">
+                            <div className="flex-1">
+                                <h3 className="text-2xl font-bold mb-2 flex items-center gap-2 text-white"><FileTextIcon className="text-yellow-400" /> Challenge Low Offers</h3>
+                                <p className="text-blue-100 text-lg">Received a lowball offer? Don't argue on the phone. Send a formal legal demand letter.</p>
+                            </div>
+                            <a href="/tools/demand-letter" className="bg-yellow-400 text-blue-900 font-black py-4 px-8 rounded-xl shadow-lg hover:scale-105 transition hover:bg-yellow-300 whitespace-nowrap">
+                                Generate Free Demand PDF &rarr;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Recognized for Excellence - Trust Badges */}
             <section className="bg-white py-12 border-b border-gray-200">
                 <div className="max-w-6xl mx-auto px-4 text-center">
@@ -400,17 +420,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                                 </div>
                             </div>
                         </SectionCard>
-                        {/* 2. Demand Letter Tool (New) */}
-                        <div className="bg-gradient-to-br from-blue-900 to-blue-800 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden group cursor-pointer hover:shadow-2xl transition-all">
-                            <div className="absolute right-0 top-0 opacity-10 transform translate-x-10 -translate-y-10">
-                                <FileTextIcon size={150} />
-                            </div>
-                            <h3 className="text-xl font-bold mb-2 flex items-center gap-2"><FileTextIcon /> Challenge Low Offers</h3>
-                            <p className="text-blue-200 mb-6">Received a lowball offer? Don't argue on the phone. Send a formal legal demand letter.</p>
-                            <a href="/tools/demand-letter" className="bg-white text-blue-900 font-bold py-3 px-6 rounded-lg inline-block w-full text-center hover:bg-blue-50 transition">
-                                Generate Free Demand PDF &rarr;
-                            </a>
-                        </div>
+
                     </div>
                 </div>
             </section>
@@ -424,6 +434,10 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                 </div>
                 <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-xs">
                     <p>&copy; {new Date().getFullYear()} Texas Total Loss Claim Help. {dict.footer.rights}</p>
+                    <div className="mt-4 space-x-4">
+                        <a href="/disclosure" className="text-gray-600 hover:text-gray-400 underline">Full Disclosure</a>
+                        <a href="/sitemap" className="text-gray-600 hover:text-gray-400 underline">Sitemap</a>
+                    </div>
                 </div>
             </footer>
 
