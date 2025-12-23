@@ -12,7 +12,12 @@ export const en = {
         call_now: "📞 Call Now",
         live_chat: "💬 Live Chat",
         sms: "💬 Text / SMS",
-        schedule: "⏱ Schedule Free Consult"
+        schedule: "⏱ Schedule Free Consult",
+        options_standalone: {
+            ai_review: "Start Free AI Case Review",
+            live_chat: "Live Chat with Angel",
+            schedule: "Schedule a Callback"
+        }
     },
     sections: {
         resources_title: "Critical Resources",
@@ -205,8 +210,7 @@ export const en = {
             // Greetings
             greeting_live: "I am connecting you to a live specialist now. Please hold on...",
             greeting_standard: "Hi, I'm Angel. I understand this is a stressful time, and I'm here to help. To start, may I have your name?",
-
-            // Steps
+            ask_name: "To start, may I have your full name?",
             ask_phone: "Thank you, {name}. In case we get disconnected, what is your cell phone number?",
             ask_contact_method: "Thanks. Do you prefer we contact you via Text or Call?",
             ask_call_time: "What is the best time for us to call you?",
@@ -248,7 +252,8 @@ export const en = {
 
             // Outcome
             qualify_high: "I see. Based on those details, you likely qualify for significant compensation. I am connecting you to a Senior Specialist now.",
-            qualify_low: "Thank you. I'm preparing an Accident Information Packet for you now. A team member will review your details shortly."
+            qualify_low: "Thank you. I'm preparing an Accident Information Packet for you now. A team member will review your details shortly.",
+            greeting_standalone: "Hi, I'm Angel. I understand this can be a difficult time, and I'm here to support you. How would you like to proceed?"
         }
     },
     caseReview: {

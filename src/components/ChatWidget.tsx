@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useChat } from './ChatContext';
 import { supabaseClient } from '@/lib/supabaseClient';
 import { Dictionary } from '@/dictionaries/en';
-import { XIcon, SendIcon, AlertTriangleIcon, MessageCircleIcon } from 'lucide-react';
+import { XIcon, SendIcon, AlertTriangleIcon, MessageCircleIcon, SparklesIcon, CalendarIcon } from 'lucide-react';
 
 type Message = {
     sender: 'user' | 'bot';
@@ -17,7 +17,7 @@ interface ChatWidgetProps {
 }
 
 export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps) {
-    const { isOpen, toggleChat, chatMode } = useChat();
+    const { isOpen, toggleChat, chatMode, openReview } = useChat();
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [step, setStep] = useState(0);
@@ -46,6 +46,10 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             } else if (chatMode === 'schedule') {
                 initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_schedule }];
                 initialStep = 500; // Schedule Flow Start
+            } else if (variant === 'fullscreen' && !chatMode) {
+                // Standalone Mode
+                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_standalone || "Hi, I'm Angel. How would you like to proceed?" }];
+                initialStep = 10;
             } else if (chatMode === 'live') {
                 initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_live }];
                 // ... (Existing live logic kept separate if needed, or merged)
@@ -409,8 +413,50 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
 
                 {/* Messages Area */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 pb-20">
-                    {/* Start Options */}
-                    {messages.length < 2 && (
+                    {/* Standalone Start Options (Step 10) */}
+                    {step === 10 && messages.length === 1 && (
+                        <div className="flex flex-col gap-3 mb-6 animate-in fade-in slide-in-from-bottom-3 duration-700">
+                            <button
+                                onClick={() => {
+                                    if (dict.buttons.options_standalone) openReview();
+                                }}
+                                className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white p-4 rounded-xl shadow-lg border border-blue-400 flex items-center gap-4 transition-all hover:scale-[1.02] group"
+                            >
+                                <div className="bg-white/20 p-2 rounded-full group-hover:bg-white/30 transition"><SparklesIcon size={24} className="text-yellow-300" /></div>
+                                <div className="text-left">
+                                    <span className="block text-xs font-bold text-blue-100 uppercase tracking-widest">Recommended</span>
+                                    <span className="text-lg font-bold">{dict.buttons.options_standalone?.ai_review || "AI Case Review"}</span>
+                                </div>
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    addMessage('user', dict.buttons.options_standalone?.live_chat || "Live Chat");
+                                    setStep(1);
+                                    setTimeout(() => addMessage('bot', dict.chat.responses.ask_name || "May I have your full name?"), 600);
+                                }}
+                                className="w-full bg-white hover:bg-gray-50 text-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4 transition-all hover:scale-[1.02]"
+                            >
+                                <div className="bg-blue-100/50 p-2 rounded-full"><MessageCircleIcon size={24} className="text-blue-600" /></div>
+                                <span className="text-lg font-bold">{dict.buttons.options_standalone?.live_chat || "Live Chat"}</span>
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    addMessage('user', dict.buttons.options_standalone?.schedule || "Schedule Call");
+                                    setStep(500);
+                                    setTimeout(() => addMessage('bot', dict.chat.responses.greeting_schedule), 600);
+                                }}
+                                className="w-full bg-white hover:bg-gray-50 text-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4 transition-all hover:scale-[1.02]"
+                            >
+                                <div className="bg-purple-100/50 p-2 rounded-full"><CalendarIcon size={24} className="text-purple-600" /></div>
+                                <span className="text-lg font-bold">{dict.buttons.options_standalone?.schedule || "Schedule Call"}</span>
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Standard Start Options */}
+                    {messages.length < 2 && step !== 10 && (
                         <div className="mb-6">
                             <button
                                 onClick={handleAtTheScene}

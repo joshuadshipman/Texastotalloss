@@ -14,7 +14,12 @@ export const es: Dictionary = {
         call_now: "Llamar / Chat en Vivo",
         live_chat: "💬 Chat en Vivo",
         sms: "💬 Texto / SMS",
-        schedule: "⏱ Agendar Consulta"
+        schedule: "⏱ Agendar Consulta",
+        options_standalone: {
+            ai_review: "Iniciar Revisión de Caso Gratuita",
+            live_chat: "Chat en Vivo con Angel",
+            schedule: "Programar una Llamada"
+        }
     },
     sections: {
         resources_title: "Recursos Críticos",
@@ -207,8 +212,7 @@ export const es: Dictionary = {
             // Greetings
             greeting_live: "Te estoy conectando con un especialista en vivo ahora. Por favor espera...",
             greeting_standard: "Hola, soy Angel. Entiendo que este es un momento estresante y estoy aquí para ayudarte. Para empezar, ¿me podrías dar tu nombre?",
-
-            // Steps
+            ask_name: "Para empezar, ¿me podrías dar tu nombre completo?",
             ask_phone: "Gracias, {name}. En caso de que nos desconectemos, ¿cuál es tu número de celular?",
             ask_contact_method: "Gracias. ¿Prefieres que te contactemos por Texto o Llamada?",
             ask_call_time: "¿Cuál es la mejor hora para llamarte?",
@@ -250,7 +254,8 @@ export const es: Dictionary = {
 
             // Outcome
             qualify_high: "Basado en los detalles, tienes un caso fuerte para compensación. Te estoy conectando con un Especialista Senior AHORA.",
-            qualify_low: "Basado en las regulaciones de Texas, este puede ser un reclamo estándar. Hemos generado un **Paquete de Accidente Profesional** con pasos para manejar esto tú mismo. Enviándolo a tu correo ahora."
+            qualify_low: "Basado en las regulaciones de Texas, este puede ser un reclamo estándar. Hemos generado un **Paquete de Accidente Profesional** con pasos para manejar esto tú mismo. Enviándolo a tu correo ahora.",
+            greeting_standalone: "Hola, soy Angel. Entiendo que este puede ser un momento difícil y estoy aquí para apoyarlo. ¿Cómo le gustaría proceder?"
         }
     },
     caseReview: {
