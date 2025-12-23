@@ -13,9 +13,10 @@ type Message = {
 
 interface ChatWidgetProps {
     dict?: Dictionary | null;
+    variant?: 'popup' | 'fullscreen';
 }
 
-export default function ChatWidget({ dict }: ChatWidgetProps) {
+export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps) {
     const { isOpen, toggleChat, chatMode } = useChat();
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
@@ -27,12 +28,15 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const agentTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+    // Force open if fullscreen
+    const showChat = variant === 'fullscreen' || isOpen;
+
     // Initial greeting
     useEffect(() => {
-        if (isOpen && messages.length === 0 && dict) {
+        if (showChat && messages.length === 0 && dict) {
             let initialMsgs: Message[] = [];
             let initialStep = 0;
-
+            // ... (rest of logic same)
             if (chatMode === 'sms') {
                 initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_sms }];
                 initialStep = 300; // SMS Flow Start
@@ -57,15 +61,13 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
             // Reset logic if mode changed or first open
             setMessages(initialMsgs);
             setStep(initialStep);
-
-            // Only save initial if we don't have messages? 
-            // Actually, we should always reset if the user clicks a specific button (changing intent)
         }
-    }, [isOpen, chatMode, dict]); // Added chatMode to dependency array to trigger reset
+    }, [showChat, chatMode, dict]);
 
     // Effect to handle "Start Over" when switching modes while already open
     useEffect(() => {
-        if (isOpen && dict) {
+        if (showChat && dict) {
+            // ... (rest logic same)
             let initialMsgs: Message[] = [];
             let initialStep = 0;
 
@@ -85,27 +87,20 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
 
             setMessages(initialMsgs);
             setStep(initialStep);
-
-            // Sync reset to Supabase if valid session
-            /* 
-               We typically don't spam Supabase on every mode switch reset unless user typed.
-               But if we want a clean slate in the DB, we might ignoring the old messages.
-               For now, we just reset the UI. 
-            */
         }
-    }, [chatMode]);
+    }, [chatMode]); // Removed 'isOpen' dependency check inside, relied on showChat
 
     // Auto-scroll
     useEffect(() => {
-        if (isOpen) {
+        if (showChat) {
             bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
-    }, [messages, isOpen]);
+    }, [messages, showChat]);
 
     // Realtime Session Status & Messages
     useEffect(() => {
-        if (!isOpen) return;
-
+        if (!showChat) return;
+        // ... (rest logic same)
         // 1. Subscribe to Messages
         const msgChannel = supabaseClient
             .channel(`session-msgs-${sessionId}`)
@@ -134,6 +129,10 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
 
         // 3. Create/Init Session in DB
         const initSession = async () => {
+            const key = `session_init_${sessionId}`; // Simple debounce
+            if (sessionStorage.getItem(key)) return;
+            sessionStorage.setItem(key, 'true');
+
             const { error } = await supabaseClient.from('chat_sessions').upsert({
                 session_id: sessionId,
                 status: 'bot',
@@ -149,9 +148,10 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
             supabaseClient.removeChannel(msgChannel);
             supabaseClient.removeChannel(sessionChannel);
         };
-    }, [isOpen, sessionId]);
+    }, [showChat, sessionId]);
 
-    // Update Session Data Helper
+    // ... (updateSessionData, addMessage, submitLead, handleScoreAndProceed, handleAtTheScene, handleSend, handleFileUpload same)
+
     const updateSessionData = async (newData: any) => {
         await supabaseClient.from('chat_sessions').update({
             user_data: newData,
@@ -162,7 +162,6 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
     const addMessage = (sender: 'user' | 'bot', text: string) => {
         setMessages(prev => [...prev, { sender, text }]);
 
-        // Save to Supabase
         supabaseClient.from('chat_messages').insert({
             session_id: sessionId,
             sender,
@@ -205,6 +204,7 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
         }
     };
 
+
     const handleAtTheScene = () => {
         if (!dict) return;
         addMessage('bot', dict.chat.responses.scene_safety || "Are you safe?");
@@ -225,6 +225,7 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
             let botText = '';
             let newData = { ...userData };
 
+            // ... (Keep existing Step Logic identical)
             // --- At The Scene Flow ---
             if (step === 200) { // Safety Answer
                 botText = d.chat.responses.scene_photo_plates || "Upload plates";
@@ -338,13 +339,6 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
                 return; // End flow handling here
             }
 
-            // --- Call Flow ---
-            else if (step === 100) {
-                // ... (Simplified for brevity, can expand if needed)
-                botText = d.chat.responses.ask_incident;
-                nextStep = 5;
-            }
-
             // If Live Mode is active, do NOT run bot logic
             if (isLiveMode) {
                 setUserData(newData); // Still keep local state up to date just in case
@@ -395,7 +389,79 @@ export default function ChatWidget({ dict }: ChatWidgetProps) {
         }
     };
 
+
     if (!dict) return null;
+
+    if (variant === 'fullscreen') {
+        return (
+            <div className="flex flex-col h-[100dvh] bg-gray-50">
+                {/* Header */}
+                <div className="bg-blue-900 text-white p-4 flex justify-between items-center shrink-0 shadow-md z-10">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center font-bold text-lg">A</div>
+                        <div>
+                            <h3 className="font-bold text-lg">Angel (AI Specialist)</h3>
+                            <p className="text-xs text-blue-200 flex items-center gap-1"><span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> Online • Private Session</p>
+                        </div>
+                    </div>
+                    {/* No Close Button in Fullscreen */}
+                </div>
+
+                {/* Messages Area */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 pb-20">
+                    {/* Start Options */}
+                    {messages.length < 2 && (
+                        <div className="mb-6">
+                            <button
+                                onClick={handleAtTheScene}
+                                className="w-full bg-red-600 hover:bg-red-700 text-white p-6 rounded-xl shadow-lg border-2 border-red-500 flex items-center justify-between group transition-all mb-4 text-left"
+                            >
+                                <div>
+                                    <span className="block text-sm font-bold text-red-100 uppercase tracking-wider animate-pulse">Just Crashed?</span>
+                                    <span className="text-xl font-black">At The Scene? Start Here</span>
+                                </div>
+                                <AlertTriangleIcon size={32} />
+                            </button>
+                        </div>
+                    )}
+
+                    {messages.map((msg, i) => (
+                        <div key={i} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                            <div className={`max-w-[85%] p-4 rounded-2xl text-base ${msg.sender === 'user'
+                                ? 'bg-blue-600 text-white rounded-tr-none shadow-md'
+                                : 'bg-white text-gray-800 border border-gray-200 shadow-sm rounded-tl-none'
+                                }`}>
+                                {msg.text}
+                            </div>
+                        </div>
+                    ))}
+                    <div ref={bottomRef} />
+                </div>
+
+                {/* Input Area - Fixed Bottom for Mobile */}
+                <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 flex gap-2 z-20 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+                    <label className="p-3 bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 cursor-pointer active:scale-95 transition">
+                        <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} ref={fileInputRef} />
+                        <span className="text-xl">📷</span>
+                    </label>
+
+                    <input
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                        placeholder="Type message..."
+                        className="flex-1 bg-gray-100 border-0 rounded-full px-5 text-base focus:ring-2 focus:ring-blue-500 outline-none"
+                    />
+                    <button
+                        onClick={() => handleSend()}
+                        className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 shadow-md transition transform active:scale-95"
+                    >
+                        <SendIcon size={20} />
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end">
