@@ -116,7 +116,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                     </p>
 
                     {/* Primary Call to Action - Glass Container */}
-                    <div className="py-8 relative group">
+                    <div className="py-8 relative group flex justify-center">
                         <div className="absolute inset-0 bg-blue-500/20 blur-3xl opacity-30 rounded-full group-hover:opacity-50 transition duration-500"></div>
                         <button
                             onClick={openReview}
