@@ -35,7 +35,7 @@ export default function AdminChatPage() {
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        if (pin === '2026') {
+        if (pin === '1234') {
             setIsAuthenticated(true);
             localStorage.setItem('admin_chat_auth', 'true');
         } else {
