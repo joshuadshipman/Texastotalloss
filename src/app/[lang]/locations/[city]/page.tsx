@@ -299,7 +299,7 @@ export default async function CityPage({ params }: Props) {
                 <div className="max-w-2xl mx-auto px-4 text-center">
                     <h2 className="text-2xl font-bold mb-6">Check Your {city.name} Vehicle Value</h2>
                     <p className="text-gray-600 mb-8">Use our calculator to see if the insurance offer matches local {city.name} dealer prices.</p>
-                    <ValuationCalculator />
+                    <ValuationCalculator dict={dict} />
                 </div>
             </section>
 

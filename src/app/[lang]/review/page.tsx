@@ -1,5 +1,5 @@
 
-import { getDictionary } from '@/dictionaries/dictionaries';
+import { getDictionary } from '@/app/[lang]/dictionaries';
 import CaseReviewModal from '@/components/CaseReviewModal';
 import { ChatProvider } from '@/components/ChatContext';
 import RedirectToReview from '@/components/RedirectToReview';

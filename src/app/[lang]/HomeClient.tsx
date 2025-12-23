@@ -173,7 +173,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             {/* Recognized for Excellence - Trust Badges */}
             <section className="bg-white py-12 border-b border-gray-200">
                 <div className="max-w-6xl mx-auto px-4 text-center">
-                    <h3 className="text-2xl font-bold text-blue-900 mb-8 uppercase tracking-wide">{dict.trust_badges.title}</h3>
+                    <h3 className="text-2xl font-bold text-blue-900 mb-8 uppercase tracking-wide">{dict.sections.trust_badges.title}</h3>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
                         {/* Badge 1 */}
                         <div className="flex flex-col items-center p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition">
@@ -208,7 +208,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                             <span className="text-xs text-gray-500 uppercase tracking-widest mt-1">Specialists</span>
                         </div>
                     </div>
-                    <p className="mt-4 text-xs text-gray-400 font-medium">{dict.trust_badges.sub}</p>
+                    <p className="mt-4 text-xs text-gray-400 font-medium">{dict.sections.trust_badges.sub}</p>
                 </div>
             </section>
 
