@@ -44,40 +44,44 @@ export default function InfoSections() {
                 </div>
             </section>
 
-            {/* Responsibility & Causes Grid */}
-            <section className="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-8">
-                {/* Responsibility */}
-                <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-xl h-full">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                        <ScaleIcon className="text-blue-600" /> Determining Responsibility
-                    </h2>
-                    <p className="text-gray-600 mb-6 font-medium">
-                        Establishing who is at fault is key to your claim. In Texas, we look for negligence factors like:
-                    </p>
-                    <ul className="space-y-3">
-                        {['Drunk / Impaired Drivers', 'Distracted Driving (Texting)', 'Failure to Yield (Pedestrians/Turns)', 'Reckless Speeding', 'Poor Road Design / Signage'].map((item, i) => (
-                            <li key={i} className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-100">
-                                <AlertTriangleIcon size={16} className="text-amber-500" />
-                                <span className="font-medium text-gray-800">{item}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+            {/* Responsibility & Causes Unified Section */}
+            <section className="max-w-6xl mx-auto px-4">
+                <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+                    <div className="grid md:grid-cols-2 gap-8">
+                        {/* Responsibility Card */}
+                        <div className="bg-blue-50/50 p-6 rounded-xl border border-blue-100 hover:shadow-md transition-shadow">
+                            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                                <ScaleIcon className="text-blue-600" size={24} /> Determining Responsibility
+                            </h2>
+                            <p className="text-gray-600 mb-4 text-sm font-medium">
+                                Establishing fault is the foundation of your claim. We document:
+                            </p>
+                            <ul className="space-y-2">
+                                {['Drunk / Impaired Drivers', 'Distracted Driving (Texting)', 'Failure to Yield', 'Reckless Speeding', 'Poor Road Design'].map((item, i) => (
+                                    <li key={i} className="flex items-center gap-2 text-sm text-gray-700 bg-white p-2 rounded border border-gray-100">
+                                        <AlertTriangleIcon size={14} className="text-amber-500" />
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
 
-                {/* Common Causes */}
-                <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-xl h-full">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                        <AlertTriangleIcon className="text-red-600" /> Common Causes
-                    </h2>
-                    <p className="text-gray-600 mb-6 font-medium">
-                        Accidents often stem from human error. Recognizing these patterns helps build your case:
-                    </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {['Speeding', 'Drunk Driving', 'Red Lights', 'Road Rage', 'Weather', 'defects'].map((cause, i) => (
-                            <div key={i} className="flex items-center gap-2 text-sm text-gray-700 bg-gray-50 p-3 rounded-lg border border-gray-100">
-                                <span className="w-2 h-2 bg-red-400 rounded-full flex-shrink-0"></span> {cause}
+                        {/* Common Causes Card */}
+                        <div className="bg-red-50/50 p-6 rounded-xl border border-red-100 hover:shadow-md transition-shadow">
+                            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                                <AlertTriangleIcon className="text-red-600" size={24} /> Common Causes
+                            </h2>
+                            <p className="text-gray-600 mb-4 text-sm font-medium">
+                                Recognizing these patterns helps build a stronger case:
+                            </p>
+                            <div className="grid grid-cols-2 gap-2">
+                                {['Speeding', 'Drunk Driving', 'Red Lights', 'Road Rage', 'Weather', 'Defects'].map((cause, i) => (
+                                    <div key={i} className="flex items-center gap-2 text-xs text-gray-700 bg-white p-2 rounded border border-gray-100">
+                                        <span className="w-1.5 h-1.5 bg-red-400 rounded-full flex-shrink-0"></span> {cause}
+                                    </div>
+                                ))}
                             </div>
-                        ))}
+                        </div>
                     </div>
                 </div>
             </section>
