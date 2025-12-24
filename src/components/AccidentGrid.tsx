@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { accidentTypes } from '@/data/accidentTypes';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { useChat } from './ChatContext';
 
 import dynamic from 'next/dynamic';
 const SectionCard = dynamic(() => import('@/components/SectionCard'));
@@ -12,6 +13,7 @@ interface AccidentGridProps {
 }
 
 export default function AccidentGrid({ dict }: AccidentGridProps) {
+    const { openChat } = useChat();
     // Fallbacks
     const title = dict?.accident_grid?.title || "Common Auto Accident Types";
     const sub = dict?.accident_grid?.subtitle || "We have specialized strategies for every scenario to maximize your recovery.";
@@ -37,7 +39,7 @@ export default function AccidentGrid({ dict }: AccidentGridProps) {
                     </div>
 
                     {/* Scrollable Area */}
-                    <div className="h-[500px] overflow-y-auto p-4 space-y-3 custom-scrollbar bg-gray-50/50">
+                    <div className="h-[380px] overflow-y-auto p-4 space-y-3 custom-scrollbar bg-gray-50/50">
                         {accidentTypes.map((type) => {
                             const Icon = type.icon;
                             return (
@@ -77,7 +79,10 @@ export default function AccidentGrid({ dict }: AccidentGridProps) {
                                                 <p className="font-bold text-blue-900">Involved in this type of crash?</p>
                                                 <p className="text-sm text-blue-600">Get a free specialized case review now.</p>
                                             </div>
-                                            <button className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow hover:bg-blue-700 transition">
+                                            <button
+                                                onClick={() => openChat('standalone')}
+                                                className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow hover:bg-blue-700 transition"
+                                            >
                                                 Start Review
                                             </button>
                                         </div>

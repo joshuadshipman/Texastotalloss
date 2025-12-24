@@ -7,6 +7,7 @@ import {
     CheckCircleIcon, AlertTriangleIcon, FileTextIcon,
     MessageSquareIcon, MapPinIcon
 } from 'lucide-react';
+import AdminChatGrid from '@/components/admin/AdminChatGrid';
 
 // Type definition matches our SQL schema
 type Lead = {
@@ -40,6 +41,42 @@ export default function AdminDashboard() {
 
     // Selected Lead for Modal
     const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+
+    // Active Chat Grid State (List of Session IDs)
+    const [activeSessions, setActiveSessions] = useState<string[]>(['', '', '', '']); // 4 Fixed Slots
+
+    // Handlers for Grid
+    const handleOpenSlot = (sessionId: string) => {
+        // Check if already active
+        if (activeSessions.includes(sessionId)) return;
+
+        // Find first empty slot
+        const emptyIndex = activeSessions.findIndex(s => s === '');
+        if (emptyIndex !== -1) {
+            const newSessions = [...activeSessions];
+            newSessions[emptyIndex] = sessionId;
+            setActiveSessions(newSessions);
+        } else {
+            // If full, replace the First slot (Queue-like or ask user later) - For now simple FIFO replacement or alert
+            const confirm = window.confirm("Slots full. Replace slot 1?");
+            if (confirm) {
+                const newSessions = [...activeSessions];
+                newSessions[0] = sessionId;
+                setActiveSessions(newSessions);
+            }
+        }
+    };
+
+    const handleMinimizeSlot = (sessionId: string) => {
+        // Just visual minimization handled in child? Or effectively "close" from grid but keep state?
+        // For now, let's treat minimize as "Close from Grid" to free up slot
+        handleCloseSlot(sessionId);
+    };
+
+    const handleCloseSlot = (sessionId: string) => {
+        const newSessions = activeSessions.map(s => s === sessionId ? '' : s);
+        setActiveSessions(newSessions);
+    };
 
     const handleLogin = () => {
         if (pin === '1234') setIsAuthenticated(true);
@@ -118,35 +155,46 @@ export default function AdminDashboard() {
                 </div>
             </header>
 
-            <main className="max-w-7xl mx-auto p-4 md:p-8 space-y-8">
-                {/* Stats Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <StatCard label="Total Leads" value={stats.total} />
-                    <StatCard label="Actionable (>70%)" value={stats.highValue} color="text-green-600" />
-                    <StatCard label="Spanish Leads" value={stats.spanish} color="text-orange-600" />
-                    <StatCard label="New Today" value={stats.newToday} color="text-blue-600" />
+            <main className="max-w-[1400px] mx-auto p-4 space-y-8">
+                {/* 1. Live Command Center (Grid) */}
+                <div>
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-xl font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                            <MessageSquareIcon className="text-blue-600" /> Live Command Center
+                        </h2>
+                        <span className="text-xs font-bold bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+                            {activeSessions.length} Active / 4 Slots
+                        </span>
+                    </div>
+                    <AdminChatGrid
+                        activeSessions={activeSessions}
+                        onMinimize={handleMinimizeSlot}
+                        onClose={handleCloseSlot}
+                    />
                 </div>
 
-                {/* Filters & Actions */}
-                <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-lg border shadow-sm">
-                    <div className="flex items-center gap-2 w-full md:w-auto">
-                        <div className="relative">
-                            <FilterIcon size={16} className="absolute left-3 top-3 text-gray-400" />
+                {/* 2. Comprehensive Session Data */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div className="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <h3 className="font-bold text-gray-700 flex items-center gap-2">
+                            <FileTextIcon size={18} /> All Sessions ({leads.length})
+                        </h3>
+
+                        {/* Filters */}
+                        <div className="flex items-center gap-2">
                             <select
                                 value={filterLang}
                                 onChange={e => setFilterLang(e.target.value as any)}
-                                className="pl-10 pr-8 py-2 border rounded-md bg-gray-50 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                className="text-sm border rounded-lg px-3 py-2 bg-white"
                             >
-                                <option value="all">All Languages</option>
-                                <option value="en">English (EN)</option>
-                                <option value="es">Spanish (ES)</option>
+                                <option value="all">Every Language</option>
+                                <option value="en">English Only</option>
+                                <option value="es">Spanish Only</option>
                             </select>
-                        </div>
-                        <div className="relative">
                             <select
                                 value={filterScore}
                                 onChange={e => setFilterScore(e.target.value as any)}
-                                className="pl-4 pr-8 py-2 border rounded-md bg-gray-50 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                className="text-sm border rounded-lg px-3 py-2 bg-white"
                             >
                                 <option value="all">All Scores</option>
                                 <option value="high">High Value (70+)</option>
@@ -154,76 +202,67 @@ export default function AdminDashboard() {
                             </select>
                         </div>
                     </div>
-                    {/* Placeholder for Search - implement if needed */}
-                </div>
 
-                {/* Data Table */}
-                <div className="bg-white rounded-lg border shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
-                            <thead className="bg-gray-50 text-gray-500 font-medium border-b">
+                            <thead className="bg-gray-100 text-gray-500 font-bold uppercase text-xs tracking-wider">
                                 <tr>
-                                    <th className="px-6 py-4">Date</th>
-                                    <th className="px-6 py-4">Name / Contact</th>
-                                    <th className="px-6 py-4">Status / Score</th>
-                                    <th className="px-6 py-4">Location</th>
-                                    <th className="px-6 py-4">Injury Summary</th>
-                                    <th className="px-6 py-4">Lang</th>
-                                    <th className="px-6 py-4">Action</th>
+                                    <th className="px-6 py-4">Session / Date</th>
+                                    <th className="px-6 py-4">User</th>
+                                    <th className="px-6 py-4">Status</th>
+                                    <th className="px-6 py-4">Score</th>
+                                    <th className="px-6 py-4">Last Activity</th>
+                                    <th className="px-6 py-4 text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
                                 {filteredLeads.map((lead) => (
-                                    <tr key={lead.id} className="hover:bg-blue-50/50 transition">
-                                        <td className="px-6 py-4 text-gray-500">
-                                            {new Date(lead.created_at).toLocaleDateString()}<br />
-                                            <span className="text-xs text-gray-400">{new Date(lead.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                    <tr key={lead.id} className="hover:bg-blue-50/30 transition group">
+                                        <td className="px-6 py-4">
+                                            <span className="font-mono text-xs text-gray-400 block mb-1">#{lead.dialogflow_session_id?.substring(0, 8)}</span>
+                                            <div className="text-gray-900 font-medium">
+                                                {new Date(lead.created_at).toLocaleDateString()}
+                                            </div>
+                                            <div className="text-xs text-gray-500">
+                                                {new Date(lead.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="font-bold text-gray-900">{lead.full_name}</div>
-                                            <div className="text-gray-500">{lead.phone}</div>
+                                            <div className="font-bold text-gray-900">{lead.full_name || 'Anonymous'}</div>
+                                            <div className="text-gray-500 text-xs">{lead.phone || 'No Phone'}</div>
+                                            {lead.language === 'es' && <span className="inline-block mt-1 bg-orange-100 text-orange-700 text-[10px] px-1.5 py-0.5 rounded font-bold">ES</span>}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${activeSessions.includes(lead.dialogflow_session_id) ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                                                {activeSessions.includes(lead.dialogflow_session_id) ? '● Live Now' : '○ Offline'}
+                                            </span>
                                         </td>
                                         <td className="px-6 py-4">
                                             <ScoreBadge score={lead.score} />
-                                            {lead.files_count > 0 && (
-                                                <div className="mt-1 inline-flex items-center gap-1 text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
-                                                    <FileTextIcon size={12} /> {lead.files_count} Files
-                                                </div>
-                                            )}
                                         </td>
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-1 text-gray-600">
-                                                <MapPinIcon size={14} className="text-gray-400" />
-                                                {lead.city || 'Unknown'}
+                                        <td className="px-6 py-4 max-w-xs truncate text-gray-500 italic">
+                                            {lead.injury_summary || "Start of conversation..."}
+                                        </td>
+                                        <td className="px-6 py-4 text-right">
+                                            <div className="flex justify-end gap-2 opacity-100">
+                                                <button
+                                                    onClick={() => handleOpenSlot(lead.dialogflow_session_id)}
+                                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded border border-blue-200 hover:border-blue-400 transition"
+                                                    title="Open in Command Center"
+                                                >
+                                                    <MessageSquareIcon size={16} />
+                                                </button>
+                                                <button
+                                                    onClick={() => setSelectedLead(lead)}
+                                                    className="p-2 text-gray-600 hover:bg-gray-100 rounded border border-gray-200 transition"
+                                                    title="View Full Details"
+                                                >
+                                                    <FileTextIcon size={16} />
+                                                </button>
                                             </div>
-                                        </td>
-                                        <td className="px-6 py-4 max-w-xs truncate text-gray-600" title={lead.injury_summary}>
-                                            {lead.injury_summary || '-'}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            {lead.language === 'es' ? (
-                                                <span className="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full font-bold">ES</span>
-                                            ) : (
-                                                <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">EN</span>
-                                            )}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <button
-                                                onClick={() => setSelectedLead(lead)}
-                                                className="text-blue-600 hover:text-blue-800 font-medium hover:underline"
-                                            >
-                                                View Details
-                                            </button>
                                         </td>
                                     </tr>
                                 ))}
-                                {filteredLeads.length === 0 && (
-                                    <tr>
-                                        <td colSpan={7} className="text-center py-12 text-gray-400">
-                                            No leads found matching current filters.
-                                        </td>
-                                    </tr>
-                                )}
                             </tbody>
                         </table>
                     </div>

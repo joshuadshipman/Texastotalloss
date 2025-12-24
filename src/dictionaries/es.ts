@@ -18,7 +18,7 @@ export const es: Dictionary = {
         options_standalone: {
             ai_review: "Iniciar Revisión de Caso Gratuita",
             live_chat: "Chat en Vivo con Angel",
-            schedule: "Programar una Llamada"
+            schedule: "Agendar Llamada"
         }
     },
     sections: {
@@ -208,6 +208,24 @@ export const es: Dictionary = {
             no: ["no", "nop", "negativo", "incorrecto"],
             pain: ["dolor", "herida", "lastimado", "roto", "fractura", "sangre", "duele"],
         },
+        time_options: {
+            less_one: "Menos de 1 Año",
+            less_two: "Menos de 2 Años",
+            less_three: "Menos de 3 Años"
+        },
+        injury_type_options: {
+            back_neck: "Dolor de Espalda o Cuello",
+            headaches: "Dolores de Cabeza",
+            cuts_bruises: "Cortes y Moretones",
+            broken_bones: "Huesos Rotos",
+            other: "Otro"
+        },
+        yes_no: {
+            yes: "Sí",
+            no: "No",
+            yes_fault: "Sí",
+            no_fault: "No"
+        },
         responses: {
             // Greetings
             greeting_live: "Te estoy conectando con un especialista en vivo ahora. Por favor espera...",
@@ -217,8 +235,13 @@ export const es: Dictionary = {
             ask_contact_method: "Gracias. ¿Prefieres que te contactemos por Texto o Llamada?",
             ask_call_time: "¿Cuál es la mejor hora para llamarte?",
             ask_incident: "Perfecto. Ahora, ¿podrías contarme brevemente qué pasó? ¿Fue pérdida total, hubo heridos, o ambos?",
-            ask_fault: "Entiendo. Lo siento mucho. ¿La policía confirmó quién tuvo la culpa?",
-            ask_photos: "¿Tienes fotos de los daños o un reporte policial? (Puedes subirlas usando el icono de cámara, o decir 'No')",
+            ask_fault: "¿Tuvo usted la culpa del accidente?",
+            ask_injury_time: "¿Hace cuánto tiempo ocurrió la lesión?",
+            ask_hospital: "¿Fue hospitalizado o recibió tratamiento médico por su lesión?",
+            ask_lawyer: "¿Ya tiene un abogado que lo represente?",
+            ask_injury_type: "¿Cuál es el tipo principal de lesión?",
+            ask_description: "¿Cómo ocurrió el accidente? Describa brevemente.",
+            ask_photos: "¿Tiene fotos de los vehículos o un reporte policial? (Puedes subirlas usando el icono de cámara, o decir 'No')",
             ask_recent: "Una última pregunta importante: ¿El accidente fue en las últimas 48 horas?",
 
             // Advice
@@ -255,7 +278,8 @@ export const es: Dictionary = {
             // Outcome
             qualify_high: "Basado en los detalles, tienes un caso fuerte para compensación. Te estoy conectando con un Especialista Senior AHORA.",
             qualify_low: "Basado en las regulaciones de Texas, este puede ser un reclamo estándar. Hemos generado un **Paquete de Accidente Profesional** con pasos para manejar esto tú mismo. Enviándolo a tu correo ahora.",
-            greeting_standalone: "Hola, soy Angel. Entiendo que este puede ser un momento difícil y estoy aquí para apoyarlo. ¿Cómo le gustaría proceder?"
+            greeting_standalone: "Hola, soy Ángel. ¿Cómo te gustaría proceder?",
+            validation_phone: "Por favor ingresa un número de teléfono válido."
         }
     },
     caseReview: {

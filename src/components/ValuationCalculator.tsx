@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useChat } from './ChatContext';
+import CustomSelect from '@/components/ui/CustomSelect';
 
 interface ValuationCalculatorProps {
     dict: any; // Using any for simplicity as Dictionary type is in another file, or better import it
@@ -177,19 +178,14 @@ Source: ${referrer}
                                 </div>
 
                                 {/* Year */}
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">{labels.year}</label>
-                                    <select
-                                        name="year"
+                                <div className="relative z-30">
+                                    <CustomSelect
+                                        label={labels.year}
+                                        options={Array.from({ length: 25 }, (_, i) => 2025 - i).map(year => ({ label: year, value: year.toString() }))}
                                         value={formData.year}
-                                        onChange={handleInputChange as any}
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all bg-white"
-                                    >
-                                        <option value="">Select Year</option>
-                                        {Array.from({ length: 25 }, (_, i) => 2025 - i).map(year => (
-                                            <option key={year} value={year}>{year}</option>
-                                        ))}
-                                    </select>
+                                        onChange={(val) => setFormData({ ...formData, year: val.toString() })}
+                                        placeholder="Select Year"
+                                    />
                                 </div>
 
                                 {/* Make */}
@@ -232,18 +228,17 @@ Source: ${referrer}
                                 </div>
 
                                 {/* Condition */}
-                                <div>
+                                <div className="relative z-20">
                                     <label className="block text-sm font-bold text-gray-700 mb-2">{labels.condition} <span className="text-gray-400 font-normal text-xs ml-1">(?)</span></label>
-                                    <select
-                                        name="condition"
+                                    <CustomSelect
+                                        options={[
+                                            { value: "good", label: labels.condition_help },
+                                            { value: "average", label: "Average (Wear & Tear)" },
+                                            { value: "poor", label: "Poor (Prior Damage)" }
+                                        ]}
                                         value={formData.condition}
-                                        onChange={handleInputChange as any}
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all bg-white"
-                                    >
-                                        <option value="good">{labels.condition_help}</option>
-                                        <option value="average">Average (Wear & Tear)</option>
-                                        <option value="poor">Poor (Prior Damage)</option>
-                                    </select>
+                                        onChange={(val) => setFormData({ ...formData, condition: val.toString() })}
+                                    />
                                 </div>
                             </div>
 
@@ -281,13 +276,17 @@ Source: ${referrer}
                                     <input type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500" placeholder="john@example.com" />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div>
+                                    <div className="relative z-30">
                                         <label className="block text-sm font-bold mb-2">Best Contact</label>
-                                        <select name="contactPref" value={formData.contactPref} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none bg-white">
-                                            <option value="text">msg/Text</option>
-                                            <option value="phone">Phone Call</option>
-                                            <option value="email">Email</option>
-                                        </select>
+                                        <CustomSelect
+                                            options={[
+                                                { value: 'text', label: 'msg/Text' },
+                                                { value: 'phone', label: 'Phone Call' },
+                                                { value: 'email', label: 'Email' }
+                                            ]}
+                                            value={formData.contactPref}
+                                            onChange={(val) => setFormData({ ...formData, contactPref: val.toString() })}
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-bold mb-2">Best Time</label>

@@ -15,7 +15,7 @@ export const en = {
         schedule: "⏱ Schedule Free Consult",
         options_standalone: {
             ai_review: "Start Free AI Case Review",
-            live_chat: "Live Chat with Angel",
+            live_chat: "Chat with Angel (Live)",
             schedule: "Schedule a Callback"
         }
     },
@@ -206,6 +206,24 @@ export const en = {
             no: ["no", "nope", "nah", "incorrect"],
             pain: ["pain", "hurt", "injury", "stress", "anxiety", "ache", "sore", "broken", "fracture", "bleed"],
         },
+        time_options: {
+            less_one: "Less than 1 Year",
+            less_two: "Less than 2 Years",
+            less_three: "Less than 3 Years"
+        },
+        injury_type_options: {
+            back_neck: "Back or Neck Pain",
+            headaches: "Headaches",
+            cuts_bruises: "Cuts and Bruises",
+            broken_bones: "Broken Bones",
+            other: "Other"
+        },
+        yes_no: {
+            yes: "Yes",
+            no: "No",
+            yes_fault: "Yes",
+            no_fault: "No"
+        },
         responses: {
             // Greetings
             greeting_live: "I am connecting you to a live specialist now. Please hold on...",
@@ -215,8 +233,13 @@ export const en = {
             ask_contact_method: "Thanks. Do you prefer we contact you via Text or Call?",
             ask_call_time: "What is the best time for us to call you?",
             ask_incident: "Perfect. Now, could you please briefly share what happened? Was it a total loss, were there injuries, or both?",
-            ask_fault: "I see. I'm so sorry. Did the police confirm fault?",
-            ask_photos: "Do you have any photos of the damage or a police report? (You can upload using the camera icon, or say 'No')",
+            ask_fault: "Were you at fault for the accident?",
+            ask_injury_time: "How long ago did the injury happen?",
+            ask_hospital: "Were you hospitalized or did you receive medical treatment for your injury?",
+            ask_lawyer: "Do you already have a lawyer representing you?",
+            ask_injury_type: "What is the primary type of injury?",
+            ask_description: "How did the accident happen? Briefly describe your accident.",
+            ask_photos: "Do you have photos of the vehicles or a police report? (You can upload using the camera icon, or say 'No')",
             ask_recent: "One last question: Was the accident within the last 48 hours?",
 
             // Advice
@@ -253,7 +276,8 @@ export const en = {
             // Outcome
             qualify_high: "I see. Based on those details, you likely qualify for significant compensation. I am connecting you to a Senior Specialist now.",
             qualify_low: "Thank you. I'm preparing an Accident Information Packet for you now. A team member will review your details shortly.",
-            greeting_standalone: "Hi, I'm Angel. I understand this can be a difficult time, and I'm here to support you. How would you like to proceed?"
+            greeting_standalone: "Hi, I'm Angel. I understand this can be a difficult time, and I'm here to support you. How would you like to proceed?",
+            validation_phone: "Please enter a valid phone number (e.g. 555-0199)."
         }
     },
     caseReview: {

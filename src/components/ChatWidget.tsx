@@ -24,6 +24,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
     const [userData, setUserData] = useState<any>({});
     const [sessionId] = useState(() => Math.random().toString(36).substring(7));
     const [isLiveMode, setIsLiveMode] = useState(false);
+    const [currentOptions, setCurrentOptions] = useState<{ label: string; value: string; }[] | null>(null);
     const bottomRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const agentTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -46,8 +47,8 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             } else if (chatMode === 'schedule') {
                 initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_schedule }];
                 initialStep = 500; // Schedule Flow Start
-            } else if (variant === 'fullscreen' && !chatMode) {
-                // Standalone Mode
+            } else if ((variant === 'fullscreen' && !chatMode) || chatMode === 'standalone') {
+                // Standalone Mode (or 'Start Review' trigger)
                 initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_standalone || "Hi, I'm Angel. How would you like to proceed?" }];
                 initialStep = 10;
             } else if (chatMode === 'live') {
@@ -84,6 +85,9 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             } else if (chatMode === 'schedule') {
                 initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_schedule }];
                 initialStep = 500;
+            } else if (chatMode === 'standalone') {
+                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_standalone || "Hi, I'm Angel. How would you like to proceed?" }];
+                initialStep = 10;
             } else {
                 initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_standard }];
                 initialStep = 1;
@@ -219,11 +223,30 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
         const userText = textOverride || input;
         if (!userText.trim() || !dict) return;
 
+        // Validation Logic
+        const lowerText = userText.toLowerCase();
+
+        // Phone Validation (Step 2, 4, 300, 400, 502, 100)
+        const isPhoneStep = [2, 4, 300, 400, 502, 100].includes(step);
+        if (isPhoneStep) {
+            // Regex: At least 10 digits, allows spaces/dashes/parens/plus
+            const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+            const cleanNumber = userText.replace(/\D/g, ''); // Strip non-digits
+
+            if (!phoneRegex.test(userText) && cleanNumber.length < 10) {
+                addMessage('user', userText); // Show what they typed
+                setTimeout(() => {
+                    addMessage('bot', dict.chat.responses.validation_phone || "Please enter a valid phone number (e.g. 555-0199).");
+                }, 400);
+                setInput('');
+                return; // STOP execution
+            }
+        }
+
         setInput('');
         addMessage('user', userText);
 
         setTimeout(() => {
-            const lowerText = userText.toLowerCase();
             const d = dict!;
             let nextStep = step;
             let botText = '';
@@ -253,6 +276,10 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
 
             // --- Standard Flow ---
             else if (step === 0 || step === 1) { // Intro -> Name
+                if (userText.length < 2) {
+                    addMessage('bot', "Please enter your full name.");
+                    return;
+                }
                 newData.full_name = userText;
                 botText = d.chat.responses.ask_phone.replace('{name}', userText);
                 nextStep = 2;
@@ -263,85 +290,200 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 nextStep = 3;
             }
 
-            // --- SMS Flow (300) ---
-            else if (step === 300) {
+            // --- Qualification Flow ---
+            // Transitioning from Contact Info (Step 3 or 4 or 100) -> Step 50
+            else if (step === 301 || step === 3 || step === 4 || step === 100) {
+                // Catch-all for end of contact flow -> Start Qualification
+                // Check if previous step logic handled transition to 5?
+                // We override Step 5 to be Step 50
+            }
+
+            // Explicit transitions from Contact Flow to Qualification
+            if (nextStep === 5) {
+                nextStep = 50;
+                botText = d.chat.responses.ask_injury_time;
+                // Set Options for Time
+                if (d.chat.time_options) {
+                    setCurrentOptions([
+                        { label: d.chat.time_options.less_one, value: d.chat.time_options.less_one },
+                        { label: d.chat.time_options.less_two, value: d.chat.time_options.less_two },
+                        { label: d.chat.time_options.less_three, value: d.chat.time_options.less_three }
+                    ]);
+                }
+            }
+
+            // Step 50: Injury Time Answered
+            else if (step === 50) {
+                newData.injury_time = userText;
+                botText = d.chat.responses.ask_hospital;
+                nextStep = 52;
+                setCurrentOptions([
+                    { label: d.chat.yes_no?.yes || "Yes", value: "Yes" },
+                    { label: d.chat.yes_no?.no || "No", value: "No" }
+                ]);
+            }
+
+            // Step 52: Hospital Answered
+            else if (step === 52) {
+                newData.hospitalized = lowerText.includes('yes') || lowerText.includes('sí');
+                botText = d.chat.responses.ask_fault;
+                nextStep = 53;
+                setCurrentOptions([
+                    { label: d.chat.yes_no?.no_fault || "No", value: "No" }, // "No" I was not at fault
+                    { label: d.chat.yes_no?.yes_fault || "Yes", value: "Yes" } // "Yes" I was at fault
+                ]);
+            }
+
+            // Step 53: Fault Answered
+            else if (step === 53) {
+                // If user says "No" to "Were you at fault?", then fault='other'
+                // If user says "Yes", fault='me'
+                const isAtFault = lowerText.includes('yes') || lowerText.includes('sí');
+                newData.fault = isAtFault ? 'me' : 'other';
+
+                botText = d.chat.responses.ask_lawyer;
+                nextStep = 54;
+                setCurrentOptions([
+                    { label: d.chat.yes_no?.no || "No", value: "No" },
+                    { label: d.chat.yes_no?.yes || "Yes", value: "Yes" }
+                ]);
+            }
+
+            // Step 54: Lawyer Answered
+            else if (step === 54) {
+                newData.has_lawyer = lowerText.includes('yes') || lowerText.includes('sí');
+                botText = d.chat.responses.ask_injury_type;
+                nextStep = 55;
+
+                const opts = d.chat.injury_type_options;
+                if (opts) {
+                    setCurrentOptions([
+                        { label: opts.back_neck, value: opts.back_neck },
+                        { label: opts.headaches, value: opts.headaches },
+                        { label: opts.cuts_bruises, value: opts.cuts_bruises },
+                        { label: opts.broken_bones, value: opts.broken_bones },
+                        { label: opts.other, value: opts.other }
+                    ]);
+                }
+            }
+
+            // Step 55: Injury Type Answered
+            else if (step === 55) {
+                newData.injury_type = userText;
+                botText = d.chat.responses.ask_description;
+                nextStep = 56;
+                // Free text
+                setCurrentOptions(null);
+            }
+
+            // Step 56: Description Answered -> Photos
+            else if (step === 56) {
+                newData.description = userText;
+                // Logic from old Step 301/6 etc
+                botText = d.chat.responses.ask_photos; // "Do you have photos?"
+                nextStep = 57;
+                setCurrentOptions([
+                    { label: d.chat.yes_no?.yes || "Yes", value: "Yes" },
+                    { label: d.chat.yes_no?.no || "No", value: "No" }
+                ]);
+            }
+
+            // Step 57: Photos Answered (Logic from old 301)
+            else if (step === 57) {
+                if (lowerText.includes('yes') || lowerText.includes('sí')) {
+                    botText = d.chat.responses.scene_photo_plates || "Please upload them now (Camera Icon).";
+                    nextStep = 201; // Transition to evidence flow
+                    setCurrentOptions(null);
+                } else {
+                    handleScoreAndProceed(newData);
+                    return;
+                }
+            }
+
+            // --- Pre-existing SMS/Call Flow Connections ---
+            // SMS (300) -> 301. Redefine 301 to jump to 50 instead of 5
+            else if (step === 300) { // SMS Sent
                 newData.phone = userText;
                 newData.contact_pref = 'text';
-                botText = "Thanks. I've sent a link. Meanwhile, do you have photos of the accident? (Yes/No)";
-                nextStep = 301;
+                botText = "Thanks. I've sent a link. Qualification: " + d.chat.responses.ask_injury_time;
+                // Wait, logic says 'Do you have photos?' first usually? 
+                // Let's standardise: SMS/Call flow leads to Qualification flow just like Web flow
+                // But previously it asked for photos first. Let's keep photos first for SMS (mobile context)?
+                // Actually, let's unify. Go to Step 5 (which becomes 50 via check above)
+                nextStep = 5;
             }
-            else if (step === 301) {
-                if (lowerText.includes('yes')) {
-                    botText = d.chat.responses.scene_photo_plates || "Please upload them now.";
-                    nextStep = 201; // Jump to existing evidence flow
-                } else {
-                    botText = d.chat.responses.ask_incident;
-                    nextStep = 5;
-                }
-            }
-
-            // --- Call Flow (400) ---
-            else if (step === 400) {
+            else if (step === 400) { // Call Dialing
                 newData.phone = userText;
                 newData.contact_pref = 'call';
-                botText = "Got it. We are dialing you now. While you wait, do you have any photos of the damage? (Yes/No)";
-                nextStep = 301; // Re-use the photo check logic
+                // Go to Qualification
+                nextStep = 5;
             }
-
-            // --- Schedule Flow (500) ---
-            else if (step === 500) {
-                newData.incident_details = userText; // They described emergency
-                botText = d.chat.responses.ask_call_time || "When is the best time for us to call you?";
-                nextStep = 501;
-            }
-            else if (step === 501) {
-                newData.best_time = userText;
-                botText = d.chat.responses.ask_phone.replace('{name}', 'there');
-                nextStep = 502;
-            }
-            else if (step === 502) {
+            else if (step === 502) { // Schedule Confirmed
                 newData.phone = userText;
-                botText = "Appointment Confirmed. Do you have scene photos to help the attorney prepare? (Yes/No)";
-                nextStep = 301; // Re-use photo check
+                nextStep = 5;
             }
 
-            else if (step === 3) { // Method
-                newData.contact_pref = lowerText.includes('text') ? 'text' : 'call';
-                botText = d.chat.responses.ask_incident;
-                nextStep = 4; // Skip to incident?
-                if (newData.contact_pref === 'call') {
-                    botText = d.chat.responses.ask_call_time;
-                    nextStep = 4;
-                } else {
-                    botText = d.chat.responses.ask_incident;
-                    nextStep = 5;
+            // --- Standard Contact (Step 3/4) Connections ---
+            else if (step === 3) {
+                // ... (existing logic)
+                const isText = lowerText.includes('text') || lowerText.includes('sms') || lowerText.includes('msg');
+                const isCall = lowerText.includes('call') || lowerText.includes('phone');
+                if (!isText && !isCall) { addMessage('bot', "Text or Call?"); return; }
+                newData.contact_pref = isText ? 'text' : 'call';
+                if (newData.contact_pref === 'call') { botText = d.chat.responses.ask_call_time; nextStep = 4; }
+                else { nextStep = 5; } // -> 50
+            }
+            else if (step === 4) {
+                newData.best_time = userText;
+                nextStep = 5; // -> 50
+            }
+            else if (step === 100) {
+                newData.phone = userText;
+                nextStep = 5; // -> 50
+            }
+
+            // --- Legacy / Safety Flow ---
+            else if (step === 200 || step === 201 || step === 202) {
+                // ... (existing evidence logic)
+                if (step === 200) { botText = d.chat.responses.scene_photo_plates; nextStep = 201; }
+                else if (step === 201) { botText = d.chat.responses.scene_photo_scene; nextStep = 202; }
+                else if (step === 202) { botText = d.chat.responses.scene_photo_docs; nextStep = 203; }
+            }
+            else if (step === 203) {
+                botText = d.chat.responses.scene_processing;
+                nextStep = 5; // -> 50
+            }
+
+
+            // If Live Mode is active, do NOT run bot logic
+            if (isLiveMode) {
+                setUserData(newData);
+                updateSessionData(newData);
+                return;
+            }
+
+            setUserData(newData);
+            updateSessionData(newData); // Sync to DB
+
+            // Handle redirect to Step 50
+            if (nextStep === 5) {
+                nextStep = 50;
+                botText = d.chat.responses.ask_injury_time;
+                if (d.chat.time_options) {
+                    setCurrentOptions([
+                        { label: d.chat.time_options.less_one, value: d.chat.time_options.less_one },
+                        { label: d.chat.time_options.less_two, value: d.chat.time_options.less_two },
+                        { label: d.chat.time_options.less_three, value: d.chat.time_options.less_three }
+                    ]);
                 }
             }
-            else if (step === 4) { // Time
-                newData.best_time = userText;
-                botText = d.chat.responses.ask_incident;
-                nextStep = 5;
+
+            setStep(nextStep);
+
+            if (botText) {
+                addMessage('bot', botText);
             }
-            else if (step === 100) { // Legacy Call (Safe fallback)
-                newData.phone = userText;
-                botText = d.chat.responses.ask_incident;
-                nextStep = 5;
-            }
-            else if (step === 5) { // Incident
-                newData.incident_details = userText;
-                botText = d.chat.responses.ask_fault;
-                nextStep = 6;
-            }
-            else if (step === 6) { // Fault
-                newData.fault = lowerText.includes('me') ? 'me' : 'other';
-                botText = "Was anyone injured? (Yes/No)";
-                nextStep = 7;
-            }
-            else if (step === 7) { // Injury
-                newData.has_injury = lowerText.includes('yes');
-                handleScoreAndProceed(newData);
-                return; // End flow handling here
-            }
+
 
             // If Live Mode is active, do NOT run bot logic
             if (isLiveMode) {
@@ -566,6 +708,21 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                             </div>
                         ))}
                         <div ref={bottomRef} />
+
+                        {/* Options Buttons */}
+                        {currentOptions && (
+                            <div className="flex flex-wrap gap-2 mt-2 justify-end animate-in fade-in slide-in-from-bottom-2">
+                                {currentOptions.map((opt, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => handleSend(opt.value)} // Send the value as message
+                                        className="bg-blue-100 hover:bg-blue-200 text-blue-800 px-4 py-2 rounded-full text-sm font-medium transition"
+                                    >
+                                        {opt.label}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     {/* Input Area */}
