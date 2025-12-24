@@ -13,11 +13,11 @@ type Props = {
 };
 
 // 1. Generate Static Params for Build Time Optimization (SSG)
-// export async function generateStaticParams() {
-//    return cities.map((city) => ({
-//        city: city.slug,
-//    }));
-// }
+export async function generateStaticParams() {
+    return cities.map((city) => ({
+        city: city.slug,
+    }));
+}
 
 // 2. Dynamic Metadata
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

@@ -215,5 +215,230 @@ export const cities: CityData[] = [
             { name: "The Joint Chiropractic - El Paso", link: "https://www.thejoint.com/texas/el-paso/", note: "West and East side locations available." },
             { name: "Texas Pain & Injury - El Paso", link: "https://texaspainandinjury.com/locations/el-paso/", note: "Focused pain relief for El Paso accident victims." }
         ]
+    },
+    // --- DFW EXPANSION ---
+    {
+        slug: 'plano',
+        translations: {
+            en: { name: 'Plano', county: 'Collin', description: "Plano's corporate headquarters and busy tollways like DNT and 121 create high-risk accident zones." },
+            es: { name: 'Plano', county: 'Collin', description: "Las sedes corporativas de Plano y las autopistas concurridas crean zonas de alto riesgo de accidentes." }
+        },
+        coordinates: { latitude: 33.0198, longitude: -96.6989 },
+        zipCodes: ["75023", "75024", "75025", "75074", "75075", "75093"],
+        medicalResources: [{ name: "Texas Health Presbyterian Plano", link: "https://www.texashealth.org", note: "Trauma Care" }]
+    },
+    {
+        slug: 'murphy',
+        translations: {
+            en: { name: 'Murphy', county: 'Collin', description: "Murphy's rapid residential growth means more traffic on FM 544 and increased neighborhood collisions." },
+            es: { name: 'Murphy', county: 'Collin', description: "El rápido crecimiento residencial de Murphy significa más tráfico en FM 544 y más choques." }
+        },
+        coordinates: { latitude: 33.0151, longitude: -96.6131 },
+        zipCodes: ["75094"],
+        medicalResources: [{ name: "Methodist Richardson (Nearby)", link: "https://methodisthealth.org", note: "Emergency Services" }]
+    },
+    {
+        slug: 'venus',
+        translations: {
+            en: { name: 'Venus', county: 'Johnson/Ellis', description: "Venus connects major rural routes where high-speed highway accidents are common and dangerous." },
+            es: { name: 'Venus', county: 'Johnson/Ellis', description: "Venus conecta rutas rurales importantes donde los accidentes de alta velocidad son comunes." }
+        },
+        coordinates: { latitude: 32.48, longitude: -97.18 },
+        zipCodes: ["76084"],
+        medicalResources: [{ name: "Texas Health Huguley", link: "https://www.texashealth.org", note: "Nearest Major Hospital" }]
+    },
+    {
+        slug: 'mansfield',
+        translations: {
+            en: { name: 'Mansfield', county: 'Tarrant', description: "Mansfield's boom has led to congestion on US 287. We face aggressive adjusters here daily." },
+            es: { name: 'Mansfield', county: 'Tarrant', description: "El auge de Mansfield ha provocado congestión en la US 287. Enfrentamos ajustadores agresivos aquí a diario." }
+        },
+        coordinates: { latitude: 32.5635, longitude: -97.1420 },
+        zipCodes: ["76063"],
+        medicalResources: [{ name: "Methodist Mansfield Medical Center", link: "https://methodisthealth.org", note: "Full Service Hospital" }]
+    },
+    {
+        slug: 'fort-worth',
+        translations: {
+            en: { name: 'Fort Worth', county: 'Tarrant', description: "Fort Worth's mix of I-35W trucking traffic and city commuters creates complex liability accidents." },
+            es: { name: 'Fort Worth', county: 'Tarrant', description: "La mezcla de tráfico de camiones I-35W y viajeros en Fort Worth crea accidentes de responsabilidad compleja." }
+        },
+        coordinates: { latitude: 32.7555, longitude: -97.3308 },
+        zipCodes: ["76102", "76104", "76107"],
+        medicalResources: [{ name: "JPS Health Network", link: "https://www.jpshealthnet.org", note: "Level 1 Trauma Center" }]
+    },
+    {
+        slug: 'arlington',
+        translations: {
+            en: { name: 'Arlington', county: 'Tarrant', description: "Home to the stadiums and I-30, Arlington sees massive event traffic and severe rear-end collisions." },
+            es: { name: 'Arlington', county: 'Tarrant', description: "Hogar de los estadios y la I-30, Arlington ve tráfico masivo de eventos y colisiones graves." }
+        },
+        coordinates: { latitude: 32.7357, longitude: -97.1081 },
+        zipCodes: ["76010", "76011"],
+        medicalResources: [{ name: "Texas Health Arlington Memorial", link: "https://www.texashealth.org", note: "Emergency Care" }]
+    },
+    {
+        slug: 'garland',
+        translations: {
+            en: { name: 'Garland', county: 'Dallas', description: "Garland's industrial corridors and I-635 proximity lead to frequent commercial vehicle accidents." },
+            es: { name: 'Garland', county: 'Dallas', description: "Los corredores industriales de Garland y la proximidad a la I-635 provocan accidentes frecuentes." }
+        },
+        coordinates: { latitude: 32.9072, longitude: -96.6353 },
+        zipCodes: ["75040", "75041"],
+        medicalResources: [{ name: "Baylor Scott & White Garland", link: "https://www.bswhealth.com", note: "Full Service" }]
+    },
+    {
+        slug: 'irving',
+        translations: {
+            en: { name: 'Irving', county: 'Dallas', description: "With DFW Airport nearby, Irving roads like 114 and 183 are hotspots for high-speed crashes." },
+            es: { name: 'Irving', county: 'Dallas', description: "Con el aeropuerto DFW cerca, las carreteras de Irving como 114 y 183 son puntos críticos de choques." }
+        },
+        coordinates: { latitude: 32.8196, longitude: -96.9454 },
+        zipCodes: ["75038", "75039"],
+        medicalResources: [{ name: "Baylor Scott & White Irving", link: "https://www.bswhealth.com", note: "Emergency Room" }]
+    },
+    {
+        slug: 'mckinney',
+        translations: {
+            en: { name: 'McKinney', county: 'Collin', description: "McKinney's rapid growth on US 75 has outpaced infrastructure, leading to frequent dangerous intersections." },
+            es: { name: 'McKinney', county: 'Collin', description: "El rápido crecimiento de McKinney en la US 75 ha superado la infraestructura, creando cruces peligrosos." }
+        },
+        coordinates: { latitude: 33.2146, longitude: -96.6145 },
+        zipCodes: ["75069", "75070"],
+        medicalResources: [{ name: "Medical City McKinney", link: "https://medicalcityhealthcare.com", note: "Trauma & Emergency" }]
+    },
+    {
+        slug: 'denton',
+        translations: {
+            en: { name: 'Denton', county: 'Denton', description: "University traffic and I-35 splits make Denton a unique area for student and commuter accidents." },
+            es: { name: 'Denton', county: 'Denton', description: "El tráfico universitario y la división de la I-35 hacen de Denton un área única para accidentes." }
+        },
+        coordinates: { latitude: 33.2148, longitude: -97.1331 },
+        zipCodes: ["76201", "76205"],
+        medicalResources: [{ name: "Texas Health Presbyterian Denton", link: "https://www.texashealth.org", note: "Full Hospital Services" }]
+    },
+    {
+        slug: 'richardson',
+        translations: {
+            en: { name: 'Richardson', county: 'Dallas', description: "The Telecom Corridor brings heavy commuter traffic to Richardson, increasing rush-hour collision risks." },
+            es: { name: 'Richardson', county: 'Dallas', description: "El Corredor de Telecomunicaciones trae tráfico pesado a Richardson, aumentando el riesgo de choques." }
+        },
+        coordinates: { latitude: 32.9656, longitude: -96.7158 },
+        zipCodes: ["75080", "75081"],
+        medicalResources: [{ name: "Methodist Richardson", link: "https://methodisthealth.org", note: "ER & Trauma" }]
+    },
+    {
+        slug: 'lewisville',
+        translations: {
+            en: { name: 'Lewisville', county: 'Denton', description: "Traffic bottlenecks on I-35E in Lewisville are notorious for producing multi-car pile-ups." },
+            es: { name: 'Lewisville', county: 'Denton', description: "Los embotellamientos en la I-35E en Lewisville son notorios por producir choques múltiples." }
+        },
+        coordinates: { latitude: 33.0383, longitude: -97.0061 },
+        zipCodes: ["75057", "75067"],
+        medicalResources: [{ name: "Medical City Lewisville", link: "https://medicalcityhealthcare.com", note: "Emergency Services" }]
+    },
+    {
+        slug: 'mesquite',
+        translations: {
+            en: { name: 'Mesquite', county: 'Dallas', description: "The Rodeo Capital's proximity to 635 and I-30/I-20 creates a dangerous mix of local and interstate traffic." },
+            es: { name: 'Mesquite', county: 'Dallas', description: "La proximidad de Mesquite a 635 y I-30/I-20 crea una mezcla peligrosa de tráfico." }
+        },
+        coordinates: { latitude: 32.7828, longitude: -96.6100 },
+        zipCodes: ["75149", "75150"],
+        medicalResources: [{ name: "Dallas Regional Medical Center", link: "https://www.dallasregionalmedicalcenter.com", note: "Emergency Room" }]
+    },
+    {
+        slug: 'grand-prairie',
+        translations: {
+            en: { name: 'Grand Prairie', county: 'Dallas/Tarrant', description: "Stretching between Dallas and Ft. Worth, Grand Prairie sees diverse accident types on I-30 and I-20." },
+            es: { name: 'Grand Prairie', county: 'Dallas/Tarrant', description: "Extendiéndose entre Dallas y Ft. Worth, Grand Prairie ve diversos tipos de accidentes." }
+        },
+        coordinates: { latitude: 32.7460, longitude: -96.9978 },
+        zipCodes: ["75050", "75051", "75052"],
+        medicalResources: [{ name: "Medical City ER Grand Prairie", link: "https://medicalcityhealthcare.com", note: "Emergency Care" }]
+    },
+
+    // --- HOUSTON METRO EXPANSION ---
+    {
+        slug: 'pasadena',
+        translations: {
+            en: { name: 'Pasadena', county: 'Harris', description: "Refinery traffic and HWY 225 make Pasadena roads hazardous for passenger vehicles." },
+            es: { name: 'Pasadena', county: 'Harris', description: "El tráfico de refinerías y la HWY 225 hacen que las carreteras de Pasadena sean peligrosas." }
+        },
+        coordinates: { latitude: 29.6911, longitude: -95.2091 },
+        zipCodes: ["77502", "77506"],
+        medicalResources: [{ name: "HCA Houston Healthcare Southeast", link: "https://hcahoustonhealthcare.com", note: "Trauma & ER" }]
+    },
+    {
+        slug: 'pearland',
+        translations: {
+            en: { name: 'Pearland', county: 'Brazoria', description: "Fast-growing Pearland faces increasing traffic on 288, leading to high-impact commuter accidents." },
+            es: { name: 'Pearland', county: 'Brazoria', description: "Pearland enfrenta un tráfico creciente en la 288, lo que lleva a accidentes de alto impacto." }
+        },
+        coordinates: { latitude: 29.5636, longitude: -95.2861 },
+        zipCodes: ["77581", "77584"],
+        medicalResources: [{ name: "Memorial Hermann Pearland", link: "https://memorialhermann.org", note: "Hospital" }]
+    },
+    {
+        slug: 'sugar-land',
+        translations: {
+            en: { name: 'Sugar Land', county: 'Fort Bend', description: "Sugar Land's Hwy 59 corridor is a frequent site of high-speed collisions and commercial truck accidents." },
+            es: { name: 'Sugar Land', county: 'Fort Bend', description: "El corredor de la Hwy 59 de Sugar Land es un sitio frecuente de colisiones de alta velocidad." }
+        },
+        coordinates: { latitude: 29.6197, longitude: -95.6349 },
+        zipCodes: ["77478", "77479"],
+        medicalResources: [{ name: "Houston Methodist Sugar Land", link: "https://houstonmethodist.org", note: "Comprehensive Care" }]
+    },
+    {
+        slug: 'cypress',
+        translations: {
+            en: { name: 'Cypress', county: 'Harris', description: "Cypress's expansion along 290 has created construction zone hazards and increased daily accidents." },
+            es: { name: 'Cypress', county: 'Harris', description: "La expansión de Cypress a lo largo de la 290 ha creado peligros en zonas de construcción." }
+        },
+        coordinates: { latitude: 29.9691, longitude: -95.6972 },
+        zipCodes: ["77429", "77433"],
+        medicalResources: [{ name: "HCA Houston Healthcare North Cypress", link: "https://hcahoustonhealthcare.com", note: "ER & Medical" }]
+    },
+    {
+        slug: 'katy',
+        translations: {
+            en: { name: 'Katy', county: 'Harris', description: "Katy's I-10 Energy Corridor is one of the busiest in the world, with frequent 18-wheeler involvements." },
+            es: { name: 'Katy', county: 'Harris', description: "El Corredor de Energía I-10 de Katy es uno de los más concurridos del mundo." }
+        },
+        coordinates: { latitude: 29.7858, longitude: -95.8244 },
+        zipCodes: ["77449", "77494"],
+        medicalResources: [{ name: "Memorial Hermann Katy", link: "https://memorialhermann.org", note: "Trauma Center" }]
+    },
+
+    // --- AUSTIN & SAN ANTONIO METRO ---
+    {
+        slug: 'round-rock',
+        translations: {
+            en: { name: 'Round Rock', county: 'Williamson', description: "I-35 through Round Rock is notoriously congested, leading to daily fender benders and severe crashes." },
+            es: { name: 'Round Rock', county: 'Williamson', description: "La I-35 a través de Round Rock está notoriamente congestionada, lo que lleva a choques diarios." }
+        },
+        coordinates: { latitude: 30.5083, longitude: -97.6789 },
+        zipCodes: ["78664", "78665"],
+        medicalResources: [{ name: "Baylor Scott & White Round Rock", link: "https://www.bswhealth.com", note: "Medical Center" }]
+    },
+    {
+        slug: 'cedar-park',
+        translations: {
+            en: { name: 'Cedar Park', county: 'Williamson', description: "Cedar Park's 183A Toll road invites high speeds, while local arterials see frequent intersection crashes." },
+            es: { name: 'Cedar Park', county: 'Williamson', description: "La carretera de peaje 183A de Cedar Park invita a altas velocidades y choques frecuentes." }
+        },
+        coordinates: { latitude: 30.5052, longitude: -97.8203 },
+        zipCodes: ["78613"],
+        medicalResources: [{ name: "Cedar Park Regional Medical Center", link: "https://www.cedarparkregional.com", note: "Emergency Sevices" }]
+    },
+    {
+        slug: 'new-braunfels',
+        translations: {
+            en: { name: 'New Braunfels', county: 'Comal', description: "Situated between Austin and San Antonio on I-35, New Braunfels sees massive tourist and truck traffic." },
+            es: { name: 'New Braunfels', county: 'Comal', description: "Situado entre Austin y San Antonio en la I-35, New Braunfels ve tráfico masivo." }
+        },
+        coordinates: { latitude: 29.7000, longitude: -98.1167 },
+        zipCodes: ["78130", "78132"],
+        medicalResources: [{ name: "Christus Santa Rosa New Braunfels", link: "https://www.christushealth.org", note: "Full Service" }]
     }
 ];

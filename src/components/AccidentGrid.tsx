@@ -39,7 +39,7 @@ export default function AccidentGrid({ dict }: AccidentGridProps) {
                     </div>
 
                     {/* Scrollable Area */}
-                    <div className="h-[380px] overflow-y-auto p-4 space-y-3 custom-scrollbar bg-gray-50/50">
+                    <div className="h-[320px] overflow-y-auto p-4 space-y-3 custom-scrollbar bg-gray-50/50">
                         {accidentTypes.map((type) => {
                             const Icon = type.icon;
                             return (
