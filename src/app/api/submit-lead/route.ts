@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
                 phone: body.phone,
                 can_text: body.contact_pref === 'text',
                 preferred_contact_time: body.best_time,
-                description: body.incident_details,
+                description: body.description || body.incident_details,
                 role: body.role || body.fault_info, // Handle both
                 has_injury: body.has_injury,
 
