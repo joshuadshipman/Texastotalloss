@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const slides = Array.from({ length: 11 }, (_, i) => `/images/slides/slide-${(i + 1).toString().padStart(2, '0')}.png`);
+const slides = Array.from({ length: 13 }, (_, i) => `/images/slides/slide-${(i + 1).toString().padStart(2, '0')}.png`);
 
 export default function Slideshow() {
     const [currentIndex, setCurrentIndex] = useState(0);
