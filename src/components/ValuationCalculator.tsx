@@ -268,46 +268,45 @@ Source: ${referrer}
 
                             {/* VALUATION HEADER */}
                             <div className="bg-green-600 p-6 text-center">
-                                <h3 className="text-white text-lg font-semibold opacity-90 mb-1">Estimated Retail Value Range</h3>
+                                <h3 className="text-white text-lg font-semibold opacity-90 mb-1">{dict.val_calc.est_value}</h3>
                                 <div className="text-white text-5xl font-black tracking-tight">
                                     ${valuation.min.toLocaleString()} - ${valuation.max.toLocaleString()}*
                                 </div>
-                                <p className="text-green-100 text-xs mt-2">*Preliminary estimate based on market data.</p>
+                                <p className="text-green-100 text-xs mt-2">{dict.val_calc.prelim_note}</p>
                             </div>
 
                             <div className="p-8 md:p-12">
                                 {/* DON'T WORRY SECTION */}
                                 <div className="text-center max-w-2xl mx-auto mb-10">
-                                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">But don't worry about that aspect yet...</h3>
+                                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">{dict.val_calc.worry_title}</h3>
                                     <p className="text-lg text-gray-600 leading-relaxed">
-                                        Give us a call to see if we can help you maximize this number.
-                                        Often the <strong>bigger financial risk</strong> is ignoring your medical needs or hidden vehicle value.
+                                        {dict.val_calc.worry_desc}
                                     </p>
                                 </div>
 
                                 <div className="bg-blue-50 rounded-2xl p-6 md:p-8 border border-blue-100">
-                                    <h2 className="text-2xl font-bold text-center mb-6 text-blue-900">Get Your Free Case Review</h2>
+                                    <h2 className="text-2xl font-bold text-center mb-6 text-blue-900">{labels.btn_next}</h2>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 
                                         {/* Contact Details */}
-                                        <div className="md:col-span-2"><h3 className="font-bold text-gray-500 border-b pb-2 mb-4 uppercase text-xs tracking-wider">Contact Information</h3></div>
+                                        <div className="md:col-span-2"><h3 className="font-bold text-gray-500 border-b pb-2 mb-4 uppercase text-xs tracking-wider">{dict.val_calc.contact_info}</h3></div>
 
                                         <div>
-                                            <label className="block text-sm font-bold mb-2">Full Name</label>
+                                            <label className="block text-sm font-bold mb-2">{dict.val_calc.full_name}</label>
                                             <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500" placeholder="John Doe" />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-bold mb-2">Phone Number</label>
+                                            <label className="block text-sm font-bold mb-2">{dict.val_calc.phone}</label>
                                             <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500" placeholder="(555) 123-4567" />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-bold mb-2">Email Address</label>
+                                            <label className="block text-sm font-bold mb-2">{dict.val_calc.email}</label>
                                             <input type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500" placeholder="john@example.com" />
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="relative z-30">
-                                                <label className="block text-sm font-bold mb-2">Best Method</label>
+                                                <label className="block text-sm font-bold mb-2">{dict.val_calc.best_method}</label>
                                                 <CustomSelect
                                                     options={[
                                                         { value: 'text', label: 'Tech/SMS' },
@@ -319,16 +318,16 @@ Source: ${referrer}
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-bold mb-2">Best Time</label>
+                                                <label className="block text-sm font-bold mb-2">{dict.val_calc.best_time}</label>
                                                 <input type="text" name="bestTime" value={formData.bestTime} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none" placeholder="Anytime / After 5pm" />
                                             </div>
                                         </div>
 
                                         {/* Incident Details */}
-                                        <div className="md:col-span-2 mt-4"><h3 className="font-bold text-gray-500 border-b pb-2 mb-4 uppercase text-xs tracking-wider">The Accident</h3></div>
+                                        <div className="md:col-span-2 mt-4"><h3 className="font-bold text-gray-500 border-b pb-2 mb-4 uppercase text-xs tracking-wider">{dict.val_calc.accident_details}</h3></div>
 
                                         <div>
-                                            <label className="block text-sm font-bold mb-2">Type of Loss</label>
+                                            <label className="block text-sm font-bold mb-2">{dict.val_calc.type_loss}</label>
                                             <CustomSelect
                                                 options={[
                                                     { value: 'collision', label: 'Collision / Wreck' },
@@ -341,28 +340,28 @@ Source: ${referrer}
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-bold mb-2">Date of Loss</label>
+                                            <label className="block text-sm font-bold mb-2">{dict.val_calc.date_loss}</label>
                                             <input type="date" name="dateOfLoss" value={formData.dateOfLoss} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500" />
                                         </div>
 
                                         {/* Yes/No Toggles */}
                                         <div className='md:col-span-2 grid grid-cols-3 gap-4'>
                                             <div>
-                                                <label className="block text-xs font-bold mb-2 text-gray-600">Ambulance Needed?</label>
+                                                <label className="block text-xs font-bold mb-2 text-gray-600">{dict.val_calc.ambulance}</label>
                                                 <select name="ambulance" value={formData.ambulance} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded bg-white">
                                                     <option value="no">No</option>
                                                     <option value="yes">Yes</option>
                                                 </select>
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-bold mb-2 text-gray-600">Tickets Issued?</label>
+                                                <label className="block text-xs font-bold mb-2 text-gray-600">{dict.val_calc.tickets}</label>
                                                 <select name="tickets" value={formData.tickets} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded bg-white">
                                                     <option value="no">No</option>
                                                     <option value="yes">Yes</option>
                                                 </select>
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-bold mb-2 text-gray-600">Vehicles Towed?</label>
+                                                <label className="block text-xs font-bold mb-2 text-gray-600">{dict.val_calc.towed}</label>
                                                 <select name="towed" value={formData.towed} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded bg-white">
                                                     <option value="no">No</option>
                                                     <option value="yes">Yes</option>
@@ -371,8 +370,8 @@ Source: ${referrer}
                                         </div>
 
                                         <div className="md:col-span-2">
-                                            <label className="block text-sm font-bold mb-2">What Happened? (Brief Description)</label>
-                                            <textarea name="description" value={formData.description} onChange={handleInputChange} rows={3} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500" placeholder="I was rear-ended at a red light..."></textarea>
+                                            <label className="block text-sm font-bold mb-2">{dict.val_calc.desc_label}</label>
+                                            <textarea name="description" value={formData.description} onChange={handleInputChange} rows={3} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500" placeholder="..."></textarea>
                                         </div>
 
                                     </div>
@@ -382,7 +381,7 @@ Source: ${referrer}
                                         disabled={isSubmitting}
                                         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg shadow-lg text-xl transition transform hover:scale-[1.02] disabled:opacity-50 flex items-center justify-center"
                                     >
-                                        {isSubmitting ? 'Submitting...' : 'Submit to Legal Team »'}
+                                        {isSubmitting ? dict.val_calc.submitting : dict.val_calc.submit_btn}
                                     </button>
                                 </div>
                             </div>
@@ -396,12 +395,12 @@ Source: ${referrer}
                         <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                             <span className="text-4xl">✅</span>
                         </div>
-                        <h3 className="text-3xl font-black text-blue-900 mb-4">Request Received!</h3>
+                        <h3 className="text-3xl font-black text-blue-900 mb-4">{dict.val_calc.success_title}</h3>
                         <p className="text-xl text-gray-600 mb-8">
-                            Our team is reviewing your vehicle valuation and accident details. <br />
-                            We will reach out via <strong>{formData.contactPref}</strong> shortly.
+                            {dict.val_calc.success_msg} <br />
+                            {dict.val_calc.success_contact.replace('{method}', formData.contactPref)}
                         </p>
-                        <button onClick={() => window.location.reload()} className="text-blue-600 font-bold hover:underline">Start New Estimate</button>
+                        <button onClick={() => window.location.reload()} className="text-blue-600 font-bold hover:underline">{dict.val_calc.start_new}</button>
                     </div>
                 )}
 

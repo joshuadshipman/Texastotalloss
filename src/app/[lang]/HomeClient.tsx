@@ -114,7 +114,8 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
 
                     {/* Subtext (Concise) */}
                     <p className="text-lg md:text-2xl font-medium text-blue-200/80 max-w-2xl mx-auto leading-relaxed">
-                        Don't let insurance adjusters underpay you. Get your <span className="text-white font-bold decoration-blue-500 underline underline-offset-4 decoration-2">True Market Value</span> instantly.
+                        <span className="block mb-1">{dict.hero.subtext_line1}</span>
+                        {dict.hero.subtext_line2_pre} <span className="text-white font-bold decoration-blue-500 underline underline-offset-4 decoration-2">{dict.hero.subtext_highlight}</span> {dict.hero.subtext_line2_post}
                     </p>
 
                     {/* Primary Call to Action - Glass Container */}
@@ -218,10 +219,10 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             <AccidentGrid dict={dict} />
 
             {/* Informational Sections (Why Hire, Liability, Urgency) */}
-            <InfoSections />
+            <InfoSections dict={dict} />
 
             {/* Video Knowledge Library (Interactive) */}
-            <VideoGallery />
+            <VideoGallery dict={dict} />
 
 
             <section className="py-12 px-4 bg-white" id="resources">
