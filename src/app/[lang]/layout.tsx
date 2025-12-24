@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "../globals.css";
 import { ChatProvider } from "@/components/ChatContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,6 +32,7 @@ export default async function RootLayout({
                     </div>
                     {children}
                 </ChatProvider>
+                <SpeedInsights />
             </body>
         </html>
     );
