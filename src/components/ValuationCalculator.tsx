@@ -180,7 +180,7 @@ Source: ${referrer}
                                         name="vin"
                                         value={formData.vin}
                                         onChange={handleInputChange}
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all font-mono text-sm placeholder:text-gray-300"
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all font-mono text-sm placeholder:text-gray-300 text-gray-900"
                                         placeholder="17 Digit VIN"
                                     />
                                 </div>
@@ -204,7 +204,7 @@ Source: ${referrer}
                                         name="make"
                                         value={formData.make}
                                         onChange={handleInputChange}
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all text-gray-900"
                                         placeholder="e.g. Ford, Toyota"
                                     />
                                 </div>
@@ -217,7 +217,7 @@ Source: ${referrer}
                                         name="model"
                                         value={formData.model}
                                         onChange={handleInputChange}
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all text-gray-900"
                                         placeholder="e.g. F-150, Camry"
                                     />
                                 </div>
@@ -230,7 +230,7 @@ Source: ${referrer}
                                         name="mileage"
                                         value={formData.mileage}
                                         onChange={handleInputChange}
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all text-gray-900"
                                         placeholder="e.g. 45000"
                                     />
                                 </div>
@@ -296,15 +296,15 @@ Source: ${referrer}
 
                                         <div>
                                             <label className="block text-sm font-bold mb-2">{dict.val_calc.full_name}</label>
-                                            <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500" placeholder="John Doe" />
+                                            <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500 text-gray-900" placeholder="John Doe" />
                                         </div>
                                         <div>
                                             <label className="block text-sm font-bold mb-2">{dict.val_calc.phone}</label>
-                                            <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500" placeholder="(555) 123-4567" />
+                                            <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500 text-gray-900" placeholder="(555) 123-4567" />
                                         </div>
                                         <div>
                                             <label className="block text-sm font-bold mb-2">{dict.val_calc.email}</label>
-                                            <input type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500" placeholder="john@example.com" />
+                                            <input type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500 text-gray-900" placeholder="john@example.com" />
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="relative z-30">
@@ -321,7 +321,7 @@ Source: ${referrer}
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-bold mb-2">{dict.val_calc.best_time}</label>
-                                                <input type="text" name="bestTime" value={formData.bestTime} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none" placeholder="Anytime / After 5pm" />
+                                                <input type="text" name="bestTime" value={formData.bestTime} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none text-gray-900" placeholder="Anytime / After 5pm" />
                                             </div>
                                         </div>
 
@@ -343,28 +343,28 @@ Source: ${referrer}
                                         </div>
                                         <div>
                                             <label className="block text-sm font-bold mb-2">{dict.val_calc.date_loss}</label>
-                                            <input type="date" name="dateOfLoss" value={formData.dateOfLoss} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500" />
+                                            <input type="date" name="dateOfLoss" value={formData.dateOfLoss} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500 text-gray-900" />
                                         </div>
 
                                         {/* Yes/No Toggles */}
                                         <div className='md:col-span-2 grid grid-cols-3 gap-4'>
                                             <div>
                                                 <label className="block text-xs font-bold mb-2 text-gray-600">{dict.val_calc.ambulance}</label>
-                                                <select name="ambulance" value={formData.ambulance} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded bg-white">
+                                                <select name="ambulance" value={formData.ambulance} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded bg-white text-gray-900">
                                                     <option value="no">No</option>
                                                     <option value="yes">Yes</option>
                                                 </select>
                                             </div>
                                             <div>
                                                 <label className="block text-xs font-bold mb-2 text-gray-600">{dict.val_calc.tickets}</label>
-                                                <select name="tickets" value={formData.tickets} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded bg-white">
+                                                <select name="tickets" value={formData.tickets} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded bg-white text-gray-900">
                                                     <option value="no">No</option>
                                                     <option value="yes">Yes</option>
                                                 </select>
                                             </div>
                                             <div>
                                                 <label className="block text-xs font-bold mb-2 text-gray-600">{dict.val_calc.towed}</label>
-                                                <select name="towed" value={formData.towed} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded bg-white">
+                                                <select name="towed" value={formData.towed} onChange={handleInputChange} className="w-full p-3 border border-gray-300 rounded bg-white text-gray-900">
                                                     <option value="no">No</option>
                                                     <option value="yes">Yes</option>
                                                 </select>
@@ -373,7 +373,7 @@ Source: ${referrer}
 
                                         <div className="md:col-span-2">
                                             <label className="block text-sm font-bold mb-2">{dict.val_calc.desc_label}</label>
-                                            <textarea name="description" value={formData.description} onChange={handleInputChange} rows={3} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500" placeholder="..."></textarea>
+                                            <textarea name="description" value={formData.description} onChange={handleInputChange} rows={3} className="w-full p-3 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500 text-gray-900" placeholder="..."></textarea>
                                         </div>
 
                                     </div>
