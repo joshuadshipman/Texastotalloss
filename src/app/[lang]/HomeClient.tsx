@@ -36,7 +36,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             {
                 '@type': 'Organization',
                 '@id': 'https://texastotalloss.com/#org',
-                name: 'Texas Total Loss Claim Help',
+                name: 'Texas Total Loss Claim and Injury Help',
                 url: 'https://texastotalloss.com',
                 logo: 'https://texastotalloss.com/images/logo.png',
                 sameAs: [

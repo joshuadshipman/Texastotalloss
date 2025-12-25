@@ -24,6 +24,26 @@ export const en = {
         }
     },
     sections: {
+        trust_badges: {
+            title: "Recognized for Excellence",
+            sub: "Independent verification of our track record."
+        },
+        faq: {
+            title: "Common Questions",
+            subtitle: "You ask, we answer.",
+            q1: "Do I need a lawyer?",
+            a1: "Not always, but for total loss and injury cases, insurance companies often underpay significantly without one.",
+            q2: "How much does it cost?",
+            a2: "We work on a contingency fee basis. You pay nothing unless we win your case.",
+            q3: "What is 'Total Loss'?",
+            a3: "It means the repair cost plus salvage value exceeds the car's actual cash value.",
+            q4: "Can I keep my car?",
+            a4: "Yes, you can choose 'Owner Retain', but the salvage value will be deducted from your settlement.",
+            q5: "What if I was at fault?",
+            a5: "You may still have coverage under your own policy (PIP/MedPay) or for your vehicle (Collision).",
+            q6: "How long does it take?",
+            a6: "Simple property claims take weeks. Injury cases can take months to ensure you are fully treated."
+        },
         resources_title: "Critical Resources",
         checklist: {
             title: "Just in an Accident?",
@@ -138,339 +158,431 @@ export const en = {
                 "You must usually reject this coverage in writing to not have it."
             ]
         },
-        val_calc: {
-            title: "Check Your Total Loss Value",
-            subtitle: "See what your car is actually worth vs. what they offered.",
-            labels: {
-                vin: "VIN (Optional)",
-                year: "Year",
-                make: "Make",
-                model: "Model",
-                mileage: "Mileage",
-                condition: "Condition",
-                condition_help: "Good (Clean Retail)",
-                btn_next: "Next: Incident Details »",
-                // Expanded Labels
-                est_value: "Estimated Retail Value Range",
-                prelim_note: "*Preliminary estimate based on market data.",
-                worry_title: "But don't worry about that aspect yet...",
-                worry_desc: "Give us a call to see if we can help you maximize this number. Often the bigger financial risk is ignoring your medical needs or hidden vehicle value.",
-                contact_info: "Contact Information",
-                full_name: "Full Name",
+    },
+    val_calc: {
+        title: "Check Your Total Loss Value",
+        subtitle: "See what your car is actually worth vs. what they offered.",
+        labels: {
+            vin: "VIN (Optional)",
+            year: "Year",
+            make: "Make",
+            model: "Model",
+            mileage: "Mileage",
+            condition: "Condition",
+            condition_help: "Good (Clean Retail)",
+            btn_next: "Next: Incident Details »",
+            // Expanded Labels
+            est_value: "Estimated Retail Value Range",
+            prelim_note: "*Preliminary estimate based on market data.",
+            worry_title: "But don't worry about that aspect yet...",
+            worry_desc: "Give us a call to see if we can help you maximize this number. Often the bigger financial risk is ignoring your medical needs or hidden vehicle value.",
+            contact_info: "Contact Information",
+            full_name: "Full Name",
+            phone: "Phone Number",
+            email: "Email Address",
+            best_method: "Best Method",
+            best_time: "Best Time",
+            accident_details: "The Accident",
+            type_loss: "Type of Loss",
+            date_loss: "Date of Loss",
+            ambulance: "Ambulance Needed?",
+            tickets: "Tickets Issued?",
+            towed: "Vehicles Towed?",
+            desc_label: "What Happened? (Brief Description)",
+            submit_btn: "Submit to Legal Team »",
+            submitting: "Submitting...",
+            success_title: "Request Received!",
+            success_msg: "Our team is reviewing your vehicle valuation and accident details.",
+            success_contact: "We will reach out via {method} shortly.",
+            start_new: "Start New Estimate"
+        }
+    },
+    info_sections: {
+        partner_title: "Why You Need a Partner",
+        partner_desc: "Motor vehicle accidents are common, but fair settlements are not. Insurance companies have teams of lawyers. You should too.",
+        partner_badge: "Dedicated to Texas Claims",
+        investigation: "Investigation",
+        investigation_desc: "We collect critical evidence, scene photos, and witness statements to prove fault.",
+        communication: "Communication",
+        communication_desc: "We handle all calls with the insurance company so you can focus strictly on recovering.",
+        valuation: "Valuation",
+        valuation_desc: "We accurately calculate your total damages, including hidden costs like diminished value.",
+        court: "Court Representation",
+        court_desc: "If they refuse a fair offer, we are prepared to fight for maximum compensation in court.",
+        responsibility_title: "Determining Responsibility",
+        responsibility_desc: "Establishing fault is the foundation of your claim. We document every detail to ensure liability is clear.",
+        causes_title: "Common Causes",
+        causes_desc: "Recognizing these patterns helps build a stronger case against the insurance company's denial tactics.",
+        urgency_title: "Why Timing Is Critical",
+        urgency_desc: "In Texas, delaying your claim can cost you thousands. Evidence disappears, and statutory deadlines expire.",
+        urgency_cards: {
+            evidence: { title: "Preserve Evidence", desc: "CCTV footage relies on short retention policies. Skid marks fade. Witnesses forget." },
+            statute: { title: "Statute of Limitations", desc: "Every state has a deadline. Missing the Texas 2-year filing window generally bars recovery forever." },
+            leverage: { title: "Build Leverage", desc: "Insurance companies pay less to unrepresented claimants. Level the playing field early." }
+        },
+        causes_list: ['Speeding', 'Drunk Driving', 'Red Lights', 'Road Rage', 'Weather', 'Defects'],
+        responsibility_list: ['Drunk / Impaired Drivers', 'Distracted Driving (Texting)', 'Failure to Yield', 'Reckless Speeding', 'Poor Road Design'],
+        trust_badges: {
+            title: "RECOGNIZED FOR EXCELLENCE",
+            placeholder: "[ Trust Badges Image Placeholder ]",
+            sub: "Partner Firm Accolades & Recognition"
+        },
+        accident_grid: {
+            title: "COMMON AUTO ACCIDENT TYPES",
+            subtitle: "We have specialized strategies for every scenario to maximize your recovery."
+        },
+        read_more: "Read Full Details",
+        faq: {
+            title: "Frequently Asked Questions",
+            subtitle: "Common questions about Texas auto claims",
+            q1: "What constitutes a total loss in Texas?",
+            a1: "In Texas, a car is a total loss if the repair costs equal or exceed 100% of the vehicle’s actual cash value (ACV).",
+            q2: "Can I keep my totaled car in Texas?",
+            a2: "Yes, this is called 'owner retention'. The insurance company will deduct the salvage value from your settlement.",
+            q3: "Does Texas have a 'Right to Appraisal'?",
+            a3: "Most policies include an Appraisal Clause, allowing you to hire an independent appraiser to dispute low offers.",
+            // New FAQs
+            q4: "What should I do immediately after an accident?",
+            a4: "First, ensure safety and call 911 if injured. Exchange insurance info, take photos of the scene and plates, and seek medical attention immediately, even if you feel fine. Report the incident to your insurer but do not give a recorded statement without advice.",
+            q5: "How long do I have to file a claim in Texas?",
+            a5: "Texas has a 2-year Statute of Limitations for injury claims. However, waiting can hurt your case as evidence disappears. It is vital to act quickly.",
+            q6: "What damages can I recover?",
+            a6: "You may recover Medical Bills, Lost Wages, Property Damage, Pain & Suffering, and sometimes Diminished Value. The specific amount depends on liability and policy limits.",
+            q7: "How long does it take to settle?",
+            a7: "Simple claims may settle in a few months. Complex injury cases or those requiring litigation can take longer. We push for a timely but fair resolution, not a quick lowball."
+        },
+    },
+    city_page: {
+        hero_badge: "Local Assistance for {county} County",
+        title_suffix: "Total Loss & Injury Claim Help",
+        subtitle: "Don't let {city} insurance adjusters underpay you. Get your free valuation and legal review today.",
+        why_different: "Why {city} Claims Are Different",
+        resources_title: "Top {city} Injury Resources",
+        resources_subtitle: "It is critical to seek medical attention within 72 hours of an accident. These trusted providers have 5+ locations in the {city} area.",
+        calculator_title: "Check Your {city} Vehicle Value",
+        calculator_text: "Use our calculator to see if the insurance offer matches local {city} dealer prices.",
+    },
+    footer: {
+        rights: "All rights reserved. Not Legal Advice.",
+        disclaimer_title: "ADVERTISING DISCLOSURE",
+        disclaimer_text: "TexasTotalLoss.com is a lead generation website and not a law firm..."
+    },
+    chat: {
+        trigger: "Chat Support",
+        close: "Close",
+        header_title: "Angel - Claims Specialist",
+        header_subtitle: "Analyzing Texas Regulations",
+        input_placeholder: "Type a message...",
+        upload_tooltip: "Upload Photo",
+        keywords: {
+            live_agent: ["live agent", "agent", "human", "person", "representative", "talk"],
+            yes: ["yes", "yeah", "yep", "sure", "ok", "correct"],
+            no: ["no", "nope", "nah", "incorrect"],
+            pain: ["pain", "hurt", "injury", "stress", "anxiety", "ache", "sore", "broken", "fracture", "bleed"],
+        },
+        time_options: {
+            less_one: "Less than 1 Year",
+            less_two: "Less than 2 Years",
+            less_three: "Less than 3 Years"
+        },
+        injury_type_options: {
+            back_neck: "Back or Neck Pain",
+            headaches: "Headaches",
+            cuts_bruises: "Cuts and Bruises",
+            broken_bones: "Broken Bones",
+            other: "Other"
+        },
+        yes_no: {
+            yes: "Yes",
+            no: "No",
+            yes_fault: "Yes",
+            no_fault: "No"
+        },
+        responses: {
+            // Greetings
+            greeting_live: "I am connecting you to a live specialist now. Please hold on...",
+            greeting_standard: "Hi, I'm Angel. I understand this is a stressful time, and I'm here to help. To start, may I have your name?",
+            ask_name: "To start, may I have your full name?",
+            ask_phone: "Thank you, {name}. In case we get disconnected, what is your cell phone number?",
+            ask_contact_method: "Thanks. Do you prefer we contact you via Text or Call?",
+            ask_call_time: "What is the best time for us to call you?",
+            ask_incident: "Perfect. Now, could you please briefly share what happened? Was it a total loss, were there injuries, or both?",
+            ask_fault: "Were you at fault for the accident?",
+            ask_injury_time: "How long ago did the injury happen?",
+            ask_hospital: "Were you hospitalized or did you receive medical treatment for your injury?",
+            ask_lawyer: "Do you already have a lawyer representing you?",
+            ask_injury_type: "What is the primary type of injury?",
+            ask_description: "How did the accident happen? Briefly describe your accident.",
+            ask_photos: "Do you have photos of the vehicles or a police report? (You can upload using the camera icon, or say 'No')",
+            ask_recent: "One last question: Was the accident within the last 48 hours?",
+
+            // Advice
+            advice_er: "Please listen: Because it's been less than 48 hours, I strongly recommend you visit an ER or Urgent Care immediately. Adrenaline can mask injuries.",
+            advice_doc_urgent: "Since it's been over a week, it is critical you see a doctor immediately. Gaps in care are the #1 reason claims are denied.",
+            advice_chiro: "Since it's been a few days, I recommend seeing a Chiropractor or Rehab Specialist ASAP.",
+
+            // Closing
+            confirmation: "We have received your details. A specialist will be in touch shortly.",
+            upload_success: "✅ Photo uploaded!",
+            upload_fail: "Failed to upload photo.",
+
+            // System
+            busy_agents: "All our agents are busy. An agent will text you shortly. What is the best time to text you?",
+            live_connect: "Connecting to live agent...",
+
+            // New Call/Chat Flow
+            intro_call: "Hi, I'm Angel, your intake specialist. I can help connect you with our team immediately.",
+            ask_disconnect_pref: "In case we get disconnected, would you prefer a Callback or a Text Message?",
+            ask_goal: "Are you looking to find medical or legal information today regarding the loss?",
+
+            // Specific Mode Greetings
+            greeting_schedule: "I can help you obtain an appointment immediately. First, what constitutes your emergency? (e.g. Total Loss, Injury, Both)",
+            greeting_call: "Please provide your phone number below, and our intake desk will call you immediately.",
+            greeting_sms: "Please enter your mobile number. We will text you a secure link to start your case.",
+
+            // At The Scene Flow
+            scene_safety: "🚨 First priority: Is everyone safe? If anyone is injured or there is immediate danger, please call 911 immediately. Are you in a safe place to chat?",
+            scene_photo_plates: "Good. Let's document the evidence before it's moved. Please upload a photo of the **License Plates** (Other Driver's & Yours).",
+            scene_photo_scene: "Got it. Now, please take 2-3 **wide photos of the scene** showing the position of both vehicles.",
+            scene_photo_docs: "Next: Please upload a photo of the **Other Driver's Insurance Card** and **Driver's License** (if they allow it).",
+            scene_processing: "Perfect. We are securing these images into your **Digital Case File**. We will email you a timestamped copy for your records.",
+
+            // Outcome
+            qualify_high: "I see. Based on those details, you likely qualify for significant compensation. I am connecting you to a Senior Specialist now.",
+            qualify_low: "Thank you. I'm preparing an Accident Information Packet for you now. A team member will review your details shortly.",
+            greeting_standalone: "Hi, I'm Angel. I understand this can be a difficult time, and I'm here to support you. How would you like to proceed?",
+            validation_phone: "Please enter a valid phone number (e.g. 555-0199)."
+        }
+    },
+    caseReview: {
+        title: "Instant AI Case Evaluator",
+        subtitle: "Analyzing Texas Regulations & Liability Rules",
+        steps: {
+            contact: {
+                title: "1. Your Contact Info",
+                name: "Full Name",
+                phone: "Mobile Phone",
+                email: "Email Address",
+                method: "Prefer Text/Call/Email",
+                time: "Best Contact Time",
+                lang: "Language",
+                permission: "I give permission to receive text messages about my case review."
+            },
+            accident: {
+                title: "2. Accident Details",
+                date: "Date of Accident",
+                location: "Location (City, TX)",
+                type: "Incident Type",
+                role: "My Role",
+                vehicle: "Your Vehicle",
+                police: "Police Report?",
+                tickets: "Tickets Issued?"
+            },
+            fault: {
+                title: "3. Liability Check",
+                who_fault: "Who was at fault?",
+                admit: "Did they admit fault?",
+                insured: "Other Driver Insured?",
+                my_insurance: "Your Insurance Co",
+                recorded: "Did you give a recorded statement?"
+            },
+            injury: {
+                title: "4. Injury Assessment",
+                were_injured: "Were you injured?",
+                pain_level: "Pain Level (0-10)",
+                parts: "Where do you hurt?",
+                treatment: "Treatment So Far",
+                need_doc: "Need help finding a Dr?"
+            },
+            legal: {
+                title: "5. Legal Status",
+                hired: "Have you hired a lawyer?",
+                change: "Looking to change lawyers?",
+                prior: "Prior claims in last 5 years?"
+            },
+            impact: {
+                title: "6. Impact & Work",
+                working: "Were you working?",
+                missed: "Missed Work?",
+                concerns: "Biggest Concerns"
+            },
+            docs: {
+                title: "7. Quick Document Upload",
+                desc: "If you have any of these handy, upload them now:",
+                cta: "Tap to Upload Photo/Document",
+                list: ["Insurance Card", "Police Report", "Scene Photos"]
+            },
+            result: {
+                high_chance: "HIGH ACCEPTANCE CHANCE",
+                review_needed: "Review Recommended",
+                match: "Match",
+                call_btn: "Call Attorney Now",
+                close_btn: "Close"
+            }
+        },
+        options: {
+            yes: "Yes",
+            no: "No",
+            unsure: "Unsure",
+            text: "Text",
+            call: "Call",
+            email: "Email",
+            driver: "Driver",
+            passenger: "Passenger",
+            pedestrian: "Pedestrian",
+            other: "Other"
+        },
+        banner: {
+            title: "Free AI Case Analysis for Total Loss and Injury Review",
+            subtitle: "It takes less than two minutes to evaluate your case and vehicle evaluation."
+        },
+        placeholders: {
+            vin: "17-Digit VIN",
+            year: "Select Year",
+            make: "e.g. Ford, Toyota",
+            model: "e.g. F-150, Camry",
+            condition: "Condition"
+        },
+        concerns: {
+            pain: "Pain/Health",
+            bills: "Medical Bills",
+            income: "Lost Income",
+            repair: "Car Repair",
+            calls: "Insurance Calls"
+        },
+        upload: {
+            attached: "Attached:",
+            secure: "Secure & Confidential"
+        }
+    },
+    accident_types: {
+        title: "Common Auto Accident Types",
+        subtitle: "We have specialized strategies for every scenario to maximize your recovery.",
+        items: {
+            bicycle: { title: "Bicycle Accidents", stats: { l1: "Fatality Increase", v1: "+58%", s1: "Since 2019 in Texas", l2: "Annual Deaths", v2: "106+", s2: "Texans killed", l3: "Risk Factor", v3: "High", s3: "Vs Autos" }, desc: "Cyclists face extreme risks. Texas law requires drivers to yield, but negligence is common." },
+            drunk: { title: "Drunk Driving", stats: { l1: "Annual Deaths", v1: "1,053", s1: "Lives lost 2024", l2: "Fatal Factor", v2: "25%", s2: "Of all deaths", l3: "Daily Toll", v3: "3", s3: "Texans/Day" }, desc: "DUI crashes are entirely preventable. We pursue maximum damages including punitive." },
+            head_on: { title: "Head-On Collisions", stats: { l1: "Fatalities", v1: "~600", s1: "Deaths/Year", l2: "Severity", v2: "Extreme", s2: "High fatality", l3: "Cause", v3: "Drifting", s3: "Distraction" }, desc: "The most deadly type of crash. Often caused by distracted driving or wrong-way errors." },
+            motorcycle: { title: "Motorcycle Crashes", stats: { l1: "Risk Multiplier", v1: "27x", s1: "More likely fatal", l2: "Helmet Usage", v2: "40%", s2: "Unhelmeted", l3: "Total Deaths", v3: "599", s3: "In 2023" }, desc: "Riders are vulnerable. Insurance often tries to blame the rider. We fight back." },
+            pedestrian: { title: "Pedestrian Accidents", stats: { l1: "Total Deaths", v1: "773", s1: "Killed 2024", l2: "Trend", v2: "+22%", s2: "5yr Increase", l3: "Danger Zone", v3: "Night", s3: "Most frequent" }, desc: "Pedestrians have the right of way. We hold negligent drivers accountable." },
+            rear_end: { title: "Rear-End Collisions", stats: { l1: "Frequency", v1: "#1", s1: "Most common", l2: "Whiplash", v2: "High", s2: "Hidden injury", l3: "Fault", v3: "Presumed", s3: "Trailing driver" }, desc: "Common but dangerous. Whiplash and spinal injuries often appear days later." },
+            rideshare: { title: "Rideshare (Uber/Lyft)", stats: { l1: "Insurance Gap", v1: "Phase 1", s1: "Waiting", l2: "Policy Limit", v2: "$1M", s2: "Passenger", l3: "Complexity", v3: "High", s3: "Multi-policy" }, desc: "Uber/Lyft cases involve complex insurance tiers. Don't let them deny coverage." },
+            rollover: { title: "Rollover Accidents", stats: { l1: "Fatality Rate", v1: "30%", s1: "Of deaths", l2: "Vehicle Type", v2: "SUV", s2: "High COG", l3: "Roof Crush", v3: "Risk", s3: "Structural" }, desc: "SUVs and trucks are prone to rollovers. These accidents often cause catastrophic injuries." },
+            uninsured: { title: "Uninsured Motorist", stats: { l1: "TX Rate", v1: "20%", s1: "Uninsured", l2: "Your Policy", v2: "UM/UIM", s2: "Crucial", l3: "Hit & Run", v3: "Covered", s3: "Under UM" }, desc: "1 in 5 Texas drivers have no insurance. We help you access your own UM coverage." },
+            wrong_way: { title: "Wrong-Way Driving", stats: { l1: "Fatality", v1: "High", s1: "Head-on", l2: "Impairment", v2: "60%+", s2: "Alcohol", l3: "Time", v3: "Night", s3: "2am-5am" }, desc: "Extremely dangerous and often linked to intoxication. We aggressive pursue these cases." }
+        },
+        cta_title: "Involved in this type of crash?",
+        cta_text: "Get a free specialized case review now.",
+        cta_btn: "Start Review"
+    },
+    caseReview: {
+        banner: {
+            title: "AI Case Analysis",
+            subtitle: "Instant Evaluation • 100% Free • Confidential"
+        },
+        steps: {
+            contact: {
+                title: "Contact Information",
+                name: "Full Name",
                 phone: "Phone Number",
                 email: "Email Address",
-                best_method: "Best Method",
-                best_time: "Best Time",
-                accident_details: "The Accident",
-                type_loss: "Type of Loss",
-                date_loss: "Date of Loss",
-                ambulance: "Ambulance Needed?",
-                tickets: "Tickets Issued?",
-                towed: "Vehicles Towed?",
-                desc_label: "What Happened? (Brief Description)",
-                submit_btn: "Submit to Legal Team »",
-                submitting: "Submitting...",
-                success_title: "Request Received!",
-                success_msg: "Our team is reviewing your vehicle valuation and accident details.",
-                success_contact: "We will reach out via {method} shortly.",
-                start_new: "Start New Estimate"
+                time: "Best Time to Call",
+                permission: "I agree to receive text messages about my case."
+            },
+            accident: {
+                title: "Accident Details",
+                date: "Date of Accident",
+                location: "City/State",
+                vehicle: "Your Vehicle (Year/Make/Model)",
+                police: "Police Report Filed?",
+                tickets: "Did you get a ticket?"
+            },
+            fault: {
+                title: "Liability & Insurance",
+                who_fault: "Who was at fault?",
+                admit: "Did you admit fault?",
+                insured: "Is the other driver insured?",
+                my_insurance: "Your Insurance Provider",
+                recorded: "Did you give a recorded statement?"
+            },
+            injury: {
+                title: "Injury Assessment",
+                were_injured: "Were you injured?",
+                pain_level: "Pain Level (0-10)",
+                parts: "Injured Body Parts",
+                treatment: "Have you sought treatment?",
+                need_doc: "Do you need help finding a doctor?"
+            },
+            legal: {
+                title: "Legal Representation",
+                hired: "Have you hired a lawyer?",
+                change: "Are you looking to change lawyers?",
+                prior: "Have you made prior claims?"
+            },
+            impact: {
+                title: "Impact on Life",
+                working: "Were you working at the time?",
+                missed: "Have you missed work?",
+                concerns: "What are your biggest concerns?"
+            },
+            docs: {
+                title: "Evidence Upload",
+                desc: "Uploading evidence now increases your claim value estimate.",
+                list: [
+                    "Photos of vehicle damage",
+                    "Photos of injuries",
+                    "Police Report / Exchange Form"
+                ],
+                cta: "Tap to Upload Photos/Docs"
+            },
+            result: {
+                high_chance: "High Probability Case",
+                match: "Match",
+                call_btn: "Speak to Senior Attorney Now",
+                review_needed: "Case Under Review",
+                close_btn: "Close"
             }
         },
-        info_sections: {
-            partner_title: "Why You Need a Partner",
-            partner_desc: "Motor vehicle accidents are common, but fair settlements are not. Insurance companies have teams of lawyers. You should too.",
-            partner_badge: "Dedicated to Texas Claims",
-            investigation: "Investigation",
-            investigation_desc: "We collect critical evidence, scene photos, and witness statements to prove fault.",
-            communication: "Communication",
-            communication_desc: "We handle all calls with the insurance company so you can focus strictly on recovering.",
-            valuation: "Valuation",
-            valuation_desc: "We accurately calculate your total damages, including hidden costs like diminished value.",
-            court: "Court Representation",
-            court_desc: "If they refuse a fair offer, we are prepared to fight for maximum compensation in court.",
-            responsibility_title: "Determining Responsibility",
-            responsibility_desc: "Establishing fault is the foundation of your claim. We document every detail to ensure liability is clear.",
-            causes_title: "Common Causes",
-            causes_desc: "Recognizing these patterns helps build a stronger case against the insurance company's denial tactics.",
-            urgency_title: "Why Timing Is Critical",
-            urgency_desc: "In Texas, delaying your claim can cost you thousands. Evidence disappears, and statutory deadlines expire.",
-            urgency_cards: {
-                evidence: { title: "Preserve Evidence", desc: "CCTV footage relies on short retention policies. Skid marks fade. Witnesses forget." },
-                statute: { title: "Statute of Limitations", desc: "Every state has a deadline. Missing the Texas 2-year filing window generally bars recovery forever." },
-                leverage: { title: "Build Leverage", desc: "Insurance companies pay less to unrepresented claimants. Level the playing field early." }
-            },
-            causes_list: ['Speeding', 'Drunk Driving', 'Red Lights', 'Road Rage', 'Weather', 'Defects'],
-            responsibility_list: ['Drunk / Impaired Drivers', 'Distracted Driving (Texting)', 'Failure to Yield', 'Reckless Speeding', 'Poor Road Design'],
-            trust_badges: {
-                title: "RECOGNIZED FOR EXCELLENCE",
-                placeholder: "[ Trust Badges Image Placeholder ]",
-                sub: "Partner Firm Accolades & Recognition"
-            },
-            accident_grid: {
-                title: "COMMON AUTO ACCIDENT TYPES",
-                subtitle: "We have specialized strategies for every scenario to maximize your recovery."
-            },
-            read_more: "Read Full Details",
-            faq: {
-                title: "Frequently Asked Questions",
-                subtitle: "Common questions about Texas auto claims",
-                q1: "What constitutes a total loss in Texas?",
-                a1: "In Texas, a car is a total loss if the repair costs equal or exceed 100% of the vehicle’s actual cash value (ACV).",
-                q2: "Can I keep my totaled car in Texas?",
-                a2: "Yes, this is called 'owner retention'. The insurance company will deduct the salvage value from your settlement.",
-                q3: "Does Texas have a 'Right to Appraisal'?",
-                a3: "Most policies include an Appraisal Clause, allowing you to hire an independent appraiser to dispute low offers.",
-                // New FAQs
-                q4: "What should I do immediately after an accident?",
-                a4: "First, ensure safety and call 911 if injured. Exchange insurance info, take photos of the scene and plates, and seek medical attention immediately, even if you feel fine. Report the incident to your insurer but do not give a recorded statement without advice.",
-                q5: "How long do I have to file a claim in Texas?",
-                a5: "Texas has a 2-year Statute of Limitations for injury claims. However, waiting can hurt your case as evidence disappears. It is vital to act quickly.",
-                q6: "What damages can I recover?",
-                a6: "You may recover Medical Bills, Lost Wages, Property Damage, Pain & Suffering, and sometimes Diminished Value. The specific amount depends on liability and policy limits.",
-                q7: "How long does it take to settle?",
-                a7: "Simple claims may settle in a few months. Complex injury cases or those requiring litigation can take longer. We push for a timely but fair resolution, not a quick lowball."
-            },
+        options: {
+            text: "Text Message",
+            call: "Phone Call",
+            email: "Email",
+            driver: "Driver",
+            passenger: "Passenger",
+            pedestrian: "Pedestrian",
+            yes: "Yes",
+            no: "No",
+            unsure: "Unsure"
         },
-        city_page: {
-            hero_badge: "Local Assistance for {county} County",
-            title_suffix: "Total Loss & Injury Claim Help",
-            subtitle: "Don't let {city} insurance adjusters underpay you. Get your free valuation and legal review today.",
-            why_different: "Why {city} Claims Are Different",
-            resources_title: "Top {city} Injury Resources",
-            resources_subtitle: "It is critical to seek medical attention within 72 hours of an accident. These trusted providers have 5+ locations in the {city} area.",
-            calculator_title: "Check Your {city} Vehicle Value",
-            calculator_text: "Use our calculator to see if the insurance offer matches local {city} dealer prices.",
+        concerns: {
+            pain: "Pain/Health",
+            bills: "Medical Bills",
+            income: "Lost Income",
+            repair: "Car Repair",
+            calls: "Insurance Calls"
         },
-        footer: {
-            rights: "All rights reserved. Not Legal Advice.",
-            disclaimer_title: "ADVERTISING DISCLOSURE",
-            disclaimer_text: "TexasTotalLoss.com is a lead generation website and not a law firm..."
-        },
-        chat: {
-            trigger: "Chat Support",
-            close: "Close",
-            header_title: "Angel - Claims Specialist",
-            header_subtitle: "Analyzing Texas Regulations",
-            input_placeholder: "Type a message...",
-            upload_tooltip: "Upload Photo",
-            keywords: {
-                live_agent: ["live agent", "agent", "human", "person", "representative", "talk"],
-                yes: ["yes", "yeah", "yep", "sure", "ok", "correct"],
-                no: ["no", "nope", "nah", "incorrect"],
-                pain: ["pain", "hurt", "injury", "stress", "anxiety", "ache", "sore", "broken", "fracture", "bleed"],
-            },
-            time_options: {
-                less_one: "Less than 1 Year",
-                less_two: "Less than 2 Years",
-                less_three: "Less than 3 Years"
-            },
-            injury_type_options: {
-                back_neck: "Back or Neck Pain",
-                headaches: "Headaches",
-                cuts_bruises: "Cuts and Bruises",
-                broken_bones: "Broken Bones",
-                other: "Other"
-            },
-            yes_no: {
-                yes: "Yes",
-                no: "No",
-                yes_fault: "Yes",
-                no_fault: "No"
-            },
-            responses: {
-                // Greetings
-                greeting_live: "I am connecting you to a live specialist now. Please hold on...",
-                greeting_standard: "Hi, I'm Angel. I understand this is a stressful time, and I'm here to help. To start, may I have your name?",
-                ask_name: "To start, may I have your full name?",
-                ask_phone: "Thank you, {name}. In case we get disconnected, what is your cell phone number?",
-                ask_contact_method: "Thanks. Do you prefer we contact you via Text or Call?",
-                ask_call_time: "What is the best time for us to call you?",
-                ask_incident: "Perfect. Now, could you please briefly share what happened? Was it a total loss, were there injuries, or both?",
-                ask_fault: "Were you at fault for the accident?",
-                ask_injury_time: "How long ago did the injury happen?",
-                ask_hospital: "Were you hospitalized or did you receive medical treatment for your injury?",
-                ask_lawyer: "Do you already have a lawyer representing you?",
-                ask_injury_type: "What is the primary type of injury?",
-                ask_description: "How did the accident happen? Briefly describe your accident.",
-                ask_photos: "Do you have photos of the vehicles or a police report? (You can upload using the camera icon, or say 'No')",
-                ask_recent: "One last question: Was the accident within the last 48 hours?",
-
-                // Advice
-                advice_er: "Please listen: Because it's been less than 48 hours, I strongly recommend you visit an ER or Urgent Care immediately. Adrenaline can mask injuries.",
-                advice_doc_urgent: "Since it's been over a week, it is critical you see a doctor immediately. Gaps in care are the #1 reason claims are denied.",
-                advice_chiro: "Since it's been a few days, I recommend seeing a Chiropractor or Rehab Specialist ASAP.",
-
-                // Closing
-                confirmation: "We have received your details. A specialist will be in touch shortly.",
-                upload_success: "✅ Photo uploaded!",
-                upload_fail: "Failed to upload photo.",
-
-                // System
-                busy_agents: "All our agents are busy. An agent will text you shortly. What is the best time to text you?",
-                live_connect: "Connecting to live agent...",
-
-                // New Call/Chat Flow
-                intro_call: "Hi, I'm Angel, your intake specialist. I can help connect you with our team immediately.",
-                ask_disconnect_pref: "In case we get disconnected, would you prefer a Callback or a Text Message?",
-                ask_goal: "Are you looking to find medical or legal information today regarding the loss?",
-
-                // Specific Mode Greetings
-                greeting_schedule: "I can help you obtain an appointment immediately. First, what constitutes your emergency? (e.g. Total Loss, Injury, Both)",
-                greeting_call: "Please provide your phone number below, and our intake desk will call you immediately.",
-                greeting_sms: "Please enter your mobile number. We will text you a secure link to start your case.",
-
-                // At The Scene Flow
-                scene_safety: "🚨 First priority: Is everyone safe? If anyone is injured or there is immediate danger, please call 911 immediately. Are you in a safe place to chat?",
-                scene_photo_plates: "Good. Let's document the evidence before it's moved. Please upload a photo of the **License Plates** (Other Driver's & Yours).",
-                scene_photo_scene: "Got it. Now, please take 2-3 **wide photos of the scene** showing the position of both vehicles.",
-                scene_photo_docs: "Next: Please upload a photo of the **Other Driver's Insurance Card** and **Driver's License** (if they allow it).",
-                scene_processing: "Perfect. We are securing these images into your **Digital Case File**. We will email you a timestamped copy for your records.",
-
-                // Outcome
-                qualify_high: "I see. Based on those details, you likely qualify for significant compensation. I am connecting you to a Senior Specialist now.",
-                qualify_low: "Thank you. I'm preparing an Accident Information Packet for you now. A team member will review your details shortly.",
-                greeting_standalone: "Hi, I'm Angel. I understand this can be a difficult time, and I'm here to support you. How would you like to proceed?",
-                validation_phone: "Please enter a valid phone number (e.g. 555-0199)."
-            }
-        },
-        caseReview: {
-            title: "Instant AI Case Evaluator",
-            subtitle: "Analyzing Texas Regulations & Liability Rules",
-            steps: {
-                contact: {
-                    title: "1. Your Contact Info",
-                    name: "Full Name",
-                    phone: "Mobile Phone",
-                    email: "Email Address",
-                    method: "Prefer Text/Call/Email",
-                    time: "Best Contact Time",
-                    lang: "Language",
-                    permission: "I give permission to receive text messages about my case review."
-                },
-                accident: {
-                    title: "2. Accident Details",
-                    date: "Date of Accident",
-                    location: "Location (City, TX)",
-                    type: "Incident Type",
-                    role: "My Role",
-                    vehicle: "Your Vehicle",
-                    police: "Police Report?",
-                    tickets: "Tickets Issued?"
-                },
-                fault: {
-                    title: "3. Liability Check",
-                    who_fault: "Who was at fault?",
-                    admit: "Did they admit fault?",
-                    insured: "Other Driver Insured?",
-                    my_insurance: "Your Insurance Co",
-                    recorded: "Did you give a recorded statement?"
-                },
-                injury: {
-                    title: "4. Injury Assessment",
-                    were_injured: "Were you injured?",
-                    pain_level: "Pain Level (0-10)",
-                    parts: "Where do you hurt?",
-                    treatment: "Treatment So Far",
-                    need_doc: "Need help finding a Dr?"
-                },
-                legal: {
-                    title: "5. Legal Status",
-                    hired: "Have you hired a lawyer?",
-                    change: "Looking to change lawyers?",
-                    prior: "Prior claims in last 5 years?"
-                },
-                impact: {
-                    title: "6. Impact & Work",
-                    working: "Were you working?",
-                    missed: "Missed Work?",
-                    concerns: "Biggest Concerns"
-                },
-                docs: {
-                    title: "7. Quick Document Upload",
-                    desc: "If you have any of these handy, upload them now:",
-                    cta: "Tap to Upload Photo/Document",
-                    list: ["Insurance Card", "Police Report", "Scene Photos"]
-                },
-                result: {
-                    high_chance: "HIGH ACCEPTANCE CHANCE",
-                    review_needed: "Review Recommended",
-                    match: "Match",
-                    call_btn: "Call Attorney Now",
-                    close_btn: "Close"
-                }
-            },
-            options: {
-                yes: "Yes",
-                no: "No",
-                unsure: "Unsure",
-                text: "Text",
-                call: "Call",
-                email: "Email",
-                driver: "Driver",
-                passenger: "Passenger",
-                pedestrian: "Pedestrian",
-                other: "Other"
-            },
-            banner: {
-                title: "Free AI Case Analysis for Total Loss and Injury Review",
-                subtitle: "It takes less than two minutes to evaluate your case and vehicle evaluation."
-            },
-            placeholders: {
-                vin: "17-Digit VIN",
-                year: "Select Year",
-                make: "e.g. Ford, Toyota",
-                model: "e.g. F-150, Camry",
-                condition: "Condition"
-            },
-            concerns: {
-                pain: "Pain/Health",
-                bills: "Medical Bills",
-                income: "Lost Income",
-                repair: "Car Repair",
-                calls: "Insurance Calls"
-            },
-            upload: {
-                attached: "Attached:",
-                secure: "Secure & Confidential"
-            }
-        },
-        accident_types: {
-            title: "Common Auto Accident Types",
-            subtitle: "We have specialized strategies for every scenario to maximize your recovery.",
-            items: {
-                bicycle: { title: "Bicycle Accidents", stats: { l1: "Fatality Increase", v1: "+58%", s1: "Since 2019 in Texas", l2: "Annual Deaths", v2: "106+", s2: "Texans killed", l3: "Risk Factor", v3: "High", s3: "Vs Autos" }, desc: "Cyclists face extreme risks. Texas law requires drivers to yield, but negligence is common." },
-                drunk: { title: "Drunk Driving", stats: { l1: "Annual Deaths", v1: "1,053", s1: "Lives lost 2024", l2: "Fatal Factor", v2: "25%", s2: "Of all deaths", l3: "Daily Toll", v3: "3", s3: "Texans/Day" }, desc: "DUI crashes are entirely preventable. We pursue maximum damages including punitive." },
-                head_on: { title: "Head-On Collisions", stats: { l1: "Fatalities", v1: "~600", s1: "Deaths/Year", l2: "Severity", v2: "Extreme", s2: "High fatality", l3: "Cause", v3: "Drifting", s3: "Distraction" }, desc: "The most deadly type of crash. Often caused by distracted driving or wrong-way errors." },
-                motorcycle: { title: "Motorcycle Crashes", stats: { l1: "Risk Multiplier", v1: "27x", s1: "More likely fatal", l2: "Helmet Usage", v2: "40%", s2: "Unhelmeted", l3: "Total Deaths", v3: "599", s3: "In 2023" }, desc: "Riders are vulnerable. Insurance often tries to blame the rider. We fight back." },
-                pedestrian: { title: "Pedestrian Accidents", stats: { l1: "Total Deaths", v1: "773", s1: "Killed 2024", l2: "Trend", v2: "+22%", s2: "5yr Increase", l3: "Danger Zone", v3: "Night", s3: "Most frequent" }, desc: "Pedestrians have the right of way. We hold negligent drivers accountable." },
-                rear_end: { title: "Rear-End Collisions", stats: { l1: "Frequency", v1: "#1", s1: "Most common", l2: "Whiplash", v2: "High", s2: "Hidden injury", l3: "Fault", v3: "Presumed", s3: "Trailing driver" }, desc: "Common but dangerous. Whiplash and spinal injuries often appear days later." },
-                rideshare: { title: "Rideshare (Uber/Lyft)", stats: { l1: "Insurance Gap", v1: "Phase 1", s1: "Waiting", l2: "Policy Limit", v2: "$1M", s2: "Passenger", l3: "Complexity", v3: "High", s3: "Multi-policy" }, desc: "Uber/Lyft cases involve complex insurance tiers. Don't let them deny coverage." },
-                rollover: { title: "Rollover Accidents", stats: { l1: "Fatality Rate", v1: "30%", s1: "Of deaths", l2: "Vehicle Type", v2: "SUV", s2: "High COG", l3: "Roof Crush", v3: "Risk", s3: "Structural" }, desc: "SUVs and trucks are prone to rollovers. These accidents often cause catastrophic injuries." },
-                uninsured: { title: "Uninsured Motorist", stats: { l1: "TX Rate", v1: "20%", s1: "Uninsured", l2: "Your Policy", v2: "UM/UIM", s2: "Crucial", l3: "Hit & Run", v3: "Covered", s3: "Under UM" }, desc: "1 in 5 Texas drivers have no insurance. We help you access your own UM coverage." },
-                wrong_way: { title: "Wrong-Way Driving", stats: { l1: "Fatality", v1: "High", s1: "Head-on", l2: "Impairment", v2: "60%+", s2: "Alcohol", l3: "Time", v3: "Night", s3: "2am-5am" }, desc: "Extremely dangerous and often linked to intoxication. We aggressive pursue these cases." }
-            },
-            cta_title: "Involved in this type of crash?",
-            cta_text: "Get a free specialized case review now.",
-            cta_btn: "Start Review"
-        },
-        video_gallery: {
-            title: "Texas Accident Video Answers",
-            subtitle: "Video Knowledge Base",
-            desc: "Real answers to the tough questions insurance adjusters don't want you to ask.",
-            videos: {
-                drunk: { title: "Hit by a Drunk Driver?", desc: "DWI crashes have special punitive damages in Texas. Learn what that means for your payout.", cat: "DWI Accident", script: "[Script]..." },
-                truck: { title: "18-Wheeler Wreck Reality", desc: "Trucking companies have rapid response teams. You need one too.", cat: "Trucking", script: "[Script]..." },
-                uninsured: { title: "Hit by Uninsured Driver?", desc: "30% of Texas drivers have no insurance. Here is how you recover money anyway.", cat: "Insurance", script: "[Script]..." },
-                distracted: { title: "Rideshare & Distracted Driving", desc: "Uber/Lyft accidents involve million-dollar insurance policies. Are you eligible?", cat: "Rideshare", script: "[Script]..." }
-            },
-            modal: {
-                watch: "Watch:",
-                processing: "Video processing...",
-                transcript: "Video Transcript / Script",
-                cta: "Speak to an Attorney About This"
-            }
+        upload: {
+            secure: "Encrypted & Confidential",
+            attached: "Attached Files:"
         }
-    };
+    },
+    video_gallery: {
+        title: "Texas Accident Video Answers",
+        subtitle: "Video Knowledge Base",
+        desc: "Real answers to the tough questions insurance adjusters don't want you to ask.",
+        videos: {
+            drunk: { title: "Hit by a Drunk Driver?", desc: "DWI crashes have special punitive damages in Texas. Learn what that means for your payout.", cat: "DWI Accident", script: "[Script]..." },
+            truck: { title: "18-Wheeler Wreck Reality", desc: "Trucking companies have rapid response teams. You need one too.", cat: "Trucking", script: "[Script]..." },
+            uninsured: { title: "Hit by Uninsured Driver?", desc: "30% of Texas drivers have no insurance. Here is how you recover money anyway.", cat: "Insurance", script: "[Script]..." },
+            distracted: { title: "Rideshare & Distracted Driving", desc: "Uber/Lyft accidents involve million-dollar insurance policies. Are you eligible?", cat: "Rideshare", script: "[Script]..." }
+        },
+        modal: {
+            watch: "Watch:",
+            processing: "Video processing...",
+            transcript: "Video Transcript / Script",
+            cta: "Speak to an Attorney About This"
+        }
+    },
 };
+
 
 export type Dictionary = typeof en;
