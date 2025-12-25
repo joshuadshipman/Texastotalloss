@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google-cloud/dialogflow": "^7.4.0",
+    "@google/generative-ai": "^0.24.1",
     "@supabase/supabase-js": "^2.88.0",
     "dotenv": "^17.2.3",
     "jspdf": "^3.0.4",
@@ -18,7 +19,9 @@
     "nodemailer": "^7.0.11",
     "react": "19.2.1",
     "react-dom": "19.2.1",
-    "uuid": "^13.0.0"
+    "twitter-api-v2": "^1.28.0",
+    "uuid": "^13.0.0",
+    "youtube-transcript": "^1.2.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

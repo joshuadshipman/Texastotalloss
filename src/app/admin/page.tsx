@@ -5,9 +5,10 @@ import { supabaseClient } from '@/lib/supabaseClient';
 import {
     SearchIcon, FilterIcon, RefreshCwIcon, DownloadIcon,
     CheckCircleIcon, AlertTriangleIcon, FileTextIcon,
-    MessageSquareIcon, MapPinIcon
+    MessageSquareIcon, MapPinIcon, LayoutGridIcon
 } from 'lucide-react';
 import AdminChatGrid from '@/components/admin/AdminChatGrid';
+import BlogManagement from '@/components/admin/BlogManagement';
 
 // Type definition matches our SQL schema
 type Lead = {
@@ -34,6 +35,7 @@ export default function AdminDashboard() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [pin, setPin] = useState('');
     const [loading, setLoading] = useState(false);
+    const [activeTab, setActiveTab] = useState<'leads' | 'content'>('leads');
 
     // Filters
     const [filterLang, setFilterLang] = useState<'all' | 'en' | 'es'>('all');
@@ -148,6 +150,20 @@ export default function AdminDashboard() {
                         <h1 className="font-bold text-lg text-gray-800">Admin Dashboard</h1>
                     </div>
                     <div className="flex items-center gap-4">
+                        <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                            <button
+                                onClick={() => setActiveTab('leads')}
+                                className={`px-4 py-1.5 rounded-md text-sm font-bold transition ${activeTab === 'leads' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+                            >
+                                Leads & Chat
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('content')}
+                                className={`px-4 py-1.5 rounded-md text-sm font-bold transition ${activeTab === 'content' ? 'bg-white shadow text-purple-600' : 'text-gray-500 hover:text-gray-700'}`}
+                            >
+                                Blog Content
+                            </button>
+                        </div>
                         <button onClick={fetchLeads} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full" title="Refresh">
                             <RefreshCwIcon size={18} className={loading ? 'animate-spin' : ''} />
                         </button>
@@ -156,117 +172,124 @@ export default function AdminDashboard() {
             </header>
 
             <main className="max-w-[1400px] mx-auto p-4 space-y-8">
-                {/* 1. Live Command Center (Grid) */}
-                <div>
-                    <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-xl font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                            <MessageSquareIcon className="text-blue-600" /> Live Command Center
-                        </h2>
-                        <span className="text-xs font-bold bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
-                            {activeSessions.length} Active / 4 Slots
-                        </span>
-                    </div>
-                    <AdminChatGrid
-                        activeSessions={activeSessions}
-                        onMinimize={handleMinimizeSlot}
-                        onClose={handleCloseSlot}
-                    />
-                </div>
 
-                {/* 2. Comprehensive Session Data */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <div className="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
-                        <h3 className="font-bold text-gray-700 flex items-center gap-2">
-                            <FileTextIcon size={18} /> All Sessions ({leads.length})
-                        </h3>
+                {activeTab === 'content' && <BlogManagement />}
 
-                        {/* Filters */}
-                        <div className="flex items-center gap-2">
-                            <select
-                                value={filterLang}
-                                onChange={e => setFilterLang(e.target.value as any)}
-                                className="text-sm border rounded-lg px-3 py-2 bg-white"
-                            >
-                                <option value="all">Every Language</option>
-                                <option value="en">English Only</option>
-                                <option value="es">Spanish Only</option>
-                            </select>
-                            <select
-                                value={filterScore}
-                                onChange={e => setFilterScore(e.target.value as any)}
-                                className="text-sm border rounded-lg px-3 py-2 bg-white"
-                            >
-                                <option value="all">All Scores</option>
-                                <option value="high">High Value (70+)</option>
-                                <option value="prospect">Prospects (&lt;70)</option>
-                            </select>
+                {activeTab === 'leads' && (
+                    <>
+                        {/* 1. Live Command Center (Grid) */}
+                        <div>
+                            <div className="flex items-center justify-between mb-4">
+                                <h2 className="text-xl font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                                    <MessageSquareIcon className="text-blue-600" /> Live Command Center
+                                </h2>
+                                <span className="text-xs font-bold bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+                                    {activeSessions.length} Active / 4 Slots
+                                </span>
+                            </div>
+                            <AdminChatGrid
+                                activeSessions={activeSessions}
+                                onMinimize={handleMinimizeSlot}
+                                onClose={handleCloseSlot}
+                            />
                         </div>
-                    </div>
 
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-sm text-left">
-                            <thead className="bg-gray-100 text-gray-500 font-bold uppercase text-xs tracking-wider">
-                                <tr>
-                                    <th className="px-6 py-4">Session / Date</th>
-                                    <th className="px-6 py-4">User</th>
-                                    <th className="px-6 py-4">Status</th>
-                                    <th className="px-6 py-4">Score</th>
-                                    <th className="px-6 py-4">Last Activity</th>
-                                    <th className="px-6 py-4 text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100">
-                                {filteredLeads.map((lead) => (
-                                    <tr key={lead.id} className="hover:bg-blue-50/30 transition group">
-                                        <td className="px-6 py-4">
-                                            <span className="font-mono text-xs text-gray-400 block mb-1">#{lead.dialogflow_session_id?.substring(0, 8)}</span>
-                                            <div className="text-gray-900 font-medium">
-                                                {new Date(lead.created_at).toLocaleDateString()}
-                                            </div>
-                                            <div className="text-xs text-gray-500">
-                                                {new Date(lead.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <div className="font-bold text-gray-900">{lead.full_name || 'Anonymous'}</div>
-                                            <div className="text-gray-500 text-xs">{lead.phone || 'No Phone'}</div>
-                                            {lead.language === 'es' && <span className="inline-block mt-1 bg-orange-100 text-orange-700 text-[10px] px-1.5 py-0.5 rounded font-bold">ES</span>}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${activeSessions.includes(lead.dialogflow_session_id) ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                                                {activeSessions.includes(lead.dialogflow_session_id) ? '● Live Now' : '○ Offline'}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <ScoreBadge score={lead.score} />
-                                        </td>
-                                        <td className="px-6 py-4 max-w-xs truncate text-gray-500 italic">
-                                            {lead.injury_summary || "Start of conversation..."}
-                                        </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="flex justify-end gap-2 opacity-100">
-                                                <button
-                                                    onClick={() => handleOpenSlot(lead.dialogflow_session_id)}
-                                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded border border-blue-200 hover:border-blue-400 transition"
-                                                    title="Open in Command Center"
-                                                >
-                                                    <MessageSquareIcon size={16} />
-                                                </button>
-                                                <button
-                                                    onClick={() => setSelectedLead(lead)}
-                                                    className="p-2 text-gray-600 hover:bg-gray-100 rounded border border-gray-200 transition"
-                                                    title="View Full Details"
-                                                >
-                                                    <FileTextIcon size={16} />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                        {/* 2. Comprehensive Session Data */}
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                            <div className="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
+                                <h3 className="font-bold text-gray-700 flex items-center gap-2">
+                                    <FileTextIcon size={18} /> All Sessions ({leads.length})
+                                </h3>
+
+                                {/* Filters */}
+                                <div className="flex items-center gap-2">
+                                    <select
+                                        value={filterLang}
+                                        onChange={e => setFilterLang(e.target.value as any)}
+                                        className="text-sm border rounded-lg px-3 py-2 bg-white"
+                                    >
+                                        <option value="all">Every Language</option>
+                                        <option value="en">English Only</option>
+                                        <option value="es">Spanish Only</option>
+                                    </select>
+                                    <select
+                                        value={filterScore}
+                                        onChange={e => setFilterScore(e.target.value as any)}
+                                        className="text-sm border rounded-lg px-3 py-2 bg-white"
+                                    >
+                                        <option value="all">All Scores</option>
+                                        <option value="high">High Value (70+)</option>
+                                        <option value="prospect">Prospects (&lt;70)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-sm text-left">
+                                    <thead className="bg-gray-100 text-gray-500 font-bold uppercase text-xs tracking-wider">
+                                        <tr>
+                                            <th className="px-6 py-4">Session / Date</th>
+                                            <th className="px-6 py-4">User</th>
+                                            <th className="px-6 py-4">Status</th>
+                                            <th className="px-6 py-4">Score</th>
+                                            <th className="px-6 py-4">Last Activity</th>
+                                            <th className="px-6 py-4 text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100">
+                                        {filteredLeads.map((lead) => (
+                                            <tr key={lead.id} className="hover:bg-blue-50/30 transition group">
+                                                <td className="px-6 py-4">
+                                                    <span className="font-mono text-xs text-gray-400 block mb-1">#{lead.dialogflow_session_id?.substring(0, 8)}</span>
+                                                    <div className="text-gray-900 font-medium">
+                                                        {new Date(lead.created_at).toLocaleDateString()}
+                                                    </div>
+                                                    <div className="text-xs text-gray-500">
+                                                        {new Date(lead.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="font-bold text-gray-900">{lead.full_name || 'Anonymous'}</div>
+                                                    <div className="text-gray-500 text-xs">{lead.phone || 'No Phone'}</div>
+                                                    {lead.language === 'es' && <span className="inline-block mt-1 bg-orange-100 text-orange-700 text-[10px] px-1.5 py-0.5 rounded font-bold">ES</span>}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${activeSessions.includes(lead.dialogflow_session_id) ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                                                        {activeSessions.includes(lead.dialogflow_session_id) ? '● Live Now' : '○ Offline'}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <ScoreBadge score={lead.score} />
+                                                </td>
+                                                <td className="px-6 py-4 max-w-xs truncate text-gray-500 italic">
+                                                    {lead.injury_summary || "Start of conversation..."}
+                                                </td>
+                                                <td className="px-6 py-4 text-right">
+                                                    <div className="flex justify-end gap-2 opacity-100">
+                                                        <button
+                                                            onClick={() => handleOpenSlot(lead.dialogflow_session_id)}
+                                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded border border-blue-200 hover:border-blue-400 transition"
+                                                            title="Open in Command Center"
+                                                        >
+                                                            <MessageSquareIcon size={16} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => setSelectedLead(lead)}
+                                                            className="p-2 text-gray-600 hover:bg-gray-100 rounded border border-gray-200 transition"
+                                                            title="View Full Details"
+                                                        >
+                                                            <FileTextIcon size={16} />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </>
+                )}
             </main>
 
             {/* Detail Modal */}
