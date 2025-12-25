@@ -40,6 +40,7 @@ export default function BlogManagement() {
 
     const [newVideoId, setNewVideoId] = useState('');
     const [generating, setGenerating] = useState(false);
+    const [showHelp, setShowHelp] = useState(false);
 
     const handleGenerate = async () => {
         if (!newVideoId) return alert('Please enter a Video ID');
@@ -168,14 +169,71 @@ export default function BlogManagement() {
                 <h2 className="text-xl font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
                     <FileTextIcon className="text-purple-600" /> Blog Content Manager
                 </h2>
-                <button
-                    onClick={fetchPosts}
-                    className="p-2 text-gray-500 hover:bg-gray-100 rounded-full"
-                    title="Refresh Posts"
-                >
-                    <RefreshCwIcon size={18} className={loading ? 'animate-spin' : ''} />
-                </button>
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => setShowHelp(!showHelp)}
+                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold hover:bg-blue-200 transition"
+                    >
+                        {showHelp ? 'Hide Guide' : 'How-To Guide'}
+                    </button>
+                    <button
+                        onClick={fetchPosts}
+                        className="p-2 text-gray-500 hover:bg-gray-100 rounded-full"
+                        title="Refresh Posts"
+                    >
+                        <RefreshCwIcon size={18} className={loading ? 'animate-spin' : ''} />
+                    </button>
+                </div>
             </div>
+
+            {/* SOP / Help Guide */}
+            {showHelp && (
+                <div className="bg-blue-50 p-6 rounded-xl border border-blue-100 text-sm text-gray-800 space-y-4 animate-in fade-in slide-in-from-top-2">
+                    <h3 className="font-bold text-lg text-blue-900 border-b border-blue-200 pb-2">Admin SOP: Content Automation</h3>
+
+                    <div className="grid md:grid-cols-3 gap-6">
+                        <div>
+                            <h4 className="font-bold text-blue-800 mb-2 flex items-center gap-2">
+                                <span className="bg-blue-200 w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
+                                Generate Blog
+                            </h4>
+                            <ul className="list-disc list-inside space-y-1 text-gray-600">
+                                <li>Find a target video on YouTube.</li>
+                                <li>Copy the ID (part after `v=`, e.g. `aTM4qKYEzXI`).</li>
+                                <li>Paste it in the box below and click <strong>Generate</strong>.</li>
+                                <li>Wait 10-20s. A "Draft" will appear in the list.</li>
+                                <li>Review, Edit, and set status to <strong>Published</strong>.</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4 className="font-bold text-blue-800 mb-2 flex items-center gap-2">
+                                <span className="bg-blue-200 w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
+                                Twitter / X Thread
+                            </h4>
+                            <ul className="list-disc list-inside space-y-1 text-gray-600">
+                                <li>Every post has a hidden 5-tweet thread generated.</li>
+                                <li>Click the <span className="text-blue-500 font-bold">Blue "X" Button</span> in the table.</li>
+                                <li>Confirm the popup to post immediately to the company account.</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4 className="font-bold text-blue-800 mb-2 flex items-center gap-2">
+                                <span className="bg-blue-200 w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
+                                TikTok / Reels
+                            </h4>
+                            <ul className="list-disc list-inside space-y-1 text-gray-600">
+                                <li>AI generates 3 viral scripts per post.</li>
+                                <li>Click the <span className="text-pink-500 font-bold">Pink "Copy" Button</span>.</li>
+                                <li>Go to <strong>Canva</strong> or <strong>CapCut</strong>.</li>
+                                <li>Search "Legal TikTok Template" &rarr; Paste Script &rarr; Export.</li>
+                                <li>Upload manually to TikTok/Instagram.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Generator Input */}
             <div className="bg-white p-4 rounded-xl border flex gap-4 items-center">

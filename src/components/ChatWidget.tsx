@@ -633,7 +633,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                         placeholder="Type message..."
-                        className="flex-1 bg-gray-100 border-0 rounded-full px-5 text-base focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="flex-1 bg-gray-100 border-0 rounded-full px-5 text-base text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
                     />
                     <button
                         onClick={() => handleSend()}
@@ -732,7 +732,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                             placeholder="Type your message..."
-                            className="flex-1 bg-gray-100 border-0 rounded-full px-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="flex-1 bg-gray-100 border-0 rounded-full px-4 text-sm text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
                         />
                         <button
                             onClick={() => handleSend()}

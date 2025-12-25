@@ -3,10 +3,23 @@
 import React from 'react';
 import DemandLetterGenerator from '@/components/DemandLetterGenerator';
 import Link from 'next/link';
-import Image from 'next/image';
 import Slideshow from '@/components/Slideshow';
 
 export default function DemandLetterPage() {
+    const guideImages = [
+        '/images/slides/slide-01.png',
+        '/images/slides/slide-02.png',
+        '/images/slides/slide-03.png',
+        '/images/slides/slide-04.png',
+        '/images/slides/slide-05.png',
+        '/images/slides/slide-06.png',
+        '/images/slides/slide-07.png',
+        '/images/slides/slide-08.png',
+        '/images/slides/slide-09.png',
+        '/images/slides/slide-10.png',
+        '/images/slides/slide-11.png',
+    ];
+
     return (
         <div className="min-h-screen bg-gray-100 py-12 px-4">
             <div className="max-w-4xl mx-auto mb-8 text-center">
@@ -18,30 +31,20 @@ export default function DemandLetterPage() {
                 </p>
 
                 {/* Infographic Guide */}
-                <div className="mb-12 bg-white p-4 rounded-xl shadow-sm border border-gray-200 inline-block overflow-hidden">
-                    <div className="relative w-full h-auto mb-4">
-                        <Image
-                            src="/images/total-loss-guide.jpg"
-                            alt="Total Loss Payout Guide"
-                            width={1200}
-                            height={600}
-                            className="rounded-lg w-full h-auto object-contain max-h-[500px]"
-                        />
-                    </div>
-                    <p className="text-lg font-bold text-blue-900">
-                        Follow the guide above, obtain the necessary quotes, and then print the demand letter below as a cover for your proof.
+                <div className="mb-12">
+                    <p className="text-lg font-bold text-blue-900 mb-4">
+                        Swipe through the step-by-step guide below to maximize your payout.
+                    </p>
+
+                    <Slideshow images={guideImages} />
+
+                    <p className="text-gray-500 text-sm mt-4">
+                        Follow the steps above, obtain the necessary quotes, and then use the tool below to generate your demand letter.
                     </p>
                 </div>
             </div>
 
             <DemandLetterGenerator />
-
-            <div className="mt-16 mb-12">
-                <h2 className="text-3xl font-black text-center text-blue-900 mb-8 max-w-2xl mx-auto">
-                    Master Class: How to Win Your Total Loss Claim
-                </h2>
-                <Slideshow />
-            </div>
 
             <div className="max-w-2xl mx-auto mt-12 text-center text-gray-500 text-sm">
                 <p>Disclaimer: This tool generates a template based on standard Texas insurance codes. It does not constitute legal advice. For complex cases, consult an attorney.</p>

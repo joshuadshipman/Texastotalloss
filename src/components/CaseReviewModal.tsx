@@ -15,7 +15,7 @@ export default function CaseReviewModal({ dict, lang }: CaseReviewModalProps) {
     const { isReviewOpen, closeReview } = useChat();
     const [step, setStep] = useState(1);
 
-    if (!isReviewOpen) return null;
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [score, setScore] = useState<number | null>(null);
 

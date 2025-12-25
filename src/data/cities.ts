@@ -52,7 +52,12 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 32.7767, longitude: -96.7970 },
         zipCodes: ["75201", "75202", "75203", "75204", "75205"],
-        subCities: ['plano', 'mesquite', 'desoto', 'irving', 'garland'],
+        subCities: [
+            'north-dallas', 'south-dallas', 'uptown-dallas',
+            'oak-lawn', 'the-village',
+            // Traditional Suburbs linked for reference if needed, but primary focus is districts
+            'plano', 'mesquite', 'irving'
+        ],
         medicalResources: [
             { name: "Accident & Injury Chiropractic", link: "https://accidentandinjury.com/", note: "19 Locations in DFW focusing purely on auto accident recovery." },
             { name: "The Joint Chiropractic - Dallas", link: "https://www.thejoint.com/texas/dallas/", note: "Convenient locations in Uptown, Preston Hollow, and White Rock." }
@@ -217,15 +222,88 @@ export const cities: CityData[] = [
         ]
     },
     // --- DFW EXPANSION ---
+    // --- DFW EXPANSION ---
     {
         slug: 'plano',
         translations: {
-            en: { name: 'Plano', county: 'Collin', description: "Plano's corporate headquarters and busy tollways like DNT and 121 create high-risk accident zones." },
-            es: { name: 'Plano', county: 'Collin', description: "Las sedes corporativas de Plano y las autopistas concurridas crean zonas de alto riesgo de accidentes." }
+            en: {
+                name: 'Plano',
+                county: 'Collin',
+                description: "Plano is the corporate hub of North Texas. With headquarters for Toyota and Liberty Mutual, traffic congestion on the Dallas North Tollway (DNT) and Sam Rayburn Tollway (121) is intense. We specialize in Plano total loss claims involving luxury vehicles and commmercial fleet accidents."
+            },
+            es: {
+                name: 'Plano',
+                county: 'Collin',
+                description: "Plano es el centro corporativo. Con sedes como Toyota, la congestión en Dallas North Tollway (DNT) y Sam Rayburn Tollway (121) es intensa. Especializamos en reclamos de vehículos de lujo."
+            }
         },
         coordinates: { latitude: 33.0198, longitude: -96.6989 },
         zipCodes: ["75023", "75024", "75025", "75074", "75075", "75093"],
-        medicalResources: [{ name: "Texas Health Presbyterian Plano", link: "https://www.texashealth.org", note: "Trauma Care" }]
+        medicalResources: [
+            { name: "Texas Health Presbyterian Plano", link: "https://www.texashealth.org/Locations/texas-health-plano", note: "Level II Trauma Center" },
+            { name: "Baylor Scott & White Medical Center - Plano", link: "https://www.bswhealth.com/locations/plano", note: "Heart & Spine Specialty" }
+        ],
+        resources: {
+            towing: [{ name: "Plano Towing Service", link: "#", note: "Rapid DNT Response", rating: 4.8 }],
+            repair: [{ name: "Sewell Collision Center", link: "#", note: "Luxury Vehicle Certified", rating: 4.9 }],
+            rental: [{ name: "Enterprise Rent-A-Car (Legacy)", link: "#", note: "Corporate Rates", rating: 4.7 }]
+        }
+    },
+    // --- DALLAS SUB-DISTRICTS ---
+    {
+        slug: 'north-dallas',
+        translations: {
+            en: { name: 'North Dallas', county: 'Dallas', description: "Covering Preston Hollow and the Galleria area, North Dallas sees high-value vehicle accidents along I-635 and the Tollway." },
+            es: { name: 'North Dallas', county: 'Dallas', description: "Cubriendo Preston Hollow y el área de Galleria, North Dallas ve accidentes de vehículos de alto valor." }
+        },
+        coordinates: { latitude: 32.88, longitude: -96.79 },
+        zipCodes: ["75230", "75225", "75240"],
+        parentCity: 'dallas',
+        medicalResources: [{ name: "Medical City Dallas", link: "https://medicalcityhealthcare.com", note: "Critical Care" }]
+    },
+    {
+        slug: 'south-dallas',
+        translations: {
+            en: { name: 'South Dallas', county: 'Dallas', description: "From Fair Park to I-45, South Dallas drivers often face uninsured motorist issues. We help protect your rights." },
+            es: { name: 'South Dallas', county: 'Dallas', description: "Desde Fair Park hasta la I-45, los conductores enfrentan problemas de conductores sin seguro." }
+        },
+        coordinates: { latitude: 32.76, longitude: -96.75 },
+        zipCodes: ["75215", "75210"],
+        parentCity: 'dallas',
+        medicalResources: [{ name: "Baylor University Medical Center", link: "https://www.bswhealth.com", note: "Level I Trauma" }]
+    },
+    {
+        slug: 'uptown-dallas',
+        translations: {
+            en: { name: 'Uptown Dallas', county: 'Dallas', description: "Dense urban traffic, pedestrians, and trolleys make Uptown a hotspot for unique low-speed but high-injury collisions." },
+            es: { name: 'Uptown Dallas', county: 'Dallas', description: "Tráfico urbano denso, peatones y tranvías hacen de Uptown un punto caliente para colisiones." }
+        },
+        coordinates: { latitude: 32.80, longitude: -96.80 },
+        zipCodes: ["75204", "75201"],
+        parentCity: 'dallas',
+        medicalResources: [{ name: "Parkland Hospital", link: "https://www.parklandhealth.org", note: "Nearest Major ER" }]
+    },
+    {
+        slug: 'oak-lawn',
+        translations: {
+            en: { name: 'Oak Lawn', county: 'Dallas', description: "With its vibrant nightlife and Lemmon Ave congestion, Oak Lawn sees frequent late-night and distracted driving incidents." },
+            es: { name: 'Oak Lawn', county: 'Dallas', description: "Con su vibrante vida nocturna, Oak Lawn ve incidentes frecuentes de conducción distraída." }
+        },
+        coordinates: { latitude: 32.81, longitude: -96.81 },
+        zipCodes: ["75219"],
+        parentCity: 'dallas',
+        medicalResources: [{ name: "UT Southwestern Medical Center", link: "https://utswmed.org", note: "Advanced Care" }]
+    },
+    {
+        slug: 'the-village',
+        translations: {
+            en: { name: 'The Village', county: 'Dallas', description: "A dense residential community near Greenville Ave. Parking lot accidents and intersection failures are common here." },
+            es: { name: 'The Village', county: 'Dallas', description: "Una densa comunidad residencial. Los accidentes en estacionamientos son comunes aquí." }
+        },
+        coordinates: { latitude: 32.85, longitude: -96.76 },
+        zipCodes: ["75206"],
+        parentCity: 'dallas',
+        medicalResources: [{ name: "Texas Health Dallas", link: "https://www.texashealth.org", note: "Nearby Presbyterian" }]
     },
     {
         slug: 'murphy',
