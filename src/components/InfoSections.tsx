@@ -54,21 +54,22 @@ export default function InfoSections({ dict }: { dict: any }) {
             <section className="max-w-6xl mx-auto px-4">
                 <div className="grid md:grid-cols-2 gap-8">
                     {/* Responsibility Card */}
-                    <div className="bg-white rounded-2xl shadow-xl border-t-4 border-blue-600 p-8 hover:shadow-2xl transition-all group">
+                    {/* Responsibility Card (Dark Blue Theme) */}
+                    <div className="bg-blue-900 text-white rounded-2xl shadow-xl border border-blue-800 p-8 hover:shadow-2xl transition-all group">
                         <div className="flex items-center gap-4 mb-6">
-                            <div className="p-3 bg-blue-100 text-blue-600 rounded-lg group-hover:scale-110 transition-transform">
+                            <div className="p-3 bg-blue-800 text-yellow-400 rounded-lg group-hover:scale-110 transition-transform shadow-inner">
                                 <ScaleIcon size={32} />
                             </div>
-                            <h2 className="text-2xl font-black text-gray-900">{txt.responsibility_title}</h2>
+                            <h2 className="text-2xl font-black text-white">{txt.responsibility_title}</h2>
                         </div>
 
-                        <p className="text-gray-600 mb-6 font-medium leading-relaxed">
+                        <p className="text-blue-100 mb-6 font-medium leading-relaxed">
                             {txt.responsibility_desc}
                         </p>
                         <ul className="space-y-3">
                             {txt.responsibility_list.map((item: string, i: number) => (
-                                <li key={i} className="flex items-center gap-3 text-gray-700 p-2 rounded hover:bg-gray-50 transition-colors">
-                                    <ShieldCheckIcon size={18} className="text-blue-500" />
+                                <li key={i} className="flex items-center gap-3 text-white p-3 rounded-lg bg-blue-800/50 border border-blue-700 hover:bg-blue-800 transition-colors">
+                                    <ShieldCheckIcon size={18} className="text-green-400 shrink-0" />
                                     <span className="font-semibold">{item}</span>
                                 </li>
                             ))}
@@ -76,21 +77,22 @@ export default function InfoSections({ dict }: { dict: any }) {
                     </div>
 
                     {/* Common Causes Card */}
-                    <div className="bg-white rounded-2xl shadow-xl border-t-4 border-red-600 p-8 hover:shadow-2xl transition-all group">
+                    {/* Common Causes Card (Dark Blue Theme) */}
+                    <div className="bg-blue-900 text-white rounded-2xl shadow-xl border border-blue-800 p-8 hover:shadow-2xl transition-all group">
                         <div className="flex items-center gap-4 mb-6">
-                            <div className="p-3 bg-red-100 text-red-600 rounded-lg group-hover:scale-110 transition-transform">
+                            <div className="p-3 bg-blue-800 text-red-400 rounded-lg group-hover:scale-110 transition-transform shadow-inner">
                                 <AlertTriangleIcon size={32} />
                             </div>
-                            <h2 className="text-2xl font-black text-gray-900">{txt.causes_title}</h2>
+                            <h2 className="text-2xl font-black text-white">{txt.causes_title}</h2>
                         </div>
 
-                        <p className="text-gray-600 mb-6 font-medium leading-relaxed">
+                        <p className="text-blue-100 mb-6 font-medium leading-relaxed">
                             {txt.causes_desc}
                         </p>
                         <div className="grid grid-cols-2 gap-3">
                             {txt.causes_list.map((cause: string, i: number) => (
-                                <div key={i} className="flex items-center gap-2 text-sm text-gray-700 bg-red-50/50 p-3 rounded-lg border border-red-100 hover:bg-red-50 transition-colors">
-                                    <span className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0"></span>
+                                <div key={i} className="flex items-center gap-2 text-sm text-white bg-blue-800/50 p-3 rounded-lg border border-blue-700 hover:bg-blue-800 transition-colors">
+                                    <span className="w-2 h-2 bg-red-400 rounded-full flex-shrink-0 animate-pulse"></span>
                                     <span className="font-bold">{cause}</span>
                                 </div>
                             ))}

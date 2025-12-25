@@ -4,6 +4,7 @@ export interface BlogPostIdea {
     intention: string;
     category: string;
     slug: string;
+    content?: string; // HTML or Markdown string for custom automated articles
 }
 
 export const blogTopics: BlogPostIdea[] = [
@@ -53,5 +54,38 @@ export const blogTopics: BlogPostIdea[] = [
     { source: "DFW Injury", title: "Rear-Ended at a Stoplight: Can I Sue?", intention: "Explain liability for rear-end collisions", category: "Auto Accident", slug: "rear-ended-stoplight-lawsuit-texas" },
     { source: "DFW Injury", title: "Personal Injury Claim If Partially at Fault?", intention: "Educate on Texas comparative negligence", category: "Auto Accident", slug: "partial-fault-accident-claim-texas" },
     { source: "DFW Injury", title: "When to File a Lawsuit for Higher Compensation", intention: "Show when to reject low insurance settlements", category: "Auto Accident", slug: "when-file-lawsuit-personal-injury-texas" },
-    { source: "DFW Injury", title: "Wrongful Death Compensation in Texas", intention: "Explain wrongful death damages", category: "Auto Accident", slug: "wrongful-death-compensation-texas-families" }
+    { source: "DFW Injury", title: "Wrongful Death Compensation in Texas", intention: "Explain wrongful death damages", category: "Auto Accident", slug: "wrongful-death-compensation-texas-families" },
+    {
+        source: "Legislative Update",
+        title: "Texas Insurance Code 542.003: 2025 Updates & Consumer Rights",
+        intention: "Inform policyholders about new stricter timelines and penalties for insurers in 2025.",
+        category: "Insurance Law",
+        slug: "texas-insurance-code-542-003-updates-2025",
+        content: `
+            <h2>Understanding Your Rights Against Unfair Claims</h2>
+            <p>If you've filed a claim in Texas recently, you might have noticed insurers dragging their feet. However, <strong>Texas Insurance Code 542.003</strong> specifically prohibits "Unfair Claim Settlement Practices." This law is your shield against bad faith tactics.</p>
+            
+            <h3>What is Prohibited?</h3>
+            <ul class="list-disc pl-5 space-y-2">
+                <li><strong>Misrepresentation:</strong> Insurers cannot lie about what your policy covers.</li>
+                <li><strong>Failure to Respond Promptly:</strong> They must answer your letters and calls.</li>
+                <li><strong>Unreasonable Investigation Delays:</strong> They cannot delay indefinitely without a valid reason.</li>
+                <li><strong>Lowballing Liability:</strong> If liability is clear, they <em>must</em> attempt a fair settlement in good faith.</li>
+            </ul>
+
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 my-6">
+                <h4 class="font-bold text-blue-900">2025 Legislative Update: Stricter Timelines</h4>
+                <p class="text-blue-800">The <strong>Texas Property Insurance Reform Act</strong> and updates to the <strong>Prompt Payment of Claims Act</strong> have tightened the reins on insurers for 2025:</p>
+                <ul class="list-disc pl-5 mt-2 text-blue-700">
+                    <li><strong>15-Day Deadline:</strong> Insurers now generally have 15 days (down from 30) to acknowledge your claim and request information.</li>
+                    <li><strong>5-Day Payment Rule:</strong> Once a claim is approved, they must pay within 5 business days.</li>
+                    <li><strong>18% Interest Penalty:</strong> If they miss these deadlines, they owe the claim amount <strong>PLUS 18% interest</strong> per year and your attorney's fees.</li>
+                </ul>
+            </div>
+
+            <h3>How to Use This Law</h3>
+            <p>If your adjuster is ghosting you or offering pennies on the dollar, cite this code. Remind them of their duty under <strong>Section 542.003</strong> and the penalties for violation.</p>
+            <p>Documentation is key. Keep a log of every call, email, and missed deadline. If they violate the Prompt Payment Act, you may be entitled to significantly more than your original claim value.</p>
+        `
+    }
 ];

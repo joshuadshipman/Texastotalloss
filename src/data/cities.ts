@@ -440,5 +440,25 @@ export const cities: CityData[] = [
         coordinates: { latitude: 29.7000, longitude: -98.1167 },
         zipCodes: ["78130", "78132"],
         medicalResources: [{ name: "Christus Santa Rosa New Braunfels", link: "https://www.christushealth.org", note: "Full Service" }]
+    },
+    {
+        slug: 'desoto',
+        translations: {
+            en: { name: 'DeSoto', county: 'Dallas', description: "DeSoto's location on I-35E South makes it a high-traffic corridor for heavy truck and commuter accidents." },
+            es: { name: 'DeSoto', county: 'Dallas', description: "La ubicación de DeSoto en la I-35E Sur lo convierte en un corredor de alto tráfico para accidentes." }
+        },
+        coordinates: { latitude: 32.5899, longitude: -96.8570 },
+        zipCodes: ["75115", "75123"],
+        medicalResources: [{ name: "Methodist Charlton Medical Center", link: "https://methodisthealth.org", note: "Emergency Care" }]
+    },
+    {
+        slug: 'the-woodlands',
+        translations: {
+            en: { name: 'The Woodlands', county: 'Montgomery', description: "The Woodlands sees heavy congestion on I-45. High-speed collisions are common in this growing metro area." },
+            es: { name: 'The Woodlands', county: 'Montgomery', description: "The Woodlands ve una gran congestión en la I-45. Las colisiones de alta velocidad son comunes." }
+        },
+        coordinates: { latitude: 30.1658, longitude: -95.4613 },
+        zipCodes: ["77380", "77381", "77382"],
+        medicalResources: [{ name: "Memorial Hermann The Woodlands", link: "https://memorialhermann.org", note: "Level II Trauma" }]
     }
 ];

@@ -344,6 +344,7 @@ export const es: Dictionary = {
 
             // At The Scene Flow
             scene_safety: "🚨 Primera prioridad: ¿Están todos a salvo? Si hay heridos o peligro inmediato, llama al 911. ¿Está en un lugar seguro para chatear?",
+            scene_safety_followup: "¿Estás en un lugar seguro para chatear ahora?",
             scene_photo_plates: "Bien. Documentemos la evidencia antes de que se mueva. Por favor sube una foto de las **Placas** (del otro conductor y tuyas).",
             scene_photo_scene: "Entendido. Ahora, toma 2-3 **fotos amplias de la escena** mostrando la posición de ambos vehículos.",
             scene_photo_docs: "Siguiente: Sube una foto de la **Tarjeta de Seguro** del otro conductor y su **Licencia** (si lo permiten).",

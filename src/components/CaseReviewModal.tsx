@@ -505,7 +505,7 @@ Concerns: ${formData.biggestConcern.join(', ')}
 
                         {step < 7 ? (
                             <button onClick={nextStep} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow flex items-center gap-2">
-                                Next <ChevronRightIcon size={16} />
+                                {dict.val_calc.labels.btn_next} <ChevronRightIcon size={16} />
                             </button>
                         ) : (
                             <button onClick={submitReview} disabled={isSubmitting} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full shadow flex items-center gap-2">

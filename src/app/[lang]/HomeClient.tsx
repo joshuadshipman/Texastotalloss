@@ -85,7 +85,13 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
     };
 
     return (
-        <main className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900 pb-20 md:pb-0">
+        <main className="min-h-screen bg-neutral-900 text-white selection:bg-red-500/30">
+            {/* Privacy Disclaimer Banner */}
+            <div className="bg-emerald-900/30 border-b border-emerald-500/20 text-center py-2 px-4 backdrop-blur-sm">
+                <p className="text-xs md:text-sm text-emerald-200/90 font-medium">
+                    🔒 <span className="font-semibold text-emerald-100">100% Confidential:</span> Any information provided is <span className="underline decoration-emerald-500/50">never</span> shared with authorities or government agencies. We Respect your Privacy.
+                </p>
+            </div>
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

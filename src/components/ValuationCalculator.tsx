@@ -272,17 +272,19 @@ Source: ${referrer}
                                 <div className="text-white text-5xl font-black tracking-tight">
                                     ${valuation.min.toLocaleString()} - ${valuation.max.toLocaleString()}*
                                 </div>
-                                <p className="text-green-100 text-xs mt-2">{dict.val_calc.prelim_note}</p>
-                            </div>
+                                <p className="text-green-100 text-xs mt-2 mb-4">{dict.val_calc.prelim_note}</p>
 
-                            <div className="p-8 md:p-12">
-                                {/* DON'T WORRY SECTION */}
-                                <div className="text-center max-w-2xl mx-auto mb-10">
-                                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">{dict.val_calc.worry_title}</h3>
-                                    <p className="text-lg text-gray-600 leading-relaxed">
+                                {/* MOVED SCRIPT HERE per user request */}
+                                <div className="mt-6 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                                    <h3 className="text-lg font-bold text-white mb-2">{dict.val_calc.worry_title}</h3>
+                                    <p className="text-sm text-green-50 leading-relaxed">
                                         {dict.val_calc.worry_desc}
                                     </p>
                                 </div>
+                            </div>
+
+                            <div className="p-8 md:p-12">
+                                {/* REMOVED OLD LOCATION */}
 
                                 <div className="bg-blue-50 rounded-2xl p-6 md:p-8 border border-blue-100">
                                     <h2 className="text-2xl font-bold text-center mb-6 text-blue-900">{labels.btn_next}</h2>

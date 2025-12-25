@@ -170,7 +170,7 @@ export const en = {
             mileage: "Mileage",
             condition: "Condition",
             condition_help: "Good (Clean Retail)",
-            btn_next: "Next: Incident Details »",
+            btn_next: "Next, Let's see how we might be able to help with your case, 100% Free and Confidential.",
             // Expanded Labels
             est_value: "Estimated Retail Value Range",
             prelim_note: "*Preliminary estimate based on market data.",
@@ -270,7 +270,7 @@ export const en = {
     chat: {
         trigger: "Chat Support",
         close: "Close",
-        header_title: "Angel - Claims Specialist",
+        header_title: "AI Accident Case Review Specialist",
         header_subtitle: "Analyzing Texas Regulations",
         input_placeholder: "Type a message...",
         upload_tooltip: "Upload Photo",
@@ -307,7 +307,7 @@ export const en = {
             ask_contact_method: "Thanks. Do you prefer we contact you via Text or Call?",
             ask_call_time: "What is the best time for us to call you?",
             ask_incident: "Perfect. Now, could you please briefly share what happened? Was it a total loss, were there injuries, or both?",
-            ask_fault: "Were you at fault for the accident?",
+            ask_fault: "Was the other driver placed at fault for the accident?",
             ask_injury_time: "How long ago did the injury happen?",
             ask_hospital: "Were you hospitalized or did you receive medical treatment for your injury?",
             ask_lawyer: "Do you already have a lawyer representing you?",
@@ -331,17 +331,18 @@ export const en = {
             live_connect: "Connecting to live agent...",
 
             // New Call/Chat Flow
-            intro_call: "Hi, I'm Angel, your intake specialist. I can help connect you with our team immediately.",
+            intro_call: "Hi, I'm Angel, your AI claim review specialist. I can help connect you with our team immediately.",
             ask_disconnect_pref: "In case we get disconnected, would you prefer a Callback or a Text Message?",
             ask_goal: "Are you looking to find medical or legal information today regarding the loss?",
 
             // Specific Mode Greetings
-            greeting_schedule: "I can help you obtain an appointment immediately. First, what constitutes your emergency? (e.g. Total Loss, Injury, Both)",
-            greeting_call: "Please provide your phone number below, and our intake desk will call you immediately.",
-            greeting_sms: "Please enter your mobile number. We will text you a secure link to start your case.",
+            greeting_schedule: "Of course, What type of consultuation would best suit your needs: total loss? Injuryies? Both? Or something else?",
+            greeting_call: "Of course, What is your phone number? And can you advise if this related to total loss, injury or both?",
+            greeting_sms: "Of course, What is your mobile number? And is there a best time to reach you? I will also share via text a live chat link with you in case that it easier.",
 
             // At The Scene Flow
-            scene_safety: "🚨 First priority: Is everyone safe? If anyone is injured or there is immediate danger, please call 911 immediately. Are you in a safe place to chat?",
+            scene_safety: "🚨 First priority: Is everyone safe? If anyone is injured or there is immediate danger, please call 911 immediately.",
+            scene_safety_followup: "Are you in a safe place to chat now?",
             scene_photo_plates: "Good. Let's document the evidence before it's moved. Please upload a photo of the **License Plates** (Other Driver's & Yours).",
             scene_photo_scene: "Got it. Now, please take 2-3 **wide photos of the scene** showing the position of both vehicles.",
             scene_photo_docs: "Next: Please upload a photo of the **Other Driver's Insurance Card** and **Driver's License** (if they allow it).",
@@ -383,7 +384,7 @@ export const en = {
                 who_fault: "Who was at fault?",
                 admit: "Did they admit fault?",
                 insured: "Other Driver Insured?",
-                my_insurance: "Your Insurance Co",
+                my_insurance: "The other driver's insurance Company",
                 recorded: "Did you give a recorded statement?"
             },
             injury: {
@@ -398,7 +399,7 @@ export const en = {
                 title: "5. Legal Status",
                 hired: "Have you hired a lawyer?",
                 change: "Looking to change lawyers?",
-                prior: "Prior claims in last 5 years?"
+                prior: "Any prior injury claims in last 5 years?"
             },
             impact: {
                 title: "6. Impact & Work",

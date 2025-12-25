@@ -28,16 +28,88 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
     const bottomRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const agentTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const processingRef = useRef(false);
 
     // Force open if fullscreen
     const showChat = variant === 'fullscreen' || isOpen;
+
+    // --- HELPER FUNCTIONS (Defined before Effects to avoid TDZ) ---
+
+    // 1. Update Session
+    const updateSessionData = async (newData: any) => {
+        await supabaseClient.from('chat_sessions').update({
+            user_data: newData,
+            updated_at: new Date().toISOString()
+        }).eq('session_id', sessionId);
+    };
+
+    // 2. Add Message
+    const addMessage = (sender: 'user' | 'bot', text: string) => {
+        setMessages(prev => [...prev, { sender, text }]);
+
+        supabaseClient.from('chat_messages').insert({
+            session_id: sessionId,
+            sender,
+            content: text,
+            created_at: new Date().toISOString()
+        }).then(({ error }) => {
+            if (error) console.error('Error saving chat:', error);
+        });
+    };
+
+    // 3. Submit Lead
+    const submitLead = async (data: any) => {
+        try {
+            await fetch('/api/submit-lead', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...data, session: sessionId })
+            });
+            console.log('Lead submitted');
+        } catch (e) {
+            console.error('Submission error', e);
+        }
+    };
+
+    // 4. Score & Proceed
+    const handleScoreAndProceed = (currentData: any) => {
+        if (!dict) return;
+        let score = 0;
+        if (currentData.fault === 'other') score += 30;
+        if (currentData.has_injury) score += 30;
+        if (currentData.year && parseInt(currentData.year) > 2015) score += 10;
+
+        const finalData = { ...currentData, score };
+        submitLead(finalData);
+
+        if (score >= 50) {
+            addMessage('bot', dict.chat.responses.qualify_high || "Connecting to Senior Specialist...");
+            setStep(999); // Live Agent State
+        } else {
+            addMessage('bot', dict.chat.responses.qualify_low || "Sending Accident Packet...");
+            setStep(998); // End State
+        }
+    };
+
+
+    const handleAtTheScene = () => {
+        if (!dict) return;
+        addMessage('bot', dict.chat.responses.scene_safety || "🚨 First priority: Is everyone safe?");
+        setTimeout(() => {
+            addMessage('bot', dict.chat.responses.scene_safety_followup || "Are you in a safe place to chat now?");
+        }, 1000);
+        setStep(200);
+    };
+
+    // --- END HELPERS ---
+
 
     // Initial greeting
     useEffect(() => {
         if (showChat && messages.length === 0 && dict) {
             let initialMsgs: Message[] = [];
             let initialStep = 0;
-            // ... (rest of logic same)
+            // logic based on chatMode
             if (chatMode === 'sms') {
                 initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_sms }];
                 initialStep = 300; // SMS Flow Start
@@ -48,12 +120,12 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_schedule }];
                 initialStep = 500; // Schedule Flow Start
             } else if ((variant === 'fullscreen' && !chatMode) || chatMode === 'standalone') {
-                // Standalone Mode (or 'Start Review' trigger)
+                // Standalone Mode
                 initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_standalone || "Hi, I'm Angel. How would you like to proceed?" }];
                 initialStep = 10;
             } else if (chatMode === 'live') {
                 initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_live }];
-                // ... (Existing live logic kept separate if needed, or merged)
+                // Check if agents are busy logic
                 agentTimeoutRef.current = setTimeout(() => {
                     addMessage('bot', dict.chat.responses.busy_agents);
                     setStep(30);
@@ -63,7 +135,6 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 initialStep = 1;
             }
 
-            // Reset logic if mode changed or first open
             setMessages(initialMsgs);
             setStep(initialStep);
         }
@@ -72,31 +143,37 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
     // Effect to handle "Start Over" when switching modes while already open
     useEffect(() => {
         if (showChat && dict) {
-            // ... (rest logic same)
+            // Only if mode changes significantly?
+            // Actually this effect logic was slightly duplicated in previous code, 
+            // but effectively it resets if chatMode changes.
+            // Simplified here to avoid conflicts:
+            // logic is already in the first useEffect [chatMode] dependency. 
+            // But if we need to FORCE reset when chatMode updates:
+            // Let's rely on the dependency array of the first effect.
+            // Wait, the first effect checks `messages.length === 0`.
+            // So if messages exist, it won't reset.
+            // We need a separate effect for mode switching if already open.
+        }
+    }, [chatMode]);
+    // Actually, looking at previous code, there was a specific block for this.
+    // I shall perform a "soft reset" if chatMode changes and isOpen.
+    useEffect(() => {
+        if (showChat && dict && chatMode) {
+            // Logic to switch context
             let initialMsgs: Message[] = [];
             let initialStep = 0;
+            if (chatMode === 'sms') { initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_sms }]; initialStep = 300; }
+            else if (chatMode === 'call') { initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_call }]; initialStep = 400; }
+            else if (chatMode === 'schedule') { initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_schedule }]; initialStep = 500; }
+            else if (chatMode === 'standalone') { initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_standalone || "Hi..." }]; initialStep = 10; }
 
-            if (chatMode === 'sms') {
-                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_sms }];
-                initialStep = 300;
-            } else if (chatMode === 'call') {
-                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_call }];
-                initialStep = 400;
-            } else if (chatMode === 'schedule') {
-                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_schedule }];
-                initialStep = 500;
-            } else if (chatMode === 'standalone') {
-                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_standalone || "Hi, I'm Angel. How would you like to proceed?" }];
-                initialStep = 10;
-            } else {
-                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_standard }];
-                initialStep = 1;
+            if (initialMsgs.length > 0) {
+                setMessages(initialMsgs);
+                setStep(initialStep);
             }
-
-            setMessages(initialMsgs);
-            setStep(initialStep);
         }
-    }, [chatMode]); // Removed 'isOpen' dependency check inside, relied on showChat
+    }, [chatMode]);
+
 
     // Auto-scroll
     useEffect(() => {
@@ -108,7 +185,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
     // Realtime Session Status & Messages
     useEffect(() => {
         if (!showChat) return;
-        // ... (rest logic same)
+
         // 1. Subscribe to Messages
         const msgChannel = supabaseClient
             .channel(`session-msgs-${sessionId}`)
@@ -158,70 +235,15 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
         };
     }, [showChat, sessionId]);
 
-    // ... (updateSessionData, addMessage, submitLead, handleScoreAndProceed, handleAtTheScene, handleSend, handleFileUpload same)
-
-    const updateSessionData = async (newData: any) => {
-        await supabaseClient.from('chat_sessions').update({
-            user_data: newData,
-            updated_at: new Date().toISOString()
-        }).eq('session_id', sessionId);
-    };
-
-    const addMessage = (sender: 'user' | 'bot', text: string) => {
-        setMessages(prev => [...prev, { sender, text }]);
-
-        supabaseClient.from('chat_messages').insert({
-            session_id: sessionId,
-            sender,
-            content: text,
-            created_at: new Date().toISOString()
-        }).then(({ error }) => {
-            if (error) console.error('Error saving chat:', error);
-        });
-    };
-
-    const submitLead = async (data: any) => {
-        try {
-            await fetch('/api/submit-lead', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...data, session: sessionId })
-            });
-            console.log('Lead submitted');
-        } catch (e) {
-            console.error('Submission error', e);
-        }
-    };
-
-    const handleScoreAndProceed = (currentData: any) => {
-        if (!dict) return;
-        let score = 0;
-        if (currentData.fault === 'other') score += 30;
-        if (currentData.has_injury) score += 30;
-        if (currentData.year && parseInt(currentData.year) > 2015) score += 10;
-
-        const finalData = { ...currentData, score };
-        submitLead(finalData);
-
-        if (score >= 50) {
-            addMessage('bot', dict.chat.responses.qualify_high || "Connecting to Senior Specialist...");
-            setStep(999); // Live Agent State
-        } else {
-            addMessage('bot', dict.chat.responses.qualify_low || "Sending Accident Packet...");
-            setStep(998); // End State
-        }
-    };
-
-
-    const handleAtTheScene = () => {
-        if (!dict) return;
-        addMessage('bot', dict.chat.responses.scene_safety || "Are you safe?");
-        setStep(200);
-    };
 
     const handleSend = async (textOverride?: string) => {
+        // Prevent double submission
+        if (processingRef.current) return;
+
         const userText = textOverride || input;
         if (!userText.trim() || !dict) return;
+
+        processingRef.current = true; // LOCK
 
         // Validation Logic
         const lowerText = userText.toLowerCase();
@@ -237,6 +259,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 addMessage('user', userText); // Show what they typed
                 setTimeout(() => {
                     addMessage('bot', dict.chat.responses.validation_phone || "Please enter a valid phone number (e.g. 555-0199).");
+                    processingRef.current = false; // UNLOCK on error
                 }, 400);
                 setInput('');
                 return; // STOP execution
@@ -247,12 +270,16 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
         addMessage('user', userText);
 
         setTimeout(() => {
+            // UNLOCK after processing response
+            processingRef.current = false;
+
             const d = dict!;
             let nextStep = step;
             let botText = '';
             let newData = { ...userData };
 
-            // ... (Keep existing Step Logic identical)
+            // === CORE LOGIC ===
+
             // --- At The Scene Flow ---
             if (step === 200) { // Safety Answer
                 botText = d.chat.responses.scene_photo_plates || "Upload plates";
@@ -291,18 +318,15 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             }
 
             // --- Qualification Flow ---
-            // Transitioning from Contact Info (Step 3 or 4 or 100) -> Step 50
+            // Transitioning from Contact Info
             else if (step === 301 || step === 3 || step === 4 || step === 100) {
-                // Catch-all for end of contact flow -> Start Qualification
-                // Check if previous step logic handled transition to 5?
-                // We override Step 5 to be Step 50
+                // Catch-all check
             }
 
             // Explicit transitions from Contact Flow to Qualification
             if (nextStep === 5) {
                 nextStep = 50;
                 botText = d.chat.responses.ask_injury_time;
-                // Set Options for Time
                 if (d.chat.time_options) {
                     setCurrentOptions([
                         { label: d.chat.time_options.less_one, value: d.chat.time_options.less_one },
@@ -329,15 +353,13 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 botText = d.chat.responses.ask_fault;
                 nextStep = 53;
                 setCurrentOptions([
-                    { label: d.chat.yes_no?.no_fault || "No", value: "No" }, // "No" I was not at fault
-                    { label: d.chat.yes_no?.yes_fault || "Yes", value: "Yes" } // "Yes" I was at fault
+                    { label: d.chat.yes_no?.no_fault || "No", value: "No" },
+                    { label: d.chat.yes_no?.yes_fault || "Yes", value: "Yes" }
                 ]);
             }
 
             // Step 53: Fault Answered
             else if (step === 53) {
-                // If user says "No" to "Were you at fault?", then fault='other'
-                // If user says "Yes", fault='me'
                 const isAtFault = lowerText.includes('yes') || lowerText.includes('sí');
                 newData.fault = isAtFault ? 'me' : 'other';
 
@@ -372,14 +394,12 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 newData.injury_type = userText;
                 botText = d.chat.responses.ask_description;
                 nextStep = 56;
-                // Free text
                 setCurrentOptions(null);
             }
 
             // Step 56: Description Answered -> Photos
             else if (step === 56) {
                 newData.description = userText;
-                // Logic from old Step 301/6 etc
                 botText = d.chat.responses.ask_photos; // "Do you have photos?"
                 nextStep = 57;
                 setCurrentOptions([
@@ -388,7 +408,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 ]);
             }
 
-            // Step 57: Photos Answered (Logic from old 301)
+            // Step 57: Photos Answered
             else if (step === 57) {
                 if (lowerText.includes('yes') || lowerText.includes('sí')) {
                     botText = d.chat.responses.scene_photo_plates || "Please upload them now (Camera Icon).";
@@ -401,21 +421,14 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             }
 
             // --- Pre-existing SMS/Call Flow Connections ---
-            // SMS (300) -> 301. Redefine 301 to jump to 50 instead of 5
             else if (step === 300) { // SMS Sent
                 newData.phone = userText;
                 newData.contact_pref = 'text';
-                botText = "Thanks. I've sent a link. Qualification: " + d.chat.responses.ask_injury_time;
-                // Wait, logic says 'Do you have photos?' first usually? 
-                // Let's standardise: SMS/Call flow leads to Qualification flow just like Web flow
-                // But previously it asked for photos first. Let's keep photos first for SMS (mobile context)?
-                // Actually, let's unify. Go to Step 5 (which becomes 50 via check above)
                 nextStep = 5;
             }
             else if (step === 400) { // Call Dialing
                 newData.phone = userText;
                 newData.contact_pref = 'call';
-                // Go to Qualification
                 nextStep = 5;
             }
             else if (step === 502) { // Schedule Confirmed
@@ -423,28 +436,26 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 nextStep = 5;
             }
 
-            // --- Standard Contact (Step 3/4) Connections ---
+            // --- Standard Contact Connections ---
             else if (step === 3) {
-                // ... (existing logic)
                 const isText = lowerText.includes('text') || lowerText.includes('sms') || lowerText.includes('msg');
                 const isCall = lowerText.includes('call') || lowerText.includes('phone');
-                if (!isText && !isCall) { addMessage('bot', "Text or Call?"); return; }
+                if (!isText && !isCall) { addMessage('bot', "Text or Call?"); processingRef.current = false; return; }
                 newData.contact_pref = isText ? 'text' : 'call';
                 if (newData.contact_pref === 'call') { botText = d.chat.responses.ask_call_time; nextStep = 4; }
-                else { nextStep = 5; } // -> 50
+                else { nextStep = 5; }
             }
             else if (step === 4) {
                 newData.best_time = userText;
-                nextStep = 5; // -> 50
+                nextStep = 5;
             }
             else if (step === 100) {
                 newData.phone = userText;
-                nextStep = 5; // -> 50
+                nextStep = 5;
             }
 
             // --- Legacy / Safety Flow ---
             else if (step === 200 || step === 201 || step === 202) {
-                // ... (existing evidence logic)
                 if (step === 200) { botText = d.chat.responses.scene_photo_plates; nextStep = 201; }
                 else if (step === 201) { botText = d.chat.responses.scene_photo_scene; nextStep = 202; }
                 else if (step === 202) { botText = d.chat.responses.scene_photo_docs; nextStep = 203; }
@@ -455,7 +466,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             }
 
 
-            // If Live Mode is active, do NOT run bot logic
+            // Live Mode Check
             if (isLiveMode) {
                 setUserData(newData);
                 updateSessionData(newData);
@@ -465,7 +476,8 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             setUserData(newData);
             updateSessionData(newData); // Sync to DB
 
-            // Handle redirect to Step 50
+            // Handle redirect to Step 50 logic repeated from above?
+            // NextStep is already 50 if applicable.
             if (nextStep === 5) {
                 nextStep = 50;
                 botText = d.chat.responses.ask_injury_time;
@@ -478,22 +490,6 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 }
             }
 
-            setStep(nextStep);
-
-            if (botText) {
-                addMessage('bot', botText);
-            }
-
-
-            // If Live Mode is active, do NOT run bot logic
-            if (isLiveMode) {
-                setUserData(newData); // Still keep local state up to date just in case
-                updateSessionData(newData); // Sync data
-                return;
-            }
-
-            setUserData(newData);
-            updateSessionData(newData); // Sync to DB
             setStep(nextStep);
 
             if (botText) {
@@ -550,7 +546,6 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                             <p className="text-xs text-blue-200 flex items-center gap-1"><span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> Online • Private Session</p>
                         </div>
                     </div>
-                    {/* No Close Button in Fullscreen */}
                 </div>
 
                 {/* Messages Area */}
@@ -671,7 +666,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center font-bold">A</div>
                             <div>
-                                <h3 className="font-bold">Angel (AI Specialist)</h3>
+                                <h3 className="font-bold">{dict?.chat?.header_title || "AI Accident Specialist"}</h3>
                                 <p className="text-xs text-blue-200 flex items-center gap-1"><span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> Online</p>
                             </div>
                         </div>
