@@ -21,26 +21,25 @@ export default function BlogManagement() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(false);
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
-
-    const fetchPosts = async () => {
-        setLoading(true);
-        const { data, error } = await supabaseClient
-            .from('posts')
-            .select('*')
-            .order('created_at', { ascending: false });
-
-        if (data) setPosts(data);
-        if (error) console.error('Error fetching posts:', error);
-        setLoading(false);
-    };
+    const [newVideoId, setNewVideoId] = useState('');
+    const [generating, setGenerating] = useState(false);
+    const [showHelp, setShowHelp] = useState(false);
 
     useEffect(() => {
         fetchPosts();
     }, []);
 
-    const [newVideoId, setNewVideoId] = useState('');
-    const [generating, setGenerating] = useState(false);
-    const [showHelp, setShowHelp] = useState(false);
+    const fetchPosts = async () => {
+        setLoading(true);
+        try {
+            const res = await fetch('/api/admin/blog-posts');
+            const data = await res.json();
+            if (data.posts) setPosts(data.posts);
+        } catch (e) {
+            console.error('Fetch post error', e);
+        }
+        setLoading(false);
+    };
 
     const handleGenerate = async () => {
         if (!newVideoId) return alert('Please enter a Video ID');
@@ -72,10 +71,9 @@ export default function BlogManagement() {
         }
 
         const tweetSection = post.content.split('<!-- SEPARATOR: TWEETS -->')[1];
-        // Clean up markdown bullets etc to get array of tweets
         const tweets = tweetSection.split('\n')
-            .filter(line => line.trim().length > 10) // Filter empty lines
-            .map(line => line.replace(/^[-*]\s/, '').trim()); // Remove bullets
+            .filter(line => line.trim().length > 10)
+            .map(line => line.replace(/^[-*]\s/, '').trim());
 
         if (!confirm(`Ready to post a thread of ${tweets.length} tweets to X / Twitter?`)) return;
 
@@ -98,32 +96,13 @@ export default function BlogManagement() {
         }
     };
 
-    const toggleStatus = async (post: Post) => {
-        const newStatus = post.status === 'published' ? 'draft' : 'published';
-        const { error } = await supabaseClient
-            .from('posts')
-            .update({ status: newStatus })
-            .eq('id', post.id);
-
-        if (!error) {
-            fetchPosts(); // Refresh
-        } else {
-            alert('Failed to update status');
-        }
-    };
-
-
-
     const handleCopyScript = (post: Post) => {
         if (!post.content.includes('<!-- SEPARATOR: VIDEOS -->')) {
             return alert('No generated video scripts found in this post.');
         }
-
-        // Extract extracting content between VIDEO AND TWEET separator (or end)
         const parts = post.content.split('<!-- SEPARATOR: VIDEOS -->');
         if (parts.length < 2) return alert('Script parsing failed');
 
-        // Take part 1, and split by TWEET separator if exists
         let scriptContent = parts[1];
         if (scriptContent.includes('<!-- SEPARATOR: TWEETS -->')) {
             scriptContent = scriptContent.split('<!-- SEPARATOR: TWEETS -->')[0];
@@ -133,34 +112,45 @@ export default function BlogManagement() {
         alert('TikTok/Shorts Script copied to clipboard!');
     };
 
+    const toggleStatus = async (post: Post) => {
+        const newStatus = post.status === 'published' ? 'draft' : 'published';
+        const res = await fetch('/api/admin/blog-posts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'update', id: post.id, status: newStatus })
+        });
+        const data = await res.json();
+        if (data.success) fetchPosts();
+        else alert('Failed: ' + data.error);
+    };
+
+    // ... (Copy/Tweet Handlers remain same as they hit other endpoints) ...
+
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this post?')) return;
-
-        const { error } = await supabaseClient
-            .from('posts')
-            .delete()
-            .eq('id', id);
-
-        if (!error) {
+        const res = await fetch('/api/admin/blog-posts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'delete', id })
+        });
+        const data = await res.json();
+        if (data.success) {
             fetchPosts();
             if (selectedPost?.id === id) setSelectedPost(null);
-        } else {
-            alert('Failed to delete post');
-        }
+        } else alert('Failed to delete');
     };
 
     const handleSaveEdit = async (id: string, newContent: string, newTitle: string) => {
-        const { error } = await supabaseClient
-            .from('posts')
-            .update({ content: newContent, title: newTitle })
-            .eq('id', id);
-
-        if (!error) {
-            alert('Saved successfully!');
+        const res = await fetch('/api/admin/blog-posts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'update', id, content: newContent, title: newTitle })
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert('Saved!');
             fetchPosts();
-        } else {
-            alert('Failed to save');
-        }
+        } else alert('Failed to save');
     };
 
     return (

@@ -6,7 +6,7 @@ import { ShieldCheckIcon, AlertTriangleIcon, CarIcon, MapPinIcon } from 'lucide-
 import ValuationCalculator from '@/components/ValuationCalculator';
 import ChatWidget from '@/components/ChatWidget';
 import CaseReviewModal from '@/components/CaseReviewModal';
-import { getDictionary } from '../../dictionaries';
+import { getDictionary } from '@/dictionaries';
 
 type Props = {
     params: Promise<{ city: string; lang: 'en' | 'es' }>;

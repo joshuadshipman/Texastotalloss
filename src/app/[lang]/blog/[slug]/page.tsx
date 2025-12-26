@@ -1,5 +1,5 @@
 import { blogTopics } from '@/data/blog-topics';
-import { getDictionary } from '../../dictionaries';
+import { getDictionary } from '@/dictionaries';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';

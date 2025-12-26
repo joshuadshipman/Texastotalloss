@@ -25,7 +25,7 @@ export default async function RootLayout({
     const { lang } = await params;
     return (
         <html lang={lang}>
-            <body className={inter.className}>
+            <body className={`${inter.className} notranslate`} translate="no">
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{

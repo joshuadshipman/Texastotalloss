@@ -1,0 +1,74 @@
+﻿[dotenv@17.2.3] injecting env (7) from .env.local -- tip: ≡ƒöæ add access controls to secrets: https://dotenvx.com/ops
+Connecting to project: total-loss-intake-bot
+Found 5 existing intents.
+Deleted intent: projects/total-loss-intake-bot/agent/intents/61c5f5f7-d132-47d1-ab14-c97303bce384
+Deleted intent: projects/total-loss-intake-bot/agent/intents/6e6068a9-a8ba-4edd-ae38-040746c18d6b
+Deleted intent: projects/total-loss-intake-bot/agent/intents/489a4205-fe37-4904-9a19-70222f45b5df
+Deleted intent: projects/total-loss-intake-bot/agent/intents/86b4a8cf-54d8-44f6-bd46-134ea7fe9fa4
+Created Intent: FAQ - Total Loss Meaning
+Created Intent: FAQ - Calculation Method
+Created Intent: FAQ - ACV Definition
+Created Intent: FAQ - Low Payout
+Created Intent: FAQ - Negotiate Offer
+Created Intent: FAQ - Gap Insurance
+Created Intent: FAQ - Upside Down
+Created Intent: FAQ - Gap Extra Money
+Created Intent: FAQ - Loan Without Gap
+Created Intent: FAQ - Check Gap Coverage
+Created Intent: FAQ - Gap Importance
+Created Intent: FAQ - Gap Deductibles
+Created Intent: FAQ - Totaled But Drivable
+Created Intent: FAQ - Total Loss Threshold
+Created Intent: FAQ - Car After Total Loss
+Created Intent: FAQ - Rear End Fault
+Created Intent: FAQ - Left Turn Fault
+Created Intent: FAQ - Sideswipe Fault
+Created Intent: FAQ - Head On Fault
+Created Intent: FAQ - Backing Fault
+Created Intent: FAQ - Determining Fault
+Created Intent: FAQ - Low ACV
+Created Intent: FAQ - Bad Comps
+Created Intent: FAQ - Condition Adjustment
+Created Intent: FAQ - UPD
+Created Intent: FAQ - Betterment
+Created Intent: FAQ - Double Dipping
+Created Intent: FAQ - Appraisal Clause
+Created Intent: FAQ - Injury Definition
+Created Intent: FAQ - Pain and Suffering
+Created Intent: FAQ - Injuries
+Created Intent: FAQ - One Vendor
+Created Intent: FAQ - Evidence
+Created Intent: FAQ - Balance After Gap
+Created Intent: FAQ - Accept First Offer
+Created Intent: FAQ - 2025 Trends
+Created Intent: FAQ - What Not To Say
+Created Intent: FAQ - Safe Phrases
+Created Intent: FAQ - Recorded Statement
+Created Intent: Valuation Request
+Created Intent: Receive VIN
+Created Intent: FAQ - Low/No Insurance
+Created Intent: FAQ - UMPD Coverage
+Created Intent: FAQ - Gap Coverage Explained
+Created Intent: FAQ - Payout Process
+Created Intent: FAQ - Action Steps
+Created Intent: FAQ - Storage Fees
+Created Intent: FAQ - Duty to Mitigate
+Created Intent: FAQ - Move Vehicle
+Created Intent: FAQ - Adjuster Recording
+Created Intent: FAQ - Adjuster Authority
+Created Intent: FAQ - Liability Investigation
+Created Intent: FAQ - Policy Limits
+Created Intent: FAQ - Written Position
+Created Intent: FAQ - Accident Checklist
+Created Intent: FAQ - Medical Mitigation
+Created Intent: FAQ - Refusing Treatment
+Created Intent: FAQ - 51 Percent Rule
+Created Intent: FAQ - Property Mitigation
+Created Intent: Default Welcome Intent
+Created Intent: Collect Name
+Created Intent: Collect Vehicle Info
+Created Intent: Collect Date
+Created Intent: Collect Description
+Created Intent: Collect Injury Status
+Created Intent: Collect Phone
+All intents configured successfully!

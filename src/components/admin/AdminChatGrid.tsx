@@ -53,11 +53,16 @@ function AdminChatWindow({ sessionId, onMinimize, onClose }: { sessionId: string
     useEffect(() => {
         // Fetch Initial
         const fetchMsgs = async () => {
-            const { data } = await supabaseClient.from('chat_messages').select('*').eq('session_id', sessionId).order('created_at', { ascending: true });
-            if (data) setMessages(data);
-
-            const { data: sessionData } = await supabaseClient.from('chat_sessions').select('*').eq('session_id', sessionId).single();
-            if (sessionData) setDetails(sessionData.user_data || {});
+            try {
+                const res = await fetch(`/api/admin/get-chat-messages?sessionId=${sessionId}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.messages) setMessages(data.messages);
+                    if (data.details) setDetails(data.details);
+                }
+            } catch (e) {
+                console.error("Error loading messages:", e);
+            }
         };
         fetchMsgs();
 
@@ -73,16 +78,21 @@ function AdminChatWindow({ sessionId, onMinimize, onClose }: { sessionId: string
 
     const sendAgentMessage = async () => {
         if (!input.trim()) return;
-        await supabaseClient.from('chat_messages').insert({
-            session_id: sessionId,
-            sender: 'agent',
-            content: input.trim()
-        });
 
-        // Also update session to 'live' if not already
-        await supabaseClient.from('chat_sessions').update({ status: 'live' }).eq('session_id', sessionId);
+        try {
+            const res = await fetch('/api/admin/send-message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sessionId, content: input.trim() })
+            });
 
-        setInput('');
+            if (res.ok) {
+                setInput('');
+                // Optimistic update or wait for real-time sub
+            } else {
+                console.error('Failed to send');
+            }
+        } catch (e) { console.error(e); }
     };
 
     return (

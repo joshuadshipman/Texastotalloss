@@ -33,7 +33,7 @@ export default function VideoGallery({ dict }: VideoGalleryProps) {
     const sectionDesc = dict?.video_gallery?.desc || "Real answers to tough questions.";
 
     return (
-        <section className="py-12 bg-gray-900 text-white">
+        <section id="video-gallery" className="py-12 bg-gray-900 text-white">
             <div className="max-w-6xl mx-auto px-4">
                 <div className="text-center mb-10">
                     <span className="text-blue-400 font-bold tracking-widest text-xs uppercase">{sectionSubtitle}</span>

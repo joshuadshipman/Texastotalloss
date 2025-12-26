@@ -53,11 +53,15 @@ export default function AdminChatPage() {
         if (!isAuthenticated) return;
 
         const fetchSessions = async () => {
-            const { data, error } = await supabaseClient
-                .from('chat_sessions')
-                .select('*')
-                .order('created_at', { ascending: false }); // Newest first
-            if (data) setSessions(data);
+            try {
+                // Use API route to bypass RLS
+                const res = await fetch('/api/admin/get-chat-sessions');
+                if (!res.ok) throw new Error('Failed to fetch sessions');
+                const { sessions } = await res.json();
+                if (sessions) setSessions(sessions);
+            } catch (error) {
+                console.error("Failed to load sessions:", error);
+            }
         };
         fetchSessions();
 

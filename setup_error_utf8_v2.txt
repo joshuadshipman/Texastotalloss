@@ -1,0 +1,226 @@
+﻿[dotenv@17.2.3] injecting env (7) from .env.local -- tip: ≡ƒöÉ encrypt with Dotenvx: https://dotenvx.com
+Connecting to project: total-loss-intake-bot
+Found 2 existing intents.
+Deleted intent: projects/total-loss-intake-bot/agent/intents/9ae76333-b517-4fd4-b634-217afe41d152
+Created Intent: FAQ - Total Loss Meaning
+Created Intent: FAQ - Calculation Method
+Created Intent: FAQ - ACV Definition
+Created Intent: FAQ - Low Payout
+Created Intent: FAQ - Negotiate Offer
+Created Intent: FAQ - Gap Insurance
+Created Intent: FAQ - Upside Down
+Created Intent: FAQ - Gap Extra Money
+Created Intent: FAQ - Loan Without Gap
+Created Intent: FAQ - Check Gap Coverage
+node.exe : Error 
+configuring 
+Dialogflow: Error: 8 
+RESOURCE_EXHAUSTED: 
+Quota exceeded for 
+quota metric 'All 
+other requests' and 
+limit 'All other 
+requests per minute' 
+of service 'dialogflow
+.googleapis.com' for 
+consumer 'project_numb
+er:135403123084'.
+At line:1 char:1
++ & "C:\Program Files\
+nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~~~~
+    + CategoryInfo    
+          : NotSpeci  
+  fied: (Error conf   
+ iguri...:13540312    
+3084'.:String) []    
+, RemoteException
+    + FullyQualifiedE 
+   rrorId : NativeCo  
+  mmandError
+ 
+    at 
+callErrorFromStatus (C
+:\Users\17549\.gemini\
+antigravity\scratch\to
+tal-loss-intake\node_m
+odules\@grpc\grpc-js\s
+rc\call.ts:84:17)
+    at Object.onReceiv
+eStatus (C:\Users\1754
+9\.gemini\antigravity\
+scratch\total-loss-int
+ake\node_modules\@grpc
+\grpc-js\src\client.ts
+:360:55)
+    at Object.onReceiv
+eStatus (C:\Users\1754
+9\.gemini\antigravity\
+scratch\total-loss-int
+ake\node_modules\@grpc
+\grpc-js\src\client-in
+terceptors.ts:466:34)
+    at Object.onReceiv
+eStatus (C:\Users\1754
+9\.gemini\antigravity\
+scratch\total-loss-int
+ake\node_modules\@grpc
+\grpc-js\src\client-in
+terceptors.ts:424:48)
+    at <anonymous> (C:
+\Users\17549\.gemini\a
+ntigravity\scratch\tot
+al-loss-intake\node_mo
+dules\@grpc\grpc-js\sr
+c\resolving-call.ts:17
+0:24)
+    at process.process
+TicksAndRejections (no
+de:internal/process/ta
+sk_queues:84:11)
+for call at
+    at ServiceClientIm
+pl.makeUnaryRequest (C
+:\Users\17549\.gemini\
+antigravity\scratch\to
+tal-loss-intake\node_m
+odules\@grpc\grpc-js\s
+rc\client.ts:325:42)
+    at ServiceClientIm
+pl.<anonymous> (C:\Use
+rs\17549\.gemini\antig
+ravity\scratch\total-l
+oss-intake\node_module
+s\@grpc\grpc-js\src\ma
+ke-client.ts:189:15)
+    at C:\Users\17549\
+.gemini\antigravity\sc
+ratch\total-loss-intak
+e\node_modules\@google
+-cloud\dialogflow\buil
+d\src\v2\intents_clien
+t.js:279:29
+    at C:\Users\17549\
+.gemini\antigravity\sc
+ratch\total-loss-intak
+e\node_modules\google-
+gax\build\src\normalCa
+lls\timeout.js:44:16
+    at repeat (C:\User
+s\17549\.gemini\antigr
+avity\scratch\total-lo
+ss-intake\node_modules
+\google-gax\build\src\
+normalCalls\retries.js
+:114:25)
+    at C:\Users\17549\
+.gemini\antigravity\sc
+ratch\total-loss-intak
+e\node_modules\google-
+gax\build\src\normalCa
+lls\retries.js:156:13
+    at OngoingCallProm
+ise.call (C:\Users\175
+49\.gemini\antigravity
+\scratch\total-loss-in
+take\node_modules\goog
+le-gax\build\src\call.
+js:70:27)
+    at 
+NormalApiCaller.call (
+C:\Users\17549\.gemini
+\antigravity\scratch\t
+otal-loss-intake\node_
+modules\google-gax\bui
+ld\src\normalCalls\nor
+malApiCaller.js:34:19)
+    at C:\Users\17549\
+.gemini\antigravity\sc
+ratch\total-loss-intak
+e\node_modules\google-
+gax\build\src\createAp
+iCall.js:110:30 {
+  code: 8,
+  details: "Quota 
+exceeded for quota 
+metric 'All other 
+requests' and limit 
+'All other requests 
+per minute' of 
+service 'dialogflow.go
+ogleapis.com' for 
+consumer 'project_numb
+er:135403123084'.",
+  metadata: Metadata {
+    internalRepr: 
+Map(7) {
+      'endpoint-load-m
+etrics-bin' => 
+[Array],
+      'grpc-server-sta
+ts-bin' => [Array],
+      
+'pc-high-bwd-bin' => 
+[Array],
+      
+'pcx-high-bwd-bin' => 
+[Array],
+      'google.rpc.erro
+rinfo-bin' => [Array],
+      
+'google.rpc.help-bin' 
+=> [Array],
+      'grpc-status-det
+ails-bin' => [Array]
+    },
+    opaqueData: 
+Map(0) {},
+    options: {}
+  },
+  note: 'Exception 
+occurred in retry 
+method that was not 
+classified as 
+transient',
+  statusDetails: [
+    ErrorInfo {
+      metadata: 
+[Object],
+      reason: 
+'RATE_LIMIT_EXCEEDED',
+      domain: 
+'googleapis.com'
+    },
+    Help { links: 
+[Array] }
+  ],
+  reason: 
+'RATE_LIMIT_EXCEEDED',
+  domain: 
+'googleapis.com',
+  errorInfoMetadata: {
+    quota_metric: 'dia
+logflow.googleapis.com
+/requests',
+    
+quota_limit_value: 
+'60',
+    quota_limit: 'Requ
+estsPerMinutePerProjec
+t',
+    quota_unit: 
+'1/min/{project}',
+    consumer: 'project
+s/135403123084',
+    quota_location: 
+'global',
+    service: 'dialogfl
+ow.googleapis.com'
+  }
+}
