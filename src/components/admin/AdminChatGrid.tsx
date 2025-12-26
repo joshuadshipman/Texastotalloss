@@ -45,10 +45,23 @@ export default function AdminChatGrid({ activeSessions, onMinimize, onClose }: A
     );
 }
 
+import { CANNED_RESPONSES, CannedResponse } from '@/data/cannedResponses';
+
 function AdminChatWindow({ sessionId, onMinimize, onClose }: { sessionId: string, onMinimize: () => void, onClose: () => void }) {
     const [messages, setMessages] = useState<any[]>([]);
     const [input, setInput] = useState('');
     const [details, setDetails] = useState<any>({});
+
+    // Quick Response State
+    const [showQuickMenu, setShowQuickMenu] = useState(false);
+    const [quickFilter, setQuickFilter] = useState('');
+    const [selectedIndex, setSelectedIndex] = useState(0);
+
+    // Filter responses
+    const filteredResponses = CANNED_RESPONSES.filter(r =>
+        r.trigger.toLowerCase().includes(quickFilter.toLowerCase()) ||
+        r.text.toLowerCase().includes(quickFilter.toLowerCase())
+    ).slice(0, 5); // Limit to top 5
 
     useEffect(() => {
         // Fetch Initial
@@ -69,12 +82,61 @@ function AdminChatWindow({ sessionId, onMinimize, onClose }: { sessionId: string
         // Sub
         const channel = supabaseClient.channel(`admin-${sessionId}`)
             .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: `session_id=eq.${sessionId}` }, (payload) => {
-                setMessages(prev => [...prev, payload.new]);
+                setMessages(prev => {
+                    // Sound Notification for NEW user messages
+                    if (payload.new.sender !== 'agent') {
+                        // Simple beep
+                        try { new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').play().catch(() => { }); } catch (e) { }
+                    }
+                    return [...prev, payload.new];
+                });
             })
             .subscribe();
 
         return () => { supabaseClient.removeChannel(channel); };
     }, [sessionId]);
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (showQuickMenu) {
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setSelectedIndex(prev => (prev + 1) % filteredResponses.length);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setSelectedIndex(prev => (prev - 1 + filteredResponses.length) % filteredResponses.length);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                selectUniqueResponse(filteredResponses[selectedIndex]);
+            } else if (e.key === 'Escape') {
+                setShowQuickMenu(false);
+            }
+            return;
+        }
+
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            sendAgentMessage();
+        }
+    };
+
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value;
+        setInput(val);
+
+        if (val.startsWith('/')) {
+            setShowQuickMenu(true);
+            setQuickFilter(val.substring(1));
+            setSelectedIndex(0);
+        } else {
+            setShowQuickMenu(false);
+        }
+    };
+
+    const selectUniqueResponse = (r: CannedResponse) => {
+        if (!r) return;
+        setInput(r.text);
+        setShowQuickMenu(false);
+    };
 
     const sendAgentMessage = async () => {
         if (!input.trim()) return;
@@ -88,15 +150,23 @@ function AdminChatWindow({ sessionId, onMinimize, onClose }: { sessionId: string
 
             if (res.ok) {
                 setInput('');
-                // Optimistic update or wait for real-time sub
+                setShowQuickMenu(false);
             } else {
                 console.error('Failed to send');
             }
         } catch (e) { console.error(e); }
     };
 
+    const generateAIResponse = async () => {
+        // Placeholder for AI implementation
+        setInput("Drafting AI response... (Simulation)");
+        setTimeout(() => {
+            setInput("Based on the user's mention of 'back pain', I recommend suggesting a chiropractic evaluation. Shall I ask for their location?");
+        }, 800);
+    };
+
     return (
-        <div className="flex flex-col h-full bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">
+        <div className="flex flex-col h-full bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200 relative">
             {/* Header - Command Center Style */}
             <div className="bg-slate-900 text-white p-3 flex justify-between items-center cursor-move shadow-sm shrink-0">
                 <div className="flex items-center gap-2 overflow-hidden">
@@ -116,7 +186,7 @@ function AdminChatWindow({ sessionId, onMinimize, onClose }: { sessionId: string
             </div>
 
             {/* Messages - Premium Chat Bubbles */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 relative">
                 {messages.length === 0 && (
                     <div className="flex justify-center mt-10 opacity-30">
                         <p className="text-xs font-medium text-slate-500 uppercase tracking-widest">Start of Session</p>
@@ -134,14 +204,48 @@ function AdminChatWindow({ sessionId, onMinimize, onClose }: { sessionId: string
                 ))}
             </div>
 
+            {/* Quick Response Menu */}
+            {showQuickMenu && (
+                <div className="absolute bottom-16 left-2 right-2 bg-white rounded-lg shadow-2xl border border-slate-200 overflow-hidden z-20 max-h-60 overflow-y-auto animate-in slide-in-from-bottom-2">
+                    <div className="bg-slate-50 px-3 py-2 text-xs font-bold text-slate-500 border-b flex justify-between">
+                        <span>SUGGESTED RESPONSES</span>
+                        <span className="font-mono text-[10px] bg-slate-200 px-1 rounded">TAB to select</span>
+                    </div>
+                    {filteredResponses.length === 0 ? (
+                        <div className="p-3 text-sm text-slate-400 italic">No matches found for "{quickFilter}"</div>
+                    ) : (
+                        filteredResponses.map((r, i) => (
+                            <button
+                                key={i}
+                                onClick={() => selectUniqueResponse(r)}
+                                className={`w-full text-left p-3 text-sm border-b border-slate-50 hover:bg-blue-50 transition-colors ${i === selectedIndex ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''}`}
+                            >
+                                <div className="flex justify-between items-center mb-1">
+                                    <span className="font-bold text-slate-700">/{r.trigger}</span>
+                                    <span className="text-[10px] uppercase tracking-wider text-slate-400 bg-white border px-1 rounded">{r.category}</span>
+                                </div>
+                                <div className="text-slate-600 truncate">{r.text}</div>
+                            </button>
+                        ))
+                    )}
+                </div>
+            )}
+
             {/* Input - Modern Floating Style */}
-            <div className="p-3 bg-white border-t border-slate-100 flex gap-2 shrink-0">
+            <div className="p-3 bg-white border-t border-slate-100 flex gap-2 shrink-0 relative z-30">
+                <button
+                    onClick={generateAIResponse}
+                    className="p-2 rounded-full text-purple-600 bg-purple-50 hover:bg-purple-100 transition shadow-sm border border-purple-100 group"
+                    title="AI Copilot Draft (Beta)"
+                >
+                    <span className="group-hover:animate-spin">✨</span>
+                </button>
                 <input
                     className="flex-1 bg-slate-100 border-0 rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none hover:bg-slate-200 transition-colors"
-                    placeholder="Reply to user..."
+                    placeholder="Type '/' for commands..."
                     value={input}
-                    onChange={e => setInput(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && sendAgentMessage()}
+                    onChange={handleInput}
+                    onKeyDown={handleKeyDown}
                 />
                 <button
                     onClick={sendAgentMessage}
