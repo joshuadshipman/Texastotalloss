@@ -10,6 +10,8 @@ interface AdminChatGridProps {
     onClose: (sessionId: string) => void;
 }
 
+import { CANNED_RESPONSES, CannedResponse } from '@/data/cannedResponses';
+
 export default function AdminChatGrid({ activeSessions, onMinimize, onClose }: AdminChatGridProps) {
     // We only show up to 4 slots. If more activeSessions exist, they will be in the 'queue' visually handled by parent or sidebar.
     const slots = [0, 1, 2, 3];
@@ -44,8 +46,6 @@ export default function AdminChatGrid({ activeSessions, onMinimize, onClose }: A
         </div>
     );
 }
-
-import { CANNED_RESPONSES, CannedResponse } from '@/data/cannedResponses';
 
 function AdminChatWindow({ sessionId, onMinimize, onClose }: { sessionId: string, onMinimize: () => void, onClose: () => void }) {
     const [messages, setMessages] = useState<any[]>([]);

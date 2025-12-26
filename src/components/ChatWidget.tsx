@@ -248,17 +248,23 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
         // Validation Logic
         const lowerText = userText.toLowerCase();
 
-        // Phone Validation (Step 2, 4, 300, 400, 502, 100)
-        const isPhoneStep = [2, 4, 300, 400, 502, 100].includes(step);
-        if (isPhoneStep) {
+        // Contact Info Validation (Step 2, 4, 300, 400, 502, 100)
+        const isContactStep = [2, 4, 300, 400, 502, 100].includes(step);
+        if (isContactStep) {
             // Regex: At least 10 digits, allows spaces/dashes/parens/plus
             const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
             const cleanNumber = userText.replace(/\D/g, ''); // Strip non-digits
 
-            if (!phoneRegex.test(userText) && cleanNumber.length < 10) {
+            // Regex: Basic Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            const isValidPhone = phoneRegex.test(userText) && cleanNumber.length >= 10;
+            const isValidEmail = emailRegex.test(userText);
+
+            if (!isValidPhone && !isValidEmail) {
                 addMessage('user', userText); // Show what they typed
                 setTimeout(() => {
-                    addMessage('bot', dict.chat.responses.validation_phone || "Please enter a valid phone number (e.g. 555-0199).");
+                    addMessage('bot', "Please enter a valid phone number OR email address.");
                     processingRef.current = false; // UNLOCK on error
                 }, 400);
                 setInput('');
@@ -308,7 +314,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                     return;
                 }
                 newData.full_name = userText;
-                botText = d.chat.responses.ask_phone.replace('{name}', userText);
+                botText = "Thank you, " + userText + ". In case we get disconnected, what is your email address or cell phone number?";
                 nextStep = 2;
             }
             else if (step === 2) { // Phone
@@ -329,9 +335,10 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 botText = d.chat.responses.ask_injury_time;
                 if (d.chat.time_options) {
                     setCurrentOptions([
-                        { label: d.chat.time_options.less_one, value: d.chat.time_options.less_one },
-                        { label: d.chat.time_options.less_two, value: d.chat.time_options.less_two },
-                        { label: d.chat.time_options.less_three, value: d.chat.time_options.less_three }
+                        { label: d.chat.time_options.one_week, value: d.chat.time_options.one_week },
+                        { label: d.chat.time_options.one_month, value: d.chat.time_options.one_month },
+                        { label: d.chat.time_options.six_months, value: d.chat.time_options.six_months },
+                        { label: d.chat.time_options.less_one, value: d.chat.time_options.less_one }
                     ]);
                 }
             }
@@ -483,9 +490,10 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 botText = d.chat.responses.ask_injury_time;
                 if (d.chat.time_options) {
                     setCurrentOptions([
-                        { label: d.chat.time_options.less_one, value: d.chat.time_options.less_one },
-                        { label: d.chat.time_options.less_two, value: d.chat.time_options.less_two },
-                        { label: d.chat.time_options.less_three, value: d.chat.time_options.less_three }
+                        { label: d.chat.time_options.one_week, value: d.chat.time_options.one_week },
+                        { label: d.chat.time_options.one_month, value: d.chat.time_options.one_month },
+                        { label: d.chat.time_options.six_months, value: d.chat.time_options.six_months },
+                        { label: d.chat.time_options.less_one, value: d.chat.time_options.less_one }
                     ]);
                 }
             }

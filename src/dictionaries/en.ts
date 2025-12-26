@@ -281,9 +281,10 @@ export const en = {
             pain: ["pain", "hurt", "injury", "stress", "anxiety", "ache", "sore", "broken", "fracture", "bleed"],
         },
         time_options: {
-            less_one: "Less than 1 Year",
-            less_two: "Less than 2 Years",
-            less_three: "Less than 3 Years"
+            less_one: "More than 1 Year",
+            six_months: "Less than 6 Months",
+            one_month: "Less than 1 Month",
+            one_week: "1 Week or Less"
         },
         injury_type_options: {
             back_neck: "Back or Neck Pain",
