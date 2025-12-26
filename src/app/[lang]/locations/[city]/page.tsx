@@ -79,10 +79,46 @@ export default async function CityPage({ params }: Props) {
                     name: city.name
                 },
                 telephone: "+1-800-555-0199",
-                priceRange: "Free Consultation"
+                priceRange: "Free Consultation",
+                // UPGRADE: Service Catalog (What we actually do)
+                hasOfferCatalog: {
+                    '@type': 'OfferCatalog',
+                    name: 'Total Loss Assistance Services',
+                    itemListElement: [
+                        {
+                            '@type': 'Offer',
+                            itemOffered: {
+                                '@type': 'Service',
+                                name: 'Total Loss Vehicle Valuation',
+                                description: 'Independent appraisal and ACV dispute assistance.'
+                            }
+                        },
+                        {
+                            '@type': 'Offer',
+                            itemOffered: {
+                                '@type': 'Service',
+                                name: 'Accident Review',
+                                description: 'Free review of accident details and insurance coverage.'
+                            }
+                        },
+                        {
+                            '@type': 'Offer',
+                            itemOffered: {
+                                '@type': 'Service',
+                                name: 'Injury Case Evaluation',
+                                description: 'Free review of medical injury claims vs policy limits.'
+                            }
+                        }
+                    ]
+                }
             },
             {
                 '@type': 'FAQPage',
+                // UPGRADE: Speakable Optimization for Voice Search
+                speakable: {
+                    '@type': 'SpeakableSpecification',
+                    cssSelector: ['h2', 'p'] // Targeted reading zones
+                },
                 '@id': `https://texastotalloss.com/locations/${city.slug}#faq`,
                 mainEntity: [
                     {

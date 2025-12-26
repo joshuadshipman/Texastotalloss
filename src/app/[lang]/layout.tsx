@@ -26,6 +26,30 @@ export default async function RootLayout({
     return (
         <html lang={lang}>
             <body className={inter.className}>
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            '@context': 'https://schema.org',
+                            '@type': 'Organization',
+                            name: 'Texas Total Loss',
+                            url: 'https://texastotalloss.com',
+                            logo: 'https://texastotalloss.com/images/logo.png', // Ensure this path exists or update later
+                            description: 'Independent vehicle valuation and total loss claim assistance for Texas residents.',
+                            contactPoint: {
+                                '@type': 'ContactPoint',
+                                telephone: '+1-800-555-0199',
+                                contactType: 'customer service',
+                                areaServed: 'TX',
+                                availableLanguage: ['en', 'es']
+                            },
+                            sameAs: [
+                                'https://twitter.com/TexasTotalLoss',
+                                'https://facebook.com/TexasTotalLoss'
+                            ]
+                        })
+                    }}
+                />
                 <ChatProvider>
                     <div className="fixed top-4 right-4 z-[100]">
                         <LanguageSwitcher />
