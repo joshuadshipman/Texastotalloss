@@ -88,16 +88,38 @@ export default function AdminDashboard() {
     const fetchLeads = async () => {
         setLoading(true);
         try {
-            const { data, error } = await supabaseClient
-                .from('total_loss_leads')
-                .select('*')
-                .order('created_at', { ascending: false });
+            // Fetch from Admin API (Bypasses RLS & gets all sessions, not just completed leads)
+            const res = await fetch('/api/admin/get-chat-sessions', { cache: 'no-store' });
+            if (!res.ok) throw new Error('Failed to fetch sessions');
 
-            if (error) throw error;
-            if (data) setLeads(data);
+            const { sessions } = await res.json();
+
+            // Map session data to Lead-like structure for the UI
+            const mappedSessions = sessions.map((s: any) => ({
+                id: s.id || s.session_id,
+                created_at: s.created_at,
+                dialogflow_session_id: s.session_id,
+                status: s.status, // bot or live
+
+                // Extract from user_data JSON
+                full_name: s.user_data?.full_name || 'Anonymous Visitor',
+                phone: s.user_data?.phone || 'No Phone',
+                language: s.user_data?.language || 'en',
+                score: s.user_data?.score || 0,
+                pain_level: s.user_data?.pain_level || 0,
+                city: s.user_data?.city || 'Unknown',
+                injury_summary: s.user_data?.injury_summary || '',
+                description: s.user_data?.description || '',
+                preferred_contact_time: s.user_data?.best_time || '',
+                liability_summary: s.user_data?.fault === 'other' ? 'Not at fault' : (s.user_data?.fault === 'me' ? 'At fault' : ''),
+                accident_date: s.user_data?.year ? `Year: ${s.user_data.year}` : '',
+                files_count: 0 // TODO: Check storage buckets if needed
+            }));
+
+            setLeads(mappedSessions);
         } catch (e) {
             console.error('Error fetching leads:', e);
-            alert('Failed to load leads from database.');
+            alert('Failed to load sessions. Please try refreshing.');
         } finally {
             setLoading(false);
         }
