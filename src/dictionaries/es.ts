@@ -283,9 +283,10 @@ export const es: Dictionary = {
             pain: ["dolor", "herida", "lastimado", "roto", "fractura", "sangre", "duele"],
         },
         time_options: {
-            less_one: "Menos de 1 Año",
-            less_two: "Menos de 2 Años",
-            less_three: "Menos de 3 Años"
+            one_week: "1 Semana o Menos",
+            one_month: "Menos de 1 Mes",
+            six_months: "Menos de 6 Meses",
+            less_one: "Más de 1 Año"
         },
         injury_type_options: {
             back_neck: "Dolor de Espalda o Cuello",

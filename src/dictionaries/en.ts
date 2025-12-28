@@ -337,9 +337,9 @@ export const en = {
             ask_goal: "Are you looking to find medical or legal information today regarding the loss?",
 
             // Specific Mode Greetings
-            greeting_schedule: "Of course, What type of consultuation would best suit your needs: total loss? Injuryies? Both? Or something else?",
-            greeting_call: "Of course, What is your phone number? And can you advise if this related to total loss, injury or both?",
-            greeting_sms: "Of course, What is your mobile number? And is there a best time to reach you? I will also share via text a live chat link with you in case that it easier.",
+            greeting_schedule: "Of course. What type of consultation would best suit your needs: Total Loss? Injuries? Both? Or something else?",
+            greeting_call: "Of course. What is your phone number? And can you advise if this is related to total loss, injury, or both?",
+            greeting_sms: "Of course. What is your mobile number? And is there a best time to reach you? I will also share a live chat link via text in case that is easier.",
 
             // At The Scene Flow
             scene_safety: "🚨 First priority: Is everyone safe? If anyone is injured or there is immediate danger, please call 911 immediately.",

@@ -160,6 +160,33 @@ export default async function CityPage({ params }: Props) {
                         text: 'Demand an appraisal if the offer is too low.'
                     }
                 ]
+            },
+            {
+                '@type': 'BreadcrumbList',
+                '@id': `https://texastotalloss.com/locations/${city.slug}#breadcrumb`,
+                itemListElement: [
+                    {
+                        '@type': 'ListItem',
+                        position: 1,
+                        name: 'Home',
+                        item: 'https://texastotalloss.com'
+                    },
+                    {
+                        '@type': 'ListItem',
+                        position: 2,
+                        name: city.metroArea || 'Locations',
+                        // If metroArea is a valid city slug (lowercase), link to it, otherwise map to locations root
+                        item: city.metroArea && cities.find(c => c.slug === city.metroArea?.toLowerCase().replace(' ', '-'))
+                            ? `https://texastotalloss.com/locations/${city.metroArea.toLowerCase().replace(' ', '-')}`
+                            : 'https://texastotalloss.com/locations'
+                    },
+                    {
+                        '@type': 'ListItem',
+                        position: 3,
+                        name: city.name,
+                        item: `https://texastotalloss.com/locations/${city.slug}`
+                    }
+                ]
             }
         ]
     };

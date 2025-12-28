@@ -24,6 +24,7 @@ export interface CityData {
         name: string;
         slug: string;
     }[];
+    metroArea?: 'Dallas' | 'Fort Worth' | 'Austin' | 'Houston' | 'San Antonio' | 'El Paso' | 'Rural/Exurban';
 }
 
 export interface LocalBusiness {
@@ -38,6 +39,7 @@ export const cities: CityData[] = [
     // --- DALLAS METRO ---
     {
         slug: 'dallas',
+        metroArea: 'Dallas',
         translations: {
             en: {
                 name: 'Dallas',
@@ -78,6 +80,7 @@ export const cities: CityData[] = [
     // --- FRISCO (Primary) ---
     {
         slug: 'frisco',
+        metroArea: 'Dallas',
         translations: {
             en: {
                 name: 'Frisco', county: 'Collin',
@@ -103,6 +106,7 @@ export const cities: CityData[] = [
     // --- HOUSTON METRO ---
     {
         slug: 'houston',
+        metroArea: 'Houston',
         translations: {
             en: {
                 name: 'Houston',
@@ -130,6 +134,7 @@ export const cities: CityData[] = [
     // --- AUSTIN METRO ---
     {
         slug: 'austin',
+        metroArea: 'Austin',
         translations: {
             en: {
                 name: 'Austin',
@@ -157,6 +162,7 @@ export const cities: CityData[] = [
     // --- SAN ANTONIO METRO ---
     {
         slug: 'san-antonio',
+        metroArea: 'San Antonio',
         translations: {
             en: {
                 name: 'San Antonio',
@@ -180,6 +186,7 @@ export const cities: CityData[] = [
     // --- FORT WORTH METRO ---
     {
         slug: 'fort-worth',
+        metroArea: 'Fort Worth',
         translations: {
             en: {
                 name: 'Fort Worth',
@@ -202,6 +209,7 @@ export const cities: CityData[] = [
     },
     {
         slug: 'el-paso',
+        metroArea: 'El Paso',
         translations: {
             en: {
                 name: 'El Paso',
@@ -538,5 +546,62 @@ export const cities: CityData[] = [
         coordinates: { latitude: 30.1658, longitude: -95.4613 },
         zipCodes: ["77380", "77381", "77382"],
         medicalResources: [{ name: "Memorial Hermann The Woodlands", link: "https://memorialhermann.org", note: "Level II Trauma" }]
+    },
+
+    // --- NEW MICRO CITIES / RURAL --- (Added by Request)
+    {
+        slug: 'mineral-wells',
+        metroArea: 'Rural/Exurban',
+        translations: {
+            en: { name: 'Mineral Wells', county: 'Palo Pinto', description: "Located west of Fort Worth, Mineral Wells faces unique challenges with rural highway accidents on US 180 and Hwy 281." },
+            es: { name: 'Mineral Wells', county: 'Palo Pinto', description: "Ubicado al oeste de Fort Worth, Mineral Wells enfrenta desafíos únicos con accidentes en carreteras como US 180." }
+        },
+        coordinates: { latitude: 32.8085, longitude: -98.1128 },
+        zipCodes: ["76067"],
+        medicalResources: [{ name: "Palo Pinto General Hospital", link: "https://ppgh.com", note: "Local Trauma Center" }]
+    },
+    {
+        slug: 'greenville',
+        metroArea: 'Rural/Exurban',
+        translations: {
+            en: { name: 'Greenville', county: 'Hunt', description: "As a key hub in Hunt County, Greenville sees heavy commercial traffic on I-30, leading to severe trucking accidents." },
+            es: { name: 'Greenville', county: 'Hunt', description: "Como centro clave en el condado de Hunt, Greenville ve mucho tráfico comercial en la I-30." }
+        },
+        coordinates: { latitude: 33.1384, longitude: -96.1106 },
+        zipCodes: ["75401", "75402"],
+        medicalResources: [{ name: "Hunt Regional Medical Center", link: "https://www.huntregional.org", note: "Emergency Services" }]
+    },
+    {
+        slug: 'prosper',
+        metroArea: 'Dallas',
+        translations: {
+            en: { name: 'Prosper', county: 'Collin', description: "Prosper's explosion in population has turned FM 1461 and Preston Road into high-risk zones for family luxury vehicles." },
+            es: { name: 'Prosper', county: 'Collin', description: "La explosión demográfica de Prosper ha convertido a FM 1461 y Preston Road en zonas de alto riesgo." }
+        },
+        coordinates: { latitude: 33.2362, longitude: -96.8011 },
+        zipCodes: ["75078"],
+        medicalResources: [{ name: "Cook Children's (Prosper)", link: "https://cookchildrens.org", note: "Specialized Pediatric Care" }]
+    },
+    {
+        slug: 'anna',
+        metroArea: 'Dallas',
+        translations: {
+            en: { name: 'Anna', county: 'Collin', description: "North of McKinney, Anna is becoming a new battleground for commuter accidents on US 75." },
+            es: { name: 'Anna', county: 'Collin', description: "Al norte de McKinney, Anna se está convirtiendo en un nuevo campo de batalla para accidentes en la US 75." }
+        },
+        coordinates: { latitude: 33.3512, longitude: -96.5497 },
+        zipCodes: ["75409"],
+        medicalResources: [{ name: "Medical City McKinney (Nearest)", link: "https://medicalcityhealthcare.com", note: "Nearest Major ER" }]
+    },
+    {
+        slug: 'melissa',
+        metroArea: 'Dallas',
+        translations: {
+            en: { name: 'Melissa', county: 'Collin', description: "Drivers in Melissa commonly face high-speed rear-end collisions due to sudden stops on Highway 75." },
+            es: { name: 'Melissa', county: 'Collin', description: "Los conductores en Melissa enfrentan comúnmente colisiones traseras de alta velocidad en la autopista 75." }
+        },
+        coordinates: { latitude: 33.2857, longitude: -96.5728 },
+        zipCodes: ["75454"],
+        medicalResources: [{ name: "Texas Health Presbyterian (Nearby)", link: "https://texashealth.org", note: "Emergency Care" }]
     }
 ];

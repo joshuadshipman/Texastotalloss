@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
-import { getDictionary } from '@/dictionaries';
+import { getDictionary } from '../dictionaries';
 
 // Initialize Supabase Client (Public)
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';

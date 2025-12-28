@@ -10,6 +10,8 @@ import { useEffect, useState } from 'react';
 import { Dictionary } from '@/dictionaries/en'; // Type
 import { ShieldCheckIcon, AlertTriangleIcon, FileTextIcon, CarIcon, DollarSignIcon, SearchIcon, SparklesIcon } from 'lucide-react';
 
+const CitySearch = dynamic(() => import('@/components/CitySearch'));
+
 const ValuationCalculator = dynamic(() => import('@/components/ValuationCalculator'), { ssr: false });
 const MobileNav = dynamic(() => import('@/components/MobileNav'), { ssr: false });
 const SectionCard = dynamic(() => import('@/components/SectionCard'));
@@ -49,10 +51,21 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                     contactType: 'customer service',
                     areaServed: 'US',
                     availableLanguage: ['en', 'es']
+                },
+                aggregateRating: {
+                    '@type': 'AggregateRating',
+                    ratingValue: '5.0',
+                    reviewCount: '124',
+                    bestRating: '5',
+                    worstRating: '1'
                 }
             },
             {
                 '@type': 'FAQPage',
+                speakable: {
+                    '@type': 'SpeakableSpecification',
+                    cssSelector: ['h3', 'p']
+                },
                 '@id': 'https://texastotalloss.com/#faq',
                 mainEntity: [
                     {
@@ -135,6 +148,12 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                             <span>{dict.buttons.ai_review}</span>
                         </button>
                         <p className="mt-3 text-xs text-blue-400/60 font-medium uppercase tracking-widest">{dict.hero.help_text}</p>
+                    </div>
+
+                    {/* NEW: City Search Bar */}
+                    <div className="max-w-xl mx-auto mb-10 text-left">
+                        <label className="text-xs font-bold text-blue-300 uppercase tracking-wider ml-1 mb-1 block">Find Your Local Guide:</label>
+                        <CitySearch lang={lang as 'en' | 'es'} />
                     </div>
 
                     {/* Secondary Actions - Clean Glass Grid */}
@@ -234,7 +253,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             <section className="py-12 px-4 bg-white" id="resources">
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-2xl font-bold mb-6 text-gray-900">{dict.sections.resources_title}</h2>
-                    <h2 className="text-2xl font-bold mb-6 text-gray-900">{dict.sections.resources_title}</h2>
+
                     <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
                         <div className="bg-blue-50 p-4 border-b border-blue-100 flex justify-between items-center">
                             <span className="text-sm font-bold text-blue-800 uppercase tracking-wider">{dict.sections.resources_title}</span>

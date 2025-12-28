@@ -248,6 +248,29 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
         // Validation Logic
         const lowerText = userText.toLowerCase();
 
+        // --- Language Switching Logic ---
+        // --- Language Switching Logic ---
+        if (lowerText.includes('english') || lowerText.includes('inglés') || lowerText.includes('ingles')) {
+            if (window.location.pathname.startsWith('/es')) {
+                addMessage('bot', "Switching to English...");
+                const newPath = window.location.pathname.replace(/^\/es/, '/en');
+                window.location.href = newPath;
+                return;
+            }
+        }
+        if (lowerText.includes('spanish') || lowerText.includes('español') || lowerText.includes('espanol')) {
+            if (window.location.pathname.startsWith('/en')) {
+                addMessage('bot', "Cambiando a Español...");
+                const newPath = window.location.pathname.replace(/^\/en/, '/es');
+                window.location.href = newPath;
+                return;
+            } else if (window.location.pathname === '/') {
+                addMessage('bot', "Cambiando a Español...");
+                window.location.href = '/es';
+                return;
+            }
+        }
+
         // Contact Info Validation (Step 2, 4, 300, 400, 502, 100)
         const isContactStep = [2, 4, 300, 400, 502, 100].includes(step);
         if (isContactStep) {
