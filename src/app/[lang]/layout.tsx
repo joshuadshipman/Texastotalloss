@@ -3,6 +3,7 @@ import "../globals.css";
 import { ChatProvider } from "@/components/ChatContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import CookieConsent from '@/components/CookieConsent';
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -56,6 +57,7 @@ export default async function RootLayout({
                     </div>
                     {children}
                     <CookieConsent />
+                    <Analytics />
                 </ChatProvider>
             </body>
         </html>
