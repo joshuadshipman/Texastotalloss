@@ -47,3 +47,52 @@ export async function sendLeadEmailPacket(lead: any) {
         console.error('Error sending email:', error);
     }
 }
+
+export async function sendChatAlertEmail(data: {
+    sessionId: string;
+    userName: string;
+    language: string;
+    initialMessage: string;
+}) {
+    if (!process.env.SMTP_USER) return;
+
+    const mailOptions = {
+        from: process.env.FROM_EMAIL || '"Texas Total Loss" <alerts@texastotalloss.com>',
+        to: 'joshua@texastotalloss.com', // TODO: Make configurable or use env var
+        subject: `🔔 NEW CHAT STARTED: ${data.userName} (${data.language.toUpperCase()})`,
+        text: `
+      URGENT: New Chat Session Started
+      
+      User: ${data.userName}
+      Language: ${data.language}
+      Session ID: ${data.sessionId}
+      
+      Initial Message / Intent:
+      ${data.initialMessage}
+      
+      Go to Admin Dashboard to respond!
+    `,
+        html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+        <h2 style="color: #d32f2f;">🔔 New Live Chat Started</h2>
+        <p><strong>User:</strong> ${data.userName}</p>
+        <p><strong>Language:</strong> ${data.language.toUpperCase()}</p>
+        <p><strong>Session ID:</strong> ${data.sessionId}</p>
+        <hr />
+        <p><strong>Initial Message/Context:</strong></p>
+        <blockquote style="background: #f9f9f9; padding: 10px; border-left: 4px solid #2196F3;">
+          ${data.initialMessage}
+        </blockquote>
+        <br />
+        <a href="https://texastotalloss.com/admin" style="display: inline-block; padding: 10px 20px; background-color: #2196F3; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">Go to Admin Dashboard</a>
+      </div>
+    `
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log(`Chat alert sent for session ${data.sessionId}`);
+    } catch (error) {
+        console.error('Error sending chat alert:', error);
+    }
+}

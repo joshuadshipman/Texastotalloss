@@ -22,7 +22,7 @@ export const es: Dictionary = {
         options_standalone: {
             ai_review: "Iniciar Revisión de Caso Gratuita",
             live_chat: "Chat en Vivo con Angel",
-            schedule: "Agendar Llamada"
+            schedule: "Agendar Consulta Gratuita de 15 Min"
         }
     },
     sections: {
@@ -354,7 +354,7 @@ export const es: Dictionary = {
             // Outcome
             qualify_high: "Basado en los detalles, tienes un caso fuerte para compensación. Te estoy conectando con un Especialista Senior AHORA.",
             qualify_low: "Basado en las regulaciones de Texas, este puede ser un reclamo estándar. Hemos generado un **Paquete de Accidente Profesional** con pasos para manejar esto tú mismo. Enviándolo a tu correo ahora.",
-            greeting_standalone: "Hola, soy Ángel. ¿Cómo te gustaría proceder?",
+            greeting_standalone: "Hola, soy Ángel. Entiendo que es un momento difícil y estoy aquí para apoyarte. ¿Cómo puedo ayudarte hoy?",
             validation_phone: "Por favor ingresa un número de teléfono válido."
         }
     },
@@ -406,7 +406,7 @@ export const es: Dictionary = {
             },
             impact: {
                 title: "6. Impacto y Trabajo",
-                working: "¿Estabas trabajando?",
+                working: "¿Estabas trabajando o en servicio?",
                 missed: "¿Perdiste días de trabajo?",
                 concerns: "Mayores Preocupaciones"
             },

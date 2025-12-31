@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
-// import { sendLeadEmailPacket } from '@/lib/email'; // Uncomment when ready
+import { sendLeadEmailPacket } from '@/lib/email';
 
 export async function POST(req: NextRequest) {
     try {
@@ -45,8 +45,8 @@ export async function POST(req: NextRequest) {
             throw new Error(error.message);
         }
 
-        // 2. Send Email (Optional for now)
-        // await sendLeadEmailPacket(data);
+        // 2. Send Email
+        await sendLeadEmailPacket(data);
 
         return NextResponse.json({ success: true, id: data.id });
 

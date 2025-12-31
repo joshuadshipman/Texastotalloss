@@ -12,7 +12,7 @@ interface CaseReviewModalProps {
 }
 
 export default function CaseReviewModal({ dict, lang }: CaseReviewModalProps) {
-    const { isReviewOpen, closeReview } = useChat();
+    const { isReviewOpen, closeReview, openChat } = useChat();
     const [step, setStep] = useState(1);
 
 
@@ -30,7 +30,7 @@ export default function CaseReviewModal({ dict, lang }: CaseReviewModalProps) {
         bestTime: '',
         // 2. Accident
         dateOfAccident: '',
-        cityState: 'Texas',
+        cityState: '',
         incidentType: 'auto_auto',
         role: 'driver',
         vehicle: '',
@@ -238,16 +238,16 @@ Concerns: ${formData.biggestConcern.join(', ')}
                     <div className="space-y-4 animate-fade-in">
                         <h3 className="text-xl font-bold text-blue-900 border-b pb-2">{d.steps.contact.title}</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input name="fullName" placeholder={d.steps.contact.name} value={formData.fullName} onChange={handleChange} className="p-3 border rounded w-full" />
-                            <input name="phone" placeholder={d.steps.contact.phone} value={formData.phone} onChange={handleChange} className="p-3 border rounded w-full" />
-                            <input name="email" placeholder={d.steps.contact.email} value={formData.email} onChange={handleChange} className="p-3 border rounded w-full" />
-                            <select name="contactMethod" value={formData.contactMethod} onChange={handleChange} className="p-3 border rounded w-full bg-white">
+                            <input name="fullName" placeholder={d.steps.contact.name} value={formData.fullName} onChange={handleChange} className="p-3 border border-gray-300 rounded w-full text-gray-900 bg-white" />
+                            <input name="phone" placeholder={d.steps.contact.phone} value={formData.phone} onChange={handleChange} className="p-3 border border-gray-300 rounded w-full text-gray-900 bg-white" />
+                            <input name="email" placeholder={d.steps.contact.email} value={formData.email} onChange={handleChange} className="p-3 border border-gray-300 rounded w-full text-gray-900 bg-white" />
+                            <select name="contactMethod" value={formData.contactMethod} onChange={handleChange} className="p-3 border border-gray-300 rounded w-full bg-white text-gray-900">
                                 <option value="text">{o.text}</option>
                                 <option value="call">{o.call}</option>
                                 <option value="email">{o.email}</option>
                             </select>
-                            <input name="bestTime" placeholder={d.steps.contact.time} value={formData.bestTime} onChange={handleChange} className="p-3 border rounded w-full" />
-                            <select name="language" value={formData.language} onChange={handleChange} className="p-3 border rounded w-full bg-white">
+                            <input name="bestTime" placeholder={d.steps.contact.time} value={formData.bestTime} onChange={handleChange} className="p-3 border border-gray-300 rounded w-full text-gray-900 bg-white" />
+                            <select name="language" value={formData.language} onChange={handleChange} className="p-3 border border-gray-300 rounded w-full bg-white text-gray-900">
                                 <option value="English">English</option>
                                 <option value="Spanish">Español</option>
                             </select>
@@ -263,24 +263,24 @@ Concerns: ${formData.biggestConcern.join(', ')}
                     <div className="space-y-4 animate-fade-in">
                         <h3 className="text-xl font-bold text-blue-900 border-b pb-2">{d.steps.accident.title}</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div><label className="text-xs font-bold">{d.steps.accident.date}</label><input type="date" name="dateOfAccident" value={formData.dateOfAccident} onChange={handleChange} className="p-3 border rounded w-full" /></div>
-                            <div><label className="text-xs font-bold">{d.steps.accident.location}</label><input name="cityState" value={formData.cityState} onChange={handleChange} placeholder="e.g. Houston, TX" className="p-3 border rounded w-full" /></div>
-                            <select name="incidentType" value={formData.incidentType} onChange={handleChange} className="p-3 border rounded w-full bg-white">
+                            <div><label className="text-xs font-bold">{d.steps.accident.date}</label><input type="date" name="dateOfAccident" value={formData.dateOfAccident} onChange={handleChange} className="p-3 border border-gray-300 rounded w-full text-gray-900 bg-white" /></div>
+                            <div><label className="text-xs font-bold">{d.steps.accident.location}</label><input name="cityState" value={formData.cityState} onChange={handleChange} placeholder="e.g. Houston, TX" className="p-3 border border-gray-300 rounded w-full text-gray-900 bg-white" /></div>
+                            <select name="incidentType" value={formData.incidentType} onChange={handleChange} className="p-3 border border-gray-300 rounded w-full bg-white text-gray-900">
                                 <option value="auto_auto">Car vs Car</option>
                                 <option value="auto_truck">Car vs Truck/Commercial</option>
                                 <option value="motorcycle">Motorcycle</option>
                                 <option value="pedestrian">Pedestrian</option>
                                 <option value="other">Other</option>
                             </select>
-                            <select name="role" value={formData.role} onChange={handleChange} className="p-3 border rounded w-full bg-white">
+                            <select name="role" value={formData.role} onChange={handleChange} className="p-3 border border-gray-300 rounded w-full bg-white text-gray-900">
                                 <option value="driver">{d.options.driver}</option>
                                 <option value="passenger">{d.options.passenger}</option>
                                 <option value="pedestrian">{d.options.pedestrian}</option>
                             </select>
-                            <input name="vehicle" placeholder={d.steps.accident.vehicle} value={formData.vehicle} onChange={handleChange} className="p-3 border rounded w-full md:col-span-2" />
+                            <input name="vehicle" placeholder={d.steps.accident.vehicle} value={formData.vehicle} onChange={handleChange} className="p-3 border border-gray-300 rounded w-full md:col-span-2 text-gray-900 bg-white" />
                             <div className="md:col-span-2 grid grid-cols-2 gap-4">
-                                <label className="text-sm">{d.steps.accident.police} <select name="policeReport" value={formData.policeReport} onChange={handleChange} className="border p-1 rounded ml-2"><option value="yes">{o.yes}</option><option value="no">{o.no}</option><option value="unsure">{o.unsure}</option></select></label>
-                                <label className="text-sm">{d.steps.accident.tickets} <select name="tickets" value={formData.tickets} onChange={handleChange} className="border p-1 rounded ml-2"><option value="yes">{o.yes}</option><option value="no">{o.no}</option><option value="unsure">{o.unsure}</option></select></label>
+                                <label className="text-sm">{d.steps.accident.police} <select name="policeReport" value={formData.policeReport} onChange={handleChange} className="border border-gray-300 p-1 rounded ml-2 bg-white text-gray-900"><option value="yes">{o.yes}</option><option value="no">{o.no}</option><option value="unsure">{o.unsure}</option></select></label>
+                                <label className="text-sm">{d.steps.accident.tickets} <select name="tickets" value={formData.tickets} onChange={handleChange} className="border border-gray-300 p-1 rounded ml-2 bg-white text-gray-900"><option value="yes">{o.yes}</option><option value="no">{o.no}</option><option value="unsure">{o.unsure}</option></select></label>
                             </div>
                         </div>
                     </div>
@@ -457,7 +457,7 @@ Concerns: ${formData.biggestConcern.join(', ')}
                                 <CheckCircleIcon className="w-20 h-20 text-green-500 mx-auto mb-4" />
                                 <h3 className="text-3xl font-extrabold text-gray-900 mb-2">{d.steps.result.high_chance}</h3>
                                 <div className="text-5xl font-black text-green-600 mb-6">{score}% {d.steps.result.match}</div>
-                                <button onClick={() => window.open('tel:1-800-555-0199')} className="bg-green-600 text-white font-bold py-4 px-8 rounded-full shadow-lg text-xl hover:scale-105 transition">{d.steps.result.call_btn}</button>
+                                <button onClick={() => { closeReview(); openChat('high_value_lead', { score, ...formData }); }} className="bg-green-600 text-white font-bold py-4 px-8 rounded-full shadow-lg text-xl hover:scale-105 transition">{d.steps.result.call_btn}</button>
                             </>
                         ) : (
                             <>

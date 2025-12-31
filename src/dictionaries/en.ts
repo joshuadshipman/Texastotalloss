@@ -20,7 +20,7 @@ export const en = {
         options_standalone: {
             ai_review: "Start Free AI Case Review",
             live_chat: "Chat with Angel (Live)",
-            schedule: "Schedule a Callback"
+            schedule: "Schedule a Free 15 Min Consultation"
         }
     },
     sections: {
@@ -352,7 +352,7 @@ export const en = {
             // Outcome
             qualify_high: "I see. Based on those details, you likely qualify for significant compensation. I am connecting you to a Senior Specialist now.",
             qualify_low: "Thank you. I'm preparing an Accident Information Packet for you now. A team member will review your details shortly.",
-            greeting_standalone: "Hi, I'm Angel. I understand this can be a difficult time, and I'm here to support you. How would you like to proceed?",
+            greeting_standalone: "Hi, I'm Angel. I understand this can be a difficult time, and I'm here to support you. How can I help you today?",
             validation_phone: "Please enter a valid phone number (e.g. 555-0199)."
         }
     },
@@ -404,7 +404,7 @@ export const en = {
             },
             impact: {
                 title: "6. Impact & Work",
-                working: "Were you working?",
+                working: "Were you working or on duty?",
                 missed: "Missed Work?",
                 concerns: "Biggest Concerns"
             },

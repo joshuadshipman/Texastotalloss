@@ -183,30 +183,7 @@ export const cities: CityData[] = [
             { name: "Airrosti San Antonio", link: "https://www.airrosti.com/locations/san-antonio/", note: "Headquartered in SA with broad city-wide coverage." }
         ]
     },
-    // --- FORT WORTH METRO ---
-    {
-        slug: 'fort-worth',
-        metroArea: 'Fort Worth',
-        translations: {
-            en: {
-                name: 'Fort Worth',
-                county: 'Tarrant',
-                description: "Tarrant County has its own localized legal landscape. If your car was totaled in Fort Worth, don't rely on generic advice; get help tailored to local carrier tactics."
-            },
-            es: {
-                name: 'Fort Worth',
-                county: 'Tarrant',
-                description: "El condado de Tarrant tiene su propio panorama legal. Si su auto fue pérdida total en Fort Worth, obtenga ayuda adaptada a las tácticas locales."
-            }
-        },
-        coordinates: { latitude: 32.7555, longitude: -97.3308 },
-        zipCodes: ["76101", "76102", "76103", "76104", "76105"],
-        medicalResources: [
-            { name: "Accident Centers of Texas", link: "https://accidentcentersoftexas.com/", note: "12 Locations including South Fort Worth." },
-            { name: "Premier Injury Clinics", link: "https://premierinjuryclinicsofdfw.com/", note: "Specializing in Fort Worth auto accident rehabilitation." },
-            { name: "The Joint Chiropractic - Fort Worth", link: "https://www.thejoint.com/texas/fort-worth/", note: "Serving Cultural District and Hulen areas." }
-        ]
-    },
+
     {
         slug: 'el-paso',
         metroArea: 'El Paso',

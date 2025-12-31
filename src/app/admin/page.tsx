@@ -382,7 +382,7 @@ export default function AdminDashboard() {
                             )}
 
                             <div className="flex justify-end gap-3 pt-4 border-t">
-                                <a href={`tel:${selectedLead.phone}`} className="px-4 py-2 bg-green-600 text-white font-bold rounded hover:bg-green-700">Call Now</a>
+                                <button onClick={() => setSelectedLead(null)} className="px-4 py-2 bg-gray-200 text-gray-700 font-bold rounded hover:bg-gray-300">Close</button>
                                 <button onClick={() => setSelectedLead(null)} className="px-4 py-2 bg-gray-200 text-gray-700 font-bold rounded hover:bg-gray-300">Close</button>
                             </div>
                         </div>

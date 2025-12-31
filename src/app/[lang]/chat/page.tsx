@@ -11,6 +11,12 @@ export async function generateStaticParams() {
 }
 
 import CaseReviewModal from '@/components/CaseReviewModal';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'TL and Injury Case Review',
+    description: 'Immediate AI Legal & Medical Case Analysis',
+};
 
 export default async function StandardChatPage({ params }: Props) {
     const { lang } = await params;
