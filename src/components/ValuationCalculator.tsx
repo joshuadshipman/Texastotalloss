@@ -82,42 +82,57 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
         setStep(2);
     };
 
-    const handleNextStep2 = () => {
-        // Calculate Value Logic
-        const baseValue = 20000; // In reality, fetch base from API or CSV
+    const [isCalculating, setIsCalculating] = useState(false);
 
-        // 1. Trim Adjustment
-        const selectedTrim = mockTrims.find(t => t.id === formData.trim) || mockTrims[0];
-        const trimValue = baseValue * selectedTrim.multiplier;
-        const trimAdj = trimValue - baseValue;
+    const handleNextStep2 = async () => {
+        setIsCalculating(true);
+        try {
+            // Call our new API endpoint
+            const res = await fetch('/api/valuation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    year: formData.year,
+                    make: formData.make,
+                    model: formData.model,
+                    trim: formData.trim,
+                    features: formData.features
+                })
+            });
 
-        // 2. Feature Adjustment
-        let featAdj = 0;
-        formData.features.forEach(fId => {
-            const feat = mockFeatures.find(f => f.id === fId);
-            if (feat) featAdj += feat.value;
-        });
+            if (!res.ok) throw new Error("Valuation failed");
 
-        // 3. Mileage/Condition Deducations (Simple Mock)
-        // Avg miles = 12k/yr. 
-        const age = 2025 - parseInt(formData.year);
-        const expectedMiles = age * 12000;
-        const actualMiles = parseInt(formData.mileage) || expectedMiles;
-        const mileageDiff = expectedMiles - actualMiles;
-        const mileageAdj = (mileageDiff / 1000) * 0.10 * baseValue; // +/- 10% per 1k miles variance roughly? No, too high.
-        // Let's say $0.10 per mile variance.
-        const mileageDollarAdj = mileageDiff * 0.15;
+            const data = await res.json();
 
-        const totalMin = trimValue + featAdj + mileageDollarAdj;
-        const totalMax = totalMin * 1.08; // 8% spread
+            // Calculate Feature Adjustment locally or trust API? 
+            // The API returns a 'min'/'max' based on listings. We can add feature value on top if we assume listings are "average".
+            // For now, let's assume the API gives the base market value and we add features on top.
 
-        setValuation({
-            min: Math.max(2000, Math.floor(totalMin)),
-            max: Math.max(2500, Math.floor(totalMax)),
-            trimAdj: Math.floor(trimAdj),
-            featAdj: featAdj
-        });
-        setStep(3);
+            let featAdj = 0;
+            formData.features.forEach(fId => {
+                const feat = mockFeatures.find(f => f.id === fId);
+                if (feat) featAdj += feat.value;
+            });
+
+            const baseMin = data.min;
+            const baseMax = data.max;
+
+            setValuation({
+                min: baseMin + featAdj,
+                max: baseMax + featAdj,
+                trimAdj: 0, // Included in API search query ideally
+                featAdj: featAdj
+            });
+            setStep(3);
+
+        } catch (error) {
+            console.error(error);
+            alert("Could not fetch real-time data. Using fallback estimation.");
+            // Fallback logic could go here or be handled by the API itself (which it is)
+            setStep(3);
+        } finally {
+            setIsCalculating(false);
+        }
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -245,7 +260,9 @@ FEATURES: ${formData.features.join(', ')}
 
                                 <div className="flex gap-4">
                                     <button onClick={() => setStep(1)} className="px-6 py-4 border font-bold rounded-xl text-gray-500 hover:text-gray-900">Back</button>
-                                    <button onClick={handleNextStep2} className="flex-1 bg-green-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-green-700">Calculate Value »</button>
+                                    <button onClick={handleNextStep2} disabled={isCalculating} className="flex-1 bg-green-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-wait">
+                                        {isCalculating ? 'Searching Market...' : 'Calculate Value »'}
+                                    </button>
                                 </div>
                             </div>
                         )}
