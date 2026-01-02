@@ -144,10 +144,11 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 initialStep = 500; // Schedule Flow Start
             } else if ((variant === 'fullscreen' && !chatMode) || chatMode === 'standalone') {
                 // Standalone Mode
-                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_standalone || "Hi, I'm Angel. How would you like to proceed?" }];
+                initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_standalone }];
                 initialStep = 10;
             } else if (chatMode === 'high_value_lead') {
-                initialMsgs = [{ sender: 'bot', text: "Strong likelihood that we may be able to assist. Are you free to chat now? Or prefer to set-up a free 15 minute consultation, I can search for the next available appt today." }];
+                const text = (dict.chat.responses as any).high_value_intro || "Strong likelihood that we may be able to assist...";
+                initialMsgs = [{ sender: 'bot', text: text }];
                 initialStep = 600;
                 sendChatAlert('High Value Lead: Match > 70%');
             } else if (chatMode === 'live') {
@@ -193,11 +194,12 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             else if (chatMode === 'call') { initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_call }]; initialStep = 400; }
             else if (chatMode === 'schedule') { initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_schedule }]; initialStep = 500; }
             else if (chatMode === 'high_value_lead') {
-                initialMsgs = [{ sender: 'bot', text: "Strong likelihood that we may be able to assist. Are you free to chat now? Or prefer to set-up a free 15 minute consultation, I can search for the next available appt today." }];
+                const text = (dict.chat.responses as any).high_value_intro || "Strong likelihood that we may be able to assist...";
+                initialMsgs = [{ sender: 'bot', text: text }];
                 initialStep = 600;
                 sendChatAlert('High Value Lead: Match > 70%');
             }
-            else if (chatMode === 'standalone') { initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_standalone || "Hi..." }]; initialStep = 10; }
+            else if (chatMode === 'standalone') { initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_standalone }]; initialStep = 10; }
 
             if (initialMsgs.length > 0) {
                 setMessages(initialMsgs);
@@ -260,20 +262,34 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             if (chatData) {
                 // Map the data from CaseReviewModal (formData) to Supabase schema
                 const mappedData = {
-                    full_name: chatData.name,
+                    full_name: chatData.fullName,
                     phone: chatData.phone,
                     city: chatData.cityState,
                     pain_level: chatData.painLevel,
-                    score: chatData.score,
-                    injury_summary: chatData.injuries ? chatData.injuries.join(', ') : '',
-                    description: chatData.description,
+                    // Handle score object or number
+                    score: typeof chatData.score === 'object' ? chatData.score?.score : chatData.score,
+                    severity: typeof chatData.score === 'object' ? chatData.score?.severity : 'unknown',
+                    injury_summary: chatData.bodyParts ? chatData.bodyParts.join(', ') : '',
+                    description: `Collision: ${chatData.collisionType}. Vehicle: ${chatData.vehicle}. Liability: ${chatData.faultBelief}.`,
                     best_time: chatData.bestTime,
-                    imported_from_review: true
+                    imported_from_review: true,
+                    // Store strict raw dump for safety
+                    raw_review_data: chatData
                 };
                 dbPayload.user_data = mappedData;
 
                 // Hydrate local state
                 setUserData((prev: any) => ({ ...prev, ...mappedData }));
+
+                // Add visible summary message if this is the first load
+                const keyMsg = `summary_sent_${sessionId}`;
+                if (!sessionStorage.getItem(keyMsg)) {
+                    sessionStorage.setItem(keyMsg, 'true');
+                    // Use a timeout to ensure it appears after greeting
+                    setTimeout(() => {
+                        addMessage('bot', `📋 Case Review Summary Received:\n\nScore: ${mappedData.score}% (${mappedData.severity?.toUpperCase()})\nInjuries: ${mappedData.injury_summary || 'None Reported'}\nCollision: ${chatData.collisionType}`);
+                    }, 500);
+                }
             }
 
             const { error } = await supabaseClient.from('chat_sessions').upsert(dbPayload, { onConflict: 'session_id' });

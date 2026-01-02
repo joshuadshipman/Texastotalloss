@@ -111,65 +111,72 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             />
             <CaseReviewModal dict={dict} lang={lang} />
 
-            {/* Hero Section (Premium Glass Redesign V2.1 - Safe Gradients) */}
-            <header className="bg-gradient-to-b from-blue-950 via-slate-900 to-black text-white pt-20 pb-16 px-4 text-center relative overflow-hidden">
+            {/* Hero Section (Premium Legal Authority - Navy & Gold) */}
+            <header className="relative bg-navy-900 text-white pt-24 pb-20 px-4 text-center overflow-hidden">
+                <div className="absolute inset-0 bg-[url('/images/legal-bg-overlay.jpg')] opacity-10 bg-cover bg-center mix-blend-overlay"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-navy-900/90 via-navy-900/50 to-navy-900"></div>
 
-                {/* Abstract Background Noise - Removed for purity/speed */}
-
-                <div className="max-w-4xl mx-auto space-y-6 relative z-10">
+                <div className="max-w-5xl mx-auto space-y-8 relative z-10">
                     {/* Badge */}
-                    <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full shadow-xl animate-fade-in-up">
-                        <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                        <span className="text-xs font-bold uppercase tracking-widest text-blue-100">{dict.hero.badge}</span>
+                    <div className="inline-flex items-center gap-3 bg-white/5 backdrop-blur-md border border-gold-500/30 px-6 py-2 rounded-full shadow-2xl animate-fade-in-up">
+                        <span className="w-2.5 h-2.5 rounded-full bg-gold-500 animate-pulse box-shadow-gold"></span>
+                        <span className="text-sm font-bold uppercase tracking-[0.2em] text-gold-500 font-sans">{dict.hero.badge}</span>
                     </div>
 
-                    {/* Main Title (Clean White & Gradient Gold) */}
-                    <h1 className="text-4xl md:text-7xl font-black tracking-tight leading-none drop-shadow-2xl">
-                        <span className="block text-white mb-2">{dict.hero.title_main}</span>
-                        <span className="block bg-gradient-to-r from-amber-200 to-yellow-500 bg-clip-text text-transparent">
+                    {/* Main Title (Serif Authority) */}
+                    <h1 className="text-5xl md:text-7xl font-serif font-black tracking-tight leading-tight drop-shadow-2xl">
+                        <span className="block text-white mb-4">{dict.hero.title_main}</span>
+                        <span className="block bg-gradient-to-r from-gold-500 via-yellow-200 to-gold-600 bg-clip-text text-transparent italic">
                             {dict.hero.title_sub}
                         </span>
                     </h1>
 
-                    {/* Subtext (Concise) */}
-                    <p className="text-lg md:text-2xl font-medium text-blue-200/80 max-w-2xl mx-auto leading-relaxed">
-                        <span className="block mb-1">{dict.hero.subtext_line1}</span>
-                        {dict.hero.subtext_line2_pre} <span className="text-white font-bold decoration-blue-500 underline underline-offset-4 decoration-2">{dict.hero.subtext_highlight}</span> {dict.hero.subtext_line2_post}
+                    {/* Subtext */}
+                    <p className="text-xl md:text-2xl font-light text-blue-100/80 max-w-3xl mx-auto leading-relaxed font-sans">
+                        <span className="block mb-2">{dict.hero.subtext_line1}</span>
+                        {dict.hero.subtext_line2_pre} <span className="text-gold-500 font-bold decoration-gold-500/30 underline underline-offset-4 decoration-1">{dict.hero.subtext_highlight}</span> {dict.hero.subtext_line2_post}
                     </p>
 
-                    {/* Primary Call to Action - Glass Container */}
-                    <div className="py-8 relative group flex flex-col items-center justify-center">
-                        <div className="absolute inset-0 bg-blue-500/20 blur-3xl opacity-30 rounded-full group-hover:opacity-50 transition duration-500"></div>
+                    {/* Primary Call to Action - Gold Power Button */}
+                    <div className="py-10 relative group flex flex-col items-center justify-center">
+                        <div className="absolute inset-0 bg-gold-500/20 blur-[60px] opacity-40 rounded-full group-hover:opacity-60 transition duration-500"></div>
                         <button
                             onClick={openReview}
-                            className="relative w-full max-w-md h-20 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-orange-500 text-white font-black rounded-2xl shadow-[0_0_40px_-10px_rgba(220,38,38,0.5)] transition-all flex items-center justify-center gap-4 text-xl md:text-2xl transform hover:scale-[1.02] border border-red-400/30"
+                            className="relative w-full max-w-lg h-24 bg-gradient-to-b from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-navy-900 font-serif font-black rounded-sm shadow-[0_10px_40px_-10px_rgba(212,175,55,0.4)] transition-all flex items-center justify-center gap-5 text-2xl md:text-3xl transform hover:-translate-y-1 border-t border-white/20"
                         >
-                            <SparklesIcon size={32} className="text-yellow-200 animate-pulse" />
-                            <span>{dict.buttons.ai_review}</span>
+                            <SparklesIcon size={36} className="text-white fill-white/20 animate-pulse" />
+                            <span className="tracking-wide">{dict.buttons.ai_review}</span>
                         </button>
-                        <p className="mt-3 text-xs text-blue-400/60 font-medium uppercase tracking-widest">{dict.hero.help_text}</p>
+                        <p className="mt-4 text-sm text-blue-200/60 font-medium uppercase tracking-widest font-sans">{dict.hero.help_text}</p>
                     </div>
 
-                    {/* NEW: City Search Bar */}
-                    <div className="max-w-xl mx-auto mb-10 text-left">
-                        <label className="text-xs font-bold text-blue-300 uppercase tracking-wider ml-1 mb-1 block">Find Your Local Guide:</label>
+                    {/* City Search Bar */}
+                    <div className="max-w-xl mx-auto mb-12 text-left bg-white/5 p-4 rounded-lg border border-white/10 backdrop-blur-sm">
+                        <label className="text-xs font-bold text-gold-500 uppercase tracking-wider ml-1 mb-2 block font-sans">Find Your Local Guide:</label>
                         <CitySearch lang={lang as 'en' | 'es'} />
                     </div>
 
-                    {/* Secondary Actions - Clean Glass Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto pt-4 border-t border-white/20">
-                        <button onClick={() => openChat('call')} className="group flex flex-col items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all backdrop-blur-sm">
-                            <span className="text-white font-bold text-sm group-hover:text-blue-200">{dict.buttons.call_now}</span>
+                    {/* Secondary Actions - Elegant Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-8 border-t border-white/10">
+                        <button onClick={() => openChat('call')} className="group flex flex-col items-center justify-center p-4 rounded-lg bg-navy-900/50 hover:bg-navy-800 border border-white/10 hover:border-gold-500/50 transition-all">
+                            <span className="text-blue-100 font-bold text-sm group-hover:text-gold-400 font-sans tracking-wide uppercase">{dict.buttons.call_now}</span>
                         </button>
-                        <button onClick={() => openChat('schedule')} className="group flex flex-col items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all backdrop-blur-sm">
-                            <span className="text-white font-bold text-sm group-hover:text-blue-200">{dict.buttons.schedule}</span>
+                        <button onClick={() => openChat('schedule')} className="group flex flex-col items-center justify-center p-4 rounded-lg bg-navy-900/50 hover:bg-navy-800 border border-white/10 hover:border-gold-500/50 transition-all">
+                            <span className="text-blue-100 font-bold text-sm group-hover:text-gold-400 font-sans tracking-wide uppercase">{dict.buttons.schedule}</span>
                         </button>
-                        <button onClick={() => openChat('sms')} className="group flex flex-col items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all backdrop-blur-sm">
-                            <span className="text-white font-bold text-sm group-hover:text-blue-200">{dict.buttons.sms}</span>
+                        <button onClick={() => openChat('sms')} className="group flex flex-col items-center justify-center p-4 rounded-lg bg-navy-900/50 hover:bg-navy-800 border border-white/10 hover:border-gold-500/50 transition-all">
+                            <span className="text-blue-100 font-bold text-sm group-hover:text-gold-400 font-sans tracking-wide uppercase">{dict.buttons.sms}</span>
                         </button>
-                        <button onClick={() => openChat('live')} className="group flex flex-col items-center justify-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all backdrop-blur-sm">
-                            <span className="text-white font-bold text-sm group-hover:text-blue-200">{dict.buttons.live_chat}</span>
+                        <button onClick={() => openChat('live')} className="group flex flex-col items-center justify-center p-4 rounded-lg bg-navy-900/50 hover:bg-navy-800 border border-white/10 hover:border-gold-500/50 transition-all">
+                            <span className="text-blue-100 font-bold text-sm group-hover:text-gold-400 font-sans tracking-wide uppercase">{dict.buttons.live_chat}</span>
                         </button>
+                    </div>
+                </div>
+
+                {/* TRUST BAR / RESULTS TICKER (New) */}
+                <div className="absolute bottom-0 left-0 right-0 bg-navy-900 border-t border-white/10 py-4 overflow-hidden">
+                    <div className="flex gap-12 animate-scroll-text whitespace-nowrap text-white/40 text-sm font-serif italic tracking-wider justify-center">
+                        <span>$5.2M Truck Accident Settlement</span> • <span>$1.8M Company Vehicle Crash</span> • <span>$950k Rideshare Injury</span> • <span>$2.4M Wrongful Death</span> • <span>$5.2M Truck Accident Settlement</span>
                     </div>
                 </div>
             </header>
@@ -178,19 +185,21 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                 <ValuationCalculator dict={dict} />
             </div>
 
-            {/* 2. Demand Letter Tool (Moved to Top) */}
-            <section className="bg-white py-8 border-b border-gray-100">
-                <div className="max-w-4xl mx-auto px-4">
-                    <div className="bg-gradient-to-br from-blue-900 to-blue-800 text-white rounded-2xl p-8 shadow-xl relative overflow-hidden group hover:shadow-2xl transition-all">
-                        <div className="absolute right-0 top-0 opacity-10 transform translate-x-10 -translate-y-10">
-                            <FileTextIcon size={200} />
+            {/* 2. Demand Letter Tool (Visual Update) */}
+            <section className="bg-white py-12 border-b border-gray-100">
+                <div className="max-w-5xl mx-auto px-4">
+                    <div className="bg-navy-900 text-white rounded-sm p-10 shadow-2xl relative overflow-hidden group border border-gold-500/20">
+                        <div className="absolute right-0 top-0 opacity-5 transform translate-x-10 -translate-y-10">
+                            <FileTextIcon size={250} />
                         </div>
-                        <div className="relative z-10 flex flex-col md:flex-row items-center gap-6">
+                        <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
                             <div className="flex-1">
-                                <h3 className="text-2xl font-bold mb-2 flex items-center gap-2 text-white"><FileTextIcon className="text-yellow-400" /> Challenge Low Offers</h3>
-                                <p className="text-blue-100 text-lg">Received a lowball offer? Don't argue on the phone. Send a formal legal demand letter.</p>
+                                <h3 className="text-3xl font-serif font-bold mb-4 flex items-center gap-3 text-white">
+                                    <FileTextIcon className="text-gold-500" /> Challenge Low Offers
+                                </h3>
+                                <p className="text-blue-100 text-lg font-light leading-relaxed">Received a lowball offer? Don't argue on the phone. Send a formal legal demand letter experienced adjusters respect.</p>
                             </div>
-                            <a href="/tools/demand-letter" className="bg-yellow-400 text-blue-900 font-black py-4 px-8 rounded-xl shadow-lg hover:scale-105 transition hover:bg-yellow-300 whitespace-nowrap">
+                            <a href="/tools/demand-letter" className="bg-gold-500 text-navy-900 font-black py-5 px-10 rounded-sm shadow-lg hover:scale-105 transition hover:bg-gold-400 whitespace-nowrap uppercase tracking-widest font-sans border border-white/10">
                                 Generate Free Demand PDF &rarr;
                             </a>
                         </div>
@@ -198,45 +207,46 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                 </div>
             </section>
 
-            {/* Recognized for Excellence - Trust Badges */}
-            <section className="bg-white py-12 border-b border-gray-200">
-                <div className="max-w-6xl mx-auto px-4 text-center">
-                    <h3 className="text-2xl font-bold text-blue-900 mb-8 uppercase tracking-wide">{dict.sections.trust_badges.title}</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+            {/* Recognized for Excellence - Trust Badges (Visual Update) */}
+            <section className="bg-white py-16 border-b border-gray-200">
+                <div className="max-w-7xl mx-auto px-4 text-center">
+                    <div className="inline-block border-b-2 border-gold-500 mb-8 pb-2">
+                        <h3 className="text-3xl font-serif font-bold text-navy-900 uppercase tracking-widest">{dict.sections.trust_badges.title}</h3>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
                         {/* Badge 1 */}
-                        <div className="flex flex-col items-center p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition">
-                            <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-2">
-                                <SparklesIcon size={24} />
+                        <div className="flex flex-col items-center p-8 bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
+                            <div className="w-16 h-16 bg-navy-900 text-gold-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                                <SparklesIcon size={32} />
                             </div>
-                            <span className="font-extrabold text-gray-900">5.0 Rating</span>
-                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-1">Client Reviews</span>
+                            <span className="font-serif font-bold text-xl text-navy-900">5.0 Rating</span>
+                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-sans font-bold">Client Reviews</span>
                         </div>
                         {/* Badge 2 */}
-                        <div className="flex flex-col items-center p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition">
-                            <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-2">
-                                <ShieldCheckIcon size={24} />
+                        <div className="flex flex-col items-center p-8 bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
+                            <div className="w-16 h-16 bg-navy-900 text-gold-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                                <ShieldCheckIcon size={32} />
                             </div>
-                            <span className="font-extrabold text-gray-900">Verified</span>
-                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-1">Trusted Firm</span>
+                            <span className="font-serif font-bold text-xl text-navy-900">Verified</span>
+                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-sans font-bold">Trusted Firm</span>
                         </div>
                         {/* Badge 3 */}
-                        <div className="flex flex-col items-center p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition">
-                            <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-2">
-                                <DollarSignIcon size={24} />
+                        <div className="flex flex-col items-center p-8 bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
+                            <div className="w-16 h-16 bg-navy-900 text-gold-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                                <DollarSignIcon size={32} />
                             </div>
-                            <span className="font-extrabold text-gray-900">No Win No Fee</span>
-                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-1">Guarantee</span>
+                            <span className="font-serif font-bold text-xl text-navy-900">No Win No Fee</span>
+                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-sans font-bold">Guarantee</span>
                         </div>
                         {/* Badge 4 */}
-                        <div className="flex flex-col items-center p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition">
-                            <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-2">
-                                <CarIcon size={24} />
+                        <div className="flex flex-col items-center p-8 bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
+                            <div className="w-16 h-16 bg-navy-900 text-gold-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                                <CarIcon size={32} />
                             </div>
-                            <span className="font-extrabold text-gray-900">Total Loss</span>
-                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-1">Specialists</span>
+                            <span className="font-serif font-bold text-xl text-navy-900">Total Loss</span>
+                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-sans font-bold">Specialists</span>
                         </div>
                     </div>
-                    <p className="mt-4 text-xs text-gray-400 font-medium">{dict.sections.trust_badges.sub}</p>
                 </div>
             </section>
 

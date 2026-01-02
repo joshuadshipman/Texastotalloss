@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@theme {
+  --color-navy-900: #0f172a;
+  --color-gold-500: #d4af37;
+  --color-gold-600: #b49b2c;
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
+}
+
 @layer utilities {
   .perspective-1000 {
     perspective: 1000px;

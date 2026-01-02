@@ -267,7 +267,7 @@ export const es: Dictionary = {
     footer: {
         rights: "Todos los derechos reservados. No es asesoramiento legal.",
         disclaimer_title: "DIVULGACIÓN DE PUBLICIDAD",
-        disclaimer_text: "TexasTotalLoss.com es un sitio web de generación de leads y no un bufete de abogados..."
+        disclaimer_text: "TexasTotalLoss.com es un recurso publicitario de propiedad privada y no es un bufete de abogados ni un servicio de referencia. No brindamos asesoramiento legal. Toda la información en este sitio es solo para fines educativos. Las revisiones automáticas de casos son preliminares y no constituyen una opinión legal. Una relación abogado-cliente solo se forma cuando se firma un acuerdo por escrito. Los servicios pueden ser realizados por abogados externos que pagan una tarifa de marketing."
     },
     chat: {
         trigger: "Chat de Ayuda",
@@ -355,7 +355,8 @@ export const es: Dictionary = {
             qualify_high: "Basado en los detalles, tienes un caso fuerte para compensación. Te estoy conectando con un Especialista Senior AHORA.",
             qualify_low: "Basado en las regulaciones de Texas, este puede ser un reclamo estándar. Hemos generado un **Paquete de Accidente Profesional** con pasos para manejar esto tú mismo. Enviándolo a tu correo ahora.",
             greeting_standalone: "Hola, soy Ángel. Entiendo que es un momento difícil y estoy aquí para apoyarte. ¿Cómo puedo ayudarte hoy?",
-            validation_phone: "Por favor ingresa un número de teléfono válido."
+            high_value_intro: "Es muy probable que podamos ayudarle. ¿Está libre para chatear ahora? O si prefiere programar una consulta gratuita de 15 minutos, puedo buscar la próxima cita disponible hoy.",
+            validation_phone: "Por favor ingrese un número de teléfono válido."
         }
     },
     caseReview: {
@@ -421,7 +422,32 @@ export const es: Dictionary = {
                 review_needed: "Revisión Recomendada",
                 match: "Coincidencia",
                 call_btn: "Llamar Abogado Ahora",
-                close_btn: "Cerrar"
+                close_btn: "Cerrar",
+                severity_labels: {
+                    low: "Caso Estándar",
+                    medium: "Caso Significativo",
+                    high: "Caso de Alta Prioridad"
+                }
+            },
+            incident_details: {
+                collision_type_label: "Tipo de Colisión",
+                options: {
+                    rear_end: "Choque Trasero",
+                    t_bone: "Impacto Lateral (T-Bone)",
+                    head_on: "Choque Frontal",
+                    sideswipe: "Raspón Lateral",
+                    single: "Vehículo Único",
+                    multi: "Múltiples Vehículos"
+                }
+            },
+            official_record: {
+                police_label: "¿Llegó la Policía?",
+                options: {
+                    yes_report: "Sí, Reporte Presentado",
+                    yes_no_report: "Sí, Sin Reporte",
+                    no: "No Llegaron",
+                    unsure: "No Estoy Seguro"
+                }
             }
         },
         options: {
@@ -435,6 +461,45 @@ export const es: Dictionary = {
             passenger: "Pasajero",
             pedestrian: "Peatón",
             other: "Otro"
+        },
+        incident_type_options: {
+            auto_auto: "Auto vs Auto",
+            auto_truck: "Auto vs Camión Comercial",
+            motorcycle: "Accidente de Moto",
+            pedestrian: "Atropello de Peatón",
+            other: "Otro"
+        },
+        body_parts: {
+            neck: "Cuello",
+            back: "Espalda",
+            head: "Cabeza",
+            shoulder: "Hombro",
+            knee: "Rodilla",
+            arm: "Brazo",
+            leg: "Pierna"
+        },
+        treatment_options: {
+            none_yet: "Ninguno Aún",
+            er: "Sala de Emergencias / Hospital",
+            urgent_care: "Urgent Care",
+            surgery: "Cirugía Recomendada",
+            chiro: "Quiropráctico / Fisioterapia"
+        },
+        fault_options: {
+            other_driver: "Otro Conductor",
+            me: "Yo",
+            shared: "Compartida / No Seguro"
+        },
+        ui: {
+            back: "Atrás",
+            next: "Siguiente",
+            analyze: "Analizar Caso",
+            analyzing: "Analizando...",
+            close: "Cerrar",
+            pain_scale: {
+                none: "Sin Dolor",
+                severe: "Severo"
+            }
         },
         banner: {
             title: "Análisis de Caso Gratuito con IA para Pérdida Total y Lesiones",

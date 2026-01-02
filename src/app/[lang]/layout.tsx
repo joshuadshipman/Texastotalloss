@@ -1,11 +1,12 @@
-import { Inter } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "../globals.css";
 import { ChatProvider } from "@/components/ChatContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import CookieConsent from '@/components/CookieConsent';
 import { Analytics } from "@vercel/analytics/next";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: '--font-sans' });
+const playfair = Playfair_Display({ subsets: ["latin"], variable: '--font-serif' });
 
 export const metadata = {
     title: "Texas Auto Total Loss & Diminished Value Help",
@@ -26,7 +27,7 @@ export default async function RootLayout({
     const { lang } = await params;
     return (
         <html lang={lang}>
-            <body className={`${inter.className} notranslate`} translate="no">
+            <body className={`${inter.variable} ${playfair.variable} font-sans antialiased notranslate`} translate="no">
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{

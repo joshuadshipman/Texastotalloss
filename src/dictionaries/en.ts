@@ -265,7 +265,7 @@ export const en = {
     footer: {
         rights: "All rights reserved. Not Legal Advice.",
         disclaimer_title: "ADVERTISING DISCLOSURE",
-        disclaimer_text: "TexasTotalLoss.com is a lead generation website and not a law firm..."
+        disclaimer_text: "TexasTotalLoss.com is a privately owned advertising resource and is not a law firm or referral service. We do not provide legal advice. All information on this site is for educational purposes only. Automated case reviews are preliminary and do not constitute a legal opinion. An attorney-client relationship is only formed when a written agreement is signed. Services may be performed by third-party attorneys who pay a marketing fee."
     },
     chat: {
         trigger: "Chat Support",
@@ -353,6 +353,7 @@ export const en = {
             qualify_high: "I see. Based on those details, you likely qualify for significant compensation. I am connecting you to a Senior Specialist now.",
             qualify_low: "Thank you. I'm preparing an Accident Information Packet for you now. A team member will review your details shortly.",
             greeting_standalone: "Hi, I'm Angel. I understand this can be a difficult time, and I'm here to support you. How can I help you today?",
+            high_value_intro: "Strong likelihood that we may be able to assist. Are you free to chat now? Or prefer to set-up a free 15 minute consultation, I can search for the next available appt today.",
             validation_phone: "Please enter a valid phone number (e.g. 555-0199)."
         }
     },
@@ -419,7 +420,32 @@ export const en = {
                 review_needed: "Review Recommended",
                 match: "Match",
                 call_btn: "Call Attorney Now",
-                close_btn: "Close"
+                close_btn: "Close",
+                severity_labels: {
+                    low: "Standard Case",
+                    medium: "Significant Case",
+                    high: "High Priority Case"
+                }
+            },
+            incident_details: {
+                collision_type_label: "Type of Collision",
+                options: {
+                    rear_end: "Rear-End",
+                    t_bone: "T-Bone / Side Impact",
+                    head_on: "Head-On",
+                    sideswipe: "Sideswipe",
+                    single: "Single Vehicle",
+                    multi: "Multi-Vehicle / Pileup"
+                }
+            },
+            official_record: {
+                police_label: "Did Police Arrive?",
+                options: {
+                    yes_report: "Yes, Report Filed",
+                    yes_no_report: "Yes, No Report",
+                    no: "No Police",
+                    unsure: "Unsure"
+                }
             }
         },
         options: {
@@ -433,6 +459,45 @@ export const en = {
             passenger: "Passenger",
             pedestrian: "Pedestrian",
             other: "Other"
+        },
+        incident_type_options: {
+            auto_auto: "Car vs Car",
+            auto_truck: "Car vs Commercial Truck",
+            motorcycle: "Motorcycle Accident",
+            pedestrian: "Pedestrian Hit",
+            other: "Other"
+        },
+        body_parts: {
+            neck: "Neck",
+            back: "Back",
+            head: "Head",
+            shoulder: "Shoulder",
+            knee: "Knee",
+            arm: "Arm",
+            leg: "Leg"
+        },
+        treatment_options: {
+            none_yet: "No Treatment Yet",
+            er: "ER / Hospital",
+            urgent_care: "Urgent Care",
+            surgery: "Surgery Recommended",
+            chiro: "Chiropractor / PT"
+        },
+        fault_options: {
+            other_driver: "Other Driver",
+            me: "Me",
+            shared: "Shared / Unsure"
+        },
+        ui: {
+            back: "Back",
+            next: "Next",
+            analyze: "Get AI Result",
+            analyzing: "Analyzing...",
+            close: "Close",
+            pain_scale: {
+                none: "No Pain",
+                severe: "Severe"
+            }
         },
         banner: {
             title: "Free AI Case Analysis for Total Loss and Injury Review",
