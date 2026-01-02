@@ -41,38 +41,27 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
-    // MOCK DATA for Trims/Features (In real app, fetch based on Make/Model)
+    // Use dictionary labels if available
+    const labels = dict?.val_calc?.labels || {};
+
     const mockTrims = [
-        { id: 'base', label: 'Base / LE / LX', multiplier: 1.0 },
-        { id: 'mid', label: 'Mid / XLE / EX', multiplier: 1.12 },
-        { id: 'sport', label: 'Sport / SE / GT', multiplier: 1.15 },
-        { id: 'limited', label: 'Limited / Touring / Platinum', multiplier: 1.25 },
-        { id: 'offroad', label: 'Off-Road / TRD / Rubicon', multiplier: 1.30 }
+        { id: 'base', label: labels?.trims?.base || 'Base / LE / LX', multiplier: 1.0 },
+        { id: 'mid', label: labels?.trims?.mid || 'Mid / XLE / EX', multiplier: 1.12 },
+        { id: 'sport', label: labels?.trims?.sport || 'Sport / SE / GT', multiplier: 1.15 },
+        { id: 'limited', label: labels?.trims?.limited || 'Limited / Touring / Platinum', multiplier: 1.25 },
+        { id: 'offroad', label: labels?.trims?.offroad || 'Off-Road / TRD / Rubicon', multiplier: 1.30 }
     ];
 
     const mockFeatures = [
-        { id: 'leather', label: 'Leather Seats', value: 800 },
-        { id: 'nav', label: 'Navigation', value: 400 },
-        { id: 'sunroof', label: 'Sunroof / Moonroof', value: 650 },
-        { id: 'tech', label: 'Driver Assist / Tech Pkg', value: 1200 },
-        { id: 'wheels', label: 'Premium Wheels', value: 500 },
-        { id: 'tow', label: 'Tow Package', value: 450 },
-        { id: 'audio', label: 'Premium Audio', value: 350 },
-        { id: '3rd_row', label: '3rd Row Seating', value: 700 }
+        { id: 'leather', label: labels?.features?.leather || 'Leather Seats', value: 800 },
+        { id: 'nav', label: labels?.features?.nav || 'Navigation', value: 400 },
+        { id: 'sunroof', label: labels?.features?.sunroof || 'Sunroof / Moonroof', value: 650 },
+        { id: 'tech', label: labels?.features?.tech || 'Driver Assist / Tech Pkg', value: 1200 },
+        { id: 'wheels', label: labels?.features?.wheels || 'Premium Wheels', value: 500 },
+        { id: 'tow', label: labels?.features?.tow || 'Tow Package', value: 450 },
+        { id: 'audio', label: labels?.features?.audio || 'Premium Audio', value: 350 },
+        { id: '3rd_row', label: labels?.features?.['3rd_row'] || '3rd Row Seating', value: 700 }
     ];
-
-    // Use dictionary labels if available
-    const labels = dict?.val_calc?.labels || {
-        vin: "VIN (Optional)",
-        year: "Year",
-        make: "Make",
-        model: "Model",
-        mileage: "Mileage",
-        condition: "Condition",
-        condition_help: "Good (Clean Retail)",
-        btn_next: "Next Step »",
-        btn_final: "Get Free Valuation »"
-    };
 
     const handleNextStep1 = () => {
         if (!formData.year || !formData.make || !formData.model) {
@@ -202,7 +191,7 @@ FEATURES: ${formData.features.join(', ')}
 
                     {/* Header / Progress Bar */}
                     <div className="bg-gray-50 p-6 border-b flex justify-between items-center">
-                        <h2 className="font-bold text-blue-900 text-lg">Total Loss Calculator</h2>
+                        <h2 className="font-bold text-blue-900 text-lg">{labels.calc_title || "Total Loss Calculator"}</h2>
                         <div className="flex gap-2">
                             {[1, 2, 3].map(s => (
                                 <div key={s} className={`h-2 w-12 rounded-full transition-all ${step >= s ? 'bg-green-500' : 'bg-gray-200'}`} />
@@ -214,28 +203,28 @@ FEATURES: ${formData.features.join(', ')}
                         {/* STEP 1: VEHICLE */}
                         {step === 1 && (
                             <div className="animate-in slide-in-from-right duration-300">
-                                <h3 className="text-2xl font-black mb-6 text-center">Step 1: Vehicle Details</h3>
+                                <h3 className="text-2xl font-black mb-6 text-center">{labels.step1_title || "Step 1: Vehicle Details"}</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-bold text-gray-700 mb-2">VIN (Recommended for Exact Match)</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-2">{labels.vin || "VIN (Recommended for Exact Match)"}</label>
                                         <input name="vin" value={formData.vin} onChange={handleInputChange} className="w-full p-2 border rounded font-mono" placeholder="17 Digit VIN" />
                                     </div>
-                                    <CustomSelect label="Year" options={Array.from({ length: 25 }, (_, i) => 2025 - i).map(y => ({ label: y.toString(), value: y.toString() }))} value={formData.year} onChange={(v) => setFormData({ ...formData, year: v.toString() })} />
-                                    <div><label className="block text-sm font-bold mb-2">Make</label><input name="make" value={formData.make} onChange={handleInputChange} className="w-full p-3 border rounded" placeholder="Toyota" /></div>
-                                    <div><label className="block text-sm font-bold mb-2">Model</label><input name="model" value={formData.model} onChange={handleInputChange} className="w-full p-3 border rounded" placeholder="Camry" /></div>
-                                    <div><label className="block text-sm font-bold mb-2">Mileage</label><input type="number" name="mileage" value={formData.mileage} onChange={handleInputChange} className="w-full p-3 border rounded" placeholder="50000" /></div>
+                                    <CustomSelect label={labels.year || "Year"} options={Array.from({ length: 25 }, (_, i) => 2025 - i).map(y => ({ label: y.toString(), value: y.toString() }))} value={formData.year} onChange={(v) => setFormData({ ...formData, year: v.toString() })} />
+                                    <div><label className="block text-sm font-bold mb-2">{labels.make || "Make"}</label><input name="make" value={formData.make} onChange={handleInputChange} className="w-full p-3 border rounded" placeholder="Toyota" /></div>
+                                    <div><label className="block text-sm font-bold mb-2">{labels.model || "Model"}</label><input name="model" value={formData.model} onChange={handleInputChange} className="w-full p-3 border rounded" placeholder="Camry" /></div>
+                                    <div><label className="block text-sm font-bold mb-2">{labels.mileage || "Mileage"}</label><input type="number" name="mileage" value={formData.mileage} onChange={handleInputChange} className="w-full p-3 border rounded" placeholder="50000" /></div>
                                 </div>
-                                <button onClick={handleNextStep1} className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-blue-700">Next Step »</button>
+                                <button onClick={handleNextStep1} className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-blue-700">{labels.btn_next || "Next Step »"}</button>
                             </div>
                         )}
 
                         {/* STEP 2: TRIM & FEATURES */}
                         {step === 2 && (
                             <div className="animate-in slide-in-from-right duration-300">
-                                <h3 className="text-2xl font-black mb-6 text-center">Step 2: Trim & Features</h3>
+                                <h3 className="text-2xl font-black mb-6 text-center">{labels.step2_title || "Step 2: Trim & Features"}</h3>
 
                                 <div className="mb-8">
-                                    <label className="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">Select Trim Level</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">{labels.select_trim || "Select Trim Level"}</label>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                                         {mockTrims.map(t => (
                                             <label key={t.id} className={`p-4 border-2 rounded-xl cursor-pointer transition-all flex flex-col items-center justify-center text-center hover:bg-blue-50 ${formData.trim === t.id ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600' : 'border-gray-200'}`}>
@@ -247,7 +236,7 @@ FEATURES: ${formData.features.join(', ')}
                                 </div>
 
                                 <div className="mb-8">
-                                    <label className="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">Key Features (Select all that apply)</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">{labels.select_features || "Key Features (Select all that apply)"}</label>
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                         {mockFeatures.map(f => (
                                             <label key={f.id} className={`p-3 border rounded-lg cursor-pointer flex items-center gap-2 text-sm hover:bg-gray-50 ${formData.features.includes(f.id) ? 'bg-green-50 border-green-500 text-green-800' : 'text-gray-600'}`}>
@@ -259,9 +248,9 @@ FEATURES: ${formData.features.join(', ')}
                                 </div>
 
                                 <div className="flex gap-4">
-                                    <button onClick={() => setStep(1)} className="px-6 py-4 border font-bold rounded-xl text-gray-500 hover:text-gray-900">Back</button>
+                                    <button onClick={() => setStep(1)} className="px-6 py-4 border font-bold rounded-xl text-gray-500 hover:text-gray-900">{labels.back || "Back"}</button>
                                     <button onClick={handleNextStep2} disabled={isCalculating} className="flex-1 bg-green-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-wait">
-                                        {isCalculating ? 'Searching Market...' : 'Calculate Value »'}
+                                        {isCalculating ? (labels.searching || "Searching Market...") : (labels.calculate || "Calculate Value »")}
                                     </button>
                                 </div>
                             </div>
@@ -271,21 +260,25 @@ FEATURES: ${formData.features.join(', ')}
                         {step === 3 && !isSubmitted && valuation && (
                             <div className="animate-in slide-in-from-right duration-300">
                                 <div className="bg-green-50 border border-green-100 p-6 rounded-2xl mb-8 text-center">
-                                    <h4 className="text-green-800 font-bold uppercase text-xs tracking-widest mb-1">Estimated Market Value</h4>
+                                    <h4 className="text-green-800 font-bold uppercase text-xs tracking-widest mb-1">{labels.est_value_title || "Estimated Market Value"}</h4>
                                     <div className="text-4xl md:text-5xl font-black text-green-700">
                                         ${valuation.min.toLocaleString()} - ${valuation.max.toLocaleString()}
                                     </div>
-                                    <p className="text-xs text-green-600 mt-2">Includes +${valuation.trimAdj.toLocaleString()} for Trim and +${valuation.featAdj.toLocaleString()} for Options.</p>
+                                    <p className="text-xs text-green-600 mt-2">
+                                        {(labels.est_value_subtitle || "Includes +${trim} for Trim and +${opts} for Options.")
+                                            .replace('{trim}', valuation.trimAdj.toLocaleString())
+                                            .replace('{opts}', valuation.featAdj.toLocaleString())}
+                                    </p>
                                 </div>
 
-                                <h3 className="text-xl font-bold mb-4 text-center">Where should we send the full report?</h3>
+                                <h3 className="text-xl font-bold mb-4 text-center">{labels.where_to_send || "Where should we send the full report?"}</h3>
                                 <div className="grid grid-cols-1 gap-4 mb-6 max-w-lg mx-auto">
-                                    <input name="name" value={formData.name} onChange={handleInputChange} placeholder="Full Name" className="p-3 border rounded w-full" />
-                                    <input name="phone" value={formData.phone} onChange={handleInputChange} placeholder="Phone Number" className="p-3 border rounded w-full" />
-                                    <input name="email" value={formData.email} onChange={handleInputChange} placeholder="Email Address" className="p-3 border rounded w-full" />
+                                    <input name="name" value={formData.name} onChange={handleInputChange} placeholder={labels.full_name || "Full Name"} className="p-3 border rounded w-full" />
+                                    <input name="phone" value={formData.phone} onChange={handleInputChange} placeholder={labels.phone || "Phone Number"} className="p-3 border rounded w-full" />
+                                    <input name="email" value={formData.email} onChange={handleInputChange} placeholder={labels.email || "Email Address"} className="p-3 border rounded w-full" />
                                 </div>
                                 <button onClick={submitLead} disabled={isSubmitting} className="w-full md:max-w-md mx-auto block bg-blue-900 text-white font-bold py-4 rounded-xl shadow hover:bg-blue-800">
-                                    {isSubmitting ? 'Sending...' : 'Send Full PDF Report »'}
+                                    {isSubmitting ? (labels.submitting || "Sending...") : (labels.btn_final || "Send Full PDF Report »")}
                                 </button>
                             </div>
                         )}
@@ -294,9 +287,9 @@ FEATURES: ${formData.features.join(', ')}
                         {isSubmitted && (
                             <div className="text-center py-12 animate-in zoom-in duration-300">
                                 <div className="text-6xl mb-4">✅</div>
-                                <h3 className="text-3xl font-black text-blue-900 mb-2">Report Generated!</h3>
-                                <p className="text-gray-600">We have texted a link to <b>{formData.phone}</b>.</p>
-                                <button onClick={() => window.location.reload()} className="mt-8 text-blue-600 underline">Start New Valuation</button>
+                                <h3 className="text-3xl font-black text-blue-900 mb-2">{labels.report_generated || "Report Generated!"}</h3>
+                                <p className="text-gray-600">{(labels.report_sent_msg || "We have texted a link to {phone}.").replace('{phone}', formData.phone)}</p>
+                                <button onClick={() => window.location.reload()} className="mt-8 text-blue-600 underline">{labels.start_new || "Start New Valuation"}</button>
                             </div>
                         )}
                     </div>

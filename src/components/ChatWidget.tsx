@@ -362,7 +362,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             if (!isValidPhone && !isValidEmail) {
                 addMessage('user', userText); // Show what they typed
                 setTimeout(() => {
-                    addMessage('bot', "Please enter a valid phone number OR email address.");
+                    addMessage('bot', (dict.chat.responses as any).validation_contact || "Please enter a valid phone number OR email address.");
                     processingRef.current = false; // UNLOCK on error
                 }, 400);
                 setInput('');
@@ -408,11 +408,11 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             // --- Standard Flow ---
             else if (step === 0 || step === 1) { // Intro -> Name
                 if (userText.length < 2) {
-                    addMessage('bot', "Please enter your full name.");
+                    addMessage('bot', (dict.chat.responses as any).validation_name || "Please enter your full name.");
                     return;
                 }
                 newData.full_name = userText;
-                botText = "Thank you, " + userText + ". In case we get disconnected, what is your email address or cell phone number?";
+                botText = ((dict.chat.responses as any).ask_email_phone || "Thank you, {name}. In case we get disconnected, what is your email address or cell phone number?").replace('{name}', userText);
                 nextStep = 2;
             }
             else if (step === 2) { // Phone
@@ -499,7 +499,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 const isYes = lowerText.includes('yes') || lowerText.includes('sí') || lowerText.includes('si');
                 const isNo = lowerText.includes('no');
                 if (!isYes && !isNo) {
-                    addMessage('bot', "Please answer Yes or No.");
+                    addMessage('bot', (dict.chat.responses as any).validation_yes_no || "Please answer Yes or No.");
                     processingRef.current = false;
                     return;
                 }
@@ -574,7 +574,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             else if (step === 3) {
                 const isText = lowerText.includes('text') || lowerText.includes('sms') || lowerText.includes('msg');
                 const isCall = lowerText.includes('call') || lowerText.includes('phone');
-                if (!isText && !isCall) { addMessage('bot', "Text or Call?"); processingRef.current = false; return; }
+                if (!isText && !isCall) { addMessage('bot', (dict.chat.responses as any).text_or_call_ask || "Text or Call?"); processingRef.current = false; return; }
                 newData.contact_pref = isText ? 'text' : 'call';
                 if (newData.contact_pref === 'call') { botText = d.chat.responses.ask_call_time; nextStep = 4; }
                 else { nextStep = 5; }
@@ -600,7 +600,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                     botText = dict.chat.responses.ask_name || "May I have your full name?";
                     nextStep = 1;
                 } else {
-                    botText = "Would you like to 'Chat Now' or 'Schedule a Consultation'?";
+                    botText = (dict.chat.responses as any).chat_or_schedule || "Would you like to 'Chat Now' or 'Schedule a Consultation'?";
                     // Stay on step 600
                 }
             }
@@ -655,7 +655,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
         const file = e.target.files?.[0];
         if (!file) return;
 
-        addMessage('user', `Uploading ${file.name}...`);
+        addMessage('user', ((dict.chat.responses as any).uploading || "Uploading {file}...").replace('{file}', file.name));
 
         try {
             const fileName = `${sessionId}/${Date.now()}-${file.name}`;

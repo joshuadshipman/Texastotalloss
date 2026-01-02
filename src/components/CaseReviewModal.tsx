@@ -219,14 +219,17 @@ Concerns: ${formData.biggestConcern.join(', ')}
     const prevStep = () => setStep(prev => prev - 1);
 
     const renderStep = () => {
-        const d = dict.caseReview; // Shortcut
-        const o = dict.options; // Was dict.caseReview.options but now global options in dict
+        const safeDict = dict as any;
+        const d = safeDict?.caseReview; // Shortcut
+        const o = safeDict?.options; // Was dict.caseReview.options but now global options in dict
         // Access new dictionaries
-        const incidentTypes = dict.incident_type_options;
-        const bodyParts = dict.body_parts;
-        const treatments = dict.treatment_options;
-        const faultOpts = dict.fault_options;
-        const ui = dict.ui;
+        const incidentTypes = safeDict?.incident_type_options;
+        const bodyParts = safeDict?.body_parts;
+        const treatments = safeDict?.treatment_options;
+        const faultOpts = safeDict?.fault_options;
+        const ui = safeDict?.ui;
+
+        if (!d || !o) return null;
 
         switch (step) {
             case 1: // Accident
@@ -316,16 +319,8 @@ Concerns: ${formData.biggestConcern.join(', ')}
                                 <div>
                                     <label className="block text-sm font-bold mb-2 text-navy-900">{d.steps.injury.parts}</label>
                                     <div className="flex flex-wrap gap-2">
-                                        {(Object.keys(bodyParts || {}) as Array<keyof typeof bodyParts>).map((key) => {
+                                        {(Object.keys(bodyParts || {})).map((key) => {
                                             const label = bodyParts ? bodyParts[key] : key;
-                                            // The key in formData is likely still 'Neck', 'Back' etc if we store English keys?
-                                            // Ideally we store English KEYS in DB, but display Localized LABELS.
-                                            // My toggleArrayItem uses the value passed.
-                                            // If I pass 'neck', it stores 'neck'. 
-                                            // The previous code used capitalized strings 'Neck'.
-                                            // Let's stick to keys: 'neck', 'back', etc. and mapped label.
-                                            // But wait, the previous code had ['Neck', 'Back'...] array.
-                                            // I'll switch to using the keys from the dictionary.
                                             return (
                                                 <button
                                                     key={key}
@@ -477,7 +472,7 @@ Concerns: ${formData.biggestConcern.join(', ')}
                         <h3 className="text-xl font-bold text-navy-900 border-b pb-2 font-serif">{d.steps.docs.title}</h3>
                         <p className="text-sm text-gray-600">{d.steps.docs.desc}</p>
                         <ul className="text-sm text-gray-500 list-disc ml-5 space-y-1">
-                            {d.steps.docs.list.map((item, i) => <li key={i}>{item}</li>)}
+                            {d.steps.docs.list.map((item: string, i: number) => <li key={i}>{item}</li>)}
                         </ul>
 
                         <div className="border-2 border-dashed border-blue-200 rounded-xl p-8 text-center bg-blue-50 hover:bg-blue-100 transition cursor-pointer relative group">
@@ -512,7 +507,7 @@ Concerns: ${formData.biggestConcern.join(', ')}
                                     {score.score}%
                                 </div>
                                 <div className="inline-block bg-green-100 text-green-800 px-4 py-1 rounded-full text-sm font-bold uppercase tracking-wider mb-8 border border-green-200">
-                                    {score.severity.toUpperCase()} Case Detected
+                                    {(d.steps.result.case_detected || "{severity} Case Detected").replace('{severity}', score.severity.toUpperCase())}
                                 </div>
                                 <button onClick={() => { closeReview(); openChat('high_value_lead', { score, ...formData }); }} className="w-full md:w-auto bg-gradient-to-r from-gold-500 to-gold-600 text-navy-900 font-bold py-4 px-12 rounded-sm shadow-xl text-xl hover:scale-105 transition transform uppercase tracking-widest border border-gold-400">
                                     {d.steps.result.call_btn}
@@ -523,7 +518,9 @@ Concerns: ${formData.biggestConcern.join(', ')}
                                 <AlertTriangleIcon className="w-20 h-20 text-yellow-500 mx-auto mb-4" />
                                 <h3 className="text-3xl font-serif font-bold text-navy-900 mb-2">{d.steps.result.review_needed}</h3>
                                 <div className="text-5xl font-black text-yellow-600 mb-6">{score?.score || 50}%</div>
-                                <p className="text-gray-500 mb-8 max-w-sm mx-auto">A specialized attorney needs to manually review your details. We will contact you at <strong>{formData.phone}</strong> shortly.</p>
+                                <p className="text-gray-500 mb-8 max-w-sm mx-auto">
+                                    {(d.steps.result.review_desc || "A specialized attorney needs to manually review your details. We will contact you at {phone} shortly.").replace('{phone}', formData.phone)}
+                                </p>
                                 <button onClick={closeReview} className="bg-navy-900 text-white font-bold py-3 px-8 rounded-sm hover:bg-navy-800 transition">
                                     {d.steps.result.close_btn}
                                 </button>
@@ -543,8 +540,8 @@ Concerns: ${formData.biggestConcern.join(', ')}
                     <div className="flex items-center gap-2">
                         <span className="bg-blue-500/20 p-2 rounded-full"><span className="animate-pulse">⚡</span></span>
                         <div>
-                            <h2 className="font-bold text-lg">{dict.caseReview.banner.title}</h2>
-                            <p className="text-xs text-blue-200">{dict.caseReview.banner.subtitle}</p>
+                            <h2 className="font-bold text-lg">{dict?.caseReview?.banner?.title || "Case Review"}</h2>
+                            <p className="text-xs text-blue-200">{dict?.caseReview?.banner?.subtitle || "AI Legal Assistant"}</p>
                         </div>
                     </div>
                     <button onClick={closeReview} className="p-2 hover:bg-blue-800 rounded"><XIcon size={20} /></button>

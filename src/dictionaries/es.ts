@@ -13,6 +13,7 @@ export const es: Dictionary = {
         subtext_highlight: "Valor Real de Mercado",
         subtext_line2_post: "al instante."
     },
+    privacy_banner: "🔒 100% Confidencial: La información proporcionada nunca se comparte con autoridades o agencias gubernamentales. Respetamos su Privacidad.",
     buttons: {
         ai_review: "Revisión de Caso con IA",
         call_now: "Llamar / Chat en Vivo",
@@ -24,6 +25,12 @@ export const es: Dictionary = {
             live_chat: "Chat en Vivo con Angel",
             schedule: "Agendar Consulta Gratuita de 15 Min"
         }
+    },
+    nav: {
+        home: "Inicio",
+        value: "Valor",
+        checklist: "Lista",
+        resources: "Recursos"
     },
     sections: {
         trust_badges: {
@@ -172,7 +179,51 @@ export const es: Dictionary = {
             mileage: "Millas",
             condition: "Condición",
             condition_help: "Bueno (Retail Limpio)",
-            btn_next: "Siguiente: Detalles del Incidente",
+            btn_next: "Siguiente Paso »",
+            btn_final: "Enviar Reporte PDF Completo »",
+
+            // Steps & Titles
+            step1_title: "Paso 1: Detalles del Vehículo",
+            step2_title: "Paso 2: Versión y Características",
+            step3_title: "Paso 3: Resultados",
+            calc_title: "Calculadora de Pérdida Total",
+
+            // Trim & Features
+            select_trim: "Seleccione la Versión",
+            select_features: "Características Clave (Seleccione las que apliquen)",
+            searching: "Buscando Mercado...",
+            calculate: "Calcular Valor »",
+            back: "Atrás",
+
+            // Result Screen
+            est_value_title: "Valor de Mercado Estimado",
+            est_value_subtitle: "Incluye +${trim} por Versión y +${opts} por Opciones.",
+            where_to_send: "¿A dónde enviamos el reporte completo?",
+
+            // Success
+            report_generated: "¡Reporte Generado!",
+            report_sent_msg: "Hemos enviado un enlace por mensaje de texto a {phone}.",
+            start_new: "Iniciar Nueva Estimación",
+
+            // Mocks
+            trims: {
+                base: "Base / LE / LX",
+                mid: "Medio / XLE / EX",
+                sport: "Deportivo / SE / GT",
+                limited: "Limitado / Touring / Platinum",
+                offroad: "Todo Terreno / TRD / Rubicon"
+            },
+            features: {
+                leather: "Asientos de Piel",
+                nav: "Navegación / GPS",
+                sunroof: "Quemacocos / Techo Solar",
+                tech: "Asistente de Manejo / Paq. Tecnológico",
+                wheels: "Rines Premium",
+                tow: "Paquete de Remolque",
+                audio: "Audio Premium",
+                "3rd_row": "3ra Fila de Asientos"
+            },
+
             // Expanded Labels
             est_value: "Rango de Valor Estimado al por Menor",
             prelim_note: "*Estimación preliminar basada en datos del mercado.",
@@ -195,8 +246,7 @@ export const es: Dictionary = {
             submitting: "Enviando...",
             success_title: "¡Solicitud Recibida!",
             success_msg: "Nuestro equipo está revisando su valoración de vehículo y detalles del accidente.",
-            success_contact: "Nos pondremos en contacto vía {method} pronto.",
-            start_new: "Iniciar Nueva Estimación"
+            success_contact: "Nos pondremos en contacto vía {method} pronto."
         }
     },
     info_sections: {
@@ -252,8 +302,20 @@ export const es: Dictionary = {
             a6: "Puede recuperar facturas médicas, salarios perdidos, daños a la propiedad, dolor y sufrimiento. El monto depende de la responsabilidad y los límites de la póliza.",
             q7: "¿Cuánto tiempo toma llegar a un acuerdo?",
             a7: "Reclamos simples pueden tardar unos meses. Casos complejos pueden tardar más. Presionamos por una resolución justa y oportuna."
+        },
+        // New Demand Letter Section
+        demand_letter: {
+            title: "Desafíe Ofertas Bajas",
+            desc: "¿Recibió una oferta baja? No discuta por teléfono. Envíe una carta de demanda legal formal que los ajustadores respeten.",
+            cta: "Generar Carta de Demanda Gratis"
         }
     },
+    trust_ticker: [
+        "$5.2M Acuerdo de Accidente de Camión",
+        "$1.8M Choque de Vehículo Comercial",
+        "$950k Lesión en Viaje Compartido",
+        "$2.4M Muerte Injusta"
+    ],
     city_page: {
         hero_badge: "Asistencia Local para el Condado de {county}",
         title_suffix: "Ayuda con Pérdida Total y Lesiones",
@@ -356,7 +418,14 @@ export const es: Dictionary = {
             qualify_low: "Basado en las regulaciones de Texas, este puede ser un reclamo estándar. Hemos generado un **Paquete de Accidente Profesional** con pasos para manejar esto tú mismo. Enviándolo a tu correo ahora.",
             greeting_standalone: "Hola, soy Ángel. Entiendo que es un momento difícil y estoy aquí para apoyarte. ¿Cómo puedo ayudarte hoy?",
             high_value_intro: "Es muy probable que podamos ayudarle. ¿Está libre para chatear ahora? O si prefiere programar una consulta gratuita de 15 minutos, puedo buscar la próxima cita disponible hoy.",
-            validation_phone: "Por favor ingrese un número de teléfono válido."
+            validation_phone: "Por favor ingrese un número de teléfono válido.",
+            validation_name: "Por favor ingrese su nombre completo.",
+            ask_email_phone: "Gracias, {name}. En caso de que nos desconectemos, ¿cuál es su correo electrónico o número de teléfono celular?",
+            validation_yes_no: "Por favor responda Sí o No.",
+            validation_contact: "Por favor ingrese un número de teléfono o dirección de correo electrónico válidos.",
+            uploading: "Subiendo {file}...",
+            text_or_call_ask: "¿Texto o Llamada?",
+            chat_or_schedule: "¿Le gustaría 'Chatear Ahora' o 'Agendar una Consulta'?"
         }
     },
     caseReview: {
@@ -423,6 +492,8 @@ export const es: Dictionary = {
                 match: "Coincidencia",
                 call_btn: "Llamar Abogado Ahora",
                 close_btn: "Cerrar",
+                case_detected: "Caso {severity} Detectado",
+                review_desc: "Un abogado especializado necesita revisar manualmente sus detalles. Le contactaremos al {phone} en breve.",
                 severity_labels: {
                     low: "Caso Estándar",
                     medium: "Caso Significativo",

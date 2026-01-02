@@ -11,6 +11,7 @@ export const en = {
         subtext_highlight: "True Market Value",
         subtext_line2_post: "instantly."
     },
+    privacy_banner: "🔒 100% Confidential: Any information provided is never shared with authorities or government agencies. We Respect your Privacy.",
     buttons: {
         ai_review: "Free Instant AI Case Review",
         call_now: "📞 Call Now",
@@ -22,6 +23,12 @@ export const en = {
             live_chat: "Chat with Angel (Live)",
             schedule: "Schedule a Free 15 Min Consultation"
         }
+    },
+    nav: {
+        home: "Home",
+        value: "Value",
+        checklist: "Checklist",
+        resources: "Resources"
     },
     sections: {
         trust_badges: {
@@ -170,7 +177,51 @@ export const en = {
             mileage: "Mileage",
             condition: "Condition",
             condition_help: "Good (Clean Retail)",
-            btn_next: "Next, Let's see how we might be able to help with your case, 100% Free and Confidential.",
+            btn_next: "Next Step »",
+            btn_final: "Send Full PDF Report »",
+
+            // Steps & Titles
+            step1_title: "Step 1: Vehicle Details",
+            step2_title: "Step 2: Trim & Features",
+            step3_title: "Step 3: Results",
+            calc_title: "Total Loss Calculator",
+
+            // Trim & Features
+            select_trim: "Select Trim Level",
+            select_features: "Key Features (Select all that apply)",
+            searching: "Searching Market...",
+            calculate: "Calculate Value »",
+            back: "Back",
+
+            // Result Screen
+            est_value_title: "Estimated Market Value",
+            est_value_subtitle: "Includes +${trim} for Trim and +${opts} for Options.",
+            where_to_send: "Where should we send the full report?",
+
+            // Success
+            report_generated: "Report Generated!",
+            report_sent_msg: "We have texted a link to {phone}.",
+            start_new: "Start New Valuation",
+
+            // Mocks
+            trims: {
+                base: "Base / LE / LX",
+                mid: "Mid / XLE / EX",
+                sport: "Sport / SE / GT",
+                limited: "Limited / Touring / Platinum",
+                offroad: "Off-Road / TRD / Rubicon"
+            },
+            features: {
+                leather: "Leather Seats",
+                nav: "Navigation",
+                sunroof: "Sunroof / Moonroof",
+                tech: "Driver Assist / Tech Pkg",
+                wheels: "Premium Wheels",
+                tow: "Tow Package",
+                audio: "Premium Audio",
+                "3rd_row": "3rd Row Seating"
+            },
+
             // Expanded Labels
             est_value: "Estimated Retail Value Range",
             prelim_note: "*Preliminary estimate based on market data.",
@@ -190,11 +241,10 @@ export const en = {
             towed: "Vehicles Towed?",
             desc_label: "What Happened? (Brief Description)",
             submit_btn: "Submit to Legal Team »",
-            submitting: "Submitting...",
+            submitting: "Sending...",
             success_title: "Request Received!",
             success_msg: "Our team is reviewing your vehicle valuation and accident details.",
-            success_contact: "We will reach out via {method} shortly.",
-            start_new: "Start New Estimate"
+            success_contact: "We will reach out via {method} shortly."
         }
     },
     info_sections: {
@@ -251,7 +301,18 @@ export const en = {
             q7: "How long does it take to settle?",
             a7: "Simple claims may settle in a few months. Complex injury cases or those requiring litigation can take longer. We push for a timely but fair resolution, not a quick lowball."
         },
+        demand_letter: {
+            title: "Challenge Low Offers",
+            desc: "Received a lowball offer? Don't argue on the phone. Send a formal legal demand letter experienced adjusters respect.",
+            cta: "Generate Free Demand PDF"
+        }
     },
+    trust_ticker: [
+        "$5.2M Truck Accident Settlement",
+        "$1.8M Company Vehicle Crash",
+        "$950k Rideshare Injury",
+        "$2.4M Wrongful Death"
+    ],
     city_page: {
         hero_badge: "Local Assistance for {county} County",
         title_suffix: "Total Loss & Injury Claim Help",
@@ -354,7 +415,14 @@ export const en = {
             qualify_low: "Thank you. I'm preparing an Accident Information Packet for you now. A team member will review your details shortly.",
             greeting_standalone: "Hi, I'm Angel. I understand this can be a difficult time, and I'm here to support you. How can I help you today?",
             high_value_intro: "Strong likelihood that we may be able to assist. Are you free to chat now? Or prefer to set-up a free 15 minute consultation, I can search for the next available appt today.",
-            validation_phone: "Please enter a valid phone number (e.g. 555-0199)."
+            validation_phone: "Please enter a valid phone number (e.g. 555-0199).",
+            validation_name: "Please enter your full name.",
+            ask_email_phone: "Thank you, {name}. In case we get disconnected, what is your email address or cell phone number?",
+            validation_yes_no: "Please answer Yes or No.",
+            validation_contact: "Please enter a valid phone number OR email address.",
+            uploading: "Uploading {file}...",
+            text_or_call_ask: "Text or Call?",
+            chat_or_schedule: "Would you like to 'Chat Now' or 'Schedule a Consultation'?"
         }
     },
     caseReview: {
@@ -421,6 +489,8 @@ export const en = {
                 match: "Match",
                 call_btn: "Call Attorney Now",
                 close_btn: "Close",
+                case_detected: "{severity} Case Detected",
+                review_desc: "A specialized attorney needs to manually review your details. We will contact you at {phone} shortly.",
                 severity_labels: {
                     low: "Standard Case",
                     medium: "Significant Case",

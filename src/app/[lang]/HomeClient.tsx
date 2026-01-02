@@ -6,7 +6,7 @@ import AccidentGrid from '@/components/AccidentGrid';
 import InfoSections from '@/components/InfoSections';
 import { useChat } from '@/components/ChatContext';
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dictionary } from '@/dictionaries/en'; // Type
 import { ShieldCheckIcon, AlertTriangleIcon, FileTextIcon, CarIcon, DollarSignIcon, SearchIcon, SparklesIcon } from 'lucide-react';
 
@@ -102,7 +102,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             {/* Privacy Disclaimer Banner */}
             <div className="bg-emerald-900/30 border-b border-emerald-500/20 text-center py-2 px-4 backdrop-blur-sm">
                 <p className="text-xs md:text-sm text-emerald-200/90 font-medium">
-                    🔒 <span className="font-semibold text-emerald-100">100% Confidential:</span> Any information provided is <span className="underline decoration-emerald-500/50">never</span> shared with authorities or government agencies. We Respect your Privacy.
+                    {dict.privacy_banner}
                 </p>
             </div>
             <script
@@ -176,7 +176,14 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                 {/* TRUST BAR / RESULTS TICKER (New) */}
                 <div className="absolute bottom-0 left-0 right-0 bg-navy-900 border-t border-white/10 py-4 overflow-hidden">
                     <div className="flex gap-12 animate-scroll-text whitespace-nowrap text-white/40 text-sm font-serif italic tracking-wider justify-center">
-                        <span>$5.2M Truck Accident Settlement</span> • <span>$1.8M Company Vehicle Crash</span> • <span>$950k Rideshare Injury</span> • <span>$2.4M Wrongful Death</span> • <span>$5.2M Truck Accident Settlement</span>
+                        {(dict.trust_ticker || []).map((item: string, i: number) => (
+                            <React.Fragment key={i}>
+                                <span>{item}</span> {i < (dict.trust_ticker?.length || 0) - 1 && '• '}
+                            </React.Fragment>
+                        ))}
+                        {(!dict.trust_ticker || dict.trust_ticker.length === 0) && (
+                            <><span>$5.2M Truck Accident Settlement</span> • <span>$1.8M Company Vehicle Crash</span></>
+                        )}
                     </div>
                 </div>
             </header>
@@ -195,12 +202,12 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                         <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
                             <div className="flex-1">
                                 <h3 className="text-3xl font-serif font-bold mb-4 flex items-center gap-3 text-white">
-                                    <FileTextIcon className="text-gold-500" /> Challenge Low Offers
+                                    <FileTextIcon className="text-gold-500" /> {dict?.info_sections?.demand_letter?.title || "Challenge Low Offers"}
                                 </h3>
-                                <p className="text-blue-100 text-lg font-light leading-relaxed">Received a lowball offer? Don't argue on the phone. Send a formal legal demand letter experienced adjusters respect.</p>
+                                <p className="text-blue-100 text-lg font-light leading-relaxed">{dict?.info_sections?.demand_letter?.desc || "Received a lowball offer? Don't argue on the phone. Send a formal legal demand letter experienced adjusters respect."}</p>
                             </div>
                             <a href="/tools/demand-letter" className="bg-gold-500 text-navy-900 font-black py-5 px-10 rounded-sm shadow-lg hover:scale-105 transition hover:bg-gold-400 whitespace-nowrap uppercase tracking-widest font-sans border border-white/10">
-                                Generate Free Demand PDF &rarr;
+                                {dict?.info_sections?.demand_letter?.cta || "Generate Free Demand PDF"} &rarr;
                             </a>
                         </div>
                     </div>
@@ -473,7 +480,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             <Footer dict={dict} lang={lang} />
 
             <ChatWidget dict={dict} />
-            <MobileNav />
+            <MobileNav dict={dict} />
         </main >
     );
 }

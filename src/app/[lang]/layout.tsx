@@ -26,7 +26,7 @@ export default async function RootLayout({
 }) {
     const { lang } = await params;
     return (
-        <html lang={lang}>
+        <html lang={lang} suppressHydrationWarning>
             <body className={`${inter.variable} ${playfair.variable} font-sans antialiased notranslate`} translate="no">
                 <script
                     type="application/ld+json"
