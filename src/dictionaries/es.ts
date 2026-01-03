@@ -20,7 +20,7 @@ export const es: Dictionary = {
         call_now: "Solicitar Llamada",
         live_chat: "💬 Chat en Vivo",
         sms: "💬 Texto / SMS",
-        schedule: "⏱ Consulta Gratuita 15min",
+        schedule: "⏱ Agendar Consulta Gratuita 15min",
         options_standalone: {
             ai_review: "Iniciar Revisión de Caso Gratuita",
             live_chat: "Chat en Vivo con Angel",

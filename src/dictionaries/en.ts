@@ -18,7 +18,7 @@ export const en = {
         call_now: "📞 Request a Call Now",
         live_chat: "💬 Live Chat",
         sms: "💬 Text / SMS",
-        schedule: "⏱ Free 15 Min Consult",
+        schedule: "⏱ Schedule Free 15 Min Consult",
         options_standalone: {
             ai_review: "Start Free AI Case Review",
             live_chat: "Chat with Angel (Live)",
