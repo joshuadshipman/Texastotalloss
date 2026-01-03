@@ -191,6 +191,9 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                 </div>
             </header>
 
+            {/* Informational Sections (Why Hire, Liability, Urgency) - Moved Above Calculator */}
+            <InfoSections dict={dict} />
+
             <div id="calculator">
                 <ValuationCalculator dict={dict} />
             </div>
@@ -263,8 +266,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             {/* Accident Types Grid */}
             <AccidentGrid dict={dict} />
 
-            {/* Informational Sections (Why Hire, Liability, Urgency) */}
-            <InfoSections dict={dict} />
+
 
             {/* Video Knowledge Library (Interactive) */}
             <VideoGallery dict={dict} />
