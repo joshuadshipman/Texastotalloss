@@ -36,7 +36,15 @@ export const es: Dictionary = {
     sections: {
         trust_badges: {
             title: "Reconocido por Excelencia",
-            sub: "Verificación independiente de nuestro historial."
+            sub: "Verificación independiente de nuestro historial.",
+            badge1_title: "Calificación 5.0",
+            badge1_sub: "Reseñas de Clientes",
+            badge2_title: "Verificado",
+            badge2_sub: "Firma Confiable",
+            badge3_title: "Sin Ganar No Paga",
+            badge3_sub: "Garantía",
+            badge4_title: "Pérdida Total",
+            badge4_sub: "Especialistas"
         },
         faq: {
             title: "Preguntas Frecuentes",

@@ -34,7 +34,15 @@ export const en = {
     sections: {
         trust_badges: {
             title: "Recognized for Excellence",
-            sub: "Independent verification of our track record."
+            sub: "Independent verification of our track record.",
+            badge1_title: "5.0 Rating",
+            badge1_sub: "Client Reviews",
+            badge2_title: "Verified",
+            badge2_sub: "Trusted Firm",
+            badge3_title: "No Win No Fee",
+            badge3_sub: "Guarantee",
+            badge4_title: "Total Loss",
+            badge4_sub: "Specialists"
         },
         faq: {
             title: "Common Questions",

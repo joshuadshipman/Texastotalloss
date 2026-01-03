@@ -232,32 +232,32 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                             <div className="w-16 h-16 bg-navy-900 text-gold-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
                                 <SparklesIcon size={32} />
                             </div>
-                            <span className="font-serif font-bold text-xl text-navy-900">5.0 Rating</span>
-                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-sans font-bold">Client Reviews</span>
+                            <span className="font-serif font-bold text-xl text-navy-900">{dict.sections.trust_badges.badge1_title}</span>
+                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-sans font-bold">{dict.sections.trust_badges.badge1_sub}</span>
                         </div>
                         {/* Badge 2 */}
                         <div className="flex flex-col items-center p-8 bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
                             <div className="w-16 h-16 bg-navy-900 text-gold-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
                                 <ShieldCheckIcon size={32} />
                             </div>
-                            <span className="font-serif font-bold text-xl text-navy-900">Verified</span>
-                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-sans font-bold">Trusted Firm</span>
+                            <span className="font-serif font-bold text-xl text-navy-900">{dict.sections.trust_badges.badge2_title}</span>
+                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-sans font-bold">{dict.sections.trust_badges.badge2_sub}</span>
                         </div>
                         {/* Badge 3 */}
                         <div className="flex flex-col items-center p-8 bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
                             <div className="w-16 h-16 bg-navy-900 text-gold-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
                                 <DollarSignIcon size={32} />
                             </div>
-                            <span className="font-serif font-bold text-xl text-navy-900">No Win No Fee</span>
-                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-sans font-bold">Guarantee</span>
+                            <span className="font-serif font-bold text-xl text-navy-900">{dict.sections.trust_badges.badge3_title}</span>
+                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-sans font-bold">{dict.sections.trust_badges.badge3_sub}</span>
                         </div>
                         {/* Badge 4 */}
                         <div className="flex flex-col items-center p-8 bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
                             <div className="w-16 h-16 bg-navy-900 text-gold-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
                                 <CarIcon size={32} />
                             </div>
-                            <span className="font-serif font-bold text-xl text-navy-900">Total Loss</span>
-                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-sans font-bold">Specialists</span>
+                            <span className="font-serif font-bold text-xl text-navy-900">{dict.sections.trust_badges.badge4_title}</span>
+                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-sans font-bold">{dict.sections.trust_badges.badge4_sub}</span>
                         </div>
                     </div>
                 </div>
