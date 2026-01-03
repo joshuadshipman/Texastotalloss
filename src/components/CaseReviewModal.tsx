@@ -14,6 +14,9 @@ interface CaseReviewModalProps {
 
 export default function CaseReviewModal({ dict, lang }: CaseReviewModalProps) {
     const { isReviewOpen, closeReview, openChat } = useChat();
+
+    if (!isReviewOpen) return null;
+
     const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [score, setScore] = useState<{ score: number, severity: string } | null>(null);
