@@ -505,7 +505,20 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                     return;
                 }
 
-                newData.hospitalized = isYes;
+                if (newData.injury_time === 'Just Now') {
+                    // Answer to "Do you need help finding a place?"
+                    if (isYes) {
+                        newData.hospitalized = false;
+                        newData.needs_medical_referral = true;
+                        // Alert or special handling
+                        sendChatAlert('🚨 URGENT: At-Scene User Needs Medical Referral');
+                    } else {
+                        newData.hospitalized = false;
+                    }
+                } else {
+                    // Answer to "Have you been to a hospital?"
+                    newData.hospitalized = isYes;
+                }
                 botText = d.chat.responses.ask_fault;
                 nextStep = 53;
                 setCurrentOptions([
@@ -672,15 +685,40 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             // Handle redirect to Step 50 logic repeated from above?
             // NextStep is already 50 if applicable.
             if (nextStep === 5) {
-                nextStep = 50;
-                botText = d.chat.responses.ask_injury_time;
-                if (d.chat.time_options) {
+                // Check if coming from "At The Scene" flow (steps 200-203)
+                // We use a check on the *previous* step state before invalidating it, 
+                // OR we check if we just processed step 203.
+                // Since this runs INSIDE the timeout where 'step' is closed over from render, 
+                // 'step' here refers to the step *before* we potentially changed it? 
+                // Wait, 'step' is the state const from the top. Correct.
+
+                const isFromScene = step >= 200 && step <= 203;
+
+                if (isFromScene) {
+                    // Logic: "Just Happened" -> Skip time question
+                    newData.injury_time = "Just Now";
+                    setUserData(newData);
+                    updateSessionData(newData);
+
+                    nextStep = 52; // Go straight to Hospital/Treatment
+                    botText = (dict.chat.responses as any).scene_medical_ask || "Since this just happened, do you need help finding a place to get checked out for injuries?";
+
                     setCurrentOptions([
-                        { label: d.chat.time_options.one_week, value: d.chat.time_options.one_week },
-                        { label: d.chat.time_options.one_month, value: d.chat.time_options.one_month },
-                        { label: d.chat.time_options.six_months, value: d.chat.time_options.six_months },
-                        { label: d.chat.time_options.less_one, value: d.chat.time_options.less_one }
+                        { label: dict.chat.yes_no?.yes || "Yes, help me find a doctor", value: "Yes" },
+                        { label: dict.chat.yes_no?.no || "No, I'm okay", value: "No" }
                     ]);
+                } else {
+                    // Standard Flow
+                    nextStep = 50;
+                    botText = d.chat.responses.ask_injury_time;
+                    if (d.chat.time_options) {
+                        setCurrentOptions([
+                            { label: d.chat.time_options.one_week, value: d.chat.time_options.one_week },
+                            { label: d.chat.time_options.one_month, value: d.chat.time_options.one_month },
+                            { label: d.chat.time_options.six_months, value: d.chat.time_options.six_months },
+                            { label: d.chat.time_options.less_one, value: d.chat.time_options.less_one }
+                        ]);
+                    }
                 }
             }
 
