@@ -9,7 +9,8 @@ export const en = {
         subtext_line1: "Don't let insurance adjusters underpay you.",
         subtext_line2_pre: "Get your",
         subtext_highlight: "True Market Value",
-        subtext_line2_post: "instantly."
+        subtext_line2_post: "instantly.",
+        find_guide: "Find Your Local Guide:"
     },
     privacy_banner: "🔒 100% Confidential: Any information provided is never shared with authorities or government agencies. We Respect your Privacy.",
     buttons: {
@@ -196,6 +197,10 @@ export const en = {
             // Result Screen
             est_value_title: "Estimated Market Value",
             est_value_subtitle: "Includes +${trim} for Trim and +${opts} for Options.",
+            empathy_title: "We understand this might not be enough...",
+            empathy_msg: "It might not be enough to pay off your loan or match what you were expecting. Don't worry about the vehicle right now, worry about you getting better.",
+            btn_chat: "Chat Now & See How We Can Help »",
+            btn_demand: "Or, generate a Total Loss Demand Letter »",
             where_to_send: "Where should we send the full report?",
 
             // Success
@@ -411,9 +416,9 @@ export const en = {
             scene_processing: "Perfect. We are securing these images into your **Digital Case File**. We will email you a timestamped copy for your records.",
 
             // Outcome
-            qualify_high: "I see. Based on those details, you likely qualify for significant compensation. I am connecting you to a Senior Specialist now.",
-            qualify_low: "Thank you. I'm preparing an Accident Information Packet for you now. A team member will review your details shortly.",
             greeting_standalone: "Hi, I'm Angel. I understand this can be a difficult time, and I'm here to support you. How can I help you today?",
+            greeting_valuation: "I see you're looking at an estimated value of $${min} - $${max}. I can help you understand this value or discuss your case. What is your full name?",
+
             high_value_intro: "Strong likelihood that we may be able to assist. Are you free to chat now? Or prefer to set-up a free 15 minute consultation, I can search for the next available appt today.",
             validation_phone: "Please enter a valid phone number (e.g. 555-0199).",
             validation_name: "Please enter your full name.",
@@ -422,7 +427,12 @@ export const en = {
             validation_contact: "Please enter a valid phone number OR email address.",
             uploading: "Uploading {file}...",
             text_or_call_ask: "Text or Call?",
-            chat_or_schedule: "Would you like to 'Chat Now' or 'Schedule a Consultation'?"
+            chat_or_schedule: "Would you like to 'Chat Now' or 'Schedule a Consultation'?",
+
+            busy_agents: "Our agents are currently assisting other clients. I can start your intake process now to speed things up. Shall we begin?",
+            qualify_high: "It looks like you have a strong case. I'm connecting you with a Senior Specialist now...",
+            qualify_low: "Based on Texas regulations, this may be a standard claim. We have generated a **Professional Accident Packet** with steps to handle this yourself. Sending it to your email now.",
+            qualify_low_followup: "However, our Senior Agents are still available if you'd like to discuss the specific details. Would you like to chat with a live person?",
         }
     },
     caseReview: {

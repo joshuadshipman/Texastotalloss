@@ -152,7 +152,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
 
                     {/* City Search Bar */}
                     <div className="max-w-xl mx-auto mb-12 text-left bg-white/5 p-4 rounded-lg border border-white/10 backdrop-blur-sm">
-                        <label className="text-xs font-bold text-gold-500 uppercase tracking-wider ml-1 mb-2 block font-sans">Find Your Local Guide:</label>
+                        <label className="text-xs font-bold text-gold-500 uppercase tracking-wider ml-1 mb-2 block font-sans">{dict.hero.find_guide}</label>
                         <CitySearch lang={lang as 'en' | 'es'} />
                     </div>
 
@@ -175,7 +175,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
 
                 {/* TRUST BAR / RESULTS TICKER (New) */}
                 <div className="absolute bottom-0 left-0 right-0 bg-navy-900 border-t border-white/10 py-4 overflow-hidden">
-                    <div className="flex gap-12 animate-scroll-text whitespace-nowrap text-white/40 text-sm font-serif italic tracking-wider justify-center">
+                    <div className="flex gap-12 animate-scroll-text whitespace-nowrap text-white/60 text-xl font-serif italic tracking-wider justify-center">
                         {(dict.trust_ticker || []).map((item: string, i: number) => (
                             <React.Fragment key={i}>
                                 <span>{item}</span> {i < (dict.trust_ticker?.length || 0) - 1 && '• '}

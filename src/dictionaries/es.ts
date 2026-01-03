@@ -11,7 +11,8 @@ export const es: Dictionary = {
         subtext_line1: "No deje que los ajustadores le paguen de menos.",
         subtext_line2_pre: "Obtenga su",
         subtext_highlight: "Valor Real de Mercado",
-        subtext_line2_post: "al instante."
+        subtext_line2_post: "al instante.",
+        find_guide: "Encuentre Su Guía Local:"
     },
     privacy_banner: "🔒 100% Confidencial: La información proporcionada nunca se comparte con autoridades o agencias gubernamentales. Respetamos su Privacidad.",
     buttons: {
@@ -198,6 +199,10 @@ export const es: Dictionary = {
             // Result Screen
             est_value_title: "Valor de Mercado Estimado",
             est_value_subtitle: "Incluye +${trim} por Versión y +${opts} por Opciones.",
+            empathy_title: "Entendemos que esto podría no ser suficiente...",
+            empathy_msg: "Podría no ser suficiente para pagar su préstamo o lo que esperaba. No se preocupe por el vehículo ahora, preocúpese por mejorarse.",
+            btn_chat: "Chatear Ahora y Ver Cómo Ayudamos »",
+            btn_demand: "O genere una Carta de Demanda de Pérdida Total »",
             where_to_send: "¿A dónde enviamos el reporte completo?",
 
             // Success
@@ -425,7 +430,10 @@ export const es: Dictionary = {
             validation_contact: "Por favor ingrese un número de teléfono o dirección de correo electrónico válidos.",
             uploading: "Subiendo {file}...",
             text_or_call_ask: "¿Texto o Llamada?",
-            chat_or_schedule: "¿Le gustaría 'Chatear Ahora' o 'Agendar una Consulta'?"
+            chat_or_schedule: "¿Le gustaría 'Chatear Ahora' o 'Agendar una Consulta'?",
+
+            greeting_valuation: "Veo que está viendo un valor estimado de $${min} - $${max}. Puedo ayudarle a entender este valor o discutir su caso. ¿Cuál es su nombre completo?",
+            qualify_low_followup: "Sin embargo, nuestros Agentes Senior todavía están disponibles si desea discutir los detalles específicos. ¿Le gustaría chatear con una persona en vivo?"
         }
     },
     caseReview: {

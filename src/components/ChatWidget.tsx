@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -87,7 +88,12 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             setStep(999); // Live Agent State
         } else {
             addMessage('bot', dict.chat.responses.qualify_low || "Sending Accident Packet...");
-            setStep(998); // End State
+
+            // NO DEAD END: Offer live chat anyway
+            setTimeout(() => {
+                addMessage('bot', (dict.chat.responses as any).qualify_low_followup || "However, our Senior Agents are still available...");
+                setStep(10); // Go to Standalone Options (Chat / Schedule)
+            }, 1500);
         }
     };
 
@@ -199,6 +205,14 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 initialStep = 600;
                 sendChatAlert('High Value Lead: Match > 70%');
             }
+            else if (chatMode === 'valuation') {
+                const min = chatData?.valuation?.min?.toLocaleString() || '...';
+                const max = chatData?.valuation?.max?.toLocaleString() || '...';
+                const baseText = (dict.chat.responses as any).greeting_valuation || "I see you're looking at an estimated value of $${min} - $${max}.";
+                const text = baseText.replace('${min}', min).replace('${max}', max);
+                initialMsgs = [{ sender: 'bot', text }];
+                initialStep = 1; // Go to Name input
+            }
             else if (chatMode === 'standalone') { initialMsgs = [{ sender: 'bot', text: dict.chat.responses.greeting_standalone }]; initialStep = 10; }
 
             if (initialMsgs.length > 0) {
@@ -260,35 +274,62 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             };
 
             if (chatData) {
-                // Map the data from CaseReviewModal (formData) to Supabase schema
-                const mappedData = {
-                    full_name: chatData.fullName,
-                    phone: chatData.phone,
-                    city: chatData.cityState,
-                    pain_level: chatData.painLevel,
-                    // Handle score object or number
-                    score: typeof chatData.score === 'object' ? chatData.score?.score : chatData.score,
-                    severity: typeof chatData.score === 'object' ? chatData.score?.severity : 'unknown',
-                    injury_summary: chatData.bodyParts ? chatData.bodyParts.join(', ') : '',
-                    description: `Collision: ${chatData.collisionType}. Vehicle: ${chatData.vehicle}. Liability: ${chatData.faultBelief}.`,
-                    best_time: chatData.bestTime,
-                    imported_from_review: true,
-                    // Store strict raw dump for safety
-                    raw_review_data: chatData
-                };
-                dbPayload.user_data = mappedData;
+                // Map the data from CaseReviewModal (formData) OR Calculator to Supabase schema
 
-                // Hydrate local state
-                setUserData((prev: any) => ({ ...prev, ...mappedData }));
+                // 1. Calculator Data Source
+                if (chatData.source === 'calculator') {
+                    // Mapping Calculator Data
+                    const valMin = chatData.valuation?.min?.toLocaleString() || '0';
+                    const valMax = chatData.valuation?.max?.toLocaleString() || '0';
+                    const vehicleStr = `${chatData.year} ${chatData.make} ${chatData.model} (${chatData.trim})`;
 
-                // Add visible summary message if this is the first load
-                const keyMsg = `summary_sent_${sessionId}`;
-                if (!sessionStorage.getItem(keyMsg)) {
-                    sessionStorage.setItem(keyMsg, 'true');
-                    // Use a timeout to ensure it appears after greeting
-                    setTimeout(() => {
-                        addMessage('bot', `📋 Case Review Summary Received:\n\nScore: ${mappedData.score}% (${mappedData.severity?.toUpperCase()})\nInjuries: ${mappedData.injury_summary || 'None Reported'}\nCollision: ${chatData.collisionType}`);
-                    }, 500);
+                    dbPayload.user_data = {
+                        vehicle_info: vehicleStr,
+                        // We use the description field to store the valuation summary
+                        description: `Valuation Inquiry: ${vehicleStr}. Est: $${valMin} - $${valMax}. Mileage: ${chatData.mileage}. Condition: ${chatData.condition}. Features: ${chatData.features?.join(', ')}`,
+
+                        // We don't have personal info yet, just the vehicle
+                        full_name: 'Guest (Valuation)',
+                        imported_from_review: true,
+                        raw_review_data: chatData
+                    };
+
+                    setUserData((prev: any) => ({ ...prev, ...dbPayload.user_data }));
+
+                    // Optional: auto-send a summary message from the bot perspective? 
+                    // No, the greeting covers it: "I see you're looking at..."
+                }
+                // 2. Case Review Data Source (Existing)
+                else {
+                    const mappedData = {
+                        full_name: chatData.fullName,
+                        phone: chatData.phone,
+                        city: chatData.cityState,
+                        pain_level: chatData.painLevel,
+                        // Handle score object or number
+                        score: typeof chatData.score === 'object' ? chatData.score?.score : chatData.score,
+                        severity: typeof chatData.score === 'object' ? chatData.score?.severity : 'unknown',
+                        injury_summary: chatData.bodyParts ? chatData.bodyParts.join(', ') : '',
+                        description: `Collision: ${chatData.collisionType}. Vehicle: ${chatData.vehicle}. Liability: ${chatData.faultBelief}.`,
+                        best_time: chatData.bestTime,
+                        imported_from_review: true,
+                        // Store strict raw dump for safety
+                        raw_review_data: chatData
+                    };
+                    dbPayload.user_data = mappedData;
+
+                    // Hydrate local state
+                    setUserData((prev: any) => ({ ...prev, ...mappedData }));
+
+                    // Add visible summary message if this is the first load
+                    const keyMsg = `summary_sent_${sessionId}`;
+                    if (!sessionStorage.getItem(keyMsg)) {
+                        sessionStorage.setItem(keyMsg, 'true');
+                        // Use a timeout to ensure it appears after greeting
+                        setTimeout(() => {
+                            addMessage('bot', `📋 Case Review Summary Received:\n\nScore: ${mappedData.score}% (${mappedData.severity?.toUpperCase()})\nInjuries: ${mappedData.injury_summary || 'None Reported'}\nCollision: ${chatData.collisionType}`);
+                        }, 500);
+                    }
                 }
             }
 
@@ -296,9 +337,10 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             if (error) console.error("Session Init Error:", error);
 
             // Alert for generic chat start
-            if (step === 1 || step === 0 || step === 600) {
+            if (step === 1 || step === 0 || step === 600 || (chatMode === "valuation")) {
                 // Defer slightly to avoid blocking
-                setTimeout(() => sendChatAlert(chatMode === 'high_value_lead' ? 'High Value Lead: Match > 70%' : 'Generic Chat Open'), 1000);
+                const alertMsg = chatMode === 'high_value_lead' ? 'High Value Lead: Match > 70%' : (chatMode === 'valuation' ? 'Valuation Inquiry Started' : 'Generic Chat Open');
+                setTimeout(() => sendChatAlert(alertMsg), 1000);
             }
         };
         initSession();

@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useState } from 'react';
 import { useChat } from './ChatContext';
 import CustomSelect from '@/components/ui/CustomSelect';
+import { Dictionary } from '@/dictionaries/en';
 
 interface ValuationCalculatorProps {
-    dict: any; // Using any for simplicity as Dictionary type is in another file, or better import it
+    dict: Dictionary;
 }
 
 export default function ValuationCalculator({ dict }: ValuationCalculatorProps) {
@@ -18,28 +20,10 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
         model: '',
         mileage: '',
         condition: 'good',
-        // NEW: Trim & Options
         trim: 'base',
-        features: [] as string[],
-        // Contact Info
-        name: '',
-        phone: '',
-        email: '',
-        contactPref: 'text',
-        bestTime: '',
-        // Incident Info
-        dateOfLoss: '',
-        injuries: '',
-        description: '',
-        // New Incident Details
-        ambulance: 'no',
-        tickets: 'no',
-        towed: 'no',
-        typeOfLoss: 'collision'
+        features: [] as string[]
     });
     const [valuation, setValuation] = useState<{ min: number, max: number, trimAdj: number, featAdj: number } | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isSubmitted, setIsSubmitted] = useState(false);
 
     // Use dictionary labels if available
     const labels = dict?.val_calc?.labels || {};
@@ -93,10 +77,6 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
 
             const data = await res.json();
 
-            // Calculate Feature Adjustment locally or trust API? 
-            // The API returns a 'min'/'max' based on listings. We can add feature value on top if we assume listings are "average".
-            // For now, let's assume the API gives the base market value and we add features on top.
-
             let featAdj = 0;
             formData.features.forEach(fId => {
                 const feat = mockFeatures.find(f => f.id === fId);
@@ -109,7 +89,7 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
             setValuation({
                 min: baseMin + featAdj,
                 max: baseMax + featAdj,
-                trimAdj: 0, // Included in API search query ideally
+                trimAdj: 0,
                 featAdj: featAdj
             });
             setStep(3);
@@ -117,14 +97,13 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
         } catch (error) {
             console.error(error);
             alert("Could not fetch real-time data. Using fallback estimation.");
-            // Fallback logic could go here or be handled by the API itself (which it is)
             setStep(3);
         } finally {
             setIsCalculating(false);
         }
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
@@ -135,53 +114,6 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
             }
             return { ...prev, features: [...prev.features, featId] };
         });
-    };
-
-    const submitLead = async () => {
-        setIsSubmitting(true);
-        // ... (Referrer logic same as before) ...
-        let referrer = 'Direct/Unknown';
-        if (typeof document !== 'undefined') referrer = document.referrer || 'Direct';
-
-        const leadMessage = `
-🚨 NEW VALUATION LEAD 🚨
-------------------------
-VALUATION: $${valuation?.min.toLocaleString()} - $${valuation?.max.toLocaleString()}
-TRIM: ${formData.trim}
-FEATURES: ${formData.features.join(', ')}
-
-👤 CONTACT: ${formData.name} | ${formData.phone} | ${formData.email}
-🚗 VEHICLE: ${formData.year} ${formData.make} ${formData.model} (VIN: ${formData.vin})
-------------------------
-`.trim();
-
-        const sessionId = `lead-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        try {
-            await fetch('/api/submit-lead', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    session: sessionId,
-                    full_name: formData.name,
-                    phone: formData.phone,
-                    contact_pref: formData.contactPref,
-                    best_time: formData.bestTime,
-                    incident_details: `Vehicle: ${formData.year} ${formData.make} ${formData.model} (${formData.trim}). Features: ${formData.features.join(',')}. Est Value: $${valuation?.min}-${valuation?.max}`,
-                    role: 'owner',
-                    has_injury: !!formData.injuries,
-                    language: 'en',
-                    score: 65,
-                    pain_level: 0,
-                    accident_date: formData.dateOfLoss || new Date().toISOString(),
-                    city: 'Unknown'
-                })
-            });
-            // ... (Insert Chat Message logic) ...
-        } catch (e) {
-            console.error("Error submitting lead:", e);
-        }
-        setIsSubmitting(false);
-        setIsSubmitted(true);
     };
 
     return (
@@ -256,8 +188,8 @@ FEATURES: ${formData.features.join(', ')}
                             </div>
                         )}
 
-                        {/* STEP 3: RESULTS (Form) */}
-                        {step === 3 && !isSubmitted && valuation && (
+                        {/* STEP 3: RESULTS (Empathetic) */}
+                        {step === 3 && valuation && (
                             <div className="animate-in slide-in-from-right duration-300">
                                 <div className="bg-green-50 border border-green-100 p-6 rounded-2xl mb-8 text-center">
                                     <h4 className="text-green-800 font-bold uppercase text-xs tracking-widest mb-1">{labels.est_value_title || "Estimated Market Value"}</h4>
@@ -271,25 +203,25 @@ FEATURES: ${formData.features.join(', ')}
                                     </p>
                                 </div>
 
-                                <h3 className="text-xl font-bold mb-4 text-center">{labels.where_to_send || "Where should we send the full report?"}</h3>
-                                <div className="grid grid-cols-1 gap-4 mb-6 max-w-lg mx-auto">
-                                    <input name="name" value={formData.name} onChange={handleInputChange} placeholder={labels.full_name || "Full Name"} className="p-3 border rounded w-full" />
-                                    <input name="phone" value={formData.phone} onChange={handleInputChange} placeholder={labels.phone || "Phone Number"} className="p-3 border rounded w-full" />
-                                    <input name="email" value={formData.email} onChange={handleInputChange} placeholder={labels.email || "Email Address"} className="p-3 border rounded w-full" />
-                                </div>
-                                <button onClick={submitLead} disabled={isSubmitting} className="w-full md:max-w-md mx-auto block bg-blue-900 text-white font-bold py-4 rounded-xl shadow hover:bg-blue-800">
-                                    {isSubmitting ? (labels.submitting || "Sending...") : (labels.btn_final || "Send Full PDF Report »")}
-                                </button>
-                            </div>
-                        )}
+                                <div className="text-center animate-in fade-in duration-500 delay-150">
+                                    <h3 className="text-2xl font-black text-blue-900 mb-4">{labels.empathy_title || "We understand this might not be enough..."}</h3>
+                                    <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto leading-relaxed">
+                                        {labels.empathy_msg || "It might not be enough to pay off your loan or match what you were expecting. Don't worry about the vehicle right now, worry about you getting better."}
+                                    </p>
 
-                        {/* SUCCESS */}
-                        {isSubmitted && (
-                            <div className="text-center py-12 animate-in zoom-in duration-300">
-                                <div className="text-6xl mb-4">✅</div>
-                                <h3 className="text-3xl font-black text-blue-900 mb-2">{labels.report_generated || "Report Generated!"}</h3>
-                                <p className="text-gray-600">{(labels.report_sent_msg || "We have texted a link to {phone}.").replace('{phone}', formData.phone)}</p>
-                                <button onClick={() => window.location.reload()} className="mt-8 text-blue-600 underline">{labels.start_new || "Start New Valuation"}</button>
+                                    <div className="flex flex-col gap-4 max-w-md mx-auto">
+                                        <button
+                                            onClick={() => openChat('valuation', { ...formData, valuation, source: 'calculator' })}
+                                            className="w-full bg-green-600 text-white font-black py-4 rounded-xl shadow-xl hover:bg-green-700 hover:scale-105 transition-all text-lg flex items-center justify-center gap-2"
+                                        >
+                                            <span>💬</span> {labels.btn_chat || "Chat Now & See How We Can Help »"}
+                                        </button>
+
+                                        <a href="/tools/demand-letter" className="block text-center text-blue-600 font-bold hover:underline text-sm mt-2">
+                                            {labels.btn_demand || "Or, generate a Total Loss Demand Letter »"}
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </div>
