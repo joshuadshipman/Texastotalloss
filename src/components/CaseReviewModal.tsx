@@ -219,15 +219,15 @@ Concerns: ${formData.biggestConcern.join(', ')}
     const prevStep = () => setStep(prev => prev - 1);
 
     const renderStep = () => {
-        const safeDict = dict as any;
-        const d = safeDict?.caseReview; // Shortcut
-        const o = safeDict?.options; // Was dict.caseReview.options but now global options in dict
+
+        const d = dict?.caseReview; // Shortcut
+        const o = dict?.options; // Was dict.caseReview.options but now global options in dict
         // Access new dictionaries
-        const incidentTypes = safeDict?.incident_type_options;
-        const bodyParts = safeDict?.body_parts;
-        const treatments = safeDict?.treatment_options;
-        const faultOpts = safeDict?.fault_options;
-        const ui = safeDict?.ui;
+        const incidentTypes = dict?.incident_type_options;
+        const bodyParts = dict?.body_parts;
+        const treatments = dict?.treatment_options;
+        const faultOpts = dict?.fault_options;
+        const ui = dict?.ui;
 
         if (!d || !o) return null;
 
@@ -320,7 +320,8 @@ Concerns: ${formData.biggestConcern.join(', ')}
                                     <label className="block text-sm font-bold mb-2 text-navy-900">{d.steps.injury.parts}</label>
                                     <div className="flex flex-wrap gap-2">
                                         {(Object.keys(bodyParts || {})).map((key) => {
-                                            const label = bodyParts ? bodyParts[key] : key;
+                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                            const label = bodyParts ? (bodyParts as any)[key] : key;
                                             return (
                                                 <button
                                                     key={key}

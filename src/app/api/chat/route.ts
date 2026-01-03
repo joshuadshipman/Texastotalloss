@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
 import dialogflow from '@google-cloud/dialogflow';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';

@@ -6,6 +6,7 @@ type DFRequest = {
     session: string;
     queryResult: {
         queryText: string;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         parameters: Record<string, any>;
         intent: { displayName: string };
     };

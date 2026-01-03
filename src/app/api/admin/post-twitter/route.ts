@@ -1,11 +1,13 @@
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { NextRequest, NextResponse } from 'next/server';
 import { TwitterApi } from 'twitter-api-v2'; // Will need to install this
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { content, postId } = body;
+        const { content } = body;
 
         if (!content) {
             return NextResponse.json({ error: 'Missing content to tweet' }, { status: 400 });

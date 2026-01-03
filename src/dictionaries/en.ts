@@ -426,8 +426,10 @@ export const en = {
         }
     },
     caseReview: {
-        title: "Instant AI Case Evaluator",
-        subtitle: "Analyzing Texas Regulations & Liability Rules",
+        banner: {
+            title: "Instant AI Case Evaluator",
+            subtitle: "Analyzing Texas Regulations & Liability Rules"
+        },
         steps: {
             contact: {
                 title: "1. Your Contact Info",
@@ -569,10 +571,7 @@ export const en = {
                 severe: "Severe"
             }
         },
-        banner: {
-            title: "Free AI Case Analysis for Total Loss and Injury Review",
-            subtitle: "It takes less than two minutes to evaluate your case and vehicle evaluation."
-        },
+
         placeholders: {
             vin: "17-Digit VIN",
             year: "Select Year",
@@ -629,6 +628,55 @@ export const en = {
             cta: "Speak to an Attorney About This"
         }
     },
+    // Missing Keys for Case Review
+    options: {
+        yes: "Yes",
+        no: "No",
+        unsure: "Unsure",
+        driver: "Driver",
+        passenger: "Passenger",
+        pedestrian: "Pedestrian",
+        text: "Text Message",
+        call: "Phone Call",
+        email: "Email"
+    },
+    incident_type_options: {
+        auto_auto: "Car vs Car",
+        auto_truck: "Car vs Truck",
+        motorcycle: "Motorcycle",
+        pedestrian: "Pedestrian",
+        other: "Other"
+    },
+    body_parts: {
+        neck: "Neck",
+        back: "Back",
+        head: "Head",
+        leg: "Leg/Knee",
+        arm: "Arm/Shoulder",
+        hand: "Hand/Wrist"
+    },
+    treatment_options: {
+        none_yet: "None Yet",
+        er: "ER / Hospital",
+        urgent_care: "Urgent Care",
+        surgery: "Surgery Recommended",
+        chiro: "Chiro / PT"
+    },
+    fault_options: {
+        other_driver: "Other Driver",
+        me: "Me",
+        shared: "Shared / Unsure"
+    },
+    ui: {
+        back: "Back",
+        next: "Next",
+        analyzing: "Analyzing Case...",
+        analyze: "Get AI Result",
+        pain_scale: {
+            none: "No Pain",
+            severe: "Severe Pain"
+        }
+    }
 };
 
 

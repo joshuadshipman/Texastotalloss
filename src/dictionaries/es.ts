@@ -429,8 +429,10 @@ export const es: Dictionary = {
         }
     },
     caseReview: {
-        title: "Evaluador de Caso con IA",
-        subtitle: "Analizando Regulaciones de Texas",
+        banner: {
+            title: "Evaluador de Caso con IA",
+            subtitle: "Analizando Regulaciones de Texas"
+        },
         steps: {
             contact: {
                 title: "1. Tu Información de Contacto",
@@ -572,10 +574,7 @@ export const es: Dictionary = {
                 severe: "Severo"
             }
         },
-        banner: {
-            title: "Análisis de Caso Gratuito con IA para Pérdida Total y Lesiones",
-            subtitle: "Toma menos de dos minutos evaluar su caso y la valoración de su vehículo."
-        },
+
         placeholders: {
             vin: "VIN de 17 Dígitos",
             year: "Seleccionar Año",
@@ -633,5 +632,55 @@ export const es: Dictionary = {
             cta: "Hable con un Abogado Sobre Esto"
         }
     },
+
+    // Global Keys for consistency with English Dictionary Type
+    options: {
+        yes: "Sí",
+        no: "No",
+        unsure: "No estoy seguro",
+        driver: "Conductor",
+        passenger: "Pasajero",
+        pedestrian: "Peatón",
+        text: "Texto / SMS",
+        call: "Llamada Telefónica",
+        email: "Correo Electrónico"
+    },
+    incident_type_options: {
+        auto_auto: "Auto vs Auto",
+        auto_truck: "Auto vs Camión Comercial",
+        motorcycle: "Accidente de Motocicleta",
+        pedestrian: "Atropello de Peatón",
+        other: "Otro"
+    },
+    body_parts: {
+        neck: "Cuello",
+        back: "Espalda",
+        head: "Cabeza",
+        leg: "Pierna/Rodilla",
+        arm: "Brazo/Hombro",
+        hand: "Mano/Muñeca"
+    },
+    treatment_options: {
+        none_yet: "Ninguno Aún",
+        er: "Sala de Emergencias / Hospital",
+        urgent_care: "Urgent Care",
+        surgery: "Cirugía Recomendada",
+        chiro: "Quiropráctico / Fisioterapia"
+    },
+    fault_options: {
+        other_driver: "Otro Conductor",
+        me: "Yo",
+        shared: "Compartida / No Seguro"
+    },
+    ui: {
+        back: "Atrás",
+        next: "Siguiente",
+        analyzing: "Analizando...",
+        analyze: "Obtener Resultado con IA",
+        pain_scale: {
+            none: "Sin Dolor",
+            severe: "Severo"
+        }
+    }
 };
 
