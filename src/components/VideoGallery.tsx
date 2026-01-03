@@ -33,10 +33,10 @@ export default function VideoGallery({ dict }: VideoGalleryProps) {
     const sectionDesc = dict?.video_gallery?.desc || "Real answers to tough questions.";
 
     return (
-        <section id="video-gallery" className="py-12 bg-gray-900 text-white">
+        <section id="video-gallery" className="py-12 bg-slate-950 text-white border-t border-white/5">
             <div className="max-w-6xl mx-auto px-4">
                 <div className="text-center mb-10">
-                    <span className="text-blue-400 font-bold tracking-widest text-xs uppercase">{sectionSubtitle}</span>
+                    <span className="text-gold-500 font-bold tracking-widest text-xs uppercase">{sectionSubtitle}</span>
                     <h2 className="text-3xl md:text-4xl font-black mt-2">{sectionTitle}</h2>
                     <p className="text-gray-400 mt-2 max-w-2xl mx-auto">
                         {sectionDesc}
@@ -50,7 +50,7 @@ export default function VideoGallery({ dict }: VideoGalleryProps) {
                             <div
                                 key={video.id}
                                 onClick={() => setActiveVideo({ item: video, data })}
-                                className="group relative bg-gray-800 rounded-xl overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all transform hover:-translate-y-1"
+                                className="group relative bg-slate-900 rounded-xl overflow-hidden cursor-pointer hover:ring-2 hover:ring-gold-500 transition-all transform hover:-translate-y-1 border border-white/5"
                             >
                                 {/* Thumbnail */}
                                 <div className="h-48 overflow-hidden relative">
@@ -65,8 +65,8 @@ export default function VideoGallery({ dict }: VideoGalleryProps) {
 
                                 {/* Info */}
                                 <div className="p-4">
-                                    <span className="text-blue-400 text-xs font-bold uppercase">{data.cat}</span>
-                                    <h3 className="font-bold text-lg leading-tight mt-1 group-hover:text-blue-300 transition-colors">{data.title}</h3>
+                                    <span className="text-gold-500 text-xs font-bold uppercase">{data.cat}</span>
+                                    <h3 className="font-bold text-lg leading-tight mt-1 group-hover:text-white transition-colors">{data.title}</h3>
                                     <p className="text-gray-400 text-xs mt-2 line-clamp-2">{data.desc}</p>
                                 </div>
                             </div>
@@ -111,7 +111,7 @@ export default function VideoGallery({ dict }: VideoGalleryProps) {
                                     </div>
                                 </div>
                                 <div className="mt-6 pt-4 border-t border-gray-700">
-                                    <button className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition text-sm">
+                                    <button className="w-full bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold py-2 px-4 rounded-lg transition text-sm">
                                         {dict?.video_gallery?.modal?.cta || "Speak to an Attorney"}
                                     </button>
                                 </div>

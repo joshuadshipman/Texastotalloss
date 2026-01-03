@@ -26,15 +26,15 @@ export default function SectionCard({ title, subtitle, icon, colorClass, childre
             {/* Card Trigger */}
             <div
                 onClick={() => setIsOpen(true)}
-                className={`bg-white rounded-2xl shadow-sm border border-gray-200 p-6 flex items-center justify-between cursor-pointer hover:shadow-md transition active:scale-[0.98] w-full mb-4`}
+                className={`bg-slate-900 rounded-2xl shadow-sm border border-white/10 p-6 flex items-center justify-between cursor-pointer hover:bg-slate-800 hover:border-gold-500/30 transition active:scale-[0.98] w-full mb-4 group`}
             >
                 <div className="flex items-center gap-4">
                     <div className={`p-3 rounded-full ${colorClass} text-white`}>
                         {icon}
                     </div>
                     <div>
-                        <h3 className="text-xl font-bold text-gray-900">{title}</h3>
-                        <p className="text-base text-gray-600">{subtitle}</p>
+                        <h3 className="text-xl font-bold text-white group-hover:text-gold-400 transition-colors">{title}</h3>
+                        <p className="text-base text-slate-400">{subtitle}</p>
                     </div>
                 </div>
                 <ChevronRightIcon className="text-gray-400" />
@@ -47,7 +47,7 @@ export default function SectionCard({ title, subtitle, icon, colorClass, childre
                     onClick={() => setIsOpen(false)} // Click backdrop to close
                 >
                     <div
-                        className="bg-white w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col relative animate-in zoom-in-95 duration-200"
+                        className="bg-slate-900 w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col relative animate-in zoom-in-95 duration-200 border border-white/10"
                         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
                     >
                         {/* Header */}
@@ -62,14 +62,14 @@ export default function SectionCard({ title, subtitle, icon, colorClass, childre
                         </div>
 
                         {/* Scrollable Body */}
-                        <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
+                        <div className="flex-1 overflow-y-auto p-6 bg-slate-950/50">
                             {children}
                         </div>
 
-                        <div className="p-4 border-t border-gray-100 bg-white shrink-0 text-center">
+                        <div className="p-4 border-t border-white/10 bg-slate-900 shrink-0 text-center">
                             <button
                                 onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}
-                                className="text-gray-500 hover:text-gray-900 font-medium text-sm"
+                                className="text-slate-500 hover:text-white font-medium text-sm"
                             >
                                 Close / Cerrar
                             </button>

@@ -117,7 +117,7 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
     };
 
     return (
-        <section className="py-16 px-4 bg-blue-900 text-white font-sans">
+        <section className="py-16 px-4 bg-slate-900 text-white font-sans border-t border-white/5">
             <div className="max-w-4xl mx-auto">
                 <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-blue-50 text-gray-900 min-h-[600px]">
 
@@ -146,7 +146,7 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
                                     <div><label className="block text-sm font-bold mb-2">{labels.model || "Model"}</label><input name="model" value={formData.model} onChange={handleInputChange} className="w-full p-3 border rounded" placeholder="Camry" /></div>
                                     <div><label className="block text-sm font-bold mb-2">{labels.mileage || "Mileage"}</label><input type="number" name="mileage" value={formData.mileage} onChange={handleInputChange} className="w-full p-3 border rounded" placeholder="50000" /></div>
                                 </div>
-                                <button onClick={handleNextStep1} className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-blue-700">{labels.btn_next || "Next Step »"}</button>
+                                <button onClick={handleNextStep1} className="w-full bg-navy-900 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-navy-800 transition-colors">{labels.btn_next || "Next Step »"}</button>
                             </div>
                         )}
 
@@ -181,7 +181,7 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
 
                                 <div className="flex gap-4">
                                     <button onClick={() => setStep(1)} className="px-6 py-4 border font-bold rounded-xl text-gray-500 hover:text-gray-900">{labels.back || "Back"}</button>
-                                    <button onClick={handleNextStep2} disabled={isCalculating} className="flex-1 bg-green-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-wait">
+                                    <button onClick={handleNextStep2} disabled={isCalculating} className="flex-1 bg-gold-500 text-navy-900 font-bold py-4 rounded-xl shadow-lg hover:bg-gold-400 disabled:opacity-50 disabled:cursor-wait transition-colors">
                                         {isCalculating ? (labels.searching || "Searching Market...") : (labels.calculate || "Calculate Value »")}
                                     </button>
                                 </div>
@@ -212,7 +212,7 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
                                     <div className="flex flex-col gap-4 max-w-md mx-auto">
                                         <button
                                             onClick={() => openChat('valuation', { ...formData, valuation, source: 'calculator' })}
-                                            className="w-full bg-green-600 text-white font-black py-4 rounded-xl shadow-xl hover:bg-green-700 hover:scale-105 transition-all text-lg flex items-center justify-center gap-2"
+                                            className="w-full bg-gradient-to-r from-gold-500 to-gold-600 text-navy-900 font-black py-4 rounded-xl shadow-xl hover:from-gold-400 hover:to-gold-500 hover:scale-105 transition-all text-lg flex items-center justify-center gap-2"
                                         >
                                             <span>💬</span> {labels.btn_chat || "Chat Now & See How We Can Help »"}
                                         </button>

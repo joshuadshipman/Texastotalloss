@@ -23,27 +23,27 @@ export default function AccidentGrid({ dict }: AccidentGridProps) {
     const ctaBtn = dict?.accident_types?.cta_btn || "Start Review";
 
     return (
-        <section className="py-16 bg-white border-t border-gray-100">
+        <section className="py-16 bg-slate-950 border-t border-white/5">
             <div className="max-w-4xl mx-auto px-4">
                 <div className="text-center mb-12">
-                    <h2 className="text-3xl font-black text-blue-900 mb-4 uppercase tracking-wide">
+                    <h2 className="text-3xl font-black text-white mb-4 uppercase tracking-wide">
                         {title}
                     </h2>
-                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                    <p className="text-lg text-slate-400 max-w-2xl mx-auto">
                         {sub}
                     </p>
                 </div>
 
                 {/* Condensed Card Container */}
-                <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                <div className="bg-slate-900 rounded-2xl shadow-xl border border-white/10 overflow-hidden">
                     {/* Header inside card */}
-                    <div className="bg-blue-50 p-4 border-b border-blue-100 flex justify-between items-center">
-                        <span className="text-sm font-bold text-blue-800 uppercase tracking-wider">{title}</span>
-                        <span className="text-xs text-blue-500">Scroll for more ↓</span>
+                    <div className="bg-slate-800 p-4 border-b border-white/10 flex justify-between items-center">
+                        <span className="text-sm font-bold text-slate-200 uppercase tracking-wider">{title}</span>
+                        <span className="text-xs text-slate-500">Scroll for more ↓</span>
                     </div>
 
                     {/* Scrollable Area */}
-                    <div className="h-[320px] overflow-y-auto p-4 space-y-3 custom-scrollbar bg-gray-50/50">
+                    <div className="h-[320px] overflow-y-auto p-4 space-y-3 custom-scrollbar bg-slate-900/50">
                         {accidentTypes.map((type) => {
                             const Icon = type.icon;
                             // Lookup localized data using ID

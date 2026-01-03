@@ -100,8 +100,9 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
     return (
         <main className="min-h-screen bg-neutral-900 text-white selection:bg-red-500/30">
             {/* Privacy Disclaimer Banner */}
-            <div className="bg-emerald-900/30 border-b border-emerald-500/20 text-center py-2 px-4 backdrop-blur-sm">
-                <p className="text-xs md:text-sm text-emerald-200/90 font-medium">
+            {/* Privacy Disclaimer Banner */}
+            <div className="bg-slate-900/80 border-b border-white/10 text-center py-2 px-4 backdrop-blur-sm">
+                <p className="text-xs md:text-sm text-slate-400 font-medium tracking-wide">
                     {dict.privacy_banner}
                 </p>
             </div>
@@ -112,9 +113,10 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             <CaseReviewModal dict={dict} lang={lang} />
 
             {/* Hero Section (Premium Legal Authority - Navy & Gold) */}
-            <header className="relative bg-navy-900 text-white pt-24 pb-20 px-4 text-center overflow-hidden">
-                <div className="absolute inset-0 bg-[url('/images/legal-bg-overlay.jpg')] opacity-10 bg-cover bg-center mix-blend-overlay"></div>
-                <div className="absolute inset-0 bg-gradient-to-b from-navy-900/90 via-navy-900/50 to-navy-900"></div>
+            {/* Hero Section (Premium Legal Authority - Slate & Gold) */}
+            <header className="relative bg-slate-950 text-white pt-12 md:pt-24 pb-12 md:pb-20 px-4 text-center overflow-hidden">
+                <div className="absolute inset-0 bg-[url('/images/legal-bg-overlay.jpg')] opacity-5 bg-cover bg-center mix-blend-overlay"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/50 to-slate-950"></div>
 
                 <div className="max-w-5xl mx-auto space-y-8 relative z-10">
                     {/* Badge */}
@@ -132,7 +134,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                     </h1>
 
                     {/* Subtext */}
-                    <p className="text-xl md:text-2xl font-light text-blue-100/80 max-w-3xl mx-auto leading-relaxed font-sans">
+                    <p className="text-xl md:text-2xl font-light text-slate-300/90 max-w-3xl mx-auto leading-relaxed font-sans">
                         <span className="block mb-2">{dict.hero.subtext_line1}</span>
                         {dict.hero.subtext_line2_pre} <span className="text-gold-500 font-bold decoration-gold-500/30 underline underline-offset-4 decoration-1">{dict.hero.subtext_highlight}</span> {dict.hero.subtext_line2_post}
                     </p>
@@ -156,25 +158,26 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                         <CitySearch lang={lang as 'en' | 'es'} />
                     </div>
 
-                    {/* Secondary Actions - Elegant Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-8 border-t border-white/10">
-                        <button onClick={() => openChat('call')} className="group flex flex-col items-center justify-center p-4 rounded-lg bg-navy-900/50 hover:bg-navy-800 border border-white/10 hover:border-gold-500/50 transition-all">
-                            <span className="text-blue-100 font-bold text-sm group-hover:text-gold-400 font-sans tracking-wide uppercase">{dict.buttons.call_now}</span>
+                    {/* Secondary Actions - Elegant Grid (Ghost Style) */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-8 border-t border-white/5">
+                        <button onClick={() => openChat('call')} className="group flex flex-col items-center justify-center p-4 rounded-lg bg-transparent hover:bg-white/5 border border-white/10 hover:border-gold-500/50 transition-all duration-300 h-full w-full">
+                            <span className="text-slate-200 font-bold text-sm group-hover:text-gold-400 font-sans tracking-wide uppercase transition-colors">{dict.buttons.call_now}</span>
                         </button>
-                        <button onClick={() => openChat('schedule')} className="group flex flex-col items-center justify-center p-4 rounded-lg bg-navy-900/50 hover:bg-navy-800 border border-white/10 hover:border-gold-500/50 transition-all">
-                            <span className="text-blue-100 font-bold text-sm group-hover:text-gold-400 font-sans tracking-wide uppercase">{dict.buttons.schedule}</span>
+                        <button onClick={() => openChat('schedule')} className="group flex flex-col items-center justify-center p-4 rounded-lg bg-transparent hover:bg-white/5 border border-white/10 hover:border-gold-500/50 transition-all duration-300 h-full w-full">
+                            <span className="text-slate-200 font-bold text-sm group-hover:text-gold-400 font-sans tracking-wide uppercase transition-colors">{dict.buttons.schedule}</span>
                         </button>
-                        <button onClick={() => openChat('sms')} className="group flex flex-col items-center justify-center p-4 rounded-lg bg-navy-900/50 hover:bg-navy-800 border border-white/10 hover:border-gold-500/50 transition-all">
-                            <span className="text-blue-100 font-bold text-sm group-hover:text-gold-400 font-sans tracking-wide uppercase">{dict.buttons.sms}</span>
+                        <button onClick={() => openChat('sms')} className="group flex flex-col items-center justify-center p-4 rounded-lg bg-transparent hover:bg-white/5 border border-white/10 hover:border-gold-500/50 transition-all duration-300 h-full w-full">
+                            <span className="text-slate-200 font-bold text-sm group-hover:text-gold-400 font-sans tracking-wide uppercase transition-colors">{dict.buttons.sms}</span>
                         </button>
-                        <button onClick={() => openChat('live')} className="group flex flex-col items-center justify-center p-4 rounded-lg bg-navy-900/50 hover:bg-navy-800 border border-white/10 hover:border-gold-500/50 transition-all">
-                            <span className="text-blue-100 font-bold text-sm group-hover:text-gold-400 font-sans tracking-wide uppercase">{dict.buttons.live_chat}</span>
+                        <button onClick={() => openChat('live')} className="group flex flex-col items-center justify-center p-4 rounded-lg bg-transparent hover:bg-white/5 border border-white/10 hover:border-gold-500/50 transition-all duration-300 h-full w-full">
+                            <span className="text-slate-200 font-bold text-sm group-hover:text-gold-400 font-sans tracking-wide uppercase transition-colors">{dict.buttons.live_chat}</span>
                         </button>
                     </div>
                 </div>
 
                 {/* TRUST BAR / RESULTS TICKER (New) */}
-                <div className="absolute bottom-0 left-0 right-0 bg-navy-900 border-t border-white/10 py-4 overflow-hidden">
+                {/* TRUST BAR / RESULTS TICKER (New) */}
+                <div className="absolute bottom-0 left-0 right-0 bg-slate-950 border-t border-white/5 py-4 overflow-hidden">
                     <div className="flex gap-12 animate-scroll-text whitespace-nowrap text-white/90 text-3xl font-serif font-black italic tracking-wider justify-center">
                         {(dict.trust_ticker || []).map((item: string, i: number) => (
                             <React.Fragment key={i}>
@@ -195,7 +198,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
             {/* 2. Demand Letter Tool (Visual Update) */}
             <section className="bg-white py-12 border-b border-gray-100">
                 <div className="max-w-5xl mx-auto px-4">
-                    <div className="bg-navy-900 text-white rounded-sm p-10 shadow-2xl relative overflow-hidden group border border-gold-500/20">
+                    <div className="bg-slate-900 text-white rounded-sm p-10 shadow-2xl relative overflow-hidden group border border-gold-500/20">
                         <div className="absolute right-0 top-0 opacity-5 transform translate-x-10 -translate-y-10">
                             <FileTextIcon size={250} />
                         </div>
@@ -204,7 +207,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                                 <h3 className="text-3xl font-serif font-bold mb-4 flex items-center gap-3 text-white">
                                     <FileTextIcon className="text-gold-500" /> {dict?.info_sections?.demand_letter?.title || "Challenge Low Offers"}
                                 </h3>
-                                <p className="text-blue-100 text-lg font-light leading-relaxed">{dict?.info_sections?.demand_letter?.desc || "Received a lowball offer? Don't argue on the phone. Send a formal legal demand letter experienced adjusters respect."}</p>
+                                <p className="text-slate-300 text-lg font-light leading-relaxed">{dict?.info_sections?.demand_letter?.desc || "Received a lowball offer? Don't argue on the phone. Send a formal legal demand letter experienced adjusters respect."}</p>
                             </div>
                             <a href="/tools/demand-letter" className="bg-gold-500 text-navy-900 font-black py-5 px-10 rounded-sm shadow-lg hover:scale-105 transition hover:bg-gold-400 whitespace-nowrap uppercase tracking-widest font-sans border border-white/10">
                                 {dict?.info_sections?.demand_letter?.cta || "Generate Free Demand PDF"} &rarr;
