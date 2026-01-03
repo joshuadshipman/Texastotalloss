@@ -15,10 +15,10 @@ export const en = {
     privacy_banner: "🔒 100% Confidential: Any information provided is never shared with authorities or government agencies. We Respect your Privacy.",
     buttons: {
         ai_review: "Free Instant AI Case Review",
-        call_now: "📞 Call Now",
+        call_now: "📞 Request a Call Now",
         live_chat: "💬 Live Chat",
         sms: "💬 Text / SMS",
-        schedule: "⏱ Schedule Free Consult",
+        schedule: "⏱ Free 15 Min Consult",
         options_standalone: {
             ai_review: "Start Free AI Case Review",
             live_chat: "Chat with Angel (Live)",
@@ -201,6 +201,7 @@ export const en = {
             empathy_msg: "It might not be enough to pay off your loan or match what you were expecting. Don't worry about the vehicle right now, worry about you getting better.",
             btn_chat: "Chat Now & See How We Can Help »",
             btn_demand: "Or, generate a Total Loss Demand Letter »",
+
             where_to_send: "Where should we send the full report?",
 
             // Success
@@ -249,7 +250,8 @@ export const en = {
             submitting: "Sending...",
             success_title: "Request Received!",
             success_msg: "Our team is reviewing your vehicle valuation and accident details.",
-            success_contact: "We will reach out via {method} shortly."
+            success_contact: "We will reach out via {method} shortly.",
+            call_confirmation: "Thanks! We have your number. An agent will call you in approximately 2-3 minutes. Stand by!"
         }
     },
     info_sections: {
@@ -394,7 +396,7 @@ export const en = {
             upload_fail: "Failed to upload photo.",
 
             // System
-            busy_agents: "All our agents are busy. An agent will text you shortly. What is the best time to text you?",
+
             live_connect: "Connecting to live agent...",
 
             // New Call/Chat Flow
@@ -418,6 +420,7 @@ export const en = {
             // Outcome
             greeting_standalone: "Hi, I'm Angel. I understand this can be a difficult time, and I'm here to support you. How can I help you today?",
             greeting_valuation: "I see you're looking at an estimated value of $${min} - $${max}. I can help you understand this value or discuss your case. What is your full name?",
+
 
             high_value_intro: "Strong likelihood that we may be able to assist. Are you free to chat now? Or prefer to set-up a free 15 minute consultation, I can search for the next available appt today.",
             validation_phone: "Please enter a valid phone number (e.g. 555-0199).",
@@ -689,5 +692,7 @@ export const en = {
     }
 };
 
-
 export type Dictionary = typeof en;
+
+
+

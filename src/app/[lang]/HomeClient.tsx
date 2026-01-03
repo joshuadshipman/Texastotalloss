@@ -175,7 +175,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
 
                 {/* TRUST BAR / RESULTS TICKER (New) */}
                 <div className="absolute bottom-0 left-0 right-0 bg-navy-900 border-t border-white/10 py-4 overflow-hidden">
-                    <div className="flex gap-12 animate-scroll-text whitespace-nowrap text-white/60 text-xl font-serif italic tracking-wider justify-center">
+                    <div className="flex gap-12 animate-scroll-text whitespace-nowrap text-white/90 text-3xl font-serif font-black italic tracking-wider justify-center">
                         {(dict.trust_ticker || []).map((item: string, i: number) => (
                             <React.Fragment key={i}>
                                 <span>{item}</span> {i < (dict.trust_ticker?.length || 0) - 1 && '• '}

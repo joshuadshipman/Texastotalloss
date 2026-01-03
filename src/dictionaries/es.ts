@@ -17,10 +17,10 @@ export const es: Dictionary = {
     privacy_banner: "🔒 100% Confidencial: La información proporcionada nunca se comparte con autoridades o agencias gubernamentales. Respetamos su Privacidad.",
     buttons: {
         ai_review: "Revisión de Caso con IA",
-        call_now: "Llamar / Chat en Vivo",
+        call_now: "Solicitar Llamada",
         live_chat: "💬 Chat en Vivo",
         sms: "💬 Texto / SMS",
-        schedule: "⏱ Agendar Consulta",
+        schedule: "⏱ Consulta Gratuita 15min",
         options_standalone: {
             ai_review: "Iniciar Revisión de Caso Gratuita",
             live_chat: "Chat en Vivo con Angel",
@@ -203,6 +203,7 @@ export const es: Dictionary = {
             empathy_msg: "Podría no ser suficiente para pagar su préstamo o lo que esperaba. No se preocupe por el vehículo ahora, preocúpese por mejorarse.",
             btn_chat: "Chatear Ahora y Ver Cómo Ayudamos »",
             btn_demand: "O genere una Carta de Demanda de Pérdida Total »",
+            call_confirmation: "¡Gracias! Tenemos su número. Un agente lo llamará en breve.",
             where_to_send: "¿A dónde enviamos el reporte completo?",
 
             // Success
@@ -370,8 +371,7 @@ export const es: Dictionary = {
         },
         responses: {
             // Greetings
-            greeting_live: "Te estoy conectando con un especialista en vivo ahora. Por favor espera...",
-            greeting_standard: "Hola, soy Angel. Entiendo que este es un momento estresante y estoy aquí para ayudarte. Para empezar, ¿me podrías dar tu nombre?",
+
             ask_name: "Para empezar, ¿me podrías dar tu nombre completo?",
             ask_phone: "Gracias, {name}. En caso de que nos desconectemos, ¿cuál es tu número de celular?",
             ask_contact_method: "Gracias. ¿Prefieres que te contactemos por Texto o Llamada?",
@@ -401,28 +401,24 @@ export const es: Dictionary = {
             live_connect: "Conectando con agente...",
 
             // New Call/Chat Flow
-            intro_call: "Hola, soy Angel. Puedo conectarte con nuestro equipo de inmediato.",
-            ask_disconnect_pref: "En caso de que nos desconectemos, ¿prefieres una Llamada o un Mensaje de Texto?",
-            ask_goal: "¿Buscas información médica o legal sobre tu pérdida hoy?",
-
-            // Specific Mode Greetings
-            greeting_schedule: "Puedo ayudarle a reservar una cita de inmediato. Primero, ¿cuál es su emergencia? (ej. Pérdida Total, Lesiones, Ambos)",
-            greeting_call: "Por favor proporcione su número de teléfono abajo, y nuestra mesa de admisión le llamará inmediatamente.",
-            greeting_sms: "Por favor ingrese su número de móvil. Le enviaremos un enlace seguro para iniciar su caso.",
+            intro_call: "Hola, soy Angel, su especialista en revisión de reclamos con IA. Puedo conectarlo con nuestro equipo inmediatamente.",
+            ask_disconnect_pref: "En caso de desconectarnos, ¿prefiere una Devolución de Llamada o un Mensaje de Texto?",
+            ask_goal: "¿Busca información médica o legal hoy sobre la pérdida?",
+            greeting_standard: "¡Hola! Soy Ángel, el Especialista en IA de la firma. Puedo ayudar a evaluar su caso al instante. ¿Cuál es su nombre completo?",
+            greeting_sms: "¡Hola! Soy Ángel de la firma de abogados. Estoy aquí para ayudar con su reclamo. ¿Cuál es su nombre completo?",
+            greeting_call: "¡Hola! Ingrese su número de teléfono a continuación (ej. 555-555-5555), y un agente lo llamará en unos minutos.",
+            greeting_schedule: "Vamos a agendar su cita. Primero, ¿podría darme su nombre completo?",
+            greeting_live: "Un agente en vivo estará con usted en breve. Mientras tanto, ¿cuál es su nombre completo?",
+            greeting_standalone: "¡Bienvenido de nuevo! ¿Cómo puedo ayudarle hoy?",
+            high_value_intro: "Es muy probable que podamos ayudarle. ¿Está libre para chatear ahora? O si prefiere programar una consulta gratuita de 15 minutos, puedo buscar la próxima cita disponible hoy.",
 
             // At The Scene Flow
-            scene_safety: "🚨 Primera prioridad: ¿Están todos a salvo? Si hay heridos o peligro inmediato, llama al 911. ¿Está en un lugar seguro para chatear?",
-            scene_safety_followup: "¿Estás en un lugar seguro para chatear ahora?",
-            scene_photo_plates: "Bien. Documentemos la evidencia antes de que se mueva. Por favor sube una foto de las **Placas** (del otro conductor y tuyas).",
-            scene_photo_scene: "Entendido. Ahora, toma 2-3 **fotos amplias de la escena** mostrando la posición de ambos vehículos.",
-            scene_photo_docs: "Siguiente: Sube una foto de la **Tarjeta de Seguro** del otro conductor y su **Licencia** (si lo permiten).",
+            scene_safety: "🚨 Prioridad uno: ¿Están todos a salvo? Si hay heridos o peligro inmediato, llame al 911 inmediatamente.",
+            scene_safety_followup: "¿Está en un lugar seguro para chatear ahora?",
+            scene_photo_plates: "Bien. Documentemos la evidencia antes de que se mueva. Por favor suba una foto de las **Placas** (Del otro conductor y las suyas).",
+            scene_photo_scene: "Entendido. Ahora, tome 2-3 **fotos amplias de la escena** mostrando la posición de ambos vehículos.",
+            scene_photo_docs: "Siguiente: Por favor suba una foto de la **Tarjeta de Seguro** y **Licencia de Conducir** del otro conductor (si lo permiten).",
             scene_processing: "Perfecto. Estamos asegurando estas imágenes en su **Expediente Digital**. Le enviaremos una copia con marca de tiempo para sus registros.",
-
-            // Outcome
-            qualify_high: "Basado en los detalles, tienes un caso fuerte para compensación. Te estoy conectando con un Especialista Senior AHORA.",
-            qualify_low: "Basado en las regulaciones de Texas, este puede ser un reclamo estándar. Hemos generado un **Paquete de Accidente Profesional** con pasos para manejar esto tú mismo. Enviándolo a tu correo ahora.",
-            greeting_standalone: "Hola, soy Ángel. Entiendo que es un momento difícil y estoy aquí para apoyarte. ¿Cómo puedo ayudarte hoy?",
-            high_value_intro: "Es muy probable que podamos ayudarle. ¿Está libre para chatear ahora? O si prefiere programar una consulta gratuita de 15 minutos, puedo buscar la próxima cita disponible hoy.",
             validation_phone: "Por favor ingrese un número de teléfono válido.",
             validation_name: "Por favor ingrese su nombre completo.",
             ask_email_phone: "Gracias, {name}. En caso de que nos desconectemos, ¿cuál es su correo electrónico o número de teléfono celular?",
@@ -432,7 +428,10 @@ export const es: Dictionary = {
             text_or_call_ask: "¿Texto o Llamada?",
             chat_or_schedule: "¿Le gustaría 'Chatear Ahora' o 'Agendar una Consulta'?",
 
+
             greeting_valuation: "Veo que está viendo un valor estimado de $${min} - $${max}. Puedo ayudarle a entender este valor o discutir su caso. ¿Cuál es su nombre completo?",
+            qualify_high: "Parece que tiene un caso sólido. Le estoy conectando con un Especialista Senior ahora...",
+            qualify_low: "Basado en las regulaciones de Texas, esto puede ser un reclamo estándar. Hemos generado un **Paquete de Accidente Profesional** con pasos para manejar esto usted mismo. Enviándolo a su correo ahora.",
             qualify_low_followup: "Sin embargo, nuestros Agentes Senior todavía están disponibles si desea discutir los detalles específicos. ¿Le gustaría chatear con una persona en vivo?"
         }
     },
