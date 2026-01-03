@@ -1,4 +1,6 @@
 
+"use client";
+
 import React, { useState, ChangeEvent } from 'react';
 import { useChat } from './ChatContext';
 import { XIcon, CheckCircleIcon, AlertTriangleIcon, ChevronRightIcon, ChevronLeftIcon } from 'lucide-react';
