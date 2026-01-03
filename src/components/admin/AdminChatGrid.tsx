@@ -51,6 +51,7 @@ function AdminChatWindow({ sessionId, onMinimize, onClose }: { sessionId: string
     const [messages, setMessages] = useState<any[]>([]);
     const [input, setInput] = useState('');
     const [details, setDetails] = useState<any>({});
+    const [showContext, setShowContext] = useState(false);
 
     // Quick Response State
     const [showQuickMenu, setShowQuickMenu] = useState(false);
@@ -71,7 +72,13 @@ function AdminChatWindow({ sessionId, onMinimize, onClose }: { sessionId: string
                 if (res.ok) {
                     const data = await res.json();
                     if (data.messages) setMessages(data.messages);
-                    if (data.details) setDetails(data.details);
+                    if (data.details) {
+                        setDetails(data.details);
+                        // Auto-show context if it's a valuation lead (has vehicle info)
+                        if (data.details.vehicle_info || data.details.description) {
+                            setShowContext(true);
+                        }
+                    }
                 }
             } catch (e) {
                 console.error("Error loading messages:", e);
@@ -180,10 +187,40 @@ function AdminChatWindow({ sessionId, onMinimize, onClose }: { sessionId: string
                     </div>
                 </div>
                 <div className="flex items-center gap-1">
+                    <button
+                        onClick={() => setShowContext(!showContext)}
+                        className={`p-1.5 rounded transition ${showContext ? 'bg-blue-600 text-white' : 'hover:bg-slate-700/50 text-slate-400 hover:text-white'}`}
+                        title="Toggle Case Details"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    </button>
                     <button onClick={onMinimize} className="p-1.5 hover:bg-slate-700/50 rounded text-slate-400 hover:text-white transition"><MinimizeIcon size={14} /></button>
                     <button onClick={onClose} className="p-1.5 hover:bg-red-500/20 rounded text-slate-400 hover:text-red-400 transition"><XIcon size={14} /></button>
                 </div>
             </div>
+
+            {/* Context Panel (Overlay) */}
+            {showContext && (
+                <div className="bg-blue-50 border-b border-blue-100 p-3 text-xs text-slate-700 animate-in slide-in-from-top-2 shadow-inner">
+                    <h4 className="font-bold text-blue-900 mb-2 uppercase tracking-wider text-[10px]">Case Context</h4>
+                    <div className="grid grid-cols-2 gap-2 mb-2">
+                        <div>
+                            <span className="block text-slate-400 text-[9px] uppercase">Vehicle</span>
+                            <span className="font-bold">{details.vehicle_info || 'N/A'}</span>
+                        </div>
+                        <div>
+                            <span className="block text-slate-400 text-[9px] uppercase">Contact</span>
+                            <span className="font-bold">{details.phone || details.email || 'N/A'}</span>
+                        </div>
+                    </div>
+                    {details.description && (
+                        <div className="bg-white p-2 rounded border border-blue-100">
+                            <span className="block text-slate-400 text-[9px] uppercase mb-1">Summary</span>
+                            <p className="leading-relaxed">{details.description}</p>
+                        </div>
+                    )}
+                </div>
+            )}
 
             {/* Messages - Premium Chat Bubbles */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 relative">

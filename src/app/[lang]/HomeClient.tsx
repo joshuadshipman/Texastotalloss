@@ -177,15 +177,15 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
 
                 {/* TRUST BAR / RESULTS TICKER (New) */}
                 {/* TRUST BAR / RESULTS TICKER (New) */}
-                <div className="absolute bottom-0 left-0 right-0 bg-slate-950 border-t border-white/5 py-4 overflow-hidden">
-                    <div className="flex gap-12 animate-scroll-text whitespace-nowrap text-white/90 text-3xl font-serif font-black italic tracking-wider justify-center">
+                <div className="absolute bottom-0 left-0 right-0 bg-slate-950 border-t border-white/5 py-6 overflow-hidden z-20">
+                    <div className="flex gap-12 animate-scroll-text whitespace-nowrap text-gold-500 text-3xl md:text-4xl font-serif font-black italic tracking-wider drop-shadow-md">
                         {(dict.trust_ticker || []).map((item: string, i: number) => (
                             <React.Fragment key={i}>
-                                <span>{item}</span> {i < (dict.trust_ticker?.length || 0) - 1 && '• '}
+                                <span>{item}</span> {i < (dict.trust_ticker?.length || 0) - 1 && <span className="text-white/20">•</span>}
                             </React.Fragment>
                         ))}
                         {(!dict.trust_ticker || dict.trust_ticker.length === 0) && (
-                            <><span>$5.2M Truck Accident Settlement</span> • <span>$1.8M Company Vehicle Crash</span></>
+                            <><span>$5.2M Truck Accident Settlement</span> <span className="text-white/20">•</span> <span>$1.8M Company Vehicle Crash</span></>
                         )}
                     </div>
                 </div>

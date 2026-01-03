@@ -14,6 +14,7 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
     const { openChat } = useChat();
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
+        zip: '',
         vin: '',
         year: '',
         make: '',
@@ -23,7 +24,7 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
         trim: 'base',
         features: [] as string[]
     });
-    const [valuation, setValuation] = useState<{ min: number, max: number, trimAdj: number, featAdj: number } | null>(null);
+    const [valuation, setValuation] = useState<{ min: number, max: number, trimAdj: number, featAdj: number, methodology?: string, sources?: any[] } | null>(null);
 
     // Use dictionary labels if available
     const labels = dict?.val_calc?.labels || {};
@@ -48,6 +49,10 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
     ];
 
     const handleNextStep1 = () => {
+        if (!formData.zip || formData.zip.length < 5) {
+            alert("Please enter a valid 5-digit Zip Code.");
+            return;
+        }
         if (!formData.year || !formData.make || !formData.model) {
             alert("Please fill in Year, Make, and Model.");
             return;
@@ -65,6 +70,7 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    zip: formData.zip,
                     year: formData.year,
                     make: formData.make,
                     model: formData.model,
@@ -90,7 +96,9 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
                 min: baseMin + featAdj,
                 max: baseMax + featAdj,
                 trimAdj: 0,
-                featAdj: featAdj
+                featAdj: featAdj,
+                methodology: data.methodology,
+                sources: data.sources
             });
             setStep(3);
 
@@ -137,9 +145,15 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
                             <div className="animate-in slide-in-from-right duration-300">
                                 <h3 className="text-2xl font-black mb-6 text-center">{labels.step1_title || "Step 1: Vehicle Details"}</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                                    <div className="md:col-span-2">
-                                        <label className="block text-sm font-bold text-gray-700 mb-2">{labels.vin || "VIN (Recommended for Exact Match)"}</label>
-                                        <input name="vin" value={formData.vin} onChange={handleInputChange} className="w-full p-2 border rounded font-mono" placeholder="17 Digit VIN" />
+                                    <div className="md:col-span-2 grid grid-cols-3 gap-4">
+                                        <div className="col-span-1">
+                                            <label className="block text-sm font-bold text-gray-700 mb-2">Zip Code *</label>
+                                            <input name="zip" value={formData.zip} onChange={handleInputChange} maxLength={5} className="w-full p-2 border rounded font-mono text-center tracking-widest bg-yellow-50 border-yellow-200" placeholder="75001" />
+                                        </div>
+                                        <div className="col-span-2">
+                                            <label className="block text-sm font-bold text-gray-700 mb-2">{labels.vin || "VIN (Optional)"}</label>
+                                            <input name="vin" value={formData.vin} onChange={handleInputChange} className="w-full p-2 border rounded font-mono" placeholder="17 Digit VIN" />
+                                        </div>
                                     </div>
                                     <CustomSelect label={labels.year || "Year"} options={Array.from({ length: 25 }, (_, i) => 2025 - i).map(y => ({ label: y.toString(), value: y.toString() }))} value={formData.year} onChange={(v) => setFormData({ ...formData, year: v.toString() })} />
                                     <div><label className="block text-sm font-bold mb-2">{labels.make || "Make"}</label><input name="make" value={formData.make} onChange={handleInputChange} className="w-full p-3 border rounded" placeholder="Toyota" /></div>
@@ -202,6 +216,26 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
                                             .replace('{opts}', valuation.featAdj.toLocaleString())}
                                     </p>
                                 </div>
+
+                                {valuation.methodology && (
+                                    <div className="mb-8 bg-slate-50 p-4 rounded-xl border border-slate-100 text-left">
+                                        <h5 className="font-bold text-slate-700 text-sm uppercase tracking-wide mb-2 flex items-center gap-2">
+                                            <span className="bg-green-100 text-green-700 p-1 rounded">✓</span> Market Methodology
+                                        </h5>
+                                        <p className="text-sm text-slate-600 mb-3 leading-relaxed">
+                                            {valuation.methodology}
+                                        </p>
+                                        {valuation.sources && (
+                                            <div className="flex flex-wrap gap-2">
+                                                {valuation.sources.map((source, idx) => (
+                                                    <a key={idx} href={source.url} target="_blank" rel="noopener noreferrer" className="text-xs bg-white border border-slate-200 px-2 py-1 rounded text-blue-600 hover:underline hover:bg-blue-50">
+                                                        View {source.name} Source ↗
+                                                    </a>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
 
                                 <div className="text-center animate-in fade-in duration-500 delay-150">
                                     <h3 className="text-2xl font-black text-blue-900 mb-4">{labels.empathy_title || "We understand this might not be enough..."}</h3>

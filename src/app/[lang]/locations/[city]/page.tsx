@@ -13,10 +13,14 @@ type Props = {
 };
 
 // 1. Generate Static Params for Build Time Optimization (SSG)
+// 1. Generate Static Params for Build Time Optimization (SSG)
 export async function generateStaticParams() {
-    return cities.map((city) => ({
-        city: city.slug,
-    }));
+    const params = [];
+    for (const city of cities) {
+        params.push({ lang: 'en', city: city.slug });
+        params.push({ lang: 'es', city: city.slug });
+    }
+    return params;
 }
 
 // 2. Dynamic Metadata
@@ -192,7 +196,7 @@ export default async function CityPage({ params }: Props) {
     };
 
     return (
-        <main className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900">
+        <main className="min-h-screen bg-slate-950 flex flex-col font-sans text-white">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -202,30 +206,30 @@ export default async function CityPage({ params }: Props) {
             {/* We reuse the main modal, which is global context anyway, but good to ensure it's here */}
 
             {/* City Hero */}
-            <header className="bg-blue-900 text-white py-16 px-4 text-center relative overflow-hidden">
+            <header className="bg-slate-900 text-white py-16 px-4 text-center relative overflow-hidden border-b border-white/5">
                 <div className="absolute inset-0 opacity-10 bg-[url('/images/pattern.png')]"></div>
                 <div className="max-w-4xl mx-auto relative z-10">
-                    <div className="inline-flex items-center gap-2 bg-blue-800/80 px-4 py-1 rounded-full text-blue-200 text-sm font-bold mb-4 border border-blue-700">
+                    <div className="inline-flex items-center gap-2 bg-slate-800/80 px-4 py-1 rounded-full text-gold-500 text-sm font-bold mb-4 border border-white/10">
                         <MapPinIcon size={14} /> Local Assistance for {city.county} County
                     </div>
 
-                    <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
-                        {city.name} Total Loss & <br /><span className="text-red-500">Injury Claim Help</span>
+                    <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-white">
+                        {city.name} Total Loss & <br /><span className="text-gold-500">Injury Claim Help</span>
                     </h1>
 
                     {/* Hotspot Links (SEO) */}
                     {city.hotspots && (
                         <div className="mt-6 flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
-                            <span className="text-xs font-bold text-blue-300 uppercase tracking-widest pt-1">Crash Hotspots:</span>
+                            <span className="text-xs font-bold text-gold-500 uppercase tracking-widest pt-1">Crash Hotspots:</span>
                             {city.hotspots.map(spot => (
-                                <a key={spot.slug} href={`/${lang}/locations/${city.slug}/${spot.slug}`} className="text-xs bg-blue-800/50 hover:bg-blue-700 text-white px-2 py-1 rounded border border-blue-500/30 transition">
+                                <a key={spot.slug} href={`/${lang}/locations/${city.slug}/${spot.slug}`} className="text-xs bg-slate-800 hover:bg-gold-500 hover:text-navy-900 text-slate-300 px-2 py-1 rounded border border-white/10 transition">
                                     {spot.name}
                                 </a>
                             ))}
                         </div>
                     )}
 
-                    <p className="text-xl text-blue-100 max-w-2xl mx-auto mt-6">
+                    <p className="text-xl text-slate-300 max-w-2xl mx-auto mt-6">
                         Don't let {city.name} insurance adjusters underpay you. Get your free valuation and legal review today.
                     </p>
                 </div>
@@ -236,16 +240,16 @@ export default async function CityPage({ params }: Props) {
                 (city.subCities || city.parentCity) && (
                     <div className="max-w-4xl mx-auto px-4 py-4 mb-4">
                         {city.parentCity && (
-                            <a href={`/${lang}/locations/${city.parentCity}`} className="text-blue-600 hover:underline flex items-center gap-1 font-bold mb-4">
+                            <a href={`/${lang}/locations/${city.parentCity}`} className="text-gold-500 hover:text-gold-400 font-bold mb-4 flex items-center gap-1">
                                 &larr; Back to {city.parentCity.charAt(0).toUpperCase() + city.parentCity.slice(1)} Metro Area
                             </a>
                         )}
                         {city.subCities && city.subCities.length > 0 && (
-                            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                                <h3 className="font-bold text-gray-800 mb-3">Serving Nearby {city.name} Communities:</h3>
+                            <div className="bg-slate-900 p-6 rounded-xl shadow-sm border border-white/10">
+                                <h3 className="font-bold text-white mb-3">Serving Nearby {city.name} Communities:</h3>
                                 <div className="flex flex-wrap gap-2">
                                     {city.subCities.map(sc => (
-                                        <a key={sc} href={`/${lang}/locations/${sc}`} className="bg-gray-100 hover:bg-blue-50 text-gray-700 hover:text-blue-700 px-3 py-1 rounded-full text-sm font-medium transition cursor-pointer">
+                                        <a key={sc} href={`/${lang}/locations/${sc}`} className="bg-slate-800 hover:bg-gold-500 text-slate-300 hover:text-navy-900 px-3 py-1 rounded-full text-sm font-medium transition cursor-pointer border border-white/5">
                                             {sc.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ')}
                                         </a>
                                     ))}
@@ -257,20 +261,20 @@ export default async function CityPage({ params }: Props) {
             }
 
             {/* Local Context Section */}
-            <section className="py-12 px-4 bg-white">
+            <section className="py-12 px-4 bg-slate-950">
                 <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
                     <div className="md:col-span-2 space-y-6">
-                        <h2 className="text-3xl font-bold text-gray-900">Why {city.name} Claims Are Different</h2>
-                        <p className="text-lg text-gray-700 leading-relaxed">
+                        <h2 className="text-3xl font-bold text-white">Why {city.name} Claims Are Different</h2>
+                        <p className="text-lg text-slate-300 leading-relaxed">
                             {city.description}
                         </p>
-                        <p className="text-gray-600">
+                        <p className="text-slate-400">
                             Whether you were on the highway or a local road in {city.name} (Zip Codes: {city.zipCodes.slice(0, 3).join(', ')}, etc.), local market values for vehicles differ from the state average. This affects your "Actual Cash Value" (ACV).
                         </p>
 
-                        <div className="bg-blue-50 p-6 rounded-xl border-l-4 border-blue-600 mt-6">
-                            <h3 className="font-bold text-blue-900 text-lg mb-2">Local Tip for {city.name} Residents</h3>
-                            <p className="text-blue-800">
+                        <div className="bg-slate-900 p-6 rounded-xl border-l-4 border-gold-500 mt-6 border border-white/5">
+                            <h3 className="font-bold text-white text-lg mb-2">Local Tip for {city.name} Residents</h3>
+                            <p className="text-slate-300">
                                 If your car is at a tow lot in {city.county} County, you are accruing daily storage fees. Mitigation is critical.
                             </p>
                         </div>
@@ -278,22 +282,22 @@ export default async function CityPage({ params }: Props) {
                         {/* TRUSTED RESOURCES BLOCK */}
                         {city.resources && (
                             <div className="mt-8 space-y-6">
-                                <h3 className="text-2xl font-bold text-gray-900 border-b pb-2">Top Rated {city.name} Resources</h3>
+                                <h3 className="text-2xl font-bold text-white border-b border-white/10 pb-2">Top Rated {city.name} Resources</h3>
 
                                 {/* Towing */}
                                 {city.resources.towing && (
-                                    <div className="bg-white border rounded-lg p-4 shadow-sm">
-                                        <h4 className="font-bold text-red-600 flex items-center gap-2 mb-3"><AlertTriangleIcon size={18} /> Emergency Towing</h4>
+                                    <div className="bg-slate-900 border border-white/10 rounded-lg p-4 shadow-sm">
+                                        <h4 className="font-bold text-gold-500 flex items-center gap-2 mb-3"><AlertTriangleIcon size={18} /> Emergency Towing</h4>
                                         <div className="space-y-3">
                                             {city.resources.towing.map((r, i) => (
-                                                <div key={i} className="flex justify-between items-start border-b border-gray-50 last:border-0 pb-2 last:pb-0">
+                                                <div key={i} className="flex justify-between items-start border-b border-white/5 last:border-0 pb-2 last:pb-0">
                                                     <div>
-                                                        <div className="font-bold text-gray-800">{r.name}</div>
-                                                        <div className="text-xs text-gray-500">{r.note}</div>
+                                                        <div className="font-bold text-slate-200">{r.name}</div>
+                                                        <div className="text-xs text-slate-500">{r.note}</div>
                                                     </div>
                                                     <div className="text-right">
-                                                        <div className="text-yellow-500 text-sm font-bold">★ {r.rating}</div>
-                                                        <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">View</a>
+                                                        <div className="text-gold-400 text-sm font-bold">★ {r.rating}</div>
+                                                        <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:text-blue-300 hover:underline">View</a>
                                                     </div>
                                                 </div>
                                             ))}
@@ -303,18 +307,18 @@ export default async function CityPage({ params }: Props) {
 
                                 {/* Repair */}
                                 {city.resources.repair && (
-                                    <div className="bg-white border rounded-lg p-4 shadow-sm">
-                                        <h4 className="font-bold text-blue-600 flex items-center gap-2 mb-3"><CarIcon size={18} /> Trusted Repair Facilities</h4>
+                                    <div className="bg-slate-900 border border-white/10 rounded-lg p-4 shadow-sm">
+                                        <h4 className="font-bold text-gold-500 flex items-center gap-2 mb-3"><CarIcon size={18} /> Trusted Repair Facilities</h4>
                                         <div className="space-y-3">
                                             {city.resources.repair.map((r, i) => (
-                                                <div key={i} className="flex justify-between items-start border-b border-gray-50 last:border-0 pb-2 last:pb-0">
+                                                <div key={i} className="flex justify-between items-start border-b border-white/5 last:border-0 pb-2 last:pb-0">
                                                     <div>
-                                                        <div className="font-bold text-gray-800">{r.name}</div>
-                                                        <div className="text-xs text-gray-500">{r.note}</div>
+                                                        <div className="font-bold text-slate-200">{r.name}</div>
+                                                        <div className="text-xs text-slate-500">{r.note}</div>
                                                     </div>
                                                     <div className="text-right">
-                                                        <div className="text-yellow-500 text-sm font-bold">★ {r.rating}</div>
-                                                        <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">View</a>
+                                                        <div className="text-gold-400 text-sm font-bold">★ {r.rating}</div>
+                                                        <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:text-blue-300 hover:underline">View</a>
                                                     </div>
                                                 </div>
                                             ))}
@@ -327,27 +331,27 @@ export default async function CityPage({ params }: Props) {
                     </div>
 
                     {/* Quick Stats / Sidebar */}
-                    <div className="bg-gray-100 p-6 rounded-xl h-fit">
-                        <h3 className="font-bold text-gray-900 mb-4 border-b border-gray-300 pb-2">Area Resources</h3>
-                        <ul className="space-y-3 text-sm text-gray-700">
-                            <li className="flex items-center gap-2"><CarIcon size={16} className="text-blue-600" /> {city.name} Body Shops</li>
-                            <li className="flex items-center gap-2"><AlertTriangleIcon size={16} className="text-red-600" /> {city.name} Police Reports</li>
-                            <li className="flex items-center gap-2"><ShieldCheckIcon size={16} className="text-green-600" /> {city.county} County Court Info</li>
+                    <div className="bg-slate-900 p-6 rounded-xl h-fit border border-white/10">
+                        <h3 className="font-bold text-white mb-4 border-b border-white/10 pb-2">Area Resources</h3>
+                        <ul className="space-y-3 text-sm text-slate-300">
+                            <li className="flex items-center gap-2"><CarIcon size={16} className="text-gold-500" /> {city.name} Body Shops</li>
+                            <li className="flex items-center gap-2"><AlertTriangleIcon size={16} className="text-gold-500" /> {city.name} Police Reports</li>
+                            <li className="flex items-center gap-2"><ShieldCheckIcon size={16} className="text-gold-500" /> {city.county} County Court Info</li>
                         </ul>
-                        <button className="mt-6 w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">
+                        <button className="mt-6 w-full bg-gold-500 text-navy-900 font-bold py-3 rounded-lg hover:bg-gold-600 transition">
                             Compare {city.name} Market Values
                         </button>
 
                         {/* Rental Link */}
                         {city.resources?.rental && (
-                            <div className="mt-6 pt-4 border-t border-gray-200">
-                                <h4 className="font-bold text-xs text-gray-500 uppercase mb-2">Need a Rental?</h4>
+                            <div className="mt-6 pt-4 border-t border-white/10">
+                                <h4 className="font-bold text-xs text-slate-500 uppercase mb-2">Need a Rental?</h4>
                                 {city.resources.rental.map((r, i) => (
-                                    <a key={i} href={r.link} target="_blank" className="block bg-white border border-gray-200 p-2 rounded mb-2 hover:bg-blue-50 transition">
-                                        <div className="font-bold text-gray-800 text-sm">{r.name}</div>
-                                        <div className="flex justify-between text-xs text-gray-500">
+                                    <a key={i} href={r.link} target="_blank" className="block bg-slate-800 border border-white/5 p-2 rounded mb-2 hover:bg-slate-700 transition">
+                                        <div className="font-bold text-slate-200 text-sm">{r.name}</div>
+                                        <div className="flex justify-between text-xs text-slate-500">
                                             <span>{r.note}</span>
-                                            <span className="text-yellow-600">★ {r.rating}</span>
+                                            <span className="text-gold-400">★ {r.rating}</span>
                                         </div>
                                     </a>
                                 ))}
@@ -358,16 +362,16 @@ export default async function CityPage({ params }: Props) {
             </section>
 
             {/* Dynamic Content Injection - Reusing Main Components */}
-            <section className="py-12 bg-gray-50 border-t border-gray-200">
+            <section className="py-12 bg-slate-950 border-t border-white/5">
                 <div className="max-w-2xl mx-auto px-4 text-center">
-                    <h2 className="text-2xl font-bold mb-6">Check Your {city.name} Vehicle Value</h2>
-                    <p className="text-gray-600 mb-8">Use our calculator to see if the insurance offer matches local {city.name} dealer prices.</p>
+                    <h2 className="text-2xl font-bold mb-6 text-white">Check Your {city.name} Vehicle Value</h2>
+                    <p className="text-slate-400 mb-8">Use our calculator to see if the insurance offer matches local {city.name} dealer prices.</p>
                     <ValuationCalculator dict={dict} />
                 </div>
             </section>
 
             {/* SEO Keywords Footer Block */}
-            <section className="py-8 bg-white border-t border-gray-100 text-xs text-gray-400">
+            <section className="py-8 bg-slate-900 border-t border-white/5 text-xs text-slate-500">
                 <div className="max-w-5xl mx-auto px-4 text-center">
                     <p>Serving {city.name} and surrounding areas including {city.zipCodes.join(', ')}. Keywords: {city.name} car accident lawyer, total loss help {city.name}, gap insurance {city.name}.</p>
                 </div>

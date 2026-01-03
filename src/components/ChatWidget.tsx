@@ -286,7 +286,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                     dbPayload.user_data = {
                         vehicle_info: vehicleStr,
                         // We use the description field to store the valuation summary
-                        description: `Valuation Inquiry: ${vehicleStr}. Est: $${valMin} - $${valMax}. Mileage: ${chatData.mileage}. Condition: ${chatData.condition}. Features: ${chatData.features?.join(', ')}`,
+                        description: `Valuation Inquiry: ${vehicleStr}. Est: $${valMin} - $${valMax}. Local Market: ${chatData.zip || 'N/A'}. Mileage: ${chatData.mileage}. Condition: ${chatData.condition}. Features: ${chatData.features?.join(', ')}`,
 
                         // We don't have personal info yet, just the vehicle
                         full_name: 'Guest (Valuation)',

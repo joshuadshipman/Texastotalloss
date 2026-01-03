@@ -21,11 +21,11 @@ export default function LocationsIndex({ params: { lang } }: LocationsIndexProps
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 py-16 px-4">
+        <div className="min-h-screen bg-slate-950 py-16 px-4">
             <div className="max-w-6xl mx-auto">
                 <div className="text-center mb-16">
-                    <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-6">{dict.title}</h1>
-                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                    <h1 className="text-4xl md:text-5xl font-black text-white mb-6 uppercase tracking-tight">{dict.title}</h1>
+                    <p className="text-xl text-slate-400 max-w-2xl mx-auto font-light">
                         {dict.subtitle}
                     </p>
                 </div>
@@ -35,17 +35,17 @@ export default function LocationsIndex({ params: { lang } }: LocationsIndexProps
                         const cityInfo = city.translations[lang as 'en' | 'es'] || city.translations.en;
                         return (
                             <Link href={`/${lang}/locations/${city.slug}`} key={city.slug} className="group">
-                                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 transition-all hover:shadow-2xl hover:-translate-y-1">
+                                <div className="bg-slate-900 rounded-2xl shadow-lg border border-white/10 p-8 transition-all hover:bg-slate-800 hover:border-gold-500/50 hover:shadow-2xl hover:-translate-y-1 h-full flex flex-col">
                                     <div className="flex items-center gap-3 mb-4">
-                                        <div className="p-3 bg-blue-50 text-blue-600 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                        <div className="p-3 bg-slate-950 text-gold-500 rounded-lg border border-white/5 group-hover:bg-gold-500 group-hover:text-slate-900 transition-colors">
                                             <MapPinIcon size={24} />
                                         </div>
-                                        <h2 className="text-2xl font-bold text-gray-900">{cityInfo.name}</h2>
+                                        <h2 className="text-2xl font-bold text-white group-hover:text-gold-400 transition-colors">{cityInfo.name}</h2>
                                     </div>
-                                    <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed">
+                                    <p className="text-slate-400 mb-6 line-clamp-3 leading-relaxed flex-grow">
                                         {cityInfo.description}
                                     </p>
-                                    <div className="flex items-center text-blue-600 font-bold group-hover:gap-2 transition-all">
+                                    <div className="flex items-center text-gold-500 font-bold group-hover:gap-2 transition-all text-sm uppercase tracking-wide mt-auto">
                                         {dict.view_guide} <ArrowRightIcon size={18} className="ml-2" />
                                     </div>
                                 </div>
