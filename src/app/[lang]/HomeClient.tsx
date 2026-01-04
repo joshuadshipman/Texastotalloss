@@ -182,8 +182,8 @@ export default function HomeClient({ dict, lang, trendingContent }: HomeClientPr
                 </div>
 
                 {/* TRUST BAR / RESULTS TICKER (New) */}
-                <div className="absolute bottom-0 left-0 right-0 bg-slate-950 border-t border-white/5 py-6 overflow-hidden z-20">
-                    <div className="flex gap-12 animate-scroll-text whitespace-nowrap text-gold-500 text-3xl md:text-4xl font-serif font-black italic tracking-wider drop-shadow-md">
+                <div className="absolute bottom-0 left-0 right-0 bg-slate-950 border-t border-white/5 py-3 md:py-6 overflow-hidden z-20">
+                    <div className="flex gap-12 animate-scroll-text whitespace-nowrap text-gold-500 text-lg md:text-4xl font-serif font-black italic tracking-wider drop-shadow-md">
                         {(dict.trust_ticker || []).map((item: string, i: number) => (
                             <React.Fragment key={i}>
                                 <span>{item}</span> {i < (dict.trust_ticker?.length || 0) - 1 && <span className="text-white/20">•</span>}
