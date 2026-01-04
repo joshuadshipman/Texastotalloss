@@ -774,7 +774,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center font-bold text-lg">A</div>
                         <div>
-                            <h3 className="font-bold text-lg">Angel (AI Specialist)</h3>
+                            <h3 className="font-bold text-lg">{dict?.chat.header_title || "Angel - Your AI Accident Case Review Specialist"}</h3>
                             <p className="text-xs text-blue-200 flex items-center gap-1"><span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> Online • Private Session</p>
                         </div>
                     </div>

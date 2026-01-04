@@ -346,7 +346,7 @@ export const en = {
     chat: {
         trigger: "Chat Support",
         close: "Close",
-        header_title: "AI Accident Case Review Specialist",
+        header_title: "Angel - Your AI Accident Case Review Specialist",
         header_subtitle: "Analyzing Texas Regulations",
         input_placeholder: "Type a message...",
         upload_tooltip: "Upload Photo",
