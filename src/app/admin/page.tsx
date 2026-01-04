@@ -147,19 +147,28 @@ export default function AdminDashboard() {
     };
 
     if (!isAuthenticated) return (
-        <div className="flex h-screen items-center justify-center bg-gray-100">
-            <div className="bg-white p-8 rounded shadow-md w-96">
-                <h1 className="text-xl font-bold mb-4 text-blue-900">Texas Total Loss Admin</h1>
-                <p className="text-sm text-gray-500 mb-4">Enter secure PIN to access dashboard.</p>
+        <div className="flex h-screen items-center justify-center bg-slate-50 font-sans">
+            <div className="bg-white p-8 rounded-xl shadow-lg w-96 border border-slate-200 text-center">
+                <div className="mb-6 flex justify-center">
+                    <div className="bg-blue-900 text-white w-12 h-12 rounded-lg flex items-center justify-center font-bold text-xl shadow-md">TTL</div>
+                </div>
+                <h1 className="text-2xl font-black mb-2 text-slate-900">Admin Access</h1>
+                <p className="text-sm text-slate-500 mb-6">Enter secure PIN to access dashboard.</p>
                 <input
                     type="password"
                     value={pin}
                     onChange={e => setPin(e.target.value)}
-                    className="border p-2 rounded w-full mb-4"
-                    placeholder="PIN"
+                    className="border border-slate-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none p-4 rounded-xl w-full mb-4 text-center text-3xl tracking-[1em] font-bold text-slate-800 placeholder:text-slate-200 transition-all"
+                    placeholder="••••"
+                    autoFocus
                     onKeyDown={e => e.key === 'Enter' && handleLogin()}
                 />
-                <button onClick={handleLogin} className="bg-blue-900 text-white p-2 rounded w-full font-bold">Access Dashboard</button>
+                <button
+                    onClick={handleLogin}
+                    className="bg-blue-900 hover:bg-blue-800 text-white p-4 rounded-xl w-full font-bold shadow-lg shadow-blue-900/20 transition-all active:scale-[0.98]"
+                >
+                    Unlock Dashboard
+                </button>
             </div>
         </div>
     );
