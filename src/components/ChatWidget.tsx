@@ -401,14 +401,28 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             const isValidPhone = phoneRegex.test(userText) && cleanNumber.length >= 10;
             const isValidEmail = emailRegex.test(userText);
 
-            if (!isValidPhone && !isValidEmail) {
-                addMessage('user', userText); // Show what they typed
+            // BYPASS: Check if user is asking for Live Agent explicitly
+            const isLiveRequest = dict.chat.keywords.live_agent.some(k => lowerText.includes(k));
+            if (isLiveRequest) {
+                // Soft Handoff Trigger
+                addMessage('user', userText);
+                setStep(900); // 900 = Live Handoff Soft Prompt
                 setTimeout(() => {
-                    addMessage('bot', (dict.chat.responses as any).validation_contact || "Please enter a valid phone number OR email address.");
-                    processingRef.current = false; // UNLOCK on error
-                }, 400);
+                    addMessage('bot', (dict.chat.responses as any).live_handoff_soft || "Understood. Connecting you now...");
+                    processingRef.current = false;
+                }, 600);
                 setInput('');
-                return; // STOP execution
+                return;
+            } else {
+                if (!isValidPhone && !isValidEmail) {
+                    addMessage('user', userText); // Show what they typed
+                    setTimeout(() => {
+                        addMessage('bot', (dict.chat.responses as any).validation_contact || "Please enter a valid phone number OR email address.");
+                        processingRef.current = false; // UNLOCK on error
+                    }, 400);
+                    setInput('');
+                    return; // STOP execution
+                }
             }
         }
 
@@ -425,6 +439,26 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             let newData = { ...userData };
 
             // === CORE LOGIC ===
+
+            // --- Handlers for Special Flows ---
+
+            // Step 900: Logic for Soft Handoff Answer
+            if (step === 900) {
+                const isYes = lowerText.includes('yes') || lowerText.includes('details') || lowerText.includes('sure') || lowerText.includes('ok');
+                // If they say "General", "No", "Just connect me"
+                if (isYes) {
+                    // They want to give details -> Go to Name input (Standard Flow start)
+                    botText = d.chat.responses.greeting_standard || "Hi. To start, may I have your name?";
+                    nextStep = 0; // Reset to start of intake
+                } else {
+                    // They want general support -> Connect immediately
+                    botText = d.chat.responses.greeting_live;
+                    setIsLiveMode(true);
+                    // Optionally trigger an alert here
+                    sendChatAlert(`🔵 Live Chat Requested (General Support)`);
+                    // Stop further bot processing effectively (React State takes over)
+                }
+            }
 
             // --- At The Scene Flow ---
             if (step === 200) { // Safety Answer

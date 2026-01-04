@@ -444,6 +444,8 @@ export const en = {
             qualify_high: "It looks like you have a strong case. I'm connecting you with a Senior Specialist now...",
             qualify_low: "Based on Texas regulations, this may be a standard claim. We have generated a **Professional Accident Packet** with steps to handle this yourself. Sending it to your email now.",
             qualify_low_followup: "However, our Senior Agents are still available if you'd like to discuss the specific details. Would you like to chat with a live person?",
+            live_handoff_soft: "Understood. I am connecting you to a live agent now. To ensure I route you to the correct specialist, would you like to provide a few details first? Or would you prefer to connect with General Support?"
+
         }
     },
     caseReview: {
