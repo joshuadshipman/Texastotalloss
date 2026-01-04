@@ -879,7 +879,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
     }
 
     return (
-        <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end">
+        <div className="fixed bottom-4 right-4 z-[999] flex flex-col items-end">
             {/* Trigger Button */}
             {!isOpen && (
                 <button

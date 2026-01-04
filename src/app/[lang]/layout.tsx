@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"], variable: '--font-sans' });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: '--font-serif' });
 
 export const metadata = {
-    title: "Texas Auto Total Loss & Diminished Value Help",
+    title: "Texas Total Loss - AI Claim Assistance",
     description: "Total Loss claim help in Texas. Calculator, Gap Insurance, and Injury assistance.",
 };
 

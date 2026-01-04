@@ -22,12 +22,18 @@ import Footer from '@/components/Footer';
 
 const CaseReviewModal = dynamic(() => import('@/components/CaseReviewModal'), { ssr: false });
 
+import { ContentItem } from '@/lib/content';
+import TrendingQuestions from '@/components/TrendingQuestions';
+
+// ... imports
+
 interface HomeClientProps {
     dict: Dictionary;
     lang: string;
+    trendingContent?: ContentItem[];
 }
 
-export default function HomeClient({ dict, lang }: HomeClientProps) {
+export default function HomeClient({ dict, lang, trendingContent }: HomeClientProps) {
     const { openChat, openReview } = useChat();
 
     // JSON-LD is static based on language, can be here or in Server Comp.
@@ -114,7 +120,7 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
 
             {/* Hero Section (Premium Legal Authority - Navy & Gold) */}
             {/* Hero Section (Premium Legal Authority - Slate & Gold) */}
-            <header className="relative bg-slate-950 text-white pt-12 md:pt-24 pb-12 md:pb-20 px-4 text-center overflow-hidden">
+            <header className="relative bg-slate-950 text-white pt-12 md:pt-24 pb-32 md:pb-40 px-4 text-center overflow-hidden">
                 <div className="absolute inset-0 bg-[url('/images/legal-bg-overlay.jpg')] opacity-5 bg-cover bg-center mix-blend-overlay"></div>
                 <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/50 to-slate-950"></div>
 
@@ -176,7 +182,6 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                 </div>
 
                 {/* TRUST BAR / RESULTS TICKER (New) */}
-                {/* TRUST BAR / RESULTS TICKER (New) */}
                 <div className="absolute bottom-0 left-0 right-0 bg-slate-950 border-t border-white/5 py-6 overflow-hidden z-20">
                     <div className="flex gap-12 animate-scroll-text whitespace-nowrap text-gold-500 text-3xl md:text-4xl font-serif font-black italic tracking-wider drop-shadow-md">
                         {(dict.trust_ticker || []).map((item: string, i: number) => (
@@ -190,6 +195,11 @@ export default function HomeClient({ dict, lang }: HomeClientProps) {
                     </div>
                 </div>
             </header>
+
+            {/* Trending Questions Section */}
+            {trendingContent && trendingContent.length > 0 && (
+                <TrendingQuestions items={trendingContent} />
+            )}
 
             {/* Informational Sections (Why Hire, Liability, Urgency) - Moved Above Calculator */}
             <InfoSections dict={dict} />

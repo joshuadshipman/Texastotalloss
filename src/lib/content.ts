@@ -62,3 +62,37 @@ export async function getContentBySlug(slug: string) {
     }
     return data as ContentItem;
 }
+
+export async function upsertContent(content: Partial<ContentItem>) {
+    // Basic slug generation if missing
+    if (!content.slug && content.title) {
+        content.slug = content.title.toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)+/g, '');
+    }
+
+    const { data, error } = await supabase
+        .from('content_library')
+        .upsert(content)
+        .select()
+        .single();
+
+    if (error) {
+        console.error('Error upserting content:', error);
+        throw error;
+    }
+    return data as ContentItem;
+}
+
+export async function deleteContent(id: string) {
+    const { error } = await supabase
+        .from('content_library')
+        .delete()
+        .eq('id', id);
+
+    if (error) {
+        console.error('Error deleting content:', error);
+        throw error;
+    }
+    return true;
+}

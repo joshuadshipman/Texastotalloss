@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import AdminChatGrid from '@/components/admin/AdminChatGrid';
 import BlogManagement from '@/components/admin/BlogManagement';
+import ContentLibraryManager from '@/components/admin/ContentLibraryManager';
 
 // Type definition matches our SQL schema
 type Lead = {
@@ -36,6 +37,7 @@ export default function AdminDashboard() {
     const [pin, setPin] = useState('');
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState<'leads' | 'content'>('leads');
+
 
     // Filters
     const [filterLang, setFilterLang] = useState<'all' | 'en' | 'es'>('all');
@@ -181,9 +183,9 @@ export default function AdminDashboard() {
                             </button>
                             <button
                                 onClick={() => setActiveTab('content')}
-                                className={`px-4 py-1.5 rounded-md text-sm font-bold transition ${activeTab === 'content' ? 'bg-white shadow text-purple-600' : 'text-gray-500 hover:text-gray-700'}`}
+                                className={`px-4 py-1.5 rounded-md text-sm font-bold transition ${activeTab === 'content' ? 'bg-white shadow text-gold-600' : 'text-gray-500 hover:text-gray-700'}`}
                             >
-                                Blog Content
+                                Video Library
                             </button>
                         </div>
                         <button onClick={fetchLeads} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full" title="Refresh">
@@ -195,7 +197,7 @@ export default function AdminDashboard() {
 
             <main className="max-w-[1400px] mx-auto p-4 space-y-8">
 
-                {activeTab === 'content' && <BlogManagement />}
+                {activeTab === 'content' && <ContentLibraryManager />}
 
                 {activeTab === 'leads' && (
                     <>

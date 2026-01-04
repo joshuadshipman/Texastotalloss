@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { useChat } from './ChatContext';
 import CustomSelect from '@/components/ui/CustomSelect';
 import { Dictionary } from '@/dictionaries/en';
+import { VEHICLE_DATA } from '@/data/vehicles';
 
 interface ValuationCalculatorProps {
     dict: Dictionary;
@@ -155,10 +156,44 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
                                             <input name="vin" value={formData.vin} onChange={handleInputChange} className="w-full p-2 border rounded font-mono" placeholder="17 Digit VIN" />
                                         </div>
                                     </div>
-                                    <CustomSelect label={labels.year || "Year"} options={Array.from({ length: 25 }, (_, i) => 2025 - i).map(y => ({ label: y.toString(), value: y.toString() }))} value={formData.year} onChange={(v) => setFormData({ ...formData, year: v.toString() })} />
-                                    <div><label className="block text-sm font-bold mb-2">{labels.make || "Make"}</label><input name="make" value={formData.make} onChange={handleInputChange} className="w-full p-3 border rounded" placeholder="Toyota" /></div>
-                                    <div><label className="block text-sm font-bold mb-2">{labels.model || "Model"}</label><input name="model" value={formData.model} onChange={handleInputChange} className="w-full p-3 border rounded" placeholder="Camry" /></div>
-                                    <div><label className="block text-sm font-bold mb-2">{labels.mileage || "Mileage"}</label><input type="number" name="mileage" value={formData.mileage} onChange={handleInputChange} className="w-full p-3 border rounded" placeholder="50000" /></div>
+                                    <CustomSelect
+                                        label={labels.year || "Year"}
+                                        options={Object.keys(VEHICLE_DATA).sort((a, b) => b.localeCompare(a)).map(y => ({ label: y, value: y }))}
+                                        value={formData.year}
+                                        onChange={(v) => {
+                                            setFormData({ ...formData, year: v.toString(), make: '', model: '', trim: '' });
+                                        }}
+                                        placeholder="Select Year"
+                                    />
+
+                                    <CustomSelect
+                                        label={labels.make || "Make"}
+                                        options={formData.year && VEHICLE_DATA[formData.year]
+                                            ? Object.keys(VEHICLE_DATA[formData.year]).map(m => ({ label: m, value: m }))
+                                            : []}
+                                        value={formData.make}
+                                        onChange={(v) => {
+                                            setFormData({ ...formData, make: v.toString(), model: '', trim: '' });
+                                        }}
+                                        placeholder={formData.year ? "Select Make" : "Select Year First"}
+                                    />
+
+                                    <CustomSelect
+                                        label={labels.model || "Model"}
+                                        options={formData.year && formData.make && VEHICLE_DATA[formData.year][formData.make]
+                                            ? Object.keys(VEHICLE_DATA[formData.year][formData.make]).map(m => ({ label: m, value: m })) // Note: Structure change, Vehicle Data is Make -> Model -> Trims[]
+                                            : []}
+                                        value={formData.model}
+                                        onChange={(v) => {
+                                            setFormData({ ...formData, model: v.toString(), trim: '' });
+                                        }}
+                                        placeholder={formData.make ? "Select Model" : "Select Make First"}
+                                    />
+
+                                    <div>
+                                        <label className="block text-sm font-bold mb-2">{labels.mileage || "Mileage"}</label>
+                                        <input type="number" name="mileage" value={formData.mileage} onChange={handleInputChange} className="w-full p-3 border rounded-xl" placeholder="50000" />
+                                    </div>
                                 </div>
                                 <button onClick={handleNextStep1} className="w-full bg-navy-900 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-navy-800 transition-colors">{labels.btn_next || "Next Step »"}</button>
                             </div>
@@ -171,13 +206,16 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
 
                                 <div className="mb-8">
                                     <label className="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">{labels.select_trim || "Select Trim Level"}</label>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                        {mockTrims.map(t => (
-                                            <label key={t.id} className={`p-4 border-2 rounded-xl cursor-pointer transition-all flex flex-col items-center justify-center text-center hover:bg-blue-50 ${formData.trim === t.id ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600' : 'border-gray-200'}`}>
-                                                <input type="radio" name="trim" value={t.id} checked={formData.trim === t.id} onChange={(e) => setFormData({ ...formData, trim: e.target.value })} className="sr-only" />
-                                                <span className="font-bold text-blue-900">{t.label}</span>
-                                            </label>
-                                        ))}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <CustomSelect
+                                            label={labels.select_trim || "Select Trim Level"}
+                                            options={formData.year && formData.make && formData.model && VEHICLE_DATA[formData.year][formData.make][formData.model]
+                                                ? VEHICLE_DATA[formData.year][formData.make][formData.model].map(t => ({ label: t, value: t }))
+                                                : mockTrims.map(t => ({ label: t.label, value: t.id }))} // Fallback if regular data missing
+                                            value={formData.trim}
+                                            onChange={(v) => setFormData({ ...formData, trim: v.toString() })}
+                                            placeholder="Select Trim"
+                                        />
                                     </div>
                                 </div>
 

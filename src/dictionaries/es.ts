@@ -16,7 +16,7 @@ export const es: Dictionary = {
     },
     privacy_banner: "🔒 100% Confidencial: La información proporcionada nunca se comparte con autoridades o agencias gubernamentales. Respetamos su Privacidad.",
     buttons: {
-        ai_review: "Revisión de Caso con IA",
+        ai_review: "Revisión de Caso Gratuita con IA",
         call_now: "Solicitar Llamada",
         live_chat: "💬 Chat en Vivo",
         sms: "💬 Texto / SMS",
