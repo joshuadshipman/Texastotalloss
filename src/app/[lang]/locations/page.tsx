@@ -1,15 +1,15 @@
-'use client';
-
 import React from 'react';
 import Link from 'next/link';
 import { cities } from '@/data/cities';
 import { MapPinIcon, ArrowRightIcon } from 'lucide-react';
 
 interface LocationsIndexProps {
-    params: { lang: string };
+    params: Promise<{ lang: string }>;
 }
 
-export default function LocationsIndex({ params: { lang } }: LocationsIndexProps) {
+export default async function LocationsIndex({ params }: LocationsIndexProps) {
+    const { lang } = await params;
+
     const dict = lang === 'es' ? {
         title: "Guías de Ciudades de Texas",
         subtitle: "Encuentre recursos locales, médicos y legales en su área.",
