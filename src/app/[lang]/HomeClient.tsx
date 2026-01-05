@@ -34,7 +34,7 @@ interface HomeClientProps {
 }
 
 export default function HomeClient({ dict, lang, trendingContent }: HomeClientProps) {
-    const { openChat, openReview } = useChat();
+    const { openChat, openReview, openChatWithQuestion } = useChat();
 
     // JSON-LD is static based on language, can be here or in Server Comp.
     // Putting here is fine.
@@ -438,24 +438,34 @@ export default function HomeClient({ dict, lang, trendingContent }: HomeClientPr
 
                             {/* 10. FAQ Section */}
                             <SectionCard title={dict.sections.faq.title} subtitle={dict.sections.faq.subtitle} icon={<SearchIcon size={24} />} colorClass="bg-blue-600">
+                                {/* 10. FAQ Section */}
                                 <div className="space-y-6 text-left">
-                                    <div>
-                                        <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2">
+                                    <div
+                                        onClick={() => openChatWithQuestion(dict.sections.faq.q1, dict.sections.faq.a1)}
+                                        className="cursor-pointer group hover:bg-blue-50 p-2 -ml-2 rounded-lg transition-colors"
+                                    >
+                                        <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2 group-hover:text-blue-700">
                                             <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">?</span>
                                             {dict.sections.faq.q1}
                                         </h3>
                                         <p className="text-gray-600 ml-8 mt-1 border-l-2 border-blue-100 pl-4">{dict.sections.faq.a1}</p>
                                     </div>
 
-                                    <div>
-                                        <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2">
+                                    <div
+                                        onClick={() => openChatWithQuestion(dict.sections.faq.q2, dict.sections.faq.a2)}
+                                        className="cursor-pointer group hover:bg-blue-50 p-2 -ml-2 rounded-lg transition-colors"
+                                    >
+                                        <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2 group-hover:text-blue-700">
                                             <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">?</span>
                                             {dict.sections.faq.q2}
                                         </h3>
                                         <p className="text-gray-600 ml-8 mt-1 border-l-2 border-blue-100 pl-4">{dict.sections.faq.a2}</p>
                                     </div>
-                                    <div>
-                                        <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2">
+                                    <div
+                                        onClick={() => openChatWithQuestion(dict.sections.faq.q3, dict.sections.faq.a3)}
+                                        className="cursor-pointer group hover:bg-blue-50 p-2 -ml-2 rounded-lg transition-colors"
+                                    >
+                                        <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2 group-hover:text-blue-700">
                                             <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">?</span>
                                             {dict.sections.faq.q3}
                                         </h3>
@@ -463,22 +473,31 @@ export default function HomeClient({ dict, lang, trendingContent }: HomeClientPr
                                     </div>
 
                                     {/* Expanded FAQs */}
-                                    <div>
-                                        <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2">
+                                    <div
+                                        onClick={() => openChatWithQuestion(dict.sections.faq.q4, dict.sections.faq.a4)}
+                                        className="cursor-pointer group hover:bg-blue-50 p-2 -ml-2 rounded-lg transition-colors"
+                                    >
+                                        <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2 group-hover:text-blue-700">
                                             <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">?</span>
                                             {dict.sections.faq.q4}
                                         </h3>
                                         <p className="text-gray-600 ml-8 mt-1 border-l-2 border-blue-100 pl-4">{dict.sections.faq.a4}</p>
                                     </div>
-                                    <div>
-                                        <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2">
+                                    <div
+                                        onClick={() => openChatWithQuestion(dict.sections.faq.q5, dict.sections.faq.a5)}
+                                        className="cursor-pointer group hover:bg-blue-50 p-2 -ml-2 rounded-lg transition-colors"
+                                    >
+                                        <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2 group-hover:text-blue-700">
                                             <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">?</span>
                                             {dict.sections.faq.q5}
                                         </h3>
                                         <p className="text-gray-600 ml-8 mt-1 border-l-2 border-blue-100 pl-4">{dict.sections.faq.a5}</p>
                                     </div>
-                                    <div>
-                                        <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2">
+                                    <div
+                                        onClick={() => openChatWithQuestion(dict.sections.faq.q6, dict.sections.faq.a6)}
+                                        className="cursor-pointer group hover:bg-blue-50 p-2 -ml-2 rounded-lg transition-colors"
+                                    >
+                                        <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2 group-hover:text-blue-700">
                                             <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">?</span>
                                             {dict.sections.faq.q6}
                                         </h3>

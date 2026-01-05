@@ -12,6 +12,7 @@ type ChatContextType = {
     isReviewOpen: boolean;
     openReview: () => void;
     closeReview: () => void;
+    openChatWithQuestion: (question: string, answer: string) => void;
 };
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -37,8 +38,14 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     const openReview = () => setIsReviewOpen(true);
     const closeReview = () => setIsReviewOpen(false);
 
+    const openChatWithQuestion = (question: string, answer: string) => {
+        setChatMode('faq_answer');
+        setChatData({ question, answer });
+        setIsOpen(true);
+    };
+
     return (
-        <ChatContext.Provider value={{ isOpen, chatMode, chatData, openChat, closeChat, toggleChat, isReviewOpen, openReview, closeReview }}>
+        <ChatContext.Provider value={{ isOpen, chatMode, chatData, openChat, closeChat, toggleChat, isReviewOpen, openReview, closeReview, openChatWithQuestion }}>
             {children}
         </ChatContext.Provider>
     );

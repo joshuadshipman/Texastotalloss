@@ -130,6 +130,22 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
         }
     };
 
+    // 5. Auto Open for FAQ
+    useEffect(() => {
+        if (isOpen && chatMode === 'faq_answer' && chatData?.question && chatData?.answer) {
+            setMessages([
+                { sender: 'user', text: chatData.question },
+                { sender: 'bot', text: chatData.answer }
+            ]);
+            setStep(999); // Set to neutral/end state or specific FAQ state
+            // Follow up after reading
+            setTimeout(() => {
+                addMessage('bot', dict?.chat.responses.greeting_standalone || "Hi, I'm Angel. I understand this can be a difficult time, and I'm here to support you. How can I help you today?");
+                setStep(0); // Reset to base Intake flow
+            }, 3000);
+        }
+    }, [isOpen, chatMode, chatData, dict]);
+
     // --- END HELPERS ---
 
 
