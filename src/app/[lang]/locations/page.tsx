@@ -23,7 +23,12 @@ export default async function LocationsIndex({ params }: LocationsIndexProps) {
     return (
         <div className="min-h-screen bg-slate-950 py-16 px-4">
             <div className="max-w-6xl mx-auto">
-                <div className="text-center mb-16">
+                <div className="text-center mb-16 relative">
+                    <div className="absolute top-0 left-0">
+                        <Link href={`/${lang}`} className="inline-flex items-center gap-1 text-slate-400 hover:text-gold-500 transition text-sm font-bold uppercase tracking-wider">
+                            &larr; Return Home
+                        </Link>
+                    </div>
                     <h1 className="text-4xl md:text-5xl font-black text-white mb-6 uppercase tracking-tight">{dict.title}</h1>
                     <p className="text-xl text-slate-400 max-w-2xl mx-auto font-light">
                         {dict.subtitle}

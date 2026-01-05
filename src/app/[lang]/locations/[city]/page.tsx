@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { cities } from '@/data/cities';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ShieldCheckIcon, AlertTriangleIcon, CarIcon, MapPinIcon } from 'lucide-react';
 // Static imports to debug build issues
@@ -209,8 +210,14 @@ export default async function CityPage({ params }: Props) {
             <header className="bg-slate-900 text-white py-16 px-4 text-center relative overflow-hidden border-b border-white/5">
                 <div className="absolute inset-0 opacity-10 bg-[url('/images/pattern.png')]"></div>
                 <div className="max-w-4xl mx-auto relative z-10">
-                    <div className="inline-flex items-center gap-2 bg-slate-800/80 px-4 py-1 rounded-full text-gold-500 text-sm font-bold mb-4 border border-white/10">
-                        <MapPinIcon size={14} /> Local Assistance for {city.county} County
+                    {/* Navigation */}
+                    <div className="flex justify-between items-center mb-6">
+                        <Link href={`/${lang}`} className="inline-flex items-center gap-1 text-slate-400 hover:text-gold-500 transition text-sm font-bold uppercase tracking-wider">
+                            &larr; Return Home
+                        </Link>
+                        <div className="inline-flex items-center gap-2 bg-slate-800/80 px-4 py-1 rounded-full text-gold-500 text-sm font-bold border border-white/10">
+                            <MapPinIcon size={14} /> Local Assistance for {city.county} County
+                        </div>
                     </div>
 
                     <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-white">
