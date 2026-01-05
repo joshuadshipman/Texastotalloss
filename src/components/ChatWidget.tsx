@@ -591,6 +591,32 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 const isAtFault = isYes;
                 newData.fault = isAtFault ? 'me' : 'other';
 
+                // New Flow: Ask Vehicle Details
+                botText = (dict.chat.responses as any).ask_vehicle || "What is the Year, Make, and Model of your vehicle?";
+                nextStep = 60;
+                setCurrentOptions(null);
+            }
+
+            // Step 60: Vehicle Answered
+            else if (step === 60) {
+                newData.vehicle_info = userText;
+                botText = (dict.chat.responses as any).ask_insurance || "Who is the insurance company involved (theirs or yours)?";
+                nextStep = 61;
+            }
+
+            // Step 61: Insurance Answered
+            else if (step === 61) {
+                newData.insurance_carrier = userText;
+                botText = (dict.chat.responses as any).ask_accident_date || "When did the accident happen? (Approximate date is fine)";
+                nextStep = 62;
+                // Optional: Date picker options if we had a UI for it, text is fine
+            }
+
+            // Step 62: Date Answered
+            else if (step === 62) {
+                newData.accident_date = userText;
+
+                // Resume standard flow -> Ask Lawyer
                 botText = d.chat.responses.ask_lawyer;
                 nextStep = 54;
                 setCurrentOptions([
@@ -1003,25 +1029,57 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                     </div>
 
                     {/* Input Area */}
-                    <div className="p-4 bg-white border-t border-gray-100 flex gap-2 shrink-0">
-                        <label className="p-3 bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 cursor-pointer">
-                            <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} ref={fileInputRef} />
-                            <span className="text-xl">📷</span>
-                        </label>
+                    <div className="p-4 bg-white border-t border-gray-100 flex flex-col gap-2 shrink-0">
+                        <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200">
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                className="hidden"
+                                accept="image/*"
+                                onChange={(e) => {
+                                    if (e.target.files && e.target.files[0]) {
+                                        // Handle file upload
+                                        addMessage('bot', "Uploading photos is not fully configured in this demo yet!");
+                                    }
+                                }}
+                            />
+                            {/* Camera Icon - Hidden for now or mapped to file input */}
+                            {/* <button onClick={() => fileInputRef.current?.click()} className="p-2 text-gray-400 hover:text-blue-600 transition">
+                                <CameraIcon size={20} />
+                            </button> */}
 
-                        <input
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                            placeholder="Type your message..."
-                            className="flex-1 bg-gray-100 border-0 rounded-full px-4 text-sm text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
-                        />
-                        <button
-                            onClick={() => handleSend()}
-                            className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 shadow-md transition transform active:scale-95"
-                        >
-                            <SendIcon size={18} />
-                        </button>
+                            <input
+                                type="text"
+                                value={input}
+                                onChange={e => setInput(e.target.value)}
+                                onKeyDown={e => e.key === 'Enter' && handleSend()}
+                                placeholder={isLiveMode ? "Type a message..." : "Type your answer..."}
+                                className="flex-1 bg-transparent outline-none text-gray-700 min-w-0"
+                                disabled={processingRef.current && !isLiveMode}
+                            />
+                            <button
+                                onClick={() => handleSend()}
+                                disabled={!input.trim() || (processingRef.current && !isLiveMode)}
+                                className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                            >
+                                <SendIcon size={18} />
+                            </button>
+                        </div>
+
+                        {/* Persistent Live Agent Option */}
+                        {!isLiveMode && (
+                            <div className="mt-2 text-center">
+                                <button
+                                    onClick={() => {
+                                        setStep(900); // Trigger soft handoff flow
+                                        handleSend("I'd like to speak to a live agent.");
+                                    }}
+                                    className="text-xs text-slate-400 hover:text-blue-600 underline transition cursor-pointer"
+                                >
+                                    Start Live Chat with an Agent
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

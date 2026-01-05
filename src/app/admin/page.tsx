@@ -12,11 +12,13 @@ import BlogManagement from '@/components/admin/BlogManagement';
 import ContentLibraryManager from '@/components/admin/ContentLibraryManager';
 
 // Type definition matches our SQL schema
+// Type definition matches our SQL schema
 type Lead = {
     id: string;
     created_at: string;
     full_name: string;
     phone: string;
+    email?: string; // New
     language: 'en' | 'es';
     score: number;
     pain_level: number;
@@ -29,6 +31,8 @@ type Lead = {
     preferred_contact_time?: string;
     liability_summary?: string;
     accident_date?: string;
+    vehicle_info?: string; // New
+    insurance_carrier?: string; // New
 };
 
 export default function AdminDashboard() {
@@ -106,6 +110,7 @@ export default function AdminDashboard() {
                 // Extract from user_data JSON
                 full_name: s.user_data?.full_name || 'Anonymous Visitor',
                 phone: s.user_data?.phone || 'No Phone',
+                email: s.user_data?.email || '', // New
                 language: s.user_data?.language || 'en',
                 score: s.user_data?.score || 0,
                 pain_level: s.user_data?.pain_level || 0,
@@ -114,7 +119,13 @@ export default function AdminDashboard() {
                 description: s.user_data?.description || '',
                 preferred_contact_time: s.user_data?.best_time || '',
                 liability_summary: s.user_data?.fault === 'other' ? 'Not at fault' : (s.user_data?.fault === 'me' ? 'At fault' : ''),
-                accident_date: s.user_data?.year ? `Year: ${s.user_data.year}` : '',
+
+                // Fix: Check for explicit accident_date first, then fallback or empty. Don't use 'year' as date.
+                accident_date: s.user_data?.accident_date || '',
+
+                vehicle_info: s.user_data?.vehicle_info || '', // New
+                insurance_carrier: s.user_data?.insurance_carrier || '', // New
+
                 files_count: 0 // TODO: Check storage buckets if needed
             }));
 
@@ -341,6 +352,7 @@ export default function AdminDashboard() {
                                 <div className="space-y-1">
                                     <label className="text-xs font-bold text-gray-400 uppercase">Contact</label>
                                     <p className="font-medium">{selectedLead.phone}</p>
+                                    {selectedLead.email && <p className="text-sm text-blue-600">{selectedLead.email}</p>}
                                     <p className="text-sm text-gray-600">Best Time: {selectedLead.preferred_contact_time || 'Anytime'}</p>
                                 </div>
                                 <div className="space-y-1">
@@ -348,6 +360,20 @@ export default function AdminDashboard() {
                                     <div className="flex items-center gap-2">
                                         <div className="text-2xl font-black">{selectedLead.score}%</div>
                                         <ScoreBadge score={selectedLead.score} />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="p-4 bg-blue-50/50 rounded-lg border border-blue-100">
+                                <h3 className="font-bold text-blue-900 mb-3 text-sm uppercase">Vehicle & Insurance</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-xs font-bold text-blue-400 uppercase">Vehicle</label>
+                                        <div className="font-mono text-sm font-medium text-slate-700">{selectedLead.vehicle_info || 'N/A'}</div>
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-bold text-blue-400 uppercase">Insurance</label>
+                                        <div className="text-sm font-medium text-slate-700">{selectedLead.insurance_carrier || 'N/A'}</div>
                                     </div>
                                 </div>
                             </div>
