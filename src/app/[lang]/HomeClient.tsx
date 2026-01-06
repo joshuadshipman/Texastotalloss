@@ -166,17 +166,17 @@ export default function HomeClient({ dict, lang, trendingContent }: HomeClientPr
 
                     {/* Secondary Actions - Elegant Grid (Ghost Style) */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-8 border-t border-white/5">
-                        <button onClick={() => openChat('call')} className="group flex flex-col items-center justify-center p-4 rounded-lg bg-transparent hover:bg-white/5 border border-white/10 hover:border-gold-500/50 transition-all duration-300 h-full w-full">
-                            <span className="text-slate-200 font-bold text-sm group-hover:text-gold-400 font-sans tracking-wide uppercase transition-colors">{dict.buttons.call_now}</span>
+                        <button onClick={() => openChat('call')} className="group flex flex-col items-center justify-center p-6 rounded-xl bg-white/5 hover:bg-white/10 border-2 border-white/20 hover:border-gold-500 transition-all duration-300 w-full h-32 backdrop-blur-sm">
+                            <span className="text-slate-100 font-black text-lg group-hover:text-gold-400 font-sans tracking-widest uppercase transition-colors">{dict.buttons.call_now}</span>
                         </button>
-                        <button onClick={() => openChat('schedule')} className="group flex flex-col items-center justify-center p-4 rounded-lg bg-transparent hover:bg-white/5 border border-white/10 hover:border-gold-500/50 transition-all duration-300 h-full w-full">
-                            <span className="text-slate-200 font-bold text-sm group-hover:text-gold-400 font-sans tracking-wide uppercase transition-colors">{dict.buttons.schedule}</span>
+                        <button onClick={() => openChat('schedule')} className="group flex flex-col items-center justify-center p-6 rounded-xl bg-white/5 hover:bg-white/10 border-2 border-white/20 hover:border-gold-500 transition-all duration-300 w-full h-32 backdrop-blur-sm">
+                            <span className="text-slate-100 font-black text-lg group-hover:text-gold-400 font-sans tracking-widest uppercase transition-colors">{dict.buttons.schedule}</span>
                         </button>
-                        <button onClick={() => openChat('sms')} className="group flex flex-col items-center justify-center p-4 rounded-lg bg-transparent hover:bg-white/5 border border-white/10 hover:border-gold-500/50 transition-all duration-300 h-full w-full">
-                            <span className="text-slate-200 font-bold text-sm group-hover:text-gold-400 font-sans tracking-wide uppercase transition-colors">{dict.buttons.sms}</span>
+                        <button onClick={() => openChat('sms')} className="group flex flex-col items-center justify-center p-6 rounded-xl bg-white/5 hover:bg-white/10 border-2 border-white/20 hover:border-gold-500 transition-all duration-300 w-full h-32 backdrop-blur-sm">
+                            <span className="text-slate-100 font-black text-lg group-hover:text-gold-400 font-sans tracking-widest uppercase transition-colors">{dict.buttons.sms}</span>
                         </button>
-                        <button onClick={() => openChat('live')} className="group flex flex-col items-center justify-center p-4 rounded-lg bg-transparent hover:bg-white/5 border border-white/10 hover:border-gold-500/50 transition-all duration-300 h-full w-full">
-                            <span className="text-slate-200 font-bold text-sm group-hover:text-gold-400 font-sans tracking-wide uppercase transition-colors">{dict.buttons.live_chat}</span>
+                        <button onClick={() => openChat('live')} className="group flex flex-col items-center justify-center p-6 rounded-xl bg-white/5 hover:bg-white/10 border-2 border-white/20 hover:border-gold-500 transition-all duration-300 w-full h-32 backdrop-blur-sm">
+                            <span className="text-slate-100 font-black text-lg group-hover:text-gold-400 font-sans tracking-widest uppercase transition-colors">{dict.buttons.live_chat}</span>
                         </button>
                     </div>
                 </div>
