@@ -166,17 +166,17 @@ export default function HomeClient({ dict, lang, trendingContent }: HomeClientPr
 
                     {/* Secondary Actions - Elegant Grid (Ghost Style) */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-8 border-t border-white/5">
-                        <button onClick={() => openChat('call')} className="group flex flex-col items-center justify-center p-6 rounded-xl bg-white/5 hover:bg-white/10 border-2 border-white/20 hover:border-gold-500 transition-all duration-300 w-full h-32 backdrop-blur-sm">
-                            <span className="text-slate-100 font-black text-lg group-hover:text-gold-400 font-sans tracking-widest uppercase transition-colors">{dict.buttons.call_now}</span>
+                        <button onClick={() => openChat('call')} className="group flex flex-col items-center justify-center p-6 rounded-xl bg-slate-900/80 hover:bg-slate-800 border-2 border-gold-500 shadow-[0_0_20px_rgba(212,175,55,0.2)] hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] transition-all duration-300 w-full h-32 backdrop-blur-md transform hover:-translate-y-1">
+                            <span className="text-gold-400 font-black text-lg group-hover:text-white font-sans tracking-widest uppercase transition-colors">{dict.buttons.call_now}</span>
                         </button>
-                        <button onClick={() => openChat('schedule')} className="group flex flex-col items-center justify-center p-6 rounded-xl bg-white/5 hover:bg-white/10 border-2 border-white/20 hover:border-gold-500 transition-all duration-300 w-full h-32 backdrop-blur-sm">
-                            <span className="text-slate-100 font-black text-lg group-hover:text-gold-400 font-sans tracking-widest uppercase transition-colors">{dict.buttons.schedule}</span>
+                        <button onClick={() => openChat('schedule')} className="group flex flex-col items-center justify-center p-6 rounded-xl bg-slate-900/80 hover:bg-slate-800 border-2 border-gold-500 shadow-[0_0_20px_rgba(212,175,55,0.2)] hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] transition-all duration-300 w-full h-32 backdrop-blur-md transform hover:-translate-y-1">
+                            <span className="text-gold-400 font-black text-lg group-hover:text-white font-sans tracking-widest uppercase transition-colors">{dict.buttons.schedule}</span>
                         </button>
-                        <button onClick={() => openChat('sms')} className="group flex flex-col items-center justify-center p-6 rounded-xl bg-white/5 hover:bg-white/10 border-2 border-white/20 hover:border-gold-500 transition-all duration-300 w-full h-32 backdrop-blur-sm">
-                            <span className="text-slate-100 font-black text-lg group-hover:text-gold-400 font-sans tracking-widest uppercase transition-colors">{dict.buttons.sms}</span>
+                        <button onClick={() => openChat('sms')} className="group flex flex-col items-center justify-center p-6 rounded-xl bg-slate-900/80 hover:bg-slate-800 border-2 border-gold-500 shadow-[0_0_20px_rgba(212,175,55,0.2)] hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] transition-all duration-300 w-full h-32 backdrop-blur-md transform hover:-translate-y-1">
+                            <span className="text-gold-400 font-black text-lg group-hover:text-white font-sans tracking-widest uppercase transition-colors">{dict.buttons.sms}</span>
                         </button>
-                        <button onClick={() => openChat('live')} className="group flex flex-col items-center justify-center p-6 rounded-xl bg-white/5 hover:bg-white/10 border-2 border-white/20 hover:border-gold-500 transition-all duration-300 w-full h-32 backdrop-blur-sm">
-                            <span className="text-slate-100 font-black text-lg group-hover:text-gold-400 font-sans tracking-widest uppercase transition-colors">{dict.buttons.live_chat}</span>
+                        <button onClick={() => openChat('live')} className="group flex flex-col items-center justify-center p-6 rounded-xl bg-slate-900/80 hover:bg-slate-800 border-2 border-gold-500 shadow-[0_0_20px_rgba(212,175,55,0.2)] hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] transition-all duration-300 w-full h-32 backdrop-blur-md transform hover:-translate-y-1">
+                            <span className="text-gold-400 font-black text-lg group-hover:text-white font-sans tracking-widest uppercase transition-colors">{dict.buttons.live_chat}</span>
                         </button>
                     </div>
                 </div>
