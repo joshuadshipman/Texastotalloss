@@ -33,6 +33,7 @@ type Lead = {
     accident_date?: string;
     vehicle_info?: string; // New
     insurance_carrier?: string; // New
+    activity_log?: string[]; // New
 };
 
 export default function AdminDashboard() {
@@ -125,6 +126,7 @@ export default function AdminDashboard() {
 
                 vehicle_info: s.user_data?.vehicle_info || '', // New
                 insurance_carrier: s.user_data?.insurance_carrier || '', // New
+                activity_log: s.user_data?.activity_log || [], // New
 
                 files_count: 0 // TODO: Check storage buckets if needed
             }));
@@ -140,6 +142,48 @@ export default function AdminDashboard() {
 
     useEffect(() => {
         if (isAuthenticated) fetchLeads();
+    }, [isAuthenticated]);
+
+    // Realtime Listener for Sessions
+    useEffect(() => {
+        if (!isAuthenticated) return;
+
+        const channel = supabaseClient
+            .channel('admin-dashboard-sessions')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_sessions' }, (payload) => {
+                // Refresh list
+                fetchLeads();
+
+                const newSession = payload.new as any;
+                if (newSession && newSession.status === 'live') {
+                    // Play Ping Sound
+                    // Play Ping Sound
+                    const audio = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTSVMAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//uQZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWgAAAA0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAABixvW0GAAA0Q7rbDAAABHAAACWAAAAEAAAABwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/7kGQAAAwJb1tBgAANES62wwAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+                    audio.play().catch(e => console.log('Audio play failed', e));
+
+                    // Auto-Add to Grid if space
+                    setActiveSessions(prev => {
+                        if (prev.includes(newSession.session_id)) return prev; // Already there
+                        const emptyIdx = prev.findIndex(s => s === '');
+                        if (emptyIdx !== -1) {
+                            const newArr = [...prev];
+                            newArr[emptyIdx] = newSession.session_id;
+                            return newArr;
+                        } else {
+                            // If full, replace 1st slot? Or do nothing?
+                            // User asked to "pop up into one of the boxes". Let's replace the oldest (index 0)
+                            const newArr = [...prev];
+                            newArr[0] = newSession.session_id;
+                            return newArr;
+                        }
+                    });
+                }
+            })
+            .subscribe();
+
+        return () => {
+            supabaseClient.removeChannel(channel);
+        };
     }, [isAuthenticated]);
 
     // Derived States
@@ -403,6 +447,24 @@ export default function AdminDashboard() {
                                     <div>
                                         <label className="text-xs font-bold text-gray-400 uppercase">Incident Description</label>
                                         <p className="text-sm text-gray-600 italic whitespace-pre-wrap">{selectedLead.description}</p>
+                                    </div>
+
+                                    {/* Activity Log */}
+                                    <div className="p-4 bg-gray-900 text-white rounded-lg border border-gray-700">
+                                        <h3 className="font-bold text-gray-400 mb-3 text-sm uppercase flex items-center gap-2">
+                                            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Activity Log
+                                        </h3>
+                                        <div className="max-h-40 overflow-y-auto space-y-2 font-mono text-xs">
+                                            {selectedLead.activity_log && selectedLead.activity_log.length > 0 ? (
+                                                selectedLead.activity_log.map((log, i) => (
+                                                    <div key={i} className="border-l-2 border-gray-700 pl-2 text-gray-300">
+                                                        {log}
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div className="text-gray-500 italic">No activity recorded.</div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

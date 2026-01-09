@@ -96,3 +96,25 @@ export async function sendChatAlertEmail(data: {
         console.error('Error sending chat alert:', error);
     }
 }
+
+export async function sendGenericEmail(data: {
+    to: string;
+    subject: string;
+    html: string;
+    text?: string;
+}) {
+    if (!process.env.SMTP_USER) return;
+
+    try {
+        await transporter.sendMail({
+            from: process.env.FROM_EMAIL || '"Texas Total Loss" <alerts@texastotalloss.com>',
+            to: data.to,
+            subject: data.subject,
+            html: data.html,
+            text: data.text
+        });
+        console.log(`Generic email sent to ${data.to}`);
+    } catch (error) {
+        console.error('Error sending generic email:', error);
+    }
+}

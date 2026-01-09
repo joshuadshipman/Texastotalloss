@@ -22,7 +22,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [step, setStep] = useState(0);
-    const [userData, setUserData] = useState<any>({});
+    const [userData, setUserData] = useState<any>({ activity_log: [] });
     const [sessionId] = useState(() => Math.random().toString(36).substring(7));
     const [isLiveMode, setIsLiveMode] = useState(false);
     const [currentOptions, setCurrentOptions] = useState<{ label: string; value: string; }[] | null>(null);
@@ -30,6 +30,31 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
     const fileInputRef = useRef<HTMLInputElement>(null);
     const agentTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const processingRef = useRef(false);
+    const [isConnecting, setIsConnecting] = useState(false); // New Spinner State
+
+    // Visitor Tracking
+    useEffect(() => {
+        const trackVisitor = async () => {
+            const key = `visited_${new Date().toDateString()}`;
+            if (sessionStorage.getItem(key)) return; // Debounce per session/day
+            sessionStorage.setItem(key, 'true');
+
+            try {
+                await fetch('/api/notify/visitor', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        page: window.location.pathname,
+                        referrer: document.referrer,
+                        userAgent: navigator.userAgent
+                    })
+                });
+            } catch (e) {
+                console.error('Tracking error', e);
+            }
+        };
+        trackVisitor();
+    }, []);
 
     // Force open if fullscreen
     const showChat = variant === 'fullscreen' || isOpen;
@@ -42,6 +67,19 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             user_data: newData,
             updated_at: new Date().toISOString()
         }).eq('session_id', sessionId);
+    };
+
+    const logActivity = (action: string) => {
+        const timestamp = new Date().toLocaleTimeString();
+        const entry = `[${timestamp}] ${action}`;
+
+        setUserData((prev: any) => {
+            const newLog = [...(prev.activity_log || []), entry];
+            const updated = { ...prev, activity_log: newLog };
+            // Sync to DB immediately for log events
+            updateSessionData(updated);
+            return updated;
+        });
     };
 
     // 2. Add Message
@@ -79,27 +117,32 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
         if (currentData.fault === 'other') score += 30;
         if (currentData.has_injury) score += 30;
         if (currentData.year && parseInt(currentData.year) > 2015) score += 10;
+        // Basic engagement score
+        score += 10;
+
+        logActivity(`Scored Lead: ${score}`);
 
         const finalData = { ...currentData, score };
         submitLead(finalData);
 
-        if (score >= 50) {
-            addMessage('bot', dict.chat.responses.qualify_high || "Connecting to Senior Specialist...");
-            setStep(999); // Live Agent State
-        } else {
-            addMessage('bot', dict.chat.responses.qualify_low || "Sending Accident Packet...");
+        // DIRECT LIVE CONNECT for all/most leads as requested
+        // Add fake spinner delay
+        setIsConnecting(true); // Trigger UI spinner
 
-            // NO DEAD END: Offer live chat anyway
-            setTimeout(() => {
-                addMessage('bot', (dict.chat.responses as any).qualify_low_followup || "However, our Senior Agents are still available...");
-                setStep(10); // Go to Standalone Options (Chat / Schedule)
-            }, 1500);
-        }
+        setTimeout(() => {
+            setIsConnecting(false);
+            addMessage('bot', dict.chat.responses.greeting_live || "An agent has joined the chat.");
+            setStep(999); // Live Agent State
+            setIsLiveMode(true);
+            updateSessionData({ ...finalData, status: 'live' }); // Force Live Status
+            sendChatAlert('🔵 User Connected to Live Chat'); // Ding logic in Admin will catch this
+        }, 3500); // 3.5s delay to simulate connection
     };
 
 
     const handleAtTheScene = () => {
         if (!dict) return;
+        logActivity('Started "At The Scene" Flow');
         addMessage('bot', dict.chat.responses.scene_safety || "🚨 First priority: Is everyone safe?");
         setTimeout(() => {
             addMessage('bot', dict.chat.responses.scene_safety_followup || "Are you in a safe place to chat now?");
@@ -444,6 +487,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
 
         setInput('');
         addMessage('user', userText);
+        logActivity(`User Sent: "${userText}"`);
 
         setTimeout(() => {
             // UNLOCK after processing response
@@ -712,6 +756,7 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
             }
             else if (step === 4) {
                 newData.best_time = userText;
+                logActivity(`Set Best Time: ${userText}`);
                 nextStep = 5;
             }
             else if (step === 100) {
@@ -858,6 +903,14 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
 
                 {/* Messages Area */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 pb-20">
+
+                    {/* Connecting Spinner */}
+                    {isConnecting && (
+                        <div className="flex flex-col items-center justify-center py-10 animate-in fade-in duration-500">
+                            <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+                            <p className="text-gray-500 font-bold animate-pulse">Connecting to Specialist...</p>
+                        </div>
+                    )}
                     {/* Standalone Start Options (Step 10) */}
                     {step === 10 && messages.length === 1 && (
                         <div className="flex flex-col gap-3 mb-6 animate-in fade-in slide-in-from-bottom-3 duration-700">

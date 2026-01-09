@@ -17,6 +17,7 @@ const MobileNav = dynamic(() => import('@/components/MobileNav'), { ssr: false }
 const SectionCard = dynamic(() => import('@/components/SectionCard'));
 import VideoGallery from '@/components/VideoGallery';
 const LightboxImage = dynamic(() => import('@/components/ui/LightboxImage'));
+const ExitIntentPopup = dynamic(() => import('@/components/ExitIntentPopup'), { ssr: false });
 
 import Footer from '@/components/Footer';
 

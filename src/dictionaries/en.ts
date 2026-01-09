@@ -6,7 +6,7 @@ export const en = {
         quote_main: "Are you worried about medical bills, your vehicle's value, or just getting your life back to normal?",
         quote_sub: "I'm Angel. My team and I will handle the stress so you can focus on healing.",
         help_text: "Clear answers. No pressure. Just help.",
-        subtext_line1: "Don't let insurance adjusters underpay you.",
+        subtext_line1: "Fighting the at-fault driver's insurance?",
         subtext_line2_pre: "Get your",
         subtext_highlight: "True Market Value",
         subtext_line2_post: "instantly.",
@@ -306,15 +306,17 @@ export const en = {
             a2: "Yes, this is called 'owner retention'. The insurance company will deduct the salvage value from your settlement.",
             q3: "Does Texas have a 'Right to Appraisal'?",
             a3: "Most policies include an Appraisal Clause, allowing you to hire an independent appraiser to dispute low offers.",
+            q4: "Can I use this for my own insurance (1st Party)?",
+            a4: "You can use it to check value, but the process is different. For your own policy, you typically must invoke the 'Appraisal Clause' rather than sending a demand letter.",
             // New FAQs
-            q4: "What should I do immediately after an accident?",
-            a4: "First, ensure safety and call 911 if injured. Exchange insurance info, take photos of the scene and plates, and seek medical attention immediately, even if you feel fine. Report the incident to your insurer but do not give a recorded statement without advice.",
-            q5: "How long do I have to file a claim in Texas?",
-            a5: "Texas has a 2-year Statute of Limitations for injury claims. However, waiting can hurt your case as evidence disappears. It is vital to act quickly.",
-            q6: "What damages can I recover?",
-            a6: "You may recover Medical Bills, Lost Wages, Property Damage, Pain & Suffering, and sometimes Diminished Value. The specific amount depends on liability and policy limits.",
-            q7: "How long does it take to settle?",
-            a7: "Simple claims may settle in a few months. Complex injury cases or those requiring litigation can take longer. We push for a timely but fair resolution, not a quick lowball."
+            q5: "What should I do immediately after an accident?",
+            a5: "First, ensure safety and call 911 if injured. Exchange insurance info, take photos of the scene and plates, and seek medical attention immediately, even if you feel fine. Report the incident to your insurer but do not give a recorded statement without advice.",
+            q6: "How long do I have to file a claim in Texas?",
+            a6: "Texas has a 2-year Statute of Limitations for injury claims. However, waiting can hurt your case as evidence disappears. It is vital to act quickly.",
+            q7: "What damages can I recover?",
+            a7: "You may recover Medical Bills, Lost Wages, Property Damage, Pain & Suffering, and sometimes Diminished Value. The specific amount depends on liability and policy limits.",
+            q8: "How long does it take to settle?",
+            a8: "Simple claims may settle in a few months. Complex injury cases or those requiring litigation can take longer. We push for a timely but fair resolution, not a quick lowball."
         },
         demand_letter: {
             title: "Challenge Low Offers",
@@ -322,7 +324,19 @@ export const en = {
             cta: "Generate Free Demand PDF"
         }
     },
+    // New Calculator keys
+    val_calc_updates: {
+        who_insurance: "Whose insurance company are you fighting?",
+        option_mine: "My Insurance (1st Party)",
+        option_other: "At-Fault Driver's (3rd Party)",
+        warning_title: "Invoking Your Appraisal Clause",
+        warning_msg: "Fighting your own insurance company is handled differently. You are bound by the 'Right to Appraisal' clause in your policy, which is a specific legal process involving hiring an appraiser.",
+        warning_msg_2: "Our tools are optimized for Third-Party liability claims, but you can still use the calculator to see the true market value.",
+        btn_proceed: "I Understand, Proceed »",
+        btn_learn: "Learn About Appraisal »"
+    },
     trust_ticker: [
+        "Third-Party Claim Specialists",
         "$5.2M Truck Accident Settlement",
         "$1.8M Company Vehicle Crash",
         "$950k Rideshare Injury",
