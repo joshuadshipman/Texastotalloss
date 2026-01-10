@@ -292,7 +292,7 @@ export default async function CityPage({ params }: Props) {
                                 <h3 className="text-2xl font-bold text-white border-b border-white/10 pb-2">Top Rated {city.name} Resources</h3>
 
                                 {/* Towing */}
-                                {city.resources.towing && (
+                                {city.resources.towing && city.resources.towing.length > 0 && (
                                     <div className="bg-slate-900 border border-white/10 rounded-lg p-4 shadow-sm">
                                         <h4 className="font-bold text-gold-500 flex items-center gap-2 mb-3"><AlertTriangleIcon size={18} /> Emergency Towing</h4>
                                         <div className="space-y-3">
@@ -303,7 +303,7 @@ export default async function CityPage({ params }: Props) {
                                                         <div className="text-xs text-slate-500">{r.note}</div>
                                                     </div>
                                                     <div className="text-right">
-                                                        <div className="text-gold-400 text-sm font-bold">★ {r.rating}</div>
+                                                        {r.rating && <div className="text-gold-400 text-sm font-bold">★ {r.rating}</div>}
                                                         <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:text-blue-300 hover:underline">View</a>
                                                     </div>
                                                 </div>
@@ -312,23 +312,67 @@ export default async function CityPage({ params }: Props) {
                                     </div>
                                 )}
 
-                                {/* Repair */}
-                                {city.resources.repair && (
+                                {/* Hospitals */}
+                                {city.resources.hospitals && city.resources.hospitals.length > 0 && (
                                     <div className="bg-slate-900 border border-white/10 rounded-lg p-4 shadow-sm">
-                                        <h4 className="font-bold text-gold-500 flex items-center gap-2 mb-3"><CarIcon size={18} /> Trusted Repair Facilities</h4>
+                                        <h4 className="font-bold text-red-500 flex items-center gap-2 mb-3"><ShieldCheckIcon size={18} /> Hospitals & ERs</h4>
                                         <div className="space-y-3">
-                                            {city.resources.repair.map((r, i) => (
+                                            {city.resources.hospitals.map((r, i) => (
                                                 <div key={i} className="flex justify-between items-start border-b border-white/5 last:border-0 pb-2 last:pb-0">
                                                     <div>
                                                         <div className="font-bold text-slate-200">{r.name}</div>
                                                         <div className="text-xs text-slate-500">{r.note}</div>
                                                     </div>
                                                     <div className="text-right">
-                                                        <div className="text-gold-400 text-sm font-bold">★ {r.rating}</div>
                                                         <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:text-blue-300 hover:underline">View</a>
                                                     </div>
                                                 </div>
                                             ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Collision Centers (New) */}
+                                {(city.resources.collisionCenters || city.resources.repair) && (
+                                    <div className="bg-slate-900 border border-white/10 rounded-lg p-4 shadow-sm">
+                                        <h4 className="font-bold text-gold-500 flex items-center gap-2 mb-3"><CarIcon size={18} /> Trusted Body Shops</h4>
+                                        <div className="space-y-3">
+                                            {/* Combine legacy repair and new collisionCenters */}
+                                            {[...(city.resources.collisionCenters || []), ...(city.resources.repair || [])].map((r, i) => (
+                                                <div key={i} className="flex justify-between items-start border-b border-white/5 last:border-0 pb-2 last:pb-0">
+                                                    <div>
+                                                        <div className="font-bold text-slate-200">{r.name}</div>
+                                                        <div className="text-xs text-slate-500">{r.note}</div>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        {r.rating && <div className="text-gold-400 text-sm font-bold">★ {r.rating}</div>}
+                                                        <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:text-blue-300 hover:underline">View</a>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Government Resources */}
+                                {(city.resources.insuranceDept || city.resources.registrationOffice) && (
+                                    <div className="bg-slate-900 border border-white/10 rounded-lg p-4 shadow-sm">
+                                        <h4 className="font-bold text-blue-400 flex items-center gap-2 mb-3"><MapPinIcon size={18} /> Official Resources</h4>
+                                        <div className="space-y-3">
+                                            {city.resources.insuranceDept && (
+                                                <div className="border-b border-white/5 pb-2">
+                                                    <div className="font-bold text-slate-200 text-sm mb-1">Texas Dept. of Insurance</div>
+                                                    <div className="text-xs text-slate-400">{city.resources.insuranceDept.note}</div>
+                                                    <a href={city.resources.insuranceDept.link} target="_blank" className="text-xs text-green-400 hover:underline block mt-1">Official Website &rarr;</a>
+                                                </div>
+                                            )}
+                                            {city.resources.registrationOffice && (
+                                                <div>
+                                                    <div className="font-bold text-slate-200 text-sm mb-1">Vehicle Title & Registration</div>
+                                                    <div className="text-xs text-slate-400">{city.resources.registrationOffice.note}</div>
+                                                    <a href={city.resources.registrationOffice.link} target="_blank" className="text-xs text-green-400 hover:underline block mt-1">Official Website &rarr;</a>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 )}

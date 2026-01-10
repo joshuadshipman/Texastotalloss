@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import { ShieldCheckIcon, FacebookIcon, TwitterIcon, InstagramIcon } from 'lucide-react';
+import { ShieldCheckIcon } from 'lucide-react';
 import Link from 'next/link';
+import SocialMediaLinks from './SocialMediaLinks';
 
 interface FooterProps {
     dict: any;
@@ -25,11 +26,7 @@ export default function Footer({ dict, lang }: FooterProps) {
                     <p className="text-xs text-gray-500 leading-relaxed text-justify">
                         {dict.footer.disclaimer_text}
                     </p>
-                    <div className="pt-4 flex gap-4">
-                        <FacebookIcon size={20} className="hover:text-gold-500 cursor-pointer transition" />
-                        <TwitterIcon size={20} className="hover:text-gold-500 cursor-pointer transition" />
-                        <InstagramIcon size={20} className="hover:text-gold-500 cursor-pointer transition" />
-                    </div>
+                    <SocialMediaLinks />
                 </div>
 
                 {/* Column 2: Quick Links */}

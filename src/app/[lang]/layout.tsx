@@ -2,6 +2,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "../globals.css";
 import { ChatProvider } from "@/components/ChatContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import WhatsAppButton from "@/components/WhatsAppButton";
 import CookieConsent from '@/components/CookieConsent';
 import { Analytics } from "@vercel/analytics/next";
 
@@ -9,8 +10,45 @@ const inter = Inter({ subsets: ["latin"], variable: '--font-sans' });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: '--font-serif' });
 
 export const metadata = {
-    title: "Texas Total Loss - AI Claim Assistance",
-    description: "Total Loss claim help in Texas. Calculator, Gap Insurance, and Injury assistance.",
+    title: {
+        default: "Texas Total Loss - AI Claim Assistance",
+        template: "%s | Texas Total Loss"
+    },
+    description: "Total Loss claim help in Texas. Free independent vehicle valuation, Gap Insurance calculator, and Injury case review. Se habla Español.",
+    metadataBase: new URL('https://texastotalloss.com'),
+    alternates: {
+        languages: {
+            'en': '/en',
+            'es': '/es',
+        },
+    },
+    openGraph: {
+        type: 'website',
+        locale: 'en_US',
+        alternateLocale: 'es_US',
+        url: 'https://texastotalloss.com',
+        siteName: 'Texas Total Loss',
+        title: 'Texas Total Loss - Maximize Your Claim',
+        description: 'Don\'t let insurance underpay you. Get a free AI-powered valuation and expert legal review.',
+        images: [
+            {
+                url: '/images/og-share.jpg', // You need to ensure this exists or create it
+                width: 1200,
+                height: 630,
+                alt: 'Texas Total Loss Assistance',
+            }
+        ]
+    },
+    /*
+    twitter: {
+        card: 'summary_large_image',
+        site: '@TexasTotalLoss',
+        creator: '@TexasTotalLoss',
+    },
+    */
+    verification: {
+        google: 'your-google-verification-code', // Placeholder
+    }
 };
 
 export async function generateStaticParams() {
@@ -45,10 +83,12 @@ export default async function RootLayout({
                                 areaServed: 'TX',
                                 availableLanguage: ['en', 'es']
                             },
+                            /*
                             sameAs: [
                                 'https://twitter.com/TexasTotalLoss',
                                 'https://facebook.com/TexasTotalLoss'
                             ]
+                            */
                         })
                     }}
                 />
@@ -57,6 +97,7 @@ export default async function RootLayout({
                         <LanguageSwitcher />
                     </div>
                     {children}
+                    <WhatsAppButton />
                     <CookieConsent />
                     <Analytics />
                 </ChatProvider>

@@ -16,16 +16,22 @@ export async function sendLeadEmailPacket(lead: any) {
     <p><strong>ID:</strong> ${lead.id}</p>
     <h3>Contact</h3>
     <p>${lead.full_name || 'N/A'} – ${lead.phone || 'N/A'} – ${lead.email || 'No email'}</p>
-    <p>State: ${lead.state || ''}</p>
-    <h3>Crash</h3>
-    <p>Date: ${lead.crash_date || ''}, Role: ${lead.role || ''}</p>
-    <h3>Total Loss</h3>
+    <p>Best Time: ${lead.preferred_contact_time || 'any'}</p>
+    <p>State: ${lead.state || 'TX'}</p>
+    <h3>Scores</h3>
+    <p><strong>Algorithm Score:</strong> ${lead.score}</p>
+    <p>Pain Level: ${lead.pain_level}</p>
+    <h3>Crash & Vehicle</h3>
+    <p>Date: ${lead.accident_date || lead.crash_date || 'N/A'}</p>
+    <p>Role: ${lead.role || 'N/A'}</p>
+    <p>Description: ${lead.description || 'N/A'}</p>
     <p>${lead.vehicle_year || ''} ${lead.vehicle_make || ''} ${lead.vehicle_model || ''}</p>
-    <p>ZIP: ${lead.vehicle_zip || ''}</p>
-    <p>Insurer: ${lead.insurer_name || ''}</p>
-    <p>Offer: ${lead.total_loss_offer_amount || ''}</p>
+    <p>VIN: ${lead.vehicle_vin || 'N/A'}</p>
+    <p>Insurer: ${lead.insurer_name || 'N/A'} (Claim #: ${lead.claim_number || 'N/A'})</p>
+    <p>Offer: ${lead.total_loss_offer_amount || 'N/A'}</p>
     <h3>Injuries</h3>
     <p>Has injury: ${lead.has_injury}</p>
+    <p>Summary: ${lead.injury_summary || 'N/A'}</p>
     <p>Areas: ${(lead.injury_areas || []).join(', ')}</p>
     <p>Treatment started: ${lead.treatment_started}</p>
     <h3>Attachments</h3>
@@ -38,7 +44,7 @@ export async function sendLeadEmailPacket(lead: any) {
     try {
         await transporter.sendMail({
             from: process.env.FROM_EMAIL,
-            to: 'intake@yourdomain.com', // In production this would be configurable
+            to: ['intake@yourdomain.com', 'jds@pmaction.com'], // Updated recipient
             subject: `New Total Loss + Injury Lead: ${lead.id}`,
             html
         });

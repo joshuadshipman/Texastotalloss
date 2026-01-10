@@ -2,24 +2,27 @@
 
 import React, { useState } from 'react';
 import { scrapeCompetitorHeadlines, ScrapedHeadline } from '@/lib/scraper';
-import { analyzeHeadlines, ContentConcept } from '@/lib/gemini';
-import { Loader2, RefreshCw, PenTool, Video, MapPin, Copy } from 'lucide-react';
+import { analyzeHeadlines, ContentConcept, generateFullBlogPost, BlogPost } from '@/lib/gemini';
+import { Loader2, RefreshCw, PenTool, Video, MapPin, Copy, FileText, CheckCircle } from 'lucide-react';
 
 export default function ContentDashboard() {
     const [isLoading, setIsLoading] = useState(false);
+    const [isWriting, setIsWriting] = useState(false);
     const [headlines, setHeadlines] = useState<ScrapedHeadline[]>([]);
     const [concept, setConcept] = useState<ContentConcept | null>(null);
+    const [blogPost, setBlogPost] = useState<BlogPost | null>(null);
     const [status, setStatus] = useState<string>('Ready');
 
     const handleGenerate = async () => {
         setIsLoading(true);
         setConcept(null);
+        setBlogPost(null);
         setHeadlines([]);
 
         try {
             // 1. Scrape
             setStatus('Scouting Competitors...');
-            const scraped = await scrapeCompetitorHeadlines(); // NOTE: In prod, this must be a Server Action or API route
+            const scraped = await scrapeCompetitorHeadlines();
             setHeadlines(scraped);
 
             if (scraped.length === 0) {
@@ -30,7 +33,7 @@ export default function ContentDashboard() {
 
             // 2. Analyze
             setStatus('Analyzing Trends with Gemini...');
-            const result = await analyzeHeadlines(scraped); // NOTE: In prod, server-side to hide key
+            const result = await analyzeHeadlines(scraped);
             setConcept(result);
             setStatus('Done!');
 
@@ -42,22 +45,38 @@ export default function ContentDashboard() {
         }
     };
 
+    const handleWritePost = async () => {
+        if (!concept) return;
+        setIsWriting(true);
+        setStatus('Writing Full Article...');
+        try {
+            const post = await generateFullBlogPost(concept);
+            setBlogPost(post);
+        } catch (e) {
+            console.error(e);
+            alert('Failed to write post');
+        } finally {
+            setIsWriting(false);
+            setStatus('Article Ready');
+        }
+    };
+
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
         alert('Copied to clipboard!');
     };
 
     return (
-        <div className="p-8 max-w-6xl mx-auto">
+        <div className="p-8 max-w-6xl mx-auto mb-20">
             <header className="mb-8 flex justify-between items-center">
                 <div>
                     <h1 className="text-3xl font-bold text-slate-900">Content Growth Engine</h1>
-                    <p className="text-slate-500">Automated Competitor Analysis & empathetic Content Generation</p>
+                    <p className="text-slate-500">Automated Competitor Analysis & Empathetic Content Generation</p>
                 </div>
                 <button
                     onClick={handleGenerate}
-                    disabled={isLoading}
-                    className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 disabled:opacity-50 transition-all"
+                    disabled={isLoading || isWriting}
+                    className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 disabled:opacity-50 transition-all shadow-lg shadow-blue-200"
                 >
                     {isLoading ? <Loader2 className="animate-spin" /> : <RefreshCw />}
                     {isLoading ? status : 'Run Daily Scout'}
@@ -66,14 +85,14 @@ export default function ContentDashboard() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* 1. The Scout (Left Col) */}
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 h-fit">
                     <h2 className="font-bold text-slate-700 mb-4 flex items-center gap-2">
                         <MapPin size={20} className="text-blue-500" /> Competitor Intel
                     </h2>
                     {headlines.length > 0 ? (
                         <div className="space-y-4">
                             {headlines.map((h, i) => (
-                                <div key={i} className="text-sm p-3 bg-slate-50 rounded border border-slate-100">
+                                <div key={i} className="text-sm p-3 bg-slate-50 rounded border border-slate-100 hover:bg-white hover:shadow-sm transition-all">
                                     <p className="font-semibold text-slate-800 line-clamp-2">{h.title}</p>
                                     <span className="text-xs text-slate-400 mt-1 block">{h.source}</span>
                                 </div>
@@ -88,8 +107,8 @@ export default function ContentDashboard() {
                 <div className="lg:col-span-2 space-y-8">
                     {concept ? (
                         <>
-                            {/* Blog Concept */}
-                            <div className="bg-white p-8 rounded-xl shadow-lg border border-indigo-100 relative overflow-hidden">
+                            {/* Blog Concept Card */}
+                            <div className="bg-white p-8 rounded-xl shadow-lg border border-indigo-100 relative overflow-hidden animate-fade-in-up">
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-bl-full -mr-16 -mt-16"></div>
 
                                 <span className="inline-block bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full mb-4">
@@ -106,16 +125,44 @@ export default function ContentDashboard() {
                                     </ul>
                                 </div>
 
-                                <div className="flex gap-2">
-                                    {concept.geo_targets.map((city, i) => (
-                                        <span key={i} className="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded border">
-                                            +{city}
-                                        </span>
-                                    ))}
+                                <div className="flex gap-4 border-t pt-6">
+                                    {!blogPost ? (
+                                        <button
+                                            onClick={handleWritePost}
+                                            disabled={isWriting}
+                                            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2"
+                                        >
+                                            {isWriting ? <Loader2 className="animate-spin" /> : <FileText />}
+                                            {isWriting ? 'Writing Article...' : 'Generate Full Article'}
+                                        </button>
+                                    ) : (
+                                        <div className="text-green-600 font-bold flex items-center gap-2 bg-green-50 px-4 py-2 rounded-lg">
+                                            <CheckCircle /> Article Generated Below
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
-                            {/* Video Prompt (Option B) */}
+                            {/* Generated Blog Post Result */}
+                            {blogPost && (
+                                <div className="bg-white p-8 rounded-xl shadow-xl border-2 border-indigo-100 animate-slide-up">
+                                    <div className="flex justify-between items-center mb-6 border-b pb-4">
+                                        <h3 className="font-bold text-xl text-slate-800">Draft Preview</h3>
+                                        <button
+                                            onClick={() => copyToClipboard(JSON.stringify(blogPost, null, 2))}
+                                            className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1 rounded font-mono border"
+                                        >
+                                            Copy JSON
+                                        </button>
+                                    </div>
+                                    <div className="prose max-w-none text-slate-700">
+                                        <h1>{blogPost.title}</h1>
+                                        <div dangerouslySetInnerHTML={{ __html: blogPost.content }} />
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Video Prompt */}
                             <div className="bg-gradient-to-r from-purple-900 to-indigo-900 p-8 rounded-xl shadow-xl text-white">
                                 <div className="flex justify-between items-start mb-6">
                                     <div>

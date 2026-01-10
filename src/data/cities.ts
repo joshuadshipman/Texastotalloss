@@ -16,8 +16,12 @@ export interface CityData {
     parentCity?: string; // Slug of parent city
     resources?: {
         towing: LocalBusiness[];
-        repair: LocalBusiness[];
+        repair: LocalBusiness[]; // Keeping for backward compatibility, will map to collisionCenters
         rental: LocalBusiness[];
+        collisionCenters?: LocalBusiness[]; // New specific field
+        hospitals?: LocalBusiness[]; // New
+        insuranceDept?: LocalBusiness; // New (TDI field office or main)
+        registrationOffice?: LocalBusiness; // New (Tax Assessor/DMV)
     };
     medicalResources: LocalBusiness[];
     hotspots?: {
@@ -33,6 +37,7 @@ export interface LocalBusiness {
     note: string;
     rating?: number; // 4.5 etc
     phone?: string;
+    address?: string; // New
 }
 
 export const cities: CityData[] = [
@@ -69,9 +74,27 @@ export const cities: CityData[] = [
                 { name: "Walnut Hill Wrecker", link: "https://walnuthillwrecker.com", note: "24/7 Service", rating: 4.8 },
                 { name: "Dallas Tow Boys", link: "#", note: "Fast response in downtown", rating: 4.7 }
             ],
-            repair: [
-                { name: "Service King Collision", link: "https://www.serviceking.com", note: "National warranty", rating: 4.5 }
+            repair: [], // Legacy
+            collisionCenters: [
+                { name: "Service King Collision", link: "https://www.serviceking.com", note: "National warranty", rating: 4.5 },
+                { name: "Sewell Collision Center", link: "https://www.sewellcollision.com", note: "Luxury vehicle specialists", rating: 4.8 }
             ],
+            hospitals: [
+                { name: "Parkland Memorial Hospital", link: "https://www.parklandhealth.org", note: "Level I Trauma Center. 5200 Harry Hines Blvd, Dallas, TX 75235" },
+                { name: "Baylor University Medical Center", link: "https://www.bswhealth.com", note: "Level I Trauma Center. 3500 Gaston Ave, Dallas, TX 75246" }
+            ],
+            insuranceDept: {
+                name: "TDI (Austin HQ)",
+                link: "https://www.tdi.texas.gov",
+                note: "Consumer Help Line: 800-252-3439. 1601 Congress Ave, Austin, TX 78701",
+                address: "1601 Congress Ave, Austin, TX 78701"
+            },
+            registrationOffice: {
+                name: "Dallas County Tax Office",
+                link: "https://www.dallascounty.org/departments/tax/",
+                note: "Vehicle Title & Registration. 500 Elm St, Dallas, TX 75202",
+                address: "500 Elm St, Dallas, TX 75202"
+            },
             rental: [
                 { name: "Enterprise Rent-A-Car", link: "https://www.enterprise.com", note: "Multiple DFW locations", rating: 4.6 }
             ]
