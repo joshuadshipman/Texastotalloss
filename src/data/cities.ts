@@ -173,7 +173,10 @@ export const cities: CityData[] = [
                 { name: "JJ Auto Body", link: "https://jjautobodyhouston.com", note: "High-end import repair", rating: 4.8 }
             ],
             hospitals: [
-                { name: "Memorial Hermann", link: "https://memorialhermann.org", note: "Texas Medical Center" }
+                { name: "Memorial Hermann - Texas Medical Center", link: "https://memorialhermann.org", note: "Level I Trauma Center", address: "6411 Fannin St, Houston, TX 77030", phone: "713-704-4000" },
+                { name: "Ben Taub Hospital", link: "https://www.harrishealth.org", note: "Level I Trauma Center - County Hospital", address: "1504 Taub Loop, Houston, TX 77030", phone: "713-873-2000" },
+                { name: "Houston Methodist Hospital", link: "https://www.houstonmethodist.org", note: "Nationally ranked. Texas Medical Center", address: "6565 Fannin St, Houston, TX 77030", phone: "713-790-3311" },
+                { name: "Texas Children's Hospital", link: "https://www.texaschildrens.org", note: "Pediatric injuries", address: "6621 Fannin St, Houston, TX 77030", phone: "832-824-1000" }
             ],
             registrationOffice: {
                 name: "Harris County Tax Office",
@@ -214,7 +217,11 @@ export const cities: CityData[] = [
                 { name: "Caliber Collision", link: "https://caliber.com", note: "Multiple Austin locations" }
             ],
             repair: [],
-            hospitals: [{ name: "Dell Seton Medical Center", link: "https://www.seton.net", note: "Central Austin Trauma" }],
+            hospitals: [
+                { name: "Dell Seton Medical Center at UT", link: "https://www.seton.net", note: "Level I Trauma Center", address: "1500 Red River St, Austin, TX 78701", phone: "512-324-7000" },
+                { name: "St. David's South Austin Medical Center", link: "https://stdavids.com/south-austin", note: "Level II Trauma", address: "901 W Ben White Blvd, Austin, TX 78704", phone: "512-816-7000" },
+                { name: "Ascension Seton Medical Center Austin", link: "https://www.seton.net", note: "Full-service trauma care", address: "1201 W 38th St, Austin, TX 78705", phone: "512-324-1000" }
+            ],
             insuranceDept: {
                 name: "TDI Headquarters",
                 link: "https://www.tdi.texas.gov",
@@ -260,7 +267,12 @@ export const cities: CityData[] = [
                 { name: "Caliber Collision", link: "#", note: "San Antonio wide" }
             ],
             repair: [],
-            hospitals: [{ name: "University Hospital", link: "https://www.universityhealthsystem.com", note: "Medical Center District" }],
+            hospitals: [
+                { name: "University Hospital", link: "https://www.universityhealthsystem.com", note: "Level I Trauma Center", address: "4502 Medical Dr, San Antonio, TX 78229", phone: "210-358-4000" },
+                { name: "Brooke Army Medical Center (BAMC)", link: "https://bamc.tricare.mil", note: "Military Trauma Center - civilians accepted", address: "3551 Roger Brooke Dr, San Antonio, TX 78234", phone: "210-916-4141" },
+                { name: "Methodist Hospital", link: "https://www.sahealth.com", note: "Downtown San Antonio", address: "7700 Floyd Curl Dr, San Antonio, TX 78229", phone: "210-575-4000" },
+                { name: "Baptist Medical Center", link: "https://www.baptisthealthsystem.com", note: "Multiple SA locations", address: "111 Dallas St, San Antonio, TX 78205", phone: "210-297-7000" }
+            ],
             registrationOffice: {
                 name: "Bexar County Tax Assessor",
                 link: "https://www.bexar.org/tax",
