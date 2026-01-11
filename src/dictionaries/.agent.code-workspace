@@ -1,0 +1,31 @@
+{
+	"folders": [
+		{
+			"path": "../../.agent"
+		},
+		{
+			"path": "../../.git"
+		},
+		{
+			"path": "../../.next"
+		},
+		{
+			"path": "../../.vercel"
+		},
+		{
+			"path": "../../node_modules"
+		},
+		{
+			"path": "../../public"
+		},
+		{
+			"path": "../../scripts"
+		},
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../supabase"
+		}
+	]
+}
