@@ -8,7 +8,7 @@ import { useChat } from '@/components/ChatContext';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
 import { Dictionary } from '@/dictionaries/en'; // Type
-import { ShieldCheckIcon, AlertTriangleIcon, FileTextIcon, CarIcon, DollarSignIcon, SearchIcon, SparklesIcon } from 'lucide-react';
+import { ShieldCheckIcon, AlertTriangleIcon, FileTextIcon, CarIcon, DollarSignIcon, SearchIcon, SparklesIcon, PhoneCall } from 'lucide-react';
 
 const CitySearch = dynamic(() => import('@/components/CitySearch'));
 
@@ -54,7 +54,7 @@ export default function HomeClient({ dict, lang, trendingContent }: HomeClientPr
                 ],
                 contactPoint: {
                     '@type': 'ContactPoint',
-                    telephone: '+1-800-555-0199',
+                    telephone: '+1-469-729-4423',
                     contactType: 'customer service',
                     areaServed: 'US',
                     availableLanguage: ['en', 'es']
@@ -156,6 +156,17 @@ export default function HomeClient({ dict, lang, trendingContent }: HomeClientPr
                             <SparklesIcon size={36} className="text-white fill-white/20 animate-pulse" />
                             <span className="tracking-wide">{dict.buttons.ai_review}</span>
                         </button>
+
+                        {/* Click-to-Call Button */}
+                        <a
+                            href="tel:+14697294423"
+                            className="mt-4 inline-flex items-center gap-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 shadow-lg"
+                        >
+                            <PhoneCall className="h-6 w-6 text-green-400 animate-pulse" />
+                            <span>(469) 729-4423</span>
+                            <span className="text-sm text-white/60">Tap to Call</span>
+                        </a>
+
                         <p className="mt-4 text-sm text-blue-200/60 font-medium uppercase tracking-widest font-sans">{dict.hero.help_text}</p>
                     </div>
 

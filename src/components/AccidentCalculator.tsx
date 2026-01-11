@@ -136,7 +136,7 @@ export default function AccidentCalculator() {
                         <div
                             key={s.id}
                             className={`h-2 flex-1 rounded-full transition-all duration-500 ${s.id < step ? 'bg-green-500' :
-                                    s.id === step ? 'bg-blue-600 animate-pulse' : 'bg-gray-200'
+                                s.id === step ? 'bg-blue-600 animate-pulse' : 'bg-gray-200'
                                 }`}
                         />
                     ))}
@@ -344,11 +344,11 @@ export default function AccidentCalculator() {
 
                         <div className="space-y-3 pt-4">
                             <a
-                                href="tel:1-800-555-0199"
+                                href="tel:+14697294423"
                                 className="flex items-center justify-center gap-3 w-full py-5 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-400 hover:to-red-400 text-white rounded-2xl font-bold text-lg shadow-xl shadow-orange-200 transform hover:-translate-y-1 transition-all"
                             >
                                 <PhoneCall className="h-6 w-6" />
-                                <span>Call for Free Review</span>
+                                <span>Call (469) 729-4423</span>
                             </a>
 
                             <button
