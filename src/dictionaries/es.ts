@@ -263,6 +263,16 @@ export const es: Dictionary = {
             success_contact: "Nos pondremos en contacto vía {method} pronto."
         }
     },
+    val_calc_updates: {
+        who_insurance: "¿Contra qué compañía de seguros está luchando?",
+        option_mine: "Mi Seguro (1ra Parte)",
+        option_other: "Conductor Culpable (3ra Parte)",
+        warning_title: "Invocando Su Cláusula de Tasación",
+        warning_msg: "Luchar contra su propia aseguradora se maneja de manera diferente. Usted está sujeto a la cláusula de 'Derecho a Tasación' en su póliza, que es un proceso legal específico que involucra contratar a un tasador.",
+        warning_msg_2: "Nuestras herramientas están optimizadas para reclamos de responsabilidad de terceros, pero aún puede usar la calculadora para ver el valor real de mercado.",
+        btn_proceed: "Entiendo, Continuar »",
+        btn_learn: "Aprender Sobre Tasación »"
+    },
     info_sections: {
         partner_title: "Por qué Necesita un Aliado",
         partner_desc: "Los accidentes son comunes, pero los acuerdos justos no. Las aseguradoras tienen equipos de abogados. Usted también debería.",
@@ -307,15 +317,17 @@ export const es: Dictionary = {
             a2: "Sí, esto se llama 'retención del propietario'. La aseguradora deducirá el valor de salvamento de su liquidación.",
             q3: "¿Texas tiene 'Derecho a Tasación'?",
             a3: "La mayoría de las pólizas incluyen una Cláusula de Tasación, permitiéndole contratar un tasador independiente.",
+            q4: "¿Puedo usar esto para mi propio seguro (1ra Parte)?",
+            a4: "Puede usarlo para comprobar el valor, pero el proceso es diferente. Para su propia póliza, generalmente debe invocar la 'Cláusula de Tasación' en lugar de enviar una carta de demanda.",
             // New FAQs Translated
-            q4: "¿Qué debo hacer inmediatamente después de un accidente?",
-            a4: "Primero, asegure la seguridad y llame al 911 si hay heridos. Intercambie información de seguro, tome fotos y busque atención médica de inmediato. Informe a su aseguradora pero evite declaraciones grabadas sin asesoría.",
-            q5: "¿Cuánto tiempo tengo para presentar un reclamo en Texas?",
-            a5: "Texas tiene un límite de 2 años para reclamos por lesiones. Sin embargo, esperar puede dañar su caso ya que la evidencia desaparece.",
-            q6: "¿Qué daños puedo recuperar?",
-            a6: "Puede recuperar facturas médicas, salarios perdidos, daños a la propiedad, dolor y sufrimiento. El monto depende de la responsabilidad y los límites de la póliza.",
-            q7: "¿Cuánto tiempo toma llegar a un acuerdo?",
-            a7: "Reclamos simples pueden tardar unos meses. Casos complejos pueden tardar más. Presionamos por una resolución justa y oportuna."
+            q5: "¿Qué debo hacer inmediatamente después de un accidente?",
+            a5: "Primero, asegure la seguridad y llame al 911 si hay heridos. Intercambie información de seguro, tome fotos y busque atención médica de inmediato. Informe a su aseguradora pero evite declaraciones grabadas sin asesoría.",
+            q6: "¿Cuánto tiempo tengo para presentar un reclamo en Texas?",
+            a6: "Texas tiene un límite de 2 años para reclamos por lesiones. Sin embargo, esperar puede dañar su caso ya que la evidencia desaparece.",
+            q7: "¿Qué daños puedo recuperar?",
+            a7: "Puede recuperar facturas médicas, salarios perdidos, daños a la propiedad, dolor y sufrimiento. El monto depende de la responsabilidad y los límites de la póliza.",
+            q8: "¿Cuánto tiempo toma llegar a un acuerdo?",
+            a8: "Reclamos simples pueden tardar unos meses. Casos complejos pueden tardar más. Presionamos por una resolución justa y oportuna."
         },
         // New Demand Letter Section
         demand_letter: {
@@ -440,7 +452,8 @@ export const es: Dictionary = {
             greeting_valuation: "Veo que está viendo un valor estimado de $${min} - $${max}. Puedo ayudarle a entender este valor o discutir su caso. ¿Cuál es su nombre completo?",
             qualify_high: "Parece que tiene un caso sólido. Le estoy conectando con un Especialista Senior ahora...",
             qualify_low: "Basado en las regulaciones de Texas, esto puede ser un reclamo estándar. Hemos generado un **Paquete de Accidente Profesional** con pasos para manejar esto usted mismo. Enviándolo a su correo ahora.",
-            qualify_low_followup: "Sin embargo, nuestros Agentes Senior todavía están disponibles si desea discutir los detalles específicos. ¿Le gustaría chatear con una persona en vivo?"
+            qualify_low_followup: "Sin embargo, nuestros Agentes Senior todavía están disponibles si desea discutir los detalles específicos. ¿Le gustaría chatear con una persona en vivo?",
+            live_handoff_soft: "Entendido. Le estoy conectando con un agente en vivo ahora. Para asegurar que le dirijo al especialista correcto, ¿le gustaría proporcionar algunos detalles primero? ¿O prefiere conectar con Soporte General?"
         }
     },
     caseReview: {

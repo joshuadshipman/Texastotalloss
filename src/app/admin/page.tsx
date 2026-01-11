@@ -10,6 +10,7 @@ import {
 import AdminChatGrid from '@/components/admin/AdminChatGrid';
 import BlogManagement from '@/components/admin/BlogManagement';
 import ContentLibraryManager from '@/components/admin/ContentLibraryManager';
+import ContentEngineManager from '@/components/admin/ContentEngineManager';
 
 // Type definition matches our SQL schema
 // Type definition matches our SQL schema
@@ -41,7 +42,7 @@ export default function AdminDashboard() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [pin, setPin] = useState('');
     const [loading, setLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState<'leads' | 'content'>('leads');
+    const [activeTab, setActiveTab] = useState<'leads' | 'content' | 'scout'>('leads');
 
 
     // Filters
@@ -251,6 +252,12 @@ export default function AdminDashboard() {
                             >
                                 Video Library
                             </button>
+                            <button
+                                onClick={() => setActiveTab('scout')}
+                                className={`px-4 py-1.5 rounded-md text-sm font-bold transition ${activeTab === 'scout' ? 'bg-white shadow text-purple-600' : 'text-gray-500 hover:text-gray-700'}`}
+                            >
+                                AI Scout
+                            </button>
                         </div>
                         <button onClick={fetchLeads} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full" title="Refresh">
                             <RefreshCwIcon size={18} className={loading ? 'animate-spin' : ''} />
@@ -261,6 +268,7 @@ export default function AdminDashboard() {
 
             <main className="max-w-[1400px] mx-auto p-4 space-y-8">
 
+                {activeTab === 'scout' && <ContentEngineManager />}
                 {activeTab === 'content' && <ContentLibraryManager />}
 
                 {activeTab === 'leads' && (

@@ -3,6 +3,9 @@ import { cities } from '@/data/cities';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ShieldCheckIcon, AlertTriangleIcon, CarIcon, MapPinIcon } from 'lucide-react';
+import NeighborhoodAccordion from '@/components/NeighborhoodAccordion';
+import TrustBadges from '@/components/TrustBadges';
+import ResourceLinkHelper from '@/components/ResourceLinkHelper';
 // Static imports to debug build issues
 import ValuationCalculator from '@/components/ValuationCalculator';
 import ChatWidget from '@/components/ChatWidget';
@@ -279,6 +282,8 @@ export default async function CityPage({ params }: Props) {
                             Whether you were on the highway or a local road in {city.name} (Zip Codes: {city.zipCodes.slice(0, 3).join(', ')}, etc.), local market values for vehicles differ from the state average. This affects your "Actual Cash Value" (ACV).
                         </p>
 
+
+
                         <div className="bg-slate-900 p-6 rounded-xl border-l-4 border-gold-500 mt-6 border border-white/5">
                             <h3 className="font-bold text-white text-lg mb-2">Local Tip for {city.name} Residents</h3>
                             <p className="text-slate-300">
@@ -286,13 +291,39 @@ export default async function CityPage({ params }: Props) {
                             </p>
                         </div>
 
+                        {/* NEIGHBORHOODS ACCORDION (SEO) */}
+                        {city.neighborhoods && city.neighborhoods.length > 0 && (
+                            <div className="mt-8">
+                                <h2 className="text-2xl font-bold text-white mb-4">Serving All {city.name} Neighborhoods</h2>
+                                <NeighborhoodAccordion title={`Total Loss Disputes in ${city.name}`} neighborhoods={city.neighborhoods} />
+                            </div>
+                        )}
+
+                        {/* RECENT SETTLEMENTS (Social Proof) */}
+                        {city.settlements && city.settlements.length > 0 && (
+                            <div className="mt-8 bg-slate-900 p-6 rounded-xl border border-white/10">
+                                <h3 className="text-xl font-bold text-gold-500 mb-4 flex items-center gap-2">
+                                    <ShieldCheckIcon size={20} /> Recent {city.name} Success Stories
+                                </h3>
+                                <div className="space-y-3">
+                                    {city.settlements.map((s, i) => (
+                                        <div key={i} className="flex gap-3 items-start p-3 bg-slate-950/50 rounded border border-white/5 hover:border-gold-500/30 transition">
+                                            <span className="text-green-500 font-bold text-sm">✓ PAID</span>
+                                            <span className="text-slate-300 font-medium text-sm">{s}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                                <p className="text-xs text-slate-500 mt-3 italic">*Past results do not guarantee future outcomes.</p>
+                            </div>
+                        )}
+
                         {/* TRUSTED RESOURCES BLOCK */}
                         {city.resources && (
                             <div className="mt-8 space-y-6">
                                 <h3 className="text-2xl font-bold text-white border-b border-white/10 pb-2">Top Rated {city.name} Resources</h3>
 
                                 {/* Towing */}
-                                {city.resources.towing && city.resources.towing.length > 0 && (
+                                {city.resources.towing && city.resources.towing.length > 0 ? (
                                     <div className="bg-slate-900 border border-white/10 rounded-lg p-4 shadow-sm">
                                         <h4 className="font-bold text-gold-500 flex items-center gap-2 mb-3"><AlertTriangleIcon size={18} /> Emergency Towing</h4>
                                         <div className="space-y-3">
@@ -310,10 +341,15 @@ export default async function CityPage({ params }: Props) {
                                             ))}
                                         </div>
                                     </div>
+                                ) : (
+                                    <div className="bg-slate-900 border border-white/10 rounded-lg p-4 shadow-sm">
+                                        <h4 className="font-bold text-gold-500 flex items-center gap-2 mb-3"><AlertTriangleIcon size={18} /> Emergency Towing</h4>
+                                        <ResourceLinkHelper resourceType="towing" city={city.name} className="w-full justify-center" />
+                                    </div>
                                 )}
 
                                 {/* Hospitals */}
-                                {city.resources.hospitals && city.resources.hospitals.length > 0 && (
+                                {city.resources.hospitals && city.resources.hospitals.length > 0 ? (
                                     <div className="bg-slate-900 border border-white/10 rounded-lg p-4 shadow-sm">
                                         <h4 className="font-bold text-red-500 flex items-center gap-2 mb-3"><ShieldCheckIcon size={18} /> Hospitals & ERs</h4>
                                         <div className="space-y-3">
@@ -330,6 +366,11 @@ export default async function CityPage({ params }: Props) {
                                             ))}
                                         </div>
                                     </div>
+                                ) : (
+                                    <div className="bg-slate-900 border border-white/10 rounded-lg p-4 shadow-sm">
+                                        <h4 className="font-bold text-red-500 flex items-center gap-2 mb-3"><ShieldCheckIcon size={18} /> Hospitals & ERs</h4>
+                                        <ResourceLinkHelper resourceType="hospital" city={city.name} className="w-full justify-center" />
+                                    </div>
                                 )}
 
                                 {/* Collision Centers (New) */}
@@ -338,18 +379,22 @@ export default async function CityPage({ params }: Props) {
                                         <h4 className="font-bold text-gold-500 flex items-center gap-2 mb-3"><CarIcon size={18} /> Trusted Body Shops</h4>
                                         <div className="space-y-3">
                                             {/* Combine legacy repair and new collisionCenters */}
-                                            {[...(city.resources.collisionCenters || []), ...(city.resources.repair || [])].map((r, i) => (
-                                                <div key={i} className="flex justify-between items-start border-b border-white/5 last:border-0 pb-2 last:pb-0">
-                                                    <div>
-                                                        <div className="font-bold text-slate-200">{r.name}</div>
-                                                        <div className="text-xs text-slate-500">{r.note}</div>
+                                            {[...(city.resources.collisionCenters || []), ...(city.resources.repair || [])].length > 0 ? (
+                                                [...(city.resources.collisionCenters || []), ...(city.resources.repair || [])].map((r, i) => (
+                                                    <div key={i} className="flex justify-between items-start border-b border-white/5 last:border-0 pb-2 last:pb-0">
+                                                        <div>
+                                                            <div className="font-bold text-slate-200">{r.name}</div>
+                                                            <div className="text-xs text-slate-500">{r.note}</div>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            {r.rating && <div className="text-gold-400 text-sm font-bold">★ {r.rating}</div>}
+                                                            <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:text-blue-300 hover:underline">View</a>
+                                                        </div>
                                                     </div>
-                                                    <div className="text-right">
-                                                        {r.rating && <div className="text-gold-400 text-sm font-bold">★ {r.rating}</div>}
-                                                        <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:text-blue-300 hover:underline">View</a>
-                                                    </div>
-                                                </div>
-                                            ))}
+                                                ))
+                                            ) : (
+                                                <ResourceLinkHelper resourceType="auto repair" city={city.name} className="w-full justify-center" />
+                                            )}
                                         </div>
                                     </div>
                                 )}
@@ -381,33 +426,39 @@ export default async function CityPage({ params }: Props) {
 
                     </div>
 
-                    {/* Quick Stats / Sidebar */}
-                    <div className="bg-slate-900 p-6 rounded-xl h-fit border border-white/10">
-                        <h3 className="font-bold text-white mb-4 border-b border-white/10 pb-2">Area Resources</h3>
-                        <ul className="space-y-3 text-sm text-slate-300">
-                            <li className="flex items-center gap-2"><CarIcon size={16} className="text-gold-500" /> {city.name} Body Shops</li>
-                            <li className="flex items-center gap-2"><AlertTriangleIcon size={16} className="text-gold-500" /> {city.name} Police Reports</li>
-                            <li className="flex items-center gap-2"><ShieldCheckIcon size={16} className="text-gold-500" /> {city.county} County Court Info</li>
-                        </ul>
-                        <button className="mt-6 w-full bg-gold-500 text-navy-900 font-bold py-3 rounded-lg hover:bg-gold-600 transition">
-                            Compare {city.name} Market Values
-                        </button>
 
-                        {/* Rental Link */}
-                        {city.resources?.rental && (
-                            <div className="mt-6 pt-4 border-t border-white/10">
-                                <h4 className="font-bold text-xs text-slate-500 uppercase mb-2">Need a Rental?</h4>
-                                {city.resources.rental.map((r, i) => (
-                                    <a key={i} href={r.link} target="_blank" className="block bg-slate-800 border border-white/5 p-2 rounded mb-2 hover:bg-slate-700 transition">
-                                        <div className="font-bold text-slate-200 text-sm">{r.name}</div>
-                                        <div className="flex justify-between text-xs text-slate-500">
-                                            <span>{r.note}</span>
-                                            <span className="text-gold-400">★ {r.rating}</span>
-                                        </div>
-                                    </a>
-                                ))}
-                            </div>
-                        )}
+                    {/* Quick Stats / Sidebar */}
+                    <div className="space-y-6">
+                        {/* TRUST BADGES (New) */}
+                        <TrustBadges />
+
+                        <div className="bg-slate-900 p-6 rounded-xl h-fit border border-white/10">
+                            <h3 className="font-bold text-white mb-4 border-b border-white/10 pb-2">Area Resources</h3>
+                            <ul className="space-y-3 text-sm text-slate-300">
+                                <li className="flex items-center gap-2"><CarIcon size={16} className="text-gold-500" /> {city.name} Body Shops</li>
+                                <li className="flex items-center gap-2"><AlertTriangleIcon size={16} className="text-gold-500" /> {city.name} Police Reports</li>
+                                <li className="flex items-center gap-2"><ShieldCheckIcon size={16} className="text-gold-500" /> {city.county} County Court Info</li>
+                            </ul>
+                            <button className="mt-6 w-full bg-gold-500 text-navy-900 font-bold py-3 rounded-lg hover:bg-gold-600 transition">
+                                Compare {city.name} Market Values
+                            </button>
+
+                            {/* Rental Link */}
+                            {city.resources?.rental && (
+                                <div className="mt-6 pt-4 border-t border-white/10">
+                                    <h4 className="font-bold text-xs text-slate-500 uppercase mb-2">Need a Rental?</h4>
+                                    {city.resources.rental.map((r, i) => (
+                                        <a key={i} href={r.link} target="_blank" className="block bg-slate-800 border border-white/5 p-2 rounded mb-2 hover:bg-slate-700 transition">
+                                            <div className="font-bold text-slate-200 text-sm">{r.name}</div>
+                                            <div className="flex justify-between text-xs text-slate-500">
+                                                <span>{r.note}</span>
+                                                <span className="text-gold-400">★ {r.rating}</span>
+                                            </div>
+                                        </a>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </section>

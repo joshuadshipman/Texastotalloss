@@ -61,42 +61,43 @@ export const cities: CityData[] = [
         zipCodes: ["75201", "75202", "75203", "75204", "75205"],
         subCities: [
             'north-dallas', 'south-dallas', 'uptown-dallas',
-            'oak-lawn', 'the-village',
-            // Traditional Suburbs linked for reference if needed, but primary focus is districts
+            'oak-lawn', 'the-village', 'deep-ellum', 'bishop-arts',
             'plano', 'mesquite', 'irving'
         ],
         medicalResources: [
-            { name: "Accident & Injury Chiropractic", link: "https://accidentandinjury.com/", note: "19 Locations in DFW focusing purely on auto accident recovery." },
-            { name: "The Joint Chiropractic - Dallas", link: "https://www.thejoint.com/texas/dallas/", note: "Convenient locations in Uptown, Preston Hollow, and White Rock." }
+            { name: "Parkland Memorial Hospital", link: "https://www.parklandhealth.org", note: "Level I Trauma Center. 5200 Harry Hines Blvd", address: "5200 Harry Hines Blvd, Dallas, TX 75235" },
+            { name: "Baylor University Medical Center", link: "https://www.bswhealth.com/locations/dallas", note: "Level I Trauma Center. 3500 Gaston Ave", address: "3500 Gaston Ave, Dallas, TX 75246" },
+            { name: "Methodist Dallas Medical Center", link: "https://www.methodisthealth.org", note: "Level I Trauma Center. 1441 N Beckley Ave", address: "1441 N Beckley Ave, Dallas, TX 75203" }
         ],
         resources: {
             towing: [
                 { name: "Walnut Hill Wrecker", link: "https://walnuthillwrecker.com", note: "24/7 Service", rating: 4.8 },
-                { name: "Dallas Tow Boys", link: "#", note: "Fast response in downtown", rating: 4.7 }
+                { name: "Dallas Tow Boys", link: "https://dallastowboys.com", note: "Fast response downtown", rating: 4.7 }
             ],
             repair: [], // Legacy
             collisionCenters: [
-                { name: "Service King Collision", link: "https://www.serviceking.com", note: "National warranty", rating: 4.5 },
-                { name: "Sewell Collision Center", link: "https://www.sewellcollision.com", note: "Luxury vehicle specialists", rating: 4.8 }
+                { name: "Service King Collision (Crash Champions)", link: "https://crashchampions.com", note: "Multiple DFW locations, Lifetime Warranty", rating: 4.5 },
+                { name: "Sewell Collision Center", link: "https://www.sewellcollision.com", note: "Luxury vehicle specialists (Lexus/Audi/BMW)", rating: 4.8 },
+                { name: "Caliber Collision", link: "https://caliber.com", note: "National warranty, works with all insurers", rating: 4.6 }
             ],
             hospitals: [
-                { name: "Parkland Memorial Hospital", link: "https://www.parklandhealth.org", note: "Level I Trauma Center. 5200 Harry Hines Blvd, Dallas, TX 75235" },
-                { name: "Baylor University Medical Center", link: "https://www.bswhealth.com", note: "Level I Trauma Center. 3500 Gaston Ave, Dallas, TX 75246" }
+                { name: "Parkland Memorial Hospital", link: "https://www.parklandhealth.org", note: "Level I Trauma Center" },
+                { name: "Baylor University Medical Center", link: "https://www.bswhealth.com", note: "Level I Trauma Center" }
             ],
             insuranceDept: {
-                name: "TDI (Austin HQ)",
+                name: "TDI Consumer Help",
                 link: "https://www.tdi.texas.gov",
-                note: "Consumer Help Line: 800-252-3439. 1601 Congress Ave, Austin, TX 78701",
-                address: "1601 Congress Ave, Austin, TX 78701"
+                note: "File a complaint: 800-252-3439",
+                address: "333 Guadalupe St, Austin, TX 78701 (Statewide HQ)"
             },
             registrationOffice: {
                 name: "Dallas County Tax Office",
                 link: "https://www.dallascounty.org/departments/tax/",
-                note: "Vehicle Title & Registration. 500 Elm St, Dallas, TX 75202",
+                note: "Vehicle Title & Registration",
                 address: "500 Elm St, Dallas, TX 75202"
             },
             rental: [
-                { name: "Enterprise Rent-A-Car", link: "https://www.enterprise.com", note: "Multiple DFW locations", rating: 4.6 }
+                { name: "Enterprise Rent-A-Car", link: "https://www.enterprise.com", note: "Multiple DFW locations" }
             ]
         }
     },
@@ -118,11 +119,26 @@ export const cities: CityData[] = [
         zipCodes: ["75033", "75034", "75035"],
         subCities: ['little-elm', 'prosper', 'celina', 'the-colony'],
         medicalResources: [
+            { name: "Baylor Scott & White Medical Center - Frisco", link: "https://www.bswhealth.com/locations/frisco", note: "Sports Medicine & Trauma" },
+            { name: "Scottish Rite for Children", link: "https://scottishriteforchildren.org", note: "Pediatric Orthopedics (North Campus)" },
             { name: "Airrosti Frisco", link: "https://www.airrosti.com", note: "Soft tissue therapy" }
         ],
         resources: {
             towing: [{ name: "Frisco Towing Service", link: "#", note: "Local expert", rating: 4.9 }],
-            repair: [{ name: "Frisco Paint & Body", link: "#", note: "High-end repairs", rating: 4.8 }],
+            collisionCenters: [
+                { name: "Frisco Paint & Body", link: "https://friscopaint.com", note: "High-end repairs", rating: 4.8 },
+                { name: "Crash Champions Frisco", link: "https://crashchampions.com", note: "Legacy Service King location", rating: 4.6 }
+            ],
+            repair: [],
+            hospitals: [
+                { name: "Baylor Scott & White Medical Center - Frisco", link: "https://www.bswhealth.com/locations/frisco", note: "Urgent Care & Surgery" }
+            ],
+            registrationOffice: {
+                name: "Collin County Tax Assessor",
+                link: "https://www.collincountytx.gov/tax_assessor",
+                note: "Frisco Sub-Courthouse",
+                address: "6101 Frisco Square Blvd, Frisco, TX 75034"
+            },
             rental: [{ name: "Hertz Frisco", link: "#", note: "Near Stonebriar", rating: 4.5 }]
         }
     },
@@ -144,13 +160,27 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 29.7604, longitude: -95.3698 },
         zipCodes: ["77002", "77003"],
-        subCities: ['the-woodlands', 'katy', 'sugar-land', 'pearland', 'pasadena'],
+        subCities: ['the-woodlands', 'katy', 'sugar-land', 'pearland', 'pasadena', 'river-oaks', 'heights', 'montrose'],
         medicalResources: [
-            { name: "The Joint Chiropractic", link: "https://www.thejoint.com", note: "Houston wide" }
+            { name: "Memorial Hermann - Texas Medical Center", link: "https://memorialhermann.org", note: "Level I Trauma Center. World-class care.", address: "6411 Fannin St, Houston, TX 77030" },
+            { name: "Ben Taub Hospital", link: "https://www.harrishealth.org", note: "Level I Trauma Center", address: "1504 Taub Loop, Houston, TX 77030" }
         ],
         resources: {
-            towing: [{ name: "Milam's Towing", link: "#", note: "Heavy duty specialists", rating: 4.7 }],
-            repair: [{ name: "Caliber Collision", link: "#", note: "Lifetime warranty", rating: 4.6 }],
+            towing: [{ name: "Milam's Towing", link: "https://milamstowing.com", note: "Heavy duty specialists", rating: 4.7 }],
+            repair: [],
+            collisionCenters: [
+                { name: "Caliber Collision", link: "https://caliber.com", note: "Lifetime warranty, multiple locations", rating: 4.6 },
+                { name: "JJ Auto Body", link: "https://jjautobodyhouston.com", note: "High-end import repair", rating: 4.8 }
+            ],
+            hospitals: [
+                { name: "Memorial Hermann", link: "https://memorialhermann.org", note: "Texas Medical Center" }
+            ],
+            registrationOffice: {
+                name: "Harris County Tax Office",
+                link: "https://www.hctax.net",
+                note: "Vehicle Registration",
+                address: "1001 Preston St, Houston, TX 77002"
+            },
             rental: [{ name: "Enterprise", link: "#", note: "Downtown & Airports", rating: 4.5 }]
         }
     },
@@ -172,13 +202,31 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 30.2672, longitude: -97.7431 },
         zipCodes: ["78701", "78704"],
-        subCities: ['bastrop', 'round-rock', 'pflugerville', 'cedar-park'],
+        subCities: ['bastrop', 'round-rock', 'pflugerville', 'cedar-park', 'south-congress', 'hyde-park'],
         medicalResources: [
-            { name: "Airrosti Austin", link: "https://www.airrosti.com", note: "Austin wide" }
+            { name: "Dell Seton Medical Center at UT", link: "https://www.seton.net", note: "Level I Trauma Center", address: "1500 Red River St, Austin, TX 78701" },
+            { name: "St. David's South Austin", link: "https://stdavids.com", note: "Level II Trauma Center", address: "901 W Ben White Blvd, Austin, TX 78704" }
         ],
         resources: {
-            towing: [{ name: "Bulldog Towing", link: "#", note: "Quick response", rating: 4.8 }],
-            repair: [{ name: "Austin Body Works", link: "#", note: "Local favorite", rating: 4.9 }],
+            towing: [{ name: "Bulldog Towing", link: "https://bulldogtow.com", note: "Quick response", rating: 4.8 }],
+            collisionCenters: [
+                { name: "Austin Body Works", link: "https://austindescriptionworks.com", note: "Local favorite", rating: 4.9 },
+                { name: "Caliber Collision", link: "https://caliber.com", note: "Multiple Austin locations" }
+            ],
+            repair: [],
+            hospitals: [{ name: "Dell Seton Medical Center", link: "https://www.seton.net", note: "Central Austin Trauma" }],
+            insuranceDept: {
+                name: "TDI Headquarters",
+                link: "https://www.tdi.texas.gov",
+                note: "Main Office",
+                address: "333 Guadalupe St, Austin, TX 78701"
+            },
+            registrationOffice: {
+                name: "Travis County Tax Office",
+                link: "https://tax-office.traviscountytx.gov",
+                note: "Registration & Title",
+                address: "5501 Airport Blvd, Austin, TX 78751"
+            },
             rental: [{ name: "Enterprise", link: "#", note: "South Congress", rating: 4.6 }]
         }
     },
@@ -204,7 +252,23 @@ export const cities: CityData[] = [
             { name: "Texas Pain & Injury", link: "https://texaspainandinjury.com/locations/san-antonio/", note: "Dedicated centers for accident injury across San Antonio." },
             { name: "The Joint Chiropractic - San Antonio", link: "https://www.thejoint.com/texas/san-antonio/", note: "Multiple clinics including Alamo Heights and Stone Oak." },
             { name: "Airrosti San Antonio", link: "https://www.airrosti.com/locations/san-antonio/", note: "Headquartered in SA with broad city-wide coverage." }
-        ]
+        ],
+        resources: {
+            towing: [{ name: "San Antonio Towing", link: "#", note: "24/7", rating: 4.5 }],
+            collisionCenters: [
+                { name: "Blue Bonnet Motors Collision", link: "#", note: "Ford Certified", rating: 4.7 },
+                { name: "Caliber Collision", link: "#", note: "San Antonio wide" }
+            ],
+            repair: [],
+            hospitals: [{ name: "University Hospital", link: "https://www.universityhealthsystem.com", note: "Medical Center District" }],
+            registrationOffice: {
+                name: "Bexar County Tax Assessor",
+                link: "https://www.bexar.org/tax",
+                note: "Vista Verde Plaza",
+                address: "233 N Pecos La Trinidad, San Antonio, TX 78207"
+            },
+            rental: [{ name: "Hertz", link: "#", note: "Airport & Downtown", rating: 4.5 }]
+        }
     },
 
     {
@@ -229,7 +293,6 @@ export const cities: CityData[] = [
             { name: "Texas Pain & Injury - El Paso", link: "https://texaspainandinjury.com/locations/el-paso/", note: "Focused pain relief for El Paso accident victims." }
         ]
     },
-    // --- DFW EXPANSION ---
     // --- DFW EXPANSION ---
     {
         slug: 'plano',

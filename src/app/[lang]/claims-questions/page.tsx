@@ -20,45 +20,79 @@ export default async function ClaimsQuestionsPage({ params }: Props) {
 
     const questions = [
         {
-            category: "Immediate Actions",
+            category: "At the Scene",
             items: [
-                { q: "What should I do immediately after a car accident?", a: "Ensure safety first. Call 911 if there are injuries. Move vehicles only if safe. Exchange info and document the scene with photos." },
-                { q: "Should I call the police for a minor accident?", a: "Yes. A police report provides an unbiased record, which is crucial for insurance claims, even for minor damage." },
-                { q: "What info should I exchange with the other driver?", a: "Name, address, phone number, insurance company, policy number, driver's license number, and license plate number." },
-                { q: "Should I admit fault at the scene?", a: "No. Never admit fault or apologize at the scene. Let the investigation determine liability based on facts." },
-                { q: "How do I document the accident scene?", a: "Take photos of vehicle damage, skid marks, road signs, and injuries. Get witness contact info if available." }
+                { q: "What is the first thing I should do after a car accident?", a: "Ensure safety, check for injuries, and call 911 immediately. Turn on hazard lights and move to a safe spot if possible." },
+                { q: "Do I always need to call the police?", a: "Yes. In Texas, you must report accidents involving injury, death, or damage over $1,000. A police report is vital for your claim." },
+                { q: "What information must I exchange with the other driver?", a: "Name, address, phone number, insurance company name, policy number, driver’s license number, and license plate." },
+                { q: "Should I apologize to the other driver?", a: "No. Never say 'I'm sorry' or admit fault at the scene. These statements can be used against you later to deny liability." },
+                { q: "How should I document the accident?", a: "Take photos of all vehicle positions, damage, skid marks, road signs, and injuries. diverse angles are best." },
+                { q: "What if the other driver flees (Hit and Run)?", a: "Stay at the scene, call the police, and write down any details of their car (make, color, partial plate). Do not chase them." },
+                { q: "Should I speak to witnesses?", a: "Yes. Get names and phone numbers of any bystanders. Independent witnesses are powerful evidence in disputed liability cases." },
+                { q: "Do I need to report the accident to the state?", a: "If police don't investigate, you must file a Crash Report (CR-2) with TxDOT within 10 days if there is injury or significant damage." }
             ]
         },
         {
-            category: "Insurance & Claims",
+            category: "Vehicle Damage & Total Loss",
             items: [
-                { q: "How do I file a car insurance claim?", a: "Contact your insurer's claims department or use their mobile app. Provide the police report number and photos." },
-                { q: "Whose insurance do I call first?", a: "Call your own insurance company to report the accident. If the other driver is at fault, you can file a claim with them too." },
-                { q: "Will my rates go up if it wasn't my fault?", a: "In Texas, your rates generally shouldn't increase for a not-at-fault accident, but policies vary." },
-                { q: "What is 'Total Loss'?", a: "A car is a total loss when repair costs exceed the vehicle's actual cash value (ACV) minus the salvage value." },
-                { q: "How do insurance companies calculate car value?", a: "They use market research (CCC, Mitchell) to find comparable local vehicles. These valuations are often low and can be disputed." },
-                { q: "What is 'Gap Insurance'?", a: "Gap insurance covers the difference between your car's ACV (what insurance pays) and what you still owe on your loan." },
-                { q: "What if the other driver is uninsured?", a: "If you have Uninsured Motorist (UM/UIM) coverage, your own policy will pay for your damages and medical bills." },
-                { q: "Can I choose my own body shop?", a: "Yes. Texas law gives you the specific right to choose where your vehicle is repaired. You do not have to use their 'preferred' shop." }
+                { q: "What qualifies as a 'Total Loss' in Texas?", a: "A car is a total loss if the repair cost plus salvage value equals or exceeds the vehicle's Actual Cash Value (ACV)." },
+                { q: "How is 'Actual Cash Value' determined?", a: "ACV is the fair market value of your car just before the crash, usually based on comparable local sales, not Kelly Blue Book." },
+                { q: "Can I dispute the insurance company's valuation?", a: "Yes. You can submit your own comparable vehicle listings (comps) to prove their offer is too low." },
+                { q: "What is the 'Appraisal Clause'?", a: "A policy provision letting you hire an independent appraiser to negotiate value with the insurer's appraiser if you can't agree." },
+                { q: "What is 'Gap Insurance'?", a: "It pays the difference between your car's ACV settlement and what you still owe on your loan/lease if you're 'upside down'." },
+                { q: "What is 'Diminished Value'?", a: "The loss in market value a car suffers due to having an accident history, even after it has been perfectly repaired." },
+                { q: "Can I claim Diminished Value in Texas?", a: "Yes, but generally only against the at-fault driver's insurance (third-party claim), not your own collision policy." },
+                { q: "Can I choose my own repair shop?", a: "Yes. Texas law prohibits insurers from forcing you to use a specific shop. You have the right to choose." },
+                { q: "What if the repair shop charges more than insurance estimates?", a: "The insurance company must negotiate with the shop to restore the car to pre-loss condition, but disputes can occur." },
+                { q: "Who pays for my rental car?", a: "The at-fault driver's insurance should pay. If they delay, use your own 'Rental Reimbursement' coverage and get reimbursed later." }
             ]
         },
         {
-            category: "Medical & Injuries",
+            category: "Injuries & Medical",
             items: [
-                { q: "Should I see a doctor if I feel fine?", a: "Yes. Adrenaline can mask injuries like whiplash. A medical record links injuries to the accident." },
-                { q: "Who pays for my medical bills?", a: "Initially, your own PIP (Personal Injury Protection) or health insurance. The at-fault driver's liability pays eventually." },
-                { q: "What is PIP coverage?", a: "Personal Injury Protection covers medical costs and lost wages for you and your passengers, regardless of fault. Texas requires it unless rejected in writing." },
-                { q: "Can I get compensation for pain and suffering?", a: "Yes, 'pain and suffering' is a non-economic damage you can claim against the at-fault party." }
+                { q: "Should I go to the ER even if I feel fine?", a: "Yes. Adrenaline masks pain. A delay in treatment gives insurance companies a reason to argue your injuries aren't accident-related." },
+                { q: "Who pays my medical bills upfront?", a: "Use your own PIP (Personal Injury Protection) or health insurance. Settlement from the other driver comes later." },
+                { q: "What is PIP coverage?", a: "Personal Injury Protection covers medical bills and lost wages for you/passengers regardless of fault. It is mandatory in TX unless rejected in writing." },
+                { q: "Do I have to pay back my health insurance?", a: "Likely yes. This is called 'Subrogation'. Your health insurer expects reimbursement from your injury settlement." },
+                { q: "What are 'General Damages'?", a: "Non-economic damages like physical pain, suffering, mental anguish, and loss of enjoyment of life." },
+                { q: "Can I claim lost wages?", a: "Yes. You are entitled to compensation for income lost due to recovery time or medical appointments." },
+                { q: "What if I have a pre-existing condition?", a: "The 'Eggshell Skull' rule means the at-fault driver is liable for aggravating pre-existing conditions, though it complicates the case." }
             ]
         },
         {
-            category: "Legal & Disputes",
+            category: "Insurance Company Tactics",
             items: [
-                { q: "Do I need a lawyer for a fender bender?", a: "Likely not. But if there are injuries or a disputed liability, a lawyer is highly recommended." },
-                { q: "How to dispute a total loss offer?", a: "Find local comparable vehicles (comps) priced higher than their offer. Submit these to the adjuster or invoke your policy's Appraisal Clause." },
-                { q: "What is the Appraisal Clause?", a: "A policy provision allowing you to hire an independent appraiser to negotiate the value of your car directly with the insurer's appraiser." },
-                { q: "What is Diminished Value?", a: "The loss in market value your car suffers simply because it has an accident history, even after perfect repairs." },
-                { q: "Is Texas a Diminished Value state?", a: "Yes. You can claim diminished value against the at-fault driver's insurance relative to the loss in resale value." }
+                { q: "Should I give a recorded statement?", a: "No. Do not give a recorded statement to the other driver's insurance without legal advice. They fish for inconsistencies." },
+                { q: "Why did the insurance company offer me a quick check?", a: "This is a 'swoop and settle' tactic to get you to sign a release before you realize the full extent of your injuries." },
+                { q: "What is a 'Release of Liability'?", a: "A legal document that ends your claim forever in exchange for payment. Never sign this until you are 100% sure you are done treating." },
+                { q: "Why is the adjuster ignoring my calls?", a: "Delay tactics wear you down. Document every attempt to contact them and consider filing a TDI complaint." },
+                { q: "What is 'Comparative Negligence'?", a: "Texas uses 'Modified Comparative Negligence'. If you are more than 50% at fault, you cannot recover damages." },
+                { q: "Can they deny my claim if I was partly at fault?", a: "They can reduce your payout by your percentage of fault. If you are 51% at fault, you get $0." }
+            ]
+        },
+        {
+            category: "Legal & Court",
+            items: [
+                { q: "What is the Statute of Limitations in Texas?", a: "Generally, you have 2 years from the date of the accident to file a lawsuit for personal injury or property damage." },
+                { q: "How much does a car accident lawyer cost?", a: "Most work on a 'Contingency Fee' basis, taking a percentage (usually 33-40%) of the settlement only if they win." },
+                { q: "Will my case go to trial?", a: "Most cases (over 90%) settle out of court. Trials are expensive and risky, so insurers prefer to settle." },
+                { q: "Can I sue the other driver personally?", a: "Technically yes, but you are usually suing to get to their insurance policy limits. Most individuals don't have personal assets to pay judgments." },
+                { q: "What are 'Policy Limits'?", a: "The maximum amount an insurance policy will pay. Texas minimum is 30/60/25 ($30k per person, $60k per accident, $25k property)." },
+                { q: "What if my damages exceed their policy limits?", a: "You can file an Underinsured Motorist (UIM) claim with your own policy to cover the difference." },
+                { q: "What is a 'Letter of Protection' (LOP)?", a: "A promise signed by you and your attorney to pay a doctor from the future settlement funds so you can get treated now." },
+                { q: "How long does a settlement take?", a: "Simple claims can settle in months. Complex injury cases needing extensive treatment or litigation can take 1-2 years." }
+            ]
+        },
+        {
+            category: "Special Situations",
+            items: [
+                { q: "What if the driver was drunk (DWI)?", a: "You may be entitled to 'Punitive Damages' in addition to standard damages to punish the gross negligence." },
+                { q: "What if I was hit by an Uber/Lyft?", a: "Rideshare companies have large insurance policies ($1M+) that apply if the app was on and a ride was in progress." },
+                { q: "What if I was hit by a Commercial Truck?", a: "Trucking cases are complex. Federal regulations (FMCSA) apply, and evidence like electronic logbooks must be preserved immediately." },
+                { q: "What if a government vehicle hit me?", a: "The 'Texas Tort Claims Act' applies. Notice deadlines are very short (often 6 months or less) and liability is capped." },
+                { q: "Can I claim for a car seat?", a: "Yes. NHTSA recommends replacing car seats after any moderate accident. Insurance usually covers the full replacement cost." },
+                { q: "What about loose items damaged in the car?", a: "Property damage claims can include glasses, laptops, or phones broken in the crash. Provide receipts or photos." },
+                { q: "What if the accident happened on private property?", a: "Police might not write a report. Documenting the scene yourself is even more critical. General negligence laws still apply." }
             ]
         }
     ];

@@ -1,183 +1,79 @@
-import { blogTopics } from '@/data/blog-topics';
-import { getDictionary } from '@/dictionaries';
+import { blogPosts } from '@/data/blog-posts';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeftIcon, CheckCircleIcon, AlertTriangleIcon, FileTextIcon } from 'lucide-react';
-import ChatWidget from '@/components/ChatWidget';
+import { ChevronLeft } from 'lucide-react';
 
-// Logic to generate 50 static pages at build time
-export async function generateStaticParams() {
-    return blogTopics.map((topic) => ({
-        slug: topic.slug,
-    }));
-}
-
-export async function generateMetadata({ params }: { params: Promise<{ lang: string; slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
-    const topic = blogTopics.find((t) => t.slug === slug);
-
-    if (!topic) {
-        return {
-            title: 'Article Not Found',
-        };
-    }
+    const post = blogPosts.find(p => p.slug === slug);
+    if (!post) return {};
 
     return {
-        title: `${topic.title} | Texas Accident Claims`,
-        description: topic.intention,
+        title: `${post.title} | Texas Total Loss`,
+        description: post.excerpt,
     };
+}
+
+export async function generateStaticParams() {
+    return blogPosts.map((post) => ({
+        slug: post.slug,
+    }));
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ lang: string; slug: string }> }) {
     const { lang, slug } = await params;
-    const dict = await getDictionary(lang as any); // Type assertion for now to avoid 'any' error if strict
-    const topic = blogTopics.find((t) => t.slug === slug);
+    const post = blogPosts.find(p => p.slug === slug);
 
-    if (!topic) {
-        return notFound();
+    if (!post) {
+        notFound();
     }
 
-    // Generic Content Template based on Category
-    // We construct the article dynamically based on the "Formula" provided by the user.
-    // Hook -> Case? -> Rules -> Evidence -> Money -> Tools
-
     return (
-        <main className="max-w-4xl mx-auto px-4 py-8 md:py-12 font-sans text-gray-800">
-            {/* Nav */}
-            <div className="mb-6">
-                <Link href={`/${lang}`} className="inline-flex items-center text-blue-600 hover:underline text-sm font-medium">
-                    <ArrowLeftIcon size={16} className="mr-1" /> Back to Home
+        <main className="min-h-screen bg-white py-20 px-4">
+            <article className="max-w-3xl mx-auto">
+                <Link href={`/${lang}/blog`} className="inline-flex items-center gap-2 text-slate-500 hover:text-navy-900 transition mb-8 font-bold text-sm">
+                    <ChevronLeft size={16} /> Back to Library
                 </Link>
-            </div>
 
-            {/* Header */}
-            <header className="mb-8 border-b border-gray-200 pb-8">
-                <span className="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide mb-3 inline-block">
-                    {topic.category} Guide
-                </span>
-                <h1 className="text-3xl md:text-5xl font-black text-gray-900 mb-4 leading-tight">
-                    {topic.title}
-                </h1>
-                <p className="text-xl text-gray-600 leading-relaxed font-light">
-                    {topic.intention}
-                </p>
-            </header>
+                <header className="mb-12">
+                    <div className="flex gap-2 mb-6">
+                        {post.tags.map(tag => (
+                            <span key={tag} className="bg-gold-100 text-gold-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+                    <h1 className="text-4xl md:text-5xl font-black text-navy-900 mb-6 font-serif leading-tight">
+                        {post.title}
+                    </h1>
+                    <div className="flex items-center gap-4 text-sm text-slate-500 border-l-4 border-gold-500 pl-4">
+                        <p>By <span className="font-bold text-navy-900">{post.author}</span></p>
+                        <span>•</span>
+                        <p>{post.date}</p>
+                        <span>•</span>
+                        <p>{post.readTime}</p>
+                    </div>
+                </header>
 
-            {/* Dynamic Content Body (Custom or Formula) */}
-            <div className="space-y-10">
-                {topic.content ? (
-                    /* Custom Automated Content */
-                    <article className="prose prose-lg prose-blue max-w-none" dangerouslySetInnerHTML={{ __html: topic.content }} />
-                ) : (
-                    /* Generic Fallback Formula */
-                    <>
-                        {/* 1. The Hook / "Do I Have a Case?" */}
-                        <section>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                <span className="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center text-sm">01</span>
-                                Do I Have a Case?
-                            </h2>
-                            <div className="prose prose-lg text-gray-700">
-                                <p>
-                                    If you are reading this, likely something unexpected happened on the road.
-                                    <strong>{topic.title}</strong> is a complex issue in Texas, but the core question is always:
-                                    <em> Did someone else's negligence cause your loss?</em>
-                                </p>
-                                <p className="mt-4">
-                                    In Texas, to have a valid claim for a {topic.category.toLowerCase()}, you typically need to prove three things:
-                                </p>
-                                <ul className="list-disc pl-5 mt-4 space-y-2 bg-gray-50 p-6 rounded-lg border border-gray-100">
-                                    <li><strong>Duty of Care:</strong> The other driver had a responsibility to drive safely.</li>
-                                    <li><strong>Breach:</strong> They failed that duty (e.g., speeding, distracted, unsafe lane change).</li>
-                                    <li><strong>Causation:</strong> Their failure directly caused your injury or property damage.</li>
-                                </ul>
-                            </div>
-                        </section>
+                {/* Content Injection */}
+                <div
+                    className="prose prose-lg prose-slate max-w-none prose-headings:font-serif prose-headings:font-bold prose-headings:text-navy-900 prose-a:text-blue-600 hover:prose-a:text-blue-800 prose-img:rounded-xl"
+                    dangerouslySetInnerHTML={{ __html: post.content }}
+                />
 
-                        {/* 2. Key Texas Rules */}
-                        <section>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                <span className="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center text-sm">02</span>
-                                Key Texas Laws You Should Know
-                            </h2>
-                            <div className="prose prose-lg text-gray-700">
-                                <p>
-                                    Texas follows a <strong>"Modified Comparative Negligence"</strong> rule (51% Bar Rule).
-                                    This means you can still recover damages as long as you are <em>not more than 50% at fault</em>.
-                                </p>
-
-                                <div className="my-6 bg-amber-50 border-l-4 border-amber-500 p-4">
-                                    <h4 className="font-bold text-amber-800 flex items-center gap-2">
-                                        <AlertTriangleIcon size={18} />
-                                        Important Warning
-                                    </h4>
-                                    <p className="text-sm text-amber-900 mt-1">
-                                        Insurance adjusters often try to pin 51% of the blame on you to avoid paying <em>anything</em>.
-                                        Never admit fault at the scene or on recorded lines without speaking to a lawyer.
-                                    </p>
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* 3. Evidence & Money */}
-                        <section>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                <span className="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center text-sm">03</span>
-                                Recovering Your Money
-                            </h2>
-                            <div className="prose prose-lg text-gray-700">
-                                <p>
-                                    For {topic.category.toLowerCase()} cases, you may be entitled to compensation for:
-                                </p>
-                                <div className="grid md:grid-cols-2 gap-4 mt-4">
-                                    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                                        <h3 className="font-bold text-green-700 mb-2">Economic Damages</h3>
-                                        <ul className="text-sm space-y-1">
-                                            <li>✅ Medical Bills (Past & Future)</li>
-                                            <li>✅ Lost Wages</li>
-                                            <li>✅ Property Damage / Total Loss</li>
-                                        </ul>
-                                    </div>
-                                    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                                        <h3 className="font-bold text-blue-700 mb-2">Non-Economic Damages</h3>
-                                        <ul className="text-sm space-y-1">
-                                            <li>✅ Pain and Suffering</li>
-                                            <li>✅ Mental Anguish</li>
-                                            <li>✅ Physical Impairment</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* 4. Tools & CTA (Soft Sell) */}
-                        <section className="bg-gradient-to-br from-blue-900 to-blue-800 text-white p-8 rounded-2xl shadow-xl transform transition hover:scale-[1.01]">
-                            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 text-white">
-                                <CheckCircleIcon className="text-green-400" />
-                                Take The Next Step (Free)
-                            </h2>
-                            <p className="text-blue-100 mb-6 text-lg">
-                                Don't guess about your case value. Use our free tools to get answers instantly.
-                                We don't need to call you—just get your data and decide what's best.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-4">
-                                <Link href={`/${lang}#calculator`} className="bg-green-500 hover:bg-green-400 text-white font-bold py-3 px-6 rounded-lg text-center transition shadow-lg border-b-4 border-green-700 active:translate-y-1 active:border-b-0">
-                                    Calculate Total Loss Value
-                                </Link>
-                                <Link href={`/${lang}/chat`} className="bg-white/10 hover:bg-white/20 text-white font-bold py-3 px-6 rounded-lg text-center transition border border-white/30 backdrop-blur-sm">
-                                    Ask AI Case Review
-                                </Link>
-                            </div>
-                        </section>
-                    </>
-                )}
-            </div>
-
-            {/* Chat Widget for this page */}
-            <div className="fixed z-50">
-                <ChatWidget dict={dict} />
-            </div>
+                {/* Call to Action Footer */}
+                <div className="mt-16 bg-navy-900 rounded-2xl p-8 md:p-12 text-center text-white relative overflow-hidden">
+                    <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
+                    <h3 className="text-2xl font-bold font-serif mb-4 relative z-10">Maximize Your Settlement Today</h3>
+                    <p className="text-blue-200 mb-8 max-w-lg mx-auto relative z-10">
+                        Don't let the insurance company undervalue your claim. Get a free AI analysis in seconds.
+                    </p>
+                    <Link href={`/${lang}/review`} className="inline-block bg-gold-500 hover:bg-gold-600 text-navy-900 font-bold py-4 px-10 rounded-full shadow-lg hover:scale-105 transition-transform relative z-10">
+                        Start Free Case Review
+                    </Link>
+                </div>
+            </article>
         </main>
     );
 }

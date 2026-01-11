@@ -1,86 +1,65 @@
-import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
-import { getDictionary } from '../dictionaries';
+import { blogPosts } from '@/data/blog-posts';
+import { Metadata } from 'next';
 
-// Initialize Supabase Client (Public)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''; // Use Anon Key for public read
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-export const revalidate = 60; // Revalidate every minute
+export const metadata: Metadata = {
+    title: 'Expert Auto Insurance Claim Advice | Texas Total Loss Blog',
+    description: 'Read the latest guides on handling total loss claims, diminished value, and injury settlements in Texas.',
+};
 
 export default async function BlogIndex({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
-    const dict = await getDictionary(lang as 'en' | 'es');
-
-    // Fetch Published Posts
-    const { data: posts, error } = await supabase
-        .from('posts')
-        .select('*')
-        .eq('status', 'published')
-        .order('created_at', { ascending: false });
-
-    if (error) {
-        console.error("Error fetching posts:", error);
-    }
 
     return (
-        <main className="min-h-screen bg-gray-50 font-sans text-gray-900">
-            {/* Header */}
-            <header className="bg-blue-900 text-white py-20 px-4 text-center">
-                <div className="max-w-4xl mx-auto">
-                    <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
-                        Texas Total Loss <span className="text-blue-300">Resources</span>
+        <main className="min-h-screen bg-slate-50 py-20 px-4">
+            <div className="max-w-6xl mx-auto">
+                <div className="text-center mb-16">
+                    <h1 className="text-4xl md:text-6xl font-black text-navy-900 mb-6 font-serif">
+                        Claim <span className="text-gold-500">Intel</span>
                     </h1>
-                    <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-                        Latest guides, legal insights, and viral TikTok breakdowns regarding your total loss claim.
+                    <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+                        Expert guides to help you fight insurance companies and maximize your payout.
                     </p>
                 </div>
-            </header>
 
-            {/* Blog Grid */}
-            <section className="py-12 px-4 max-w-6xl mx-auto">
-                {!posts || posts.length === 0 ? (
-                    <div className="text-center py-20 bg-white rounded-xl shadow-sm border border-gray-100">
-                        <p className="text-gray-500 text-lg">No articles published yet. Check back soon!</p>
-                    </div>
-                ) : (
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {posts.map((post) => (
-                            <Link
-                                key={post.id}
-                                href={`/${lang}/blog/${post.slug}`}
-                                className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition flex flex-col h-full"
-                            >
-                                {/* Fallback Image or Video Thumbnail could go here */}
-                                <div className="h-48 bg-gray-100 flex items-center justify-center relative overflow-hidden">
-                                    {/* If we had a thumbnail_url, we'd use it. For now, a pattern. */}
-                                    <div className="absolute inset-0 opacity-10 bg-[url('/images/pattern.png')] bg-cover"></div>
-                                    <span className="text-4xl">📄</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {blogPosts.map((post) => (
+                        <Link key={post.slug} href={`/${lang}/blog/${post.slug}`} className="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-100 flex flex-col">
+                            {/* Decorative Top Bar */}
+                            <div className="h-2 bg-gradient-to-r from-navy-900 to-blue-800"></div>
+
+                            <div className="p-8 flex-1 flex flex-col">
+                                <div className="mb-4 flex flex-wrap gap-2">
+                                    {post.tags.map(tag => (
+                                        <span key={tag} className="text-[10px] uppercase font-bold tracking-wider text-blue-600 bg-blue-50 px-2 py-1 rounded-sm">
+                                            {tag}
+                                        </span>
+                                    ))}
                                 </div>
 
-                                <div className="p-6 flex flex-col flex-1">
-                                    <div className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2">
-                                        Article
-                                    </div>
-                                    <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-700 transition line-clamp-2">
-                                        {post.title}
-                                    </h2>
-                                    <p className="text-gray-600 text-sm line-clamp-3 mb-4 flex-1">
-                                        {/* Simple markdown strip for excerpt */}
-                                        {post.content
-                                            ? post.content.replace(/[#*`]/g, '').substring(0, 150) + "..."
-                                            : "Read the full guide on Texas Total Loss..."}
-                                    </p>
-                                    <div className="text-blue-600 font-bold text-sm flex items-center gap-1">
-                                        Read Article &rarr;
-                                    </div>
+                                <h3 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-gold-600 transition-colors line-clamp-2">
+                                    {post.title}
+                                </h3>
+
+                                <p className="text-slate-600 text-sm leading-relaxed mb-6 line-clamp-3">
+                                    {post.excerpt}
+                                </p>
+
+                                <div className="mt-auto flex items-center justify-between text-xs text-slate-400 font-medium">
+                                    <span>{post.date}</span>
+                                    <span>{post.readTime}</span>
                                 </div>
-                            </Link>
-                        ))}
-                    </div>
-                )}
-            </section>
+                            </div>
+
+                            {/* Read More Arrow */}
+                            <div className="px-8 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between group-hover:bg-navy-900 group-hover:text-white transition-colors">
+                                <span className="font-bold text-sm uppercase tracking-wide">Read Article</span>
+                                <span className="group-hover:translate-x-1 transition-transform">→</span>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+            </div>
         </main>
     );
 }
