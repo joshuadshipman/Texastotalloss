@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useChat } from './ChatContext';
 import { supabaseClient } from '@/lib/supabaseClient';
 import { Dictionary } from '@/dictionaries/en';
-import { XIcon, SendIcon, AlertTriangleIcon, MessageCircleIcon, SparklesIcon, CalendarIcon } from 'lucide-react';
+import { XIcon, SendIcon, AlertTriangleIcon, MessageCircleIcon, SparklesIcon, CalendarIcon, Calculator } from 'lucide-react';
 
 type Message = {
     sender: 'user' | 'bot';
@@ -950,6 +950,17 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                                 <div className="bg-purple-100/50 p-2 rounded-full"><CalendarIcon size={24} className="text-purple-600" /></div>
                                 <span className="text-lg font-bold">{dict.buttons.options_standalone?.schedule || "Schedule Call"}</span>
                             </button>
+
+                            <button
+                                onClick={() => window.location.href = `/${window.location.pathname.startsWith('/es') ? 'es' : 'en'}/assessment`}
+                                className="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 p-4 rounded-xl shadow-sm border border-emerald-200 flex items-center gap-4 transition-all hover:scale-[1.02]"
+                            >
+                                <div className="bg-emerald-100 p-2 rounded-full"><Calculator size={24} className="text-emerald-600" /></div>
+                                <div className="text-left">
+                                    <span className="block text-xs font-bold text-emerald-600 uppercase">Instant Value</span>
+                                    <span className="text-lg font-bold">Get Settlement Estimate</span>
+                                </div>
+                            </button>
                         </div>
                     )}
 
@@ -965,6 +976,17 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                                     <span className="text-xl font-black">At The Scene? Start Here</span>
                                 </div>
                                 <AlertTriangleIcon size={32} />
+                            </button>
+
+                            <button
+                                onClick={() => window.location.href = `/${window.location.pathname.startsWith('/es') ? 'es' : 'en'}/assessment`}
+                                className="w-full bg-white hover:bg-emerald-50 text-emerald-900 p-4 rounded-xl shadow-sm border border-emerald-200 flex items-center gap-4 transition-all hover:scale-[1.02] mb-4"
+                            >
+                                <div className="bg-emerald-100 p-2 rounded-full"><Calculator size={24} className="text-emerald-600" /></div>
+                                <div className="text-left">
+                                    <span className="block text-xs font-bold text-emerald-600 uppercase">Free Tool</span>
+                                    <span className="text-lg font-bold">Calculate Case Value</span>
+                                </div>
                             </button>
                         </div>
                     )}
