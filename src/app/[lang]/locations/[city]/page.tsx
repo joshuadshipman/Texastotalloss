@@ -68,9 +68,11 @@ export default async function CityPage({ params }: Props) {
             {
                 '@type': 'LegalService',
                 '@id': `https://texastotalloss.com/locations/${city.slug}#service`,
-                name: `Texas Total Loss - ${city.name} Assistance`,
-                description: `Assisting ${city.name} residents with total loss vehicle claims, gap insurance disputes, and injury case reviews.`,
+                name: `Texas Total Loss & Auto Accident Attorneys - ${city.name}`,
+                description: `Full-service auto accident attorneys in ${city.name} handling injury claims, total loss disputes, and complex liability cases.`,
                 url: `https://texastotalloss.com/locations/${city.slug}`,
+                logo: "https://texastotalloss.com/images/logo.png",
+                image: "https://texastotalloss.com/images/og-image.jpg",
                 address: {
                     '@type': 'PostalAddress',
                     addressLocality: city.name,
@@ -82,17 +84,47 @@ export default async function CityPage({ params }: Props) {
                     latitude: city.coordinates.latitude,
                     longitude: city.coordinates.longitude
                 },
+                hasMap: `https://www.google.com/maps/search/?api=1&query=${city.coordinates.latitude},${city.coordinates.longitude}`,
                 areaServed: {
                     '@type': 'City',
                     name: city.name
                 },
                 telephone: "+1-800-555-0199",
+                email: "admin@texastotalloss.com",
                 priceRange: "Free Consultation",
+                openingHoursSpecification: [
+                    {
+                        '@type': 'OpeningHoursSpecification',
+                        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                        opens: '00:00',
+                        closes: '23:59'
+                    }
+                ],
+                sameAs: [
+                    "https://www.facebook.com/texastotalloss",
+                    "https://twitter.com/txtotalloss",
+                    "https://www.linkedin.com/company/texas-total-loss"
+                ],
+                aggregateRating: {
+                    '@type': 'AggregateRating',
+                    ratingValue: "4.9",
+                    reviewCount: "124",
+                    bestRating: "5",
+                    worstRating: "1"
+                },
                 // UPGRADE: Service Catalog (What we actually do)
                 hasOfferCatalog: {
                     '@type': 'OfferCatalog',
-                    name: 'Total Loss Assistance Services',
+                    name: 'Auto Accident & Total Loss Services',
                     itemListElement: [
+                        {
+                            '@type': 'Offer',
+                            itemOffered: {
+                                '@type': 'Service',
+                                name: 'Car Accident Injury Representation',
+                                description: 'Full legal representation for medical bills, pain & suffering, and lost wages.'
+                            }
+                        },
                         {
                             '@type': 'Offer',
                             itemOffered: {
@@ -107,14 +139,6 @@ export default async function CityPage({ params }: Props) {
                                 '@type': 'Service',
                                 name: 'Accident Review',
                                 description: 'Free review of accident details and insurance coverage.'
-                            }
-                        },
-                        {
-                            '@type': 'Offer',
-                            itemOffered: {
-                                '@type': 'Service',
-                                name: 'Injury Case Evaluation',
-                                description: 'Free review of medical injury claims vs policy limits.'
                             }
                         }
                     ]
@@ -295,7 +319,13 @@ export default async function CityPage({ params }: Props) {
                         {city.neighborhoods && city.neighborhoods.length > 0 && (
                             <div className="mt-8">
                                 <h2 className="text-2xl font-bold text-white mb-4">Serving All {city.name} Neighborhoods</h2>
-                                <NeighborhoodAccordion title={`Total Loss Disputes in ${city.name}`} neighborhoods={city.neighborhoods} />
+                                <NeighborhoodAccordion
+                                    title={`Total Loss Disputes in ${city.name}`}
+                                    neighborhoods={city.neighborhoods.map(n => ({
+                                        name: n,
+                                        desc: `We help residents of ${n} dispute lowball insurance offers and recover the true value of their vehicles.`
+                                    }))}
+                                />
                             </div>
                         )}
 

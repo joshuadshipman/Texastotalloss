@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { ScrapedHeadline } from './scraper';
+import { NewsItem } from './news_scanner';
 
 // Use the existing client-side key for now, or prefer a server-side key if available
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || '');
@@ -13,31 +14,45 @@ export interface ContentConcept {
     geo_targets: string[]; // e.g., ["Plano", "Frisco"] for placeholder insertion
 }
 
-export async function analyzeHeadlines(headlines: ScrapedHeadline[]): Promise<ContentConcept | null> {
-    if (!headlines || headlines.length === 0) return null;
+const PERSONAS = [
+    "The Aggressive Advocate: Focus on fighting insurance companies and getting maximum payouts. Use strong, assertive language.",
+    "The Empathetic Guide: Focus on the emotional toll of accidents. Use warm, reassuring, and clear language.",
+    "The Insider Analyst: Focus on the technical details of total loss valuations and legal loopholes. Use data-driven and precise language.",
+    "The Local Expert: Focus heavily on Texas-specific laws (Title 7), local roads (I-35, DNT), and community safety."
+];
+
+export async function analyzeHeadlines(headlines: ScrapedHeadline[], news: NewsItem[] = []): Promise<ContentConcept | null> {
+    if ((!headlines || headlines.length === 0) && (!news || news.length === 0)) return null;
 
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-    const headlineText = headlines.map(h => `- ${h.title} (Source: ${h.source})`).join('\n');
+    const headlineText = headlines.map(h => `- [Competitor] ${h.title} (Source: ${h.source})`).join('\n');
+    const newsText = news.map(n => `- [Breaking News] ${n.title} - ${n.snippet.substring(0, 100)}...`).join('\n');
+
+    // Rotate Persona
+    const persona = PERSONAS[Math.floor(Math.random() * PERSONAS.length)];
 
     const prompt = `
-    Act as an empathetic content strategist for a Personal Injury Law Firm in Texas.
-    Analyze the following recent blog headlines from competitors:
+    Act as an expert content strategist for a Personal Injury Law Firm in Texas.
+    Adopt the following Persona strictly: **${persona}**
+
+    Analyze the following recent inputs (Competitor Blogs + Breaking News):
     
     ${headlineText}
+    ${newsText}
     
     Your Goal: Identify a common, trending, or high-value topic related STRICTLY to **Auto Accidents**, **Trucking Accidents**, or **Vehicle-Related Personal Injury**.
-    IGNORE general legal news, slip-and-fall, or medical malpractice unless it is directly related to a crash.
     
-    Create a content concept for a new blog post and video that emphasizes:
-    1. **Empathy:** Validate the victim's pain/confusion.
-    2. **Efficiency:** Explicitly position **Legal Support** as the best and most efficient way to resolve the claim and get paid appropriately.
-    
+    Create a content concept for a new blog post and video that:
+    1. Matches the assigned Persona's tone.
+    2. Explicitly positions **Legal Support** as the solution.
+    3. If 'Breaking News' is present, prioritize "Trend Jacking" that topic (e.g. if there's a pileup on I-35, write about multi-car liability).
+
     Return the response in strictly valid JSON format with the following keys:
     {
       "theme": "The core topic (e.g., Winter Ice Accidents, 18-Wheeler Negligence)",
-      "title": "A catchy, empathetic blog title for Texas victims (e.g., 'Why Insurance Stalls After a Truck Crash')",
-      "hook": "A 1-sentence emotional hook addressing the victim's pain",
+      "title": "A catchy, SEO-optimized title matching the persona",
+      "hook": "A 1-sentence hook addressing the victim's pain",
       "blog_outline": ["The Accident Context", "Why Handling it Alone Delays Payment", "How Legal Support Speeds Up Resolution"],
       "video_prompt": "A detailed prompt I can paste into Google Vids to generate a 60s vertical video. Script should push legal support as the key to efficiency.",
       "geo_targets": ["Dallas", "Fort Worth", "Plano"] 

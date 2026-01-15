@@ -3,12 +3,14 @@
 import React, { useState } from 'react';
 import { scrapeCompetitorHeadlines, ScrapedHeadline } from '@/lib/scraper';
 import { analyzeHeadlines, ContentConcept, generateFullBlogPost, BlogPost } from '@/lib/gemini';
-import { Loader2, RefreshCw, PenTool, Video, MapPin, Copy, FileText, CheckCircle } from 'lucide-react';
+import { fetchTrendingNews, NewsItem } from '@/lib/news_scanner';
+import { Loader2, RefreshCw, PenTool, Video, MapPin, Copy, FileText, CheckCircle, Sparkles, AlertCircle } from 'lucide-react';
 
 export default function ContentDashboard() {
     const [isLoading, setIsLoading] = useState(false);
     const [isWriting, setIsWriting] = useState(false);
     const [headlines, setHeadlines] = useState<ScrapedHeadline[]>([]);
+    const [newsItems, setNewsItems] = useState<NewsItem[]>([]); // Added state for news items
     const [concept, setConcept] = useState<ContentConcept | null>(null);
     const [blogPost, setBlogPost] = useState<BlogPost | null>(null);
     const [status, setStatus] = useState<string>('Ready');
@@ -18,22 +20,27 @@ export default function ContentDashboard() {
         setConcept(null);
         setBlogPost(null);
         setHeadlines([]);
+        setNewsItems([]); // Clear news items on new generation
 
         try {
             // 1. Scrape
-            setStatus('Scouting Competitors...');
-            const scraped = await scrapeCompetitorHeadlines();
-            setHeadlines(scraped);
+            setStatus('Scouting Competitors & Breaking News...'); // Updated status message
+            const [scrapedHeadlines, trendingNews] = await Promise.all([ // Run in parallel
+                scrapeCompetitorHeadlines(),
+                fetchTrendingNews()
+            ]);
+            setHeadlines(scrapedHeadlines);
+            setNewsItems(trendingNews);
 
-            if (scraped.length === 0) {
-                setStatus('No headlines found.');
+            if (scrapedHeadlines.length === 0 && trendingNews.length === 0) { // Check both sources
+                setStatus('No headlines or news found.');
                 setIsLoading(false);
                 return;
             }
 
             // 2. Analyze
             setStatus('Analyzing Trends with Gemini...');
-            const result = await analyzeHeadlines(scraped);
+            const result = await analyzeHeadlines(scrapedHeadlines, trendingNews); // Pass both to analyzeHeadlines
             setConcept(result);
             setStatus('Done!');
 
@@ -87,19 +94,25 @@ export default function ContentDashboard() {
                 {/* 1. The Scout (Left Col) */}
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 h-fit">
                     <h2 className="font-bold text-slate-700 mb-4 flex items-center gap-2">
-                        <MapPin size={20} className="text-blue-500" /> Competitor Intel
+                        <MapPin size={20} className="text-blue-500" /> Competitor Intel & Breaking News
                     </h2>
-                    {headlines.length > 0 ? (
+                    {headlines.length > 0 || newsItems.length > 0 ? (
                         <div className="space-y-4">
+                            {newsItems.map((n, i) => (
+                                <div key={`news-${i}`} className="text-sm p-3 bg-red-50 rounded border border-red-100 hover:bg-white hover:shadow-sm transition-all">
+                                    <p className="font-semibold text-red-800 line-clamp-2">[NEWS] {n.title}</p>
+                                    <span className="text-xs text-red-400 mt-1 block">{n.source}</span>
+                                </div>
+                            ))}
                             {headlines.map((h, i) => (
-                                <div key={i} className="text-sm p-3 bg-slate-50 rounded border border-slate-100 hover:bg-white hover:shadow-sm transition-all">
-                                    <p className="font-semibold text-slate-800 line-clamp-2">{h.title}</p>
+                                <div key={`headline-${i}`} className="text-sm p-3 bg-slate-50 rounded border border-slate-100 hover:bg-white hover:shadow-sm transition-all">
+                                    <p className="font-semibold text-slate-800 line-clamp-2">[BLOG] {h.title}</p>
                                     <span className="text-xs text-slate-400 mt-1 block">{h.source}</span>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <p className="text-slate-400 text-sm italic py-8 text-center">{isLoading ? 'Scanning blogs...' : 'No data yet. Run the scout.'}</p>
+                        <p className="text-slate-400 text-sm italic py-8 text-center">{isLoading ? 'Scanning blogs and news...' : 'No data yet. Run the scout.'}</p>
                     )}
                 </div>
 

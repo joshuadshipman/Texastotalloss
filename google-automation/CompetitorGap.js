@@ -11,7 +11,9 @@ const GAP_CONFIG = {
 };
 
 function analyzeGaps() {
-    const sheet = SpreadsheetApp.getActiveSheet();
+    // Use openById for standalone/triggered execution
+    const ss = SpreadsheetApp.openById('1UyLfJOlixYCMX3_G6VbGw1lc5Q2EdQwbqEtoZhAmceo');
+    const sheet = ss.getSheetByName('Competitor Gaps') || ss.getSheets()[0];
 
     // 1. Fetch Competitor Keywords (Mocking Semrush Gap Analysis)
     const gaps = fetchCompetitorGaps();

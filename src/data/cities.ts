@@ -28,6 +28,8 @@ export interface CityData {
         name: string;
         slug: string;
     }[];
+    neighborhoods?: string[]; // Added for SEO Accordion
+    settlements?: string[]; // Added for Social Proof
     metroArea?: 'Dallas' | 'Fort Worth' | 'Austin' | 'Houston' | 'San Antonio' | 'El Paso' | 'Rural/Exurban';
 }
 

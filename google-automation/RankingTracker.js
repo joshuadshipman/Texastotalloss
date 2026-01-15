@@ -12,7 +12,9 @@ const RANK_CONFIG = {
 };
 
 function trackRankings() {
-    const sheet = SpreadsheetApp.getActiveSheet();
+    // Use openById for standalone/triggered execution
+    const ss = SpreadsheetApp.openById('1UyLfJOlixYCMX3_G6VbGw1lc5Q2EdQwbqEtoZhAmceo');
+    const sheet = ss.getSheetByName('Rankings') || ss.getSheets()[0];
     const lastRow = sheet.getLastRow();
 
     // Assumed Columns: A=Keyword, B=TargetRank, C=CurrentRank, D=PrevRank, E=Trend

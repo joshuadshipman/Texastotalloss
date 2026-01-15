@@ -8,11 +8,13 @@
 const GBP_CONFIG = {
     EMAIL_RECIPIENT: 'jds@pmaction.com',
     CITIES: ['Dallas', 'Houston', 'Austin', 'San Antonio'],
-    GEMINI_MODEL: 'gemini-1.5-pro-latest'
+    GEMINI_MODEL: 'gemini-1.5-flash'
 };
 
 function generateGBPPost() {
-    const sheet = SpreadsheetApp.getActiveSheet(); // Assumes bound script or active
+    // Use openById for standalone/triggered execution
+    const ss = SpreadsheetApp.openById('1UyLfJOlixYCMX3_G6VbGw1lc5Q2EdQwbqEtoZhAmceo');
+    const sheet = ss.getSheetByName('GBP Posts') || ss.getSheets()[0];
 
     // 1. Identify Trend (Mocking external trend fetch for now, or use pre-filled list)
     // In a real scenario, this could fetch from Google Trends email RSS or similar
@@ -24,7 +26,7 @@ function generateGBPPost() {
     Focus City: ${city}
     Topic: ${topic}
     Tone: Helpful, Urgent, Local.
-    Include: 1 Emoji, HashTags (#TexasTotalLoss, #${city}), and a Call to Action to call 1-800-555-0199.
+    Include: 1 Emoji, HashTags (#TexasTotalLoss, #${city}), and a Call to Action to call (469) 729-4423.
   `;
 
     // 2. Generate Copy
@@ -68,7 +70,7 @@ function callGeminiAPI_GBP(prompt) {
 
     if (!apiKey) return "Error: API Key Missing";
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GBP_CONFIG.GEMINI_MODEL}:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1/models/${GBP_CONFIG.GEMINI_MODEL}:generateContent?key=${apiKey}`;
     const payload = { contents: [{ parts: [{ text: prompt }] }] };
 
     try {

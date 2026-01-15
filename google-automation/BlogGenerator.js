@@ -9,7 +9,7 @@
 const CONFIG = {
     SHEET_NAME: 'Blog Content Calendar',
     FOLDER_ID: 'YOUR_FOLDER_ID_HERE', // User must populate
-    GEMINI_MODEL: 'gemini-1.5-pro-latest',
+    GEMINI_MODEL: 'gemini-1.5-flash',
     EMAIL_RECIPIENT: 'jds@pmaction.com'
 };
 
@@ -17,9 +17,9 @@ const CONFIG = {
  * Main Entry Point
  */
 function generateBlogContent() {
-    const sheet = SpreadsheetApp.getActiveSheet();
-    // Ensure we are on the right sheet, or get by name if deployed
-    // const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CONFIG.SHEET_NAME);
+    // Use openById for standalone/triggered execution - replace with your Sheet ID
+    const ss = SpreadsheetApp.openById('1UyLfJOlixYCMX3_G6VbGw1lc5Q2EdQwbqEtoZhAmceo');
+    const sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
 
     if (!sheet) {
         Logger.log("Sheet not found: " + CONFIG.SHEET_NAME);
@@ -123,7 +123,7 @@ function callGeminiAPI(keyword) {
 
     if (!apiKey) throw new Error("GEMINI_API_KEY not set in Script Properties");
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${CONFIG.GEMINI_MODEL}:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1/models/${CONFIG.GEMINI_MODEL}:generateContent?key=${apiKey}`;
 
     const prompt = `
     Context: You are an expert Texas personal injury attorney and SEO specialist.
