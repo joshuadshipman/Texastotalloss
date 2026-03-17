@@ -4,6 +4,7 @@ import React from 'react';
 import { ShieldCheckIcon } from 'lucide-react';
 import Link from 'next/link';
 import SocialMediaLinks from './SocialMediaLinks';
+import { LegalAuditBadge } from './LegalAuditBadge';
 
 interface FooterProps {
     dict: any;
@@ -64,11 +65,20 @@ export default function Footer({ dict, lang }: FooterProps) {
             </div>
 
             <div className="max-w-6xl mx-auto mt-12 pt-8 border-t border-gray-800 text-center md:text-left flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 font-medium">
-                <p>&copy; {year} Texas Total Loss Claim Help. {dict.footer.rights}</p>
+                <div className="space-y-1">
+                    <p>&copy; {year} Texas Total Loss Claim Help. {dict.footer.rights}</p>
+                    <p className="text-[10px] text-gray-600">Attorney Responsible for Content: J.D. Silva | Principal Office: Pearland, TX</p>
+                </div>
                 <div className="mt-4 md:mt-0 flex gap-4">
                     <p className="uppercase tracking-widest text-[10px]">{dict.footer.disclaimer_title}</p>
                 </div>
             </div>
+
+            <LegalAuditBadge
+                responsibleAttorney="J.D. Silva"
+                officeLocation="Pearland, TX"
+                arcFiled={true}
+            />
         </footer>
     );
 }

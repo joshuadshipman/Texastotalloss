@@ -1,12 +1,6 @@
 import Parser from 'rss-parser';
 
-export interface NewsItem {
-    source: string;
-    title: string;
-    link: string;
-    pubDate: string;
-    snippet: string;
-}
+import { NewsItem } from './models/types';
 
 const parser = new Parser();
 

@@ -1,9 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { scrapeCompetitorHeadlines, ScrapedHeadline } from '@/lib/scraper';
-import { analyzeHeadlines, ContentConcept, generateFullBlogPost, BlogPost } from '@/lib/gemini';
-import { fetchTrendingNews, NewsItem } from '@/lib/news_scanner';
+import { 
+    scrapeCompetitorHeadlinesAction as scrapeCompetitorHeadlines, 
+    fetchTrendingNewsAction as fetchTrendingNews, 
+    analyzeHeadlinesAction as analyzeHeadlines, 
+    generateFullBlogPostAction as generateFullBlogPost 
+} from '../../actions/content_actions';
+import { ScrapedHeadline, ContentConcept, BlogPost, NewsItem } from '../../../lib/models/types';
 import { Loader2, RefreshCw, PenTool, Video, MapPin, Copy, FileText, CheckCircle, Sparkles, AlertCircle } from 'lucide-react';
 
 export default function ContentDashboard() {

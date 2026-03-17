@@ -5,14 +5,17 @@ import { supabaseClient } from '@/lib/supabaseClient';
 import {
     SearchIcon, FilterIcon, RefreshCwIcon, DownloadIcon,
     CheckCircleIcon, AlertTriangleIcon, FileTextIcon,
-    MessageSquareIcon, MapPinIcon, LayoutGridIcon
+    MessageSquareIcon, MapPinIcon, LayoutGridIcon,
+    BarChart3Icon, DollarSignIcon, TrendingUpIcon, AwardIcon
 } from 'lucide-react';
 import AdminChatGrid from '@/components/admin/AdminChatGrid';
 import BlogManagement from '@/components/admin/BlogManagement';
 import ContentLibraryManager from '@/components/admin/ContentLibraryManager';
 import ContentEngineManager from '@/components/admin/ContentEngineManager';
+// Removed generateMarketingReport due to fs dependency in client
+import MarketingROI, { MarketingReport } from '@/components/admin/MarketingROI';
 
-// Type definition matches our SQL schema
+
 // Type definition matches our SQL schema
 type Lead = {
     id: string;
@@ -42,7 +45,8 @@ export default function AdminDashboard() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [pin, setPin] = useState('');
     const [loading, setLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState<'leads' | 'content' | 'scout'>('leads');
+    const [activeTab, setActiveTab] = useState<'leads' | 'content' | 'scout' | 'marketing'>('leads');
+    const [report, setReport] = useState<MarketingReport | null>(null);
 
 
     // Filters
@@ -96,23 +100,20 @@ export default function AdminDashboard() {
     const fetchLeads = async () => {
         setLoading(true);
         try {
-            // Fetch from Admin API (Bypasses RLS & gets all sessions, not just completed leads)
+            // Fetch leads...
             const res = await fetch('/api/admin/get-chat-sessions', { cache: 'no-store' });
             if (!res.ok) throw new Error('Failed to fetch sessions');
-
             const { sessions } = await res.json();
-
-            // Map session data to Lead-like structure for the UI
+            
+            // Map sessions... (logic remains same)
             const mappedSessions = sessions.map((s: any) => ({
                 id: s.id || s.session_id,
                 created_at: s.created_at,
                 dialogflow_session_id: s.session_id,
-                status: s.status, // bot or live
-
-                // Extract from user_data JSON
+                status: s.status,
                 full_name: s.user_data?.full_name || 'Anonymous Visitor',
                 phone: s.user_data?.phone || 'No Phone',
-                email: s.user_data?.email || '', // New
+                email: s.user_data?.email || '',
                 language: s.user_data?.language || 'en',
                 score: s.user_data?.score || 0,
                 pain_level: s.user_data?.pain_level || 0,
@@ -120,22 +121,24 @@ export default function AdminDashboard() {
                 injury_summary: s.user_data?.injury_summary || '',
                 description: s.user_data?.description || '',
                 preferred_contact_time: s.user_data?.best_time || '',
-                liability_summary: s.user_data?.fault === 'other' ? 'Not at fault' : (s.user_data?.fault === 'me' ? 'At fault' : ''),
-
-                // Fix: Check for explicit accident_date first, then fallback or empty. Don't use 'year' as date.
+                liability_summary: s.user_data?.fault === 'other' ? 'Not at fault' : (s.user_data.fault === 'me' ? 'At fault' : ''),
                 accident_date: s.user_data?.accident_date || '',
-
-                vehicle_info: s.user_data?.vehicle_info || '', // New
-                insurance_carrier: s.user_data?.insurance_carrier || '', // New
-                activity_log: s.user_data?.activity_log || [], // New
-
-                files_count: 0 // TODO: Check storage buckets if needed
+                vehicle_info: s.user_data?.vehicle_info || '',
+                insurance_carrier: s.user_data?.insurance_carrier || '',
+                activity_log: s.user_data?.activity_log || [],
+                files_count: 0
             }));
-
             setLeads(mappedSessions);
+
+            // Fetch Marketing Report via API (Fixes build fs error)
+            const mRes = await fetch('/api/admin/marketing-report', { cache: 'no-store' });
+            if (mRes.ok) {
+                const mReport = await mRes.json();
+                setReport(mReport);
+            }
+
         } catch (e) {
-            console.error('Error fetching leads:', e);
-            alert('Failed to load sessions. Please try refreshing.');
+            console.error('Error fetching dashboard data:', e);
         } finally {
             setLoading(false);
         }
@@ -151,7 +154,7 @@ export default function AdminDashboard() {
 
         const channel = supabaseClient
             .channel('admin-dashboard-sessions')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_sessions' }, (payload) => {
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_sessions' }, (payload: any) => {
                 // Refresh list
                 fetchLeads();
 
@@ -257,6 +260,12 @@ export default function AdminDashboard() {
                                 className={`px-4 py-1.5 rounded-md text-sm font-bold transition ${activeTab === 'scout' ? 'bg-white shadow text-purple-600' : 'text-gray-500 hover:text-gray-700'}`}
                             >
                                 AI Scout
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('marketing')}
+                                className={`px-4 py-1.5 rounded-md text-sm font-bold transition ${activeTab === 'marketing' ? 'bg-white shadow text-emerald-600' : 'text-gray-500 hover:text-gray-700'}`}
+                            >
+                                Marketing ROI
                             </button>
                         </div>
                         <button onClick={fetchLeads} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full" title="Refresh">
@@ -386,6 +395,10 @@ export default function AdminDashboard() {
                         </div>
                     </>
                 )}
+
+                {activeTab === 'marketing' && (
+                    <MarketingROI report={report} />
+                )}
             </main>
 
             {/* Detail Modal */}
@@ -500,14 +513,6 @@ export default function AdminDashboard() {
     );
 }
 
-function StatCard({ label, value, color = 'text-gray-900' }: { label: string, value: number, color?: string }) {
-    return (
-        <div className="bg-white p-6 rounded-xl border shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition">
-            <div className={`text-4xl font-extrabold ${color} mb-1`}>{value}</div>
-            <div className="text-sm text-gray-500 font-medium">{label}</div>
-        </div>
-    );
-}
 
 function ScoreBadge({ score }: { score: number }) {
     if (score >= 80) return <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold"><CheckCircleIcon size={12} /> High ({score})</span>;

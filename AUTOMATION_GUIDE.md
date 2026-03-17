@@ -3,26 +3,31 @@
 You asked how to keep the blog generation running "24/7" and "rotate the AI". Here is the strategy we have implemented and the next steps for full automation.
 
 ## ✅ Phase 1: Better & Faster Sourcing (Done)
+
 We have upgraded your Content Engine:
-1.  **Breaking News Feed**: Instead of just copying competitors, the AI now scans **Google News RSS** for real-time Texas accident reports.
-    *   *Benefit*: You get content *before* your competitors.
-2.  **AI Rotation (Personas)**: The AI now randomly selects a "Persona" for each run:
-    *   *The Aggressive Advocate*
-    *   *The Empathetic Guide*
-    *   *The Insider Analyst*
-    *   *Benefit*: Your blog won't sound robotic or repetitive.
+
+1. **Breaking News Feed**: Instead of just copying competitors, the AI now scans **Google News RSS** for real-time Texas accident reports.
+    * *Benefit*: You get content *before* your competitors.
+2. **AI Rotation (Personas)**: The AI now randomly selects a "Persona" for each run:
+    * *The Aggressive Advocate*
+    * *The Empathetic Guide*
+    * *The Insider Analyst*
+    * *Benefit*: Your blog won't sound robotic or repetitive.
 
 ## 🚀 Phase 2: True 24/7 Automation (The Cron Job)
+
 Currently, you have to click "Run Daily Scout". To make this run automatically at 8:00 AM every day, follow these steps:
 
 ### 1. The Database Switch (Required)
+
 The automated system cannot "save to file" (`blog-posts.ts`) because the server resets every time. It **must** save to Supabase.
-*   **Step**: Run the SQL query I savedase/migrat in `supabions/20260112_create_blog_posts.sql` in your Supabase SQL Editor.
-*   **Status**: Migration file is ready.
+
+* **Step**: Run the SQL query I saved in `supabase/migrations/20260112_create_blog_posts.sql` in your Supabase SQL Editor.
+* **Status**: Migration file is ready.
 
 ### 2. Create the API Endpoint
 We need a secret URL that Vercel can "ping" to trigger the scout.
-*   Create a file `src/app/api/cron/scout/route.ts` (I can do this for you next).
+*   Created file `src/app/api/cron/scout/route.ts` (**CODE READY**).
 *   This generic "worker" will:
     1.  Run `fetchTrendingNews()`
     2.  Generate a Concept

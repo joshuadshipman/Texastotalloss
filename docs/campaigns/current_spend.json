@@ -1,0 +1,17 @@
+{
+  "monthly_budget": 5000,
+  "campaigns": [
+    {
+      "id": "FB-DAL-001",
+      "name": "Dallas Total Loss - Facebook",
+      "spend": 1200,
+      "leads_target": 50
+    },
+    {
+      "id": "GG-HOU-001",
+      "name": "Houston Injury - Google Search",
+      "spend": 2500,
+      "leads_target": 100
+    }
+  ]
+}

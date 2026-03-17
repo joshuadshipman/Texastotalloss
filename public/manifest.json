@@ -1,0 +1,22 @@
+{
+  "name": "GravityClaw Command Hub",
+  "short_name": "GravityClaw",
+  "description": "Premium Mobile Command Center for Texas Total Loss Agents",
+  "start_url": "/admin/chat",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/images/gravityclaw-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/gravityclaw-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

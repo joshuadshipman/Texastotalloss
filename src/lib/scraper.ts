@@ -25,11 +25,7 @@ const COMPETITORS = [
     }
 ];
 
-export interface ScrapedHeadline {
-    source: string;
-    title: string;
-    url: string | undefined;
-}
+import { ScrapedHeadline } from './models/types';
 
 export async function scrapeCompetitorHeadlines(): Promise<ScrapedHeadline[]> {
     const allHeadlines: ScrapedHeadline[] = [];

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { PlayIcon, AlertTriangleIcon } from 'lucide-react';
-import { useChat } from './ChatContext';
+import { useChat } from '../components/ChatContext';
 
 interface VideoPromoProps {
     title?: string;

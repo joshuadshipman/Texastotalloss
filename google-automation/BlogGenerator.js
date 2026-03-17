@@ -1,14 +1,14 @@
 /**
- * Blog Generator Pipeline
+ * Blog Generator Pipeline (Bilingual + Video Enhanced)
  * 
- * Automates the creation of SEO-optimized blog posts using Gemini AI.
- * Runs every 6 hours via Time-Driven Trigger.
+ * Automates the creation of SEO-optimized blog posts in English and Spanish,
+ * plus a YouTube Shorts script using Gemini AI.
  */
 
 // Configuration
 const CONFIG = {
     SHEET_NAME: 'Blog Content Calendar',
-    FOLDER_ID: 'YOUR_FOLDER_ID_HERE', // User must populate
+    FOLDER_ID: 'YOUR_FOLDER_ID_HERE',
     GEMINI_MODEL: 'gemini-1.5-flash',
     EMAIL_RECIPIENT: 'jds@pmaction.com'
 };
@@ -17,7 +17,6 @@ const CONFIG = {
  * Main Entry Point
  */
 function generateBlogContent() {
-    // Use openById for standalone/triggered execution - replace with your Sheet ID
     const ss = SpreadsheetApp.openById('1UyLfJOlixYCMX3_G6VbGw1lc5Q2EdQwbqEtoZhAmceo');
     const sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
 
@@ -28,10 +27,7 @@ function generateBlogContent() {
 
     const range = sheet.getDataRange();
     const values = range.getValues();
-    // Headers: Date | Keyword | Vol | Diff | Draft Link | Status | Approval | Notes | Publish Date
 
-    // 1. Identification: Find next pending topic
-    // Looking for row where 'Keyword' exists but 'Status' is empty or 'Pending'
     let targetRow = -1;
     let keyword = "";
 
@@ -40,7 +36,7 @@ function generateBlogContent() {
         const rowKeyword = values[i][1]; // Column B
 
         if (rowKeyword && (!rowStatus || rowStatus === "")) {
-            targetRow = i + 1; // 1-based index
+            targetRow = i + 1;
             keyword = rowKeyword;
             break;
         }
@@ -51,22 +47,21 @@ function generateBlogContent() {
         return;
     }
 
-    Logger.log(`Generating content for: ${keyword}`);
+    Logger.log(`Generating bilingual content for: ${keyword}`);
 
-    // 2. Generation: Call Gemini
-    let blogContent;
+    let generatedData;
     try {
-        blogContent = callGeminiAPI(keyword);
+        generatedData = callGeminiAPI(keyword);
     } catch (e) {
         Logger.log("Error calling Gemini: " + e.message);
         sheet.getRange(targetRow, 6).setValue("Error: API Fail");
         return;
     }
 
-    // 3. Staging: Create Google Doc
-    let docUrl = "";
+    // 3. Staging: Create Google Docs (English and Spanish)
+    let engDocUrl = "";
+    let espDocUrl = "";
     try {
-        // Check if folder exists, else use root
         let folder;
         try {
             folder = DriveApp.getFolderById(CONFIG.FOLDER_ID);
@@ -74,45 +69,48 @@ function generateBlogContent() {
             folder = DriveApp.getRootFolder();
         }
 
-        const doc = DocumentApp.create(`Draft: ${keyword}`);
-        const body = doc.getBody();
+        // English Doc
+        const engDoc = DocumentApp.create(`[EN] Draft: ${keyword}`);
+        engDoc.getBody().appendParagraph(generatedData.english_content);
+        const engFile = DriveApp.getFileById(engDoc.getId());
+        engFile.moveTo(folder);
+        engDocUrl = engDoc.getUrl();
 
-        // Insert Header
-        body.insertParagraph(0, `Target Keyword: ${keyword}`).setHeading(DocumentApp.ParagraphHeading.HEADING4);
-        body.appendParagraph("---");
+        // Spanish Doc
+        const espDoc = DocumentApp.create(`[ES] Draft: ${keyword}`);
+        espDoc.getBody().appendParagraph(generatedData.spanish_content);
+        const espFile = DriveApp.getFileById(espDoc.getId());
+        espFile.moveTo(folder);
+        espDocUrl = espDoc.getUrl();
 
-        // Parse Markdown-ish content to cleaner Google Docs format (Basic)
-        // For now, just dumping text. A real parser would handle bold/headers.
-        body.appendParagraph(blogContent);
-
-        // Move file
-        const file = DriveApp.getFileById(doc.getId());
-        file.moveTo(folder);
-        docUrl = doc.getUrl();
+        // YouTube Script (Save as text file or in notes column)
+        const scriptFile = folder.createFile(`[VIDEO] Script: ${keyword}.txt`, generatedData.youtube_script);
 
     } catch (e) {
-        Logger.log("Error creating Doc: " + e.message);
+        Logger.log("Error creating Docs: " + e.message);
         sheet.getRange(targetRow, 6).setValue("Error: Doc Fail");
         return;
     }
 
     // 4. Update Database (Sheet)
-    sheet.getRange(targetRow, 5).setValue(docUrl);
-    sheet.getRange(targetRow, 6).setValue("Review Ready");
+    // Format: Store both links in Draft Link column
+    sheet.getRange(targetRow, 5).setValue(`EN: ${engDocUrl}\nES: ${espDocUrl}`);
+    sheet.getRange(targetRow, 6).setValue("Bilingual Review Ready");
     sheet.getRange(targetRow, 1).setValue(new Date());
 
     // 5. Notification: Send Email
     MailApp.sendEmail({
         to: CONFIG.EMAIL_RECIPIENT,
-        subject: `📝 Review Needed: "${keyword}"`,
+        subject: `📝 Bilingual Review Needed: "${keyword}"`,
         htmlBody: `
-      <h2>New Blog Draft Generated</h2>
+      <h2>New Bilingual Blog & Video Script Generated</h2>
       <p><strong>Topic:</strong> ${keyword}</p>
       <p><strong>Status:</strong> Awaiting Approval</p>
       <br />
-      <a href="${docUrl}" style="background-color:#4CAF50;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">Open Google Doc</a>
+      <a href="${engDocUrl}" style="background-color:#4CAF50;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">English Doc</a>
+      <a href="${espDocUrl}" style="background-color:#008CBA;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;margin-left:10px;">Spanish Doc</a>
       <br /><br />
-      <p><em>This is an automated message from your Texas Total Loss Growth Engine.</em></p>
+      <p><em>YouTube script also generated in the staging folder.</em></p>
     `
     });
 }
@@ -126,16 +124,15 @@ function callGeminiAPI(keyword) {
     const url = `https://generativelanguage.googleapis.com/v1/models/${CONFIG.GEMINI_MODEL}:generateContent?key=${apiKey}`;
 
     const prompt = `
-    Context: You are an expert Texas personal injury attorney and SEO specialist.
-    Task: Write a comprehensive, empathetic, and authoritative blog post about "${keyword}".
-    Structure:
-    - Headline (H1): Catchy, includes keyword.
-    - Introduction: Hook the reader, acknowledge their pain/stress.
-    - Body Paragraphs (H2/H3): Answer specific questions related to "${keyword}". Include references to Texas laws if applicable.
-    - Local Angle: Mention Texas cities (Dallas, Houston, Austin).
-    - Call to Action: Encourage a free case review at TexasTotalLoss.com.
-    Style: Professional but accessible (Reading level: Grade 8).
-    Format: Use clean text with markdown headers (#, ##).
+    Context: Expert Texas personal injury attorney and SEO specialist.
+    Task: Generate three distinct outputs for the keyword "${keyword}".
+    
+    1. A comprehensive blog post in English.
+    2. A full translation of that blog post into Spanish (Se habla español style).
+    3. A 60-second YouTube Shorts/TikTok script focusing on a "Insurance Secret" or "Quick Tip" related to the topic.
+    
+    Format: Return ONLY a JSON object with keys: "english_content", "spanish_content", and "youtube_script".
+    Do not include markdown code blocks in the response, just the raw JSON.
   `;
 
     const payload = {
@@ -150,11 +147,20 @@ function callGeminiAPI(keyword) {
     };
 
     const response = UrlFetchApp.fetch(url, options);
-    const json = JSON.parse(response.getContentText());
+    const textResponse = response.getContentText();
 
-    if (json.error) {
-        throw new Error(json.error.message);
+    // Clean JSON response (remove potential AI bloat)
+    const cleanedText = textResponse.replace(/```json|```/g, "").trim();
+
+    let json;
+    try {
+        json = JSON.parse(cleanedText);
+    } catch (e) {
+        // Fallback for nested JSON parsing errors
+        const content = JSON.parse(textResponse);
+        const rawText = content.candidates[0].content.parts[0].text;
+        json = JSON.parse(rawText.replace(/```json|```/g, "").trim());
     }
 
-    return json.candidates[0].content.parts[0].text;
+    return json;
 }

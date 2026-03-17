@@ -1,0 +1,12 @@
+--- Testing Free-First Spending Guards ---
+
+Scenario 1: Internal Clawbot Command (CMD_SHELL)
+Selection: gemini-1.5-flash (Paid: false)
+
+Scenario 2: Coding Task - FORCED FREE (allowPaid: false)
+Selection: llama-3.1-sonar-small-128k-online (Paid: false)
+
+Scenario 3: Coding Task - ALLOW PAID
+Selection: llama-3.1-sonar-small-128k-online (Paid: false)
+
+--- Verification Complete ---

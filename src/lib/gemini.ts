@@ -1,18 +1,11 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { ScrapedHeadline } from './scraper';
-import { NewsItem } from './news_scanner';
+import { ScrapedHeadline, NewsItem, ContentConcept, BlogPost } from './models/types';
+import { modelRouter } from './models/router';
+import { TokenGuard } from './models/token-guard';
 
 // Use the existing client-side key for now, or prefer a server-side key if available
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || '');
 
-export interface ContentConcept {
-    theme: string;
-    title: string;
-    hook: string;
-    blog_outline: string[];
-    video_prompt: string;
-    geo_targets: string[]; // e.g., ["Plano", "Frisco"] for placeholder insertion
-}
 
 const PERSONAS = [
     "The Aggressive Advocate: Focus on fighting insurance companies and getting maximum payouts. Use strong, assertive language.",
@@ -24,7 +17,7 @@ const PERSONAS = [
 export async function analyzeHeadlines(headlines: ScrapedHeadline[], news: NewsItem[] = []): Promise<ContentConcept | null> {
     if ((!headlines || headlines.length === 0) && (!news || news.length === 0)) return null;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = await modelRouter.getModel({ complexity: 'medium' });
 
     const headlineText = headlines.map(h => `- [Competitor] ${h.title} (Source: ${h.source})`).join('\n');
     const newsText = news.map(n => `- [Breaking News] ${n.title} - ${n.snippet.substring(0, 100)}...`).join('\n');
@@ -60,6 +53,7 @@ export async function analyzeHeadlines(headlines: ScrapedHeadline[], news: NewsI
     `;
 
     try {
+        TokenGuard.checkUsage(prompt, 'flash');
         const result = await model.generateContent(prompt);
         const response = result.response;
         const text = response.text();
@@ -74,19 +68,10 @@ export async function analyzeHeadlines(headlines: ScrapedHeadline[], news: NewsI
     }
 }
 
-export interface BlogPost {
-    title: string;
-    slug: string;
-    excerpt: string;
-    content: string; // HTML
-    author: string;
-    date: string;
-    tags: string[];
-    readTime: string;
-}
+
 
 export async function generateFullBlogPost(concept: ContentConcept): Promise<BlogPost | null> {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = await modelRouter.getModel({ complexity: 'medium' });
 
     const prompt = `
     You are an expert legal copywriter for "Texas Total Loss". 
@@ -116,6 +101,7 @@ export async function generateFullBlogPost(concept: ContentConcept): Promise<Blo
     `;
 
     try {
+        TokenGuard.checkUsage(prompt, 'flash');
         const result = await model.generateContent(prompt);
         const text = result.response.text();
         const cleanedText = text.replace(/```json/g, '').replace(/```/g, '').trim();

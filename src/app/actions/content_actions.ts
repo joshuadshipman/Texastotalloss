@@ -1,8 +1,10 @@
 'use server';
 
-import { supabaseClient } from '@/lib/supabaseClient';
-import { scrapeCompetitorHeadlines } from '@/lib/scraper';
-import { analyzeHeadlines, generateFullBlogPost, ContentConcept } from '@/lib/gemini';
+import { supabaseClient } from '../../lib/supabaseClient';
+import { analyzeHeadlines, generateFullBlogPost } from '../../lib/gemini';
+import { ContentConcept, BlogPost, NewsItem, ScrapedHeadline } from '../../lib/models/types';
+import { fetchTrendingNews } from '../../lib/news_scanner';
+import { scrapeCompetitorHeadlines } from '../../lib/scraper';
 
 export async function triggerContentScout() {
     try {
@@ -90,4 +92,22 @@ export async function publishDraft(id: string) {
     await supabaseClient.from('content_drafts').update({ status: 'published' }).eq('id', id);
 
     return { success: true, message: "Published successfully" };
+}
+
+// --- New Server Action Wrappers for UI ---
+
+export async function scrapeCompetitorHeadlinesAction(): Promise<ScrapedHeadline[]> {
+    return await scrapeCompetitorHeadlines();
+}
+
+export async function fetchTrendingNewsAction(): Promise<NewsItem[]> {
+    return await fetchTrendingNews();
+}
+
+export async function analyzeHeadlinesAction(headlines: ScrapedHeadline[], news: NewsItem[] = []): Promise<ContentConcept | null> {
+    return await analyzeHeadlines(headlines, news);
+}
+
+export async function generateFullBlogPostAction(concept: ContentConcept): Promise<BlogPost | null> {
+    return await generateFullBlogPost(concept);
 }

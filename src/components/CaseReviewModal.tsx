@@ -3,7 +3,7 @@
 
 import React, { useState, ChangeEvent } from 'react';
 import { useChat } from './ChatContext';
-import { XIcon, CheckCircleIcon, AlertTriangleIcon, ChevronRightIcon, ChevronLeftIcon } from 'lucide-react';
+import { XIcon, CheckCircleIcon, AlertTriangleIcon, ChevronRightIcon, ChevronLeftIcon, InfoIcon, TrendingUpIcon } from 'lucide-react';
 import { supabaseClient } from '@/lib/supabaseClient';
 import { Dictionary } from '@/dictionaries/en';
 
@@ -74,7 +74,8 @@ export default function CaseReviewModal({ dict, lang }: CaseReviewModalProps) {
         bestTime: '',
         permissionText: false,
         // Flags
-        uploadedFiles: [] as string[]
+        uploadedFiles: [] as string[],
+        caseInsights: "" as string
     });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -109,30 +110,46 @@ export default function CaseReviewModal({ dict, lang }: CaseReviewModalProps) {
     const calculateScore = () => {
         let s = 10;
         let severity = 'low';
+        let insight = "";
 
         // Liability
-        if (formData.faultBelief === 'other_driver') s += 30;
+        if (formData.faultBelief === 'other_driver') {
+            s += 30;
+            insight = "✅ Other driver fault significantly increases your settlement probability.";
+        }
         if (formData.policeReport === 'yes_report') s += 10;
         if (formData.tickets === 'no') s += 5;
 
         // Injury Severity
         if (formData.isInjured === 'yes') {
             s += 20;
-            if (formData.painLevel >= 7) { s += 10; severity = 'medium'; }
-            if (formData.treatmentStatus === 'er' || formData.treatmentStatus === 'surgery') { s += 15; severity = 'high'; }
+            if (formData.painLevel >= 7) {
+                s += 10;
+                severity = 'medium';
+                insight += " | High pain level cases are prioritized for expedited legal review.";
+            }
+            if (formData.treatmentStatus === 'er' || formData.treatmentStatus === 'surgery') {
+                s += 15;
+                severity = 'high';
+                insight += " | Documented ER/Surgery treatment maximizes claim viability.";
+            }
         }
 
         // Coverage
         if (formData.otherInsurance === 'yes') s += 10;
-        if (formData.incidentType === 'auto_truck') { s += 20; severity = 'high'; }
+        if (formData.incidentType === 'auto_truck') {
+            s += 20;
+            severity = 'high';
+            insight += " | Commercial truck accidents in Texas often involve multi-million dollar policies.";
+        }
 
         // Adjusters
-        if (formData.hiredLawyer === 'yes' && formData.changeLawyer === 'no') s = 0; // Disqualified usually
+        if (formData.hiredLawyer === 'yes' && formData.changeLawyer === 'no') s = 0;
 
         if (s > 95) s = 95;
         if (s < 0) s = 0;
 
-        return { score: s, severity }; // Returning object now
+        return { score: s, severity, insight };
     };
 
     const submitReview = async () => {
@@ -235,6 +252,8 @@ Concerns: ${formData.biggestConcern.join(', ')}
         const ui = dict?.ui;
 
         if (!d || !o) return null;
+
+        const currentInsight = calculateScore().insight;
 
         switch (step) {
             case 1: // Accident
@@ -542,16 +561,37 @@ Concerns: ${formData.biggestConcern.join(', ')}
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
             <div className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
                 {/* Header */}
-                <div className="bg-blue-900 text-white p-4 flex items-center justify-between">
+                <div className="bg-navy-900 text-white p-4 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <span className="bg-blue-500/20 p-2 rounded-full"><span className="animate-pulse">⚡</span></span>
+                        <span className="bg-gold-500/20 p-2 rounded-full"><span className="animate-pulse">⚖️</span></span>
                         <div>
-                            <h2 className="font-bold text-lg">{dict?.caseReview?.banner?.title || "Case Review"}</h2>
-                            <p className="text-xs text-blue-200">{dict?.caseReview?.banner?.subtitle || "AI Legal Assistant"}</p>
+                            <h2 className="font-bold text-lg">{dict?.caseReview?.banner?.title || "High-Priority Case Evaluation"}</h2>
+                            <p className="text-xs text-gold-200">{dict?.caseReview?.banner?.subtitle || "Active Vetting Agent Online"}</p>
                         </div>
                     </div>
-                    <button onClick={closeReview} className="p-2 hover:bg-blue-800 rounded"><XIcon size={20} /></button>
+                    <button onClick={closeReview} className="p-2 hover:bg-navy-800 rounded text-gray-400 hover:text-white"><XIcon size={20} /></button>
                 </div>
+
+                {/* Real-time Insights (Quintessa Disruptor) */}
+                {step > 1 && step < 8 && currentInsight && (
+                    <div className="bg-blue-50 border-b border-blue-100 p-3 px-6 animate-slide-down">
+                        <div className="flex gap-3 items-start">
+                            <TrendingUpIcon className="text-blue-600 w-5 h-5 mt-0.5 shrink-0" />
+                            <div className="text-xs font-medium text-blue-800 leading-relaxed">
+                                <span className="font-bold uppercase tracking-wider text-[9px] block text-blue-500 mb-0.5">Live AI Case Insight:</span>
+                                {currentInsight}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Social Proof Bar */}
+                {step < 8 && (
+                    <div className="bg-gray-50 border-b border-gray-100 p-2 text-center text-[10px] uppercase font-bold text-gray-400 tracking-tighter">
+                        <span className="inline-block w-1.5 h-1.5 bg-green-500 rounded-full mr-1"></span>
+                        34 Residents in {formData.cityState || "Texas"} completed review today
+                    </div>
+                )}
 
                 {/* Content */}
                 <div className="p-6 overflow-y-auto flex-1">
@@ -562,18 +602,18 @@ Concerns: ${formData.biggestConcern.join(', ')}
                 {step < 8 && (
                     <div className="p-4 border-t border-gray-100 flex justify-between items-center bg-gray-50">
                         {step > 1 ? (
-                            <button onClick={prevStep} className="flex items-center gap-1 text-gray-600 font-medium hover:text-gray-900 px-4 py-2">
+                            <button onClick={prevStep} className="flex items-center gap-1 text-gray-400 font-medium hover:text-gray-900 px-4 py-2 transition-colors">
                                 <ChevronLeftIcon size={16} /> {ui?.back || "Back"}
                             </button>
                         ) : <div></div>}
 
                         {step < 7 ? (
-                            <button onClick={nextStep} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow flex items-center gap-2">
-                                {ui?.next || "Next"} <ChevronRightIcon size={16} />
+                            <button onClick={nextStep} className="bg-navy-900 hover:bg-black text-gold-500 font-black py-4 px-10 rounded-full shadow-xl flex items-center gap-2 transform active:scale-95 transition-all text-sm uppercase tracking-widest">
+                                {ui?.next || "Continue to Vetting"} <ChevronRightIcon size={16} />
                             </button>
                         ) : (
-                            <button onClick={submitReview} disabled={isSubmitting} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full shadow flex items-center gap-2">
-                                {isSubmitting ? (ui?.analyzing || "Analyzing...") : (ui?.analyze || "Get AI Result")}
+                            <button onClick={submitReview} disabled={isSubmitting} className="bg-green-600 hover:bg-green-700 text-white font-black py-4 px-10 rounded-full shadow-2xl flex items-center gap-2 transform hover:scale-105 active:scale-95 transition-all text-sm uppercase tracking-widest">
+                                {isSubmitting ? (ui?.analyzing || "VETTING...") : (ui?.analyze || "Finalize Evaluation")}
                             </button>
                         )}
                     </div>

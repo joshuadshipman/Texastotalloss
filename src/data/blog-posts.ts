@@ -1,4 +1,4 @@
-import { BlogPost } from '@/lib/gemini';
+import { BlogPost } from '../lib/models/types';
 
 export const blogPosts: BlogPost[] = [
     {

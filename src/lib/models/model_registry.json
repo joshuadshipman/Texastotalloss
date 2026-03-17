@@ -1,0 +1,52 @@
+{
+  "last_audit": "2026-03-17",
+  "audit_version": "1.3",
+  "global_preferences": {
+    "prefer_free_for_routine": true
+  },
+  "models": {
+    "claude-sonnet-4-6": { "provider": "anthropic", "tier": "PAID", "type": "STRENGTH" },
+    "claude-opus-4-6": { "provider": "anthropic", "tier": "PAID", "type": "STRENGTH" },
+    "grok-4": { "provider": "xai", "tier": "PAID", "type": "REASONING" },
+    "grok-4-fast-reasoning": { "provider": "xai", "tier": "PAID", "type": "REASONING" },
+    "grok-4.20-beta-latest-non-reasoning": { "provider": "xai", "tier": "PAID", "type": "GENERAL" },
+    "llama-3.1-sonar-large-128k-online": { "provider": "perplexity", "tier": "PAID", "type": "RESEARCH" },
+    "llama-3.1-sonar-small-128k-online": { "provider": "perplexity", "tier": "FREE", "type": "RESEARCH" },
+    "gemini-1.5-flash": { "provider": "google", "tier": "FREE", "type": "GENERAL" },
+    "gemini-1.5-pro": { "provider": "google", "tier": "PAID", "type": "STRENGTH" },
+    "deepseek-chat": { "provider": "deepseek", "tier": "FREE", "type": "STRENGTH", "note": "Technically paid but $0.28/1M tokens is treated as free-tier efficiency." },
+    "deepseek-reasoner": { "provider": "deepseek", "tier": "PAID", "type": "REASONING", "note": "Thinking Mode V3.2" }
+  },
+  "categories": {
+    "CODING": {
+      "free_sequence": ["deepseek-chat", "llama-3.1-sonar-small-128k-online", "gemini-1.5-flash"],
+      "paid_sequence": ["claude-sonnet-4-6", "deepseek-reasoner", "grok-4-fast-reasoning", "gemini-1.5-pro"],
+      "description": "Excellence in logic and architecture."
+    },
+    "MARKETING": {
+      "free_sequence": ["gemini-1.5-flash", "deepseek-chat"],
+      "paid_sequence": ["grok-4.20-beta-latest-non-reasoning", "claude-sonnet-4-6"],
+      "description": "Creativity and engagement."
+    },
+    "CMD_SHELL": {
+      "free_sequence": ["gemini-1.5-flash", "deepseek-chat"],
+      "paid_sequence": ["claude-sonnet-4-6", "gemini-1.5-pro"],
+      "description": "Routine internal commands. DeepSeek used as high-range free fallback."
+    },
+    "GENERAL": {
+      "free_sequence": ["gemini-1.5-flash", "deepseek-chat"],
+      "paid_sequence": ["gemini-1.5-pro", "claude-sonnet-4-6"],
+      "description": "Catch-all for unspecified task types."
+    },
+    "RESEARCH": {
+      "free_sequence": ["llama-3.1-sonar-small-128k-online", "gemini-1.5-flash"],
+      "paid_sequence": ["llama-3.1-sonar-large-128k-online", "gemini-1.5-pro", "claude-sonnet-4-6"],
+      "description": "Grounded web data and market analysis."
+    },
+    "STRATEGY": {
+      "free_sequence": ["gemini-1.5-flash"],
+      "paid_sequence": ["claude-sonnet-4-6", "gemini-1.5-pro", "deepseek-reasoner"],
+      "description": "High-intelligence game planning, acquisition techniques, and platform architecture."
+    }
+  }
+}

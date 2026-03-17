@@ -3,31 +3,27 @@ import { NextRequest, NextResponse } from 'next/server';
 import dialogflow from '@google-cloud/dialogflow';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { sendLeadEmailPacket } from '@/lib/email';
+import { google } from 'googleapis';
 import path from 'path';
 import fs from 'fs';
 
-// Service Account Key Path
+// 1. Basic Configuration
 const CREDENTIALS_PATH = path.join(process.cwd(), 'service-account.json');
 const PROJECT_ID = 'total-loss-intake-bot';
 
+// 2. Credentials Loading
 let credentials: any;
 try {
-    // Try Environment Variable first (Vercel)
     if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON) {
         credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
-    }
-    // Fallback to local file
-    else if (fs.existsSync(CREDENTIALS_PATH)) {
-        const keyFileContent = fs.readFileSync(CREDENTIALS_PATH, 'utf-8');
-        credentials = JSON.parse(keyFileContent);
-    } else {
-        console.error(`Credential file not found at: ${CREDENTIALS_PATH} and GOOGLE_SERVICE_ACCOUNT_JSON not set.`);
+    } else if (fs.existsSync(CREDENTIALS_PATH)) {
+        credentials = JSON.parse(fs.readFileSync(CREDENTIALS_PATH, 'utf-8'));
     }
 } catch (e) {
-    console.error('Failed to read service-account credentials', e);
+    console.error('Failed to load credentials:', e);
 }
 
-// Instantiate a Dialogflow Client
+// 3. Client Initialization
 const sessionClient = new dialogflow.SessionsClient({
     projectId: PROJECT_ID,
     credentials: {
@@ -36,113 +32,106 @@ const sessionClient = new dialogflow.SessionsClient({
     },
 });
 
+const auth = new google.auth.GoogleAuth({
+    credentials,
+    scopes: ['https://www.googleapis.com/auth/datastore', 'https://www.googleapis.com/auth/cloud-platform'],
+});
+const firestore = google.firestore({ version: 'v1', auth });
+
+// 4. Firestore Helper
+async function saveToFirestore(collection: string, id: string, data: any) {
+    if (!credentials) return;
+    try {
+        const parent = `projects/${PROJECT_ID}/databases/(default)/documents`;
+        const fields = Object.entries(data).reduce((acc: any, [key, value]) => {
+            acc[key] = { stringValue: String(value ?? '') };
+            return acc;
+        }, {});
+
+        // Use patch (update/create)
+        await firestore.projects.databases.documents.patch({
+            name: `${parent}/${collection}/${id}`,
+            requestBody: { fields }
+        });
+        console.log(`[Firestore] Sync: ${collection}/${id}`);
+    } catch (e: any) {
+        console.error('[Firestore] Sync Error:', e.message);
+    }
+}
+
+// 5. Main Route Handler
 export async function POST(req: NextRequest) {
     try {
         if (!credentials) {
-            throw new Error('Server missing credentials (GOOGLE_SERVICE_ACCOUNT_JSON or service-account.json)');
+            throw new Error('Server missing credentials');
         }
 
         const body = await req.json();
-        const { message, session } = body;
+        const { message, session, isAttachment } = body;
 
         if (!message || !session) {
-            return NextResponse.json({ error: 'Message and session are required' }, { status: 400 });
+            return NextResponse.json({ error: 'Message and session required' }, { status: 400 });
         }
 
         const sessionPath = sessionClient.projectAgentSessionPath(PROJECT_ID, session);
-
         const request = {
             session: sessionPath,
-            queryInput: {
-                text: {
-                    text: message,
-                    languageCode: 'en-US',
-                },
-            },
+            queryInput: { text: { text: message, languageCode: 'en-US' } },
         };
 
-        console.log(`Sending to Dialogflow: ${message} (Session: ${session})`);
-        const responses = await sessionClient.detectIntent(request);
-        const result = responses[0].queryResult;
+        const [response] = await sessionClient.detectIntent(request);
+        const result = response.queryResult;
+        if (!result) throw new Error('No result from Dialogflow');
 
-        if (!result) {
-            throw new Error('No result from Dialogflow');
-        }
-
-        let fulfillmentText = result.fulfillmentText || 'I didn\'t catch that.';
+        let fulfillmentText = result.fulfillmentText || '...';
         const intentName = result.intent?.displayName;
         const parameters = result.parameters?.fields;
 
-        console.log(`Dialogflow Response: Intent=${intentName}, Text=${fulfillmentText}`);
+        // --- Persistence: Supabase ---
+        await supabaseAdmin.from('chat_transcripts').insert([
+            { dialogflow_session_id: session, sender: 'user', message, step: intentName },
+            { dialogflow_session_id: session, sender: 'bot', message: fulfillmentText, step: intentName, raw_payload: result }
+        ]);
 
-        await supabaseAdmin.from('chat_transcripts').insert({
-            dialogflow_session_id: session,
+        // --- Persistence: Firestore (Mirroring for user) ---
+        const timestamp = new Date().toISOString();
+        const transcriptBaseId = `${session}-${Date.now()}`;
+        
+        saveToFirestore('transcripts', transcriptBaseId, {
+            session_id: session,
             sender: 'user',
-            message: message,
-            step: intentName
+            message,
+            intent: intentName,
+            timestamp
         });
 
-        await supabaseAdmin.from('chat_transcripts').insert({
-            dialogflow_session_id: session,
+        saveToFirestore('transcripts', `${transcriptBaseId}-reply`, {
+            session_id: session,
             sender: 'bot',
             message: fulfillmentText,
-            step: intentName,
-            raw_payload: result
+            intent: intentName,
+            timestamp
         });
 
-        const outputContexts = result.outputContexts || [];
-        const isEndConversation = outputContexts.some(ctx =>
-            ctx.name && ctx.name.endsWith('/contexts/end_conversation')
-        );
-
-        if (intentName === 'Receive VIN') {
-            const vin = (parameters?.['vin']?.stringValue || '').trim();
-            console.log(`Processing VIN: ${vin}`);
-
-            // Decode VIN logic here (using your new library)
-            // For now, we will just acknowledge it. 
-            // In a real app, await decodeVin(vin) here.
-            fulfillmentText += ` I've looked up VIN ${vin}. It appears to be a [Year Make Model].`;
-        }
-
-        // Check if this message is a photo upload (from frontend hidden message)
-        // Check if this message is a photo upload (from frontend hidden message)
-        if (body.isAttachment) {
-            console.log('Received attachment:', message);
+        // --- Special Logic: Attachments ---
+        if (isAttachment) {
             const photoUrl = message.replace('Uploaded photo: ', '');
-
-            // Safe Array Append: get current, append, update
-            const { data: currentLead } = await supabaseAdmin
-                .from('total_loss_leads')
-                .select('photos')
-                .eq('dialogflow_session_id', session)
-                .single();
-
-            const currentPhotos = currentLead?.photos || [];
-
-            await supabaseAdmin.from('total_loss_leads')
-                .update({ photos: [...currentPhotos, photoUrl] })
-                .eq('dialogflow_session_id', session);
+            const { data: current } = await supabaseAdmin.from('total_loss_leads').select('photos').eq('dialogflow_session_id', session).single();
+            const photos = [...(current?.photos || []), photoUrl];
+            await supabaseAdmin.from('total_loss_leads').update({ photos }).eq('dialogflow_session_id', session);
+            saveToFirestore('attachments', transcriptBaseId, { session_id: session, photo_url: photoUrl, timestamp });
         }
 
-        // Final save logic
-        if (isEndConversation || intentName === 'Collect Phone') {
-            // ... existing save logic ...
-            console.log('Conversation ended, saving lead...');
+        // --- Lead Logic ---
+        const outputContexts = result.outputContexts || [];
+        const isEnd = outputContexts.some(ctx => ctx.name?.endsWith('/contexts/end_conversation'));
 
-            let collectedData: any = {};
-            const getParam = (key: string) => {
-                const field = parameters?.[key];
-                if (field?.stringValue) return field.stringValue;
-                return null;
-            };
-
+        if (isEnd || intentName === 'Collect Phone') {
+            const collected: any = {};
             for (const ctx of outputContexts) {
-                if (ctx.parameters && ctx.parameters.fields) {
+                if (ctx.parameters?.fields) {
                     for (const [key, val] of Object.entries(ctx.parameters.fields)) {
-                        if (val.stringValue) {
-                            collectedData[key] = val.stringValue;
-                        }
+                        if ((val as any).stringValue) collected[key] = (val as any).stringValue;
                     }
                 }
             }
@@ -151,41 +140,30 @@ export async function POST(req: NextRequest) {
                 dialogflow_session_id: session,
                 status: 'new',
                 source: 'chatbot',
-                full_name: collectedData['given-name'] || getParam('given-name'),
-                vehicle_year: collectedData['vehicle'] || getParam('vehicle'),
-                crash_date: collectedData['date'] || getParam('date'),
-                description: collectedData['description'] || getParam('description'),
-                has_injury: collectedData['injury_status']?.toLowerCase().includes('yes'),
-                phone: collectedData['phone-number'] || getParam('phone-number'),
+                full_name: collected['given-name'] || parameters?.['given-name']?.stringValue,
+                vehicle_year: collected['vehicle'] || parameters?.['vehicle']?.stringValue,
+                crash_date: collected['date'] || parameters?.['date']?.stringValue,
+                description: collected['description'] || parameters?.['description']?.stringValue,
+                has_injury: collected['injury_status']?.toLowerCase().includes('yes'),
+                phone: collected['phone-number'] || parameters?.['phone-number']?.stringValue,
             };
 
-            const { data, error } = await supabaseAdmin
+            const { data: lead, error } = await supabaseAdmin
                 .from('total_loss_leads')
-                .upsert(leadData, { onConflict: 'dialogflow_session_id' }) // Upsert to merge with photos
+                .upsert(leadData, { onConflict: 'dialogflow_session_id' })
                 .select()
                 .single();
 
-            if (!error && data) {
-                console.log('Lead saved:', data.id);
-                sendLeadEmailPacket(data).catch(err => {
-                    console.error('Failed to send email automation:', err);
-                });
-            } else {
-                console.error('Error saving lead:', error);
+            if (!error && lead) {
+                sendLeadEmailPacket(lead).catch(console.error);
+                saveToFirestore('leads', session, lead);
             }
         }
 
-        return NextResponse.json({
-            fulfillmentText: fulfillmentText,
-            outputContext: null
-        });
+        return NextResponse.json({ fulfillmentText, outputContext: null });
 
     } catch (error: any) {
-        console.error('Dialogflow API Error:', error);
-        // RETURN ACTUAL ERROR FOR DEBUGGING
-        return NextResponse.json({
-            fulfillmentText: `System Error: ${error.message}. Please report this.`,
-            debugError: error.message
-        }, { status: 200 }); // Return 200 so chat widget displays it
+        console.error('Chat API Error:', error);
+        return NextResponse.json({ fulfillmentText: `Error: ${error.message}` }, { status: 200 });
     }
 }
