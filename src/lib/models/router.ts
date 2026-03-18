@@ -119,10 +119,10 @@ class ModelRouter {
                     } catch (e: any) {
                         const errorMsg = e.message?.toLowerCase() || '';
                         const isOverloaded = errorMsg.includes('503') || errorMsg.includes('high traffic') || errorMsg.includes('overloaded');
-                        const isDisabled = errorMsg.includes('403') || errorMsg.includes('forbidden') || errorMsg.includes('not been used') || errorMsg.includes('disabled');
+                        const isAuthError = errorMsg.includes('403') || errorMsg.includes('404') || errorMsg.includes('forbidden') || errorMsg.includes('not found') || errorMsg.includes('not been used') || errorMsg.includes('disabled');
                         
-                        if (isOverloaded || isDisabled) {
-                            console.log(`[ModelRouter] 🚨 Google Service Issue (${isDisabled ? 'Disabled' : 'Overloaded'}). Attempting Self-Healing Fallback...`);
+                        if (isOverloaded || isAuthError) {
+                            console.log(`[ModelRouter] 🚨 Google Service Issue (${isAuthError ? 'Auth/Config' : 'Overloaded'}). Attempting Self-Healing Fallback...`);
                             if (modelId === 'gemini-1.5-flash' && this.vertexAI) {
                                 try { return await executeGoogleAction(true, 'gemini-1.5-pro', prompt); } catch (err) {}
                             }
