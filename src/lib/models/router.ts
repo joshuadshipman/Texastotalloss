@@ -98,24 +98,47 @@ class ModelRouter {
         const provider = this.registry.models?.[modelId]?.provider;
 
         if (provider === 'google') {
-            if (this.vertexAI) {
-                const model = this.vertexAI.getGenerativeModel({ model: modelId });
-                return {
-                    generateContent: async (p) => {
-                        const res = await model.generateContent(p);
-                        return { response: { text: () => res.response.candidates?.[0]?.content?.parts?.[0]?.text || '' } };
-                    },
-                    modelName: modelId,
-                    isPaid
-                };
-            }
-            const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
-            const genAI = new GoogleGenerativeAI(apiKey);
-            const model = genAI.getGenerativeModel({ model: modelId });
+            const executeGoogleAction = async (useVertex: boolean, modelName: string, p: string) => {
+                if (useVertex && this.vertexAI) {
+                    const model = this.vertexAI.getGenerativeModel({ model: modelName });
+                    const res = await model.generateContent(p);
+                    return { response: { text: () => res.response.candidates?.[0]?.content?.parts?.[0]?.text || '' } };
+                } else {
+                    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
+                    if (!apiKey) throw new Error("No Gemini API Key for Standard SDK fallback");
+                    const genAI = new GoogleGenerativeAI(apiKey);
+                    const model = genAI.getGenerativeModel({ model: modelName });
+                    return model.generateContent(p);
+                }
+            };
+
             return {
-                generateContent: (p) => model.generateContent(p),
                 modelName: modelId,
-                isPaid
+                isPaid,
+                generateContent: async (prompt) => {
+                    try {
+                        // Priority 1: Requested Model via Vertex
+                        return await executeGoogleAction(true, modelId, prompt);
+                    } catch (e: any) {
+                        const isOverloaded = e.message?.includes('503') || e.message?.includes('high traffic') || e.message?.includes('overloaded');
+                        console.warn(`[ModelRouter] Google Provider Error (${modelId}):`, e.message);
+
+                        if (isOverloaded) {
+                            console.log(`[ModelRouter] 🚨 Server Overloaded. Attempting Self-Healing Fallback...`);
+                            
+                            // Fallback 1: If Flash failed, try Pro via Vertex
+                            if (modelId === 'gemini-1.5-flash' && this.vertexAI) {
+                                console.log("[ModelRouter] Fallback: gemini-1.5-flash -> gemini-1.5-pro (Vertex)");
+                                try { return await executeGoogleAction(true, 'gemini-1.5-pro', prompt); } catch (err) {}
+                            }
+
+                            // Fallback 2: Try Standard SDK if Vertex failed
+                            console.log("[ModelRouter] Fallback: Vertex -> Standard SDK");
+                            try { return await executeGoogleAction(false, modelId, prompt); } catch (err) {}
+                        }
+                        throw e; // Rethrow if all fails
+                    }
+                }
             };
         }
 
