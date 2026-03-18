@@ -1,10 +1,7 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { ScrapedHeadline, NewsItem, ContentConcept, BlogPost } from './models/types';
+export type { BlogPost };
 import { modelRouter } from './models/router';
 import { TokenGuard } from './models/token-guard';
-
-// Use the existing client-side key for now, or prefer a server-side key if available
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || '');
 
 
 const PERSONAS = [

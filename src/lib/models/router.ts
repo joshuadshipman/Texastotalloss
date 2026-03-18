@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { VertexAI } from '@google-cloud/vertexai';
 import axios from 'axios';
 import registryData from './model_registry.json';
 
@@ -24,6 +25,7 @@ export interface ModelInstance {
 class ModelRouter {
     private geminiFlash: any;
     private geminiPro: any;
+    private vertexAI: any;
     private pplxKey: string;
     private deepseekKey: string;
     private xaiKey: string;
@@ -37,12 +39,38 @@ class ModelRouter {
         this.geminiFlash = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
         this.geminiPro = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
         
+        // Vertex AI Configuration (Reliability Upgrade)
+        const project = process.env.GOOGLE_PROJECT_ID;
+        const location = 'us-central1';
+        const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
+        const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+
+        if (project && clientEmail && privateKey) {
+            try {
+                this.vertexAI = new VertexAI({ 
+                    project, 
+                    location,
+                    googleAuthOptions: {
+                        credentials: {
+                            client_email: clientEmail,
+                            private_key: privateKey
+                        }
+                    }
+                });
+                console.log("[ModelRouter] Vertex AI Initialized with Service Account.");
+            } catch (e) {
+                console.error("[ModelRouter] Vertex AI Initialization failed:", e);
+            }
+        }
+
         this.pplxKey = process.env.PERPLEXITY_API_KEY || '';
         this.deepseekKey = process.env.DEEPSEEK_API_KEY || '';
         this.xaiKey = process.env.XAI_API_KEY || '';
         this.claudeKey = process.env.CLAUDE_API_KEY || '';
         
-        if (!apiKey) console.warn("[ModelRouter] Warning: No Gemini API key found in NEXT_PUBLIC_GEMINI_API_KEY or GEMINI_API_KEY.");
+        if (!apiKey && !this.vertexAI) {
+            console.warn("[ModelRouter] Warning: No Gemini API key or Vertex AI credentials found.");
+        }
         
         this.loadRegistry();
     }
@@ -57,7 +85,7 @@ class ModelRouter {
 
     private hasKeyForModel(modelId: string): boolean {
         const provider = this.registry.models?.[modelId]?.provider;
-        if (provider === 'google') return !!(process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.GEMINI_API_KEY);
+        if (provider === 'google') return !!(process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.GEMINI_API_KEY || this.vertexAI);
         if (provider === 'anthropic') return !!this.claudeKey;
         if (provider === 'xai') return !!this.xaiKey;
         if (provider === 'perplexity') return !!this.pplxKey;
@@ -70,6 +98,17 @@ class ModelRouter {
         const provider = this.registry.models?.[modelId]?.provider;
 
         if (provider === 'google') {
+            if (this.vertexAI) {
+                const model = this.vertexAI.getGenerativeModel({ model: modelId });
+                return {
+                    generateContent: async (p) => {
+                        const res = await model.generateContent(p);
+                        return { response: { text: () => res.response.candidates?.[0]?.content?.parts?.[0]?.text || '' } };
+                    },
+                    modelName: modelId,
+                    isPaid
+                };
+            }
             const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
             const genAI = new GoogleGenerativeAI(apiKey);
             const model = genAI.getGenerativeModel({ model: modelId });

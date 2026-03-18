@@ -240,6 +240,7 @@ Concerns: ${formData.biggestConcern.join(', ')}
     const nextStep = () => setStep(prev => prev + 1);
     const prevStep = () => setStep(prev => prev - 1);
 
+
     const renderStep = () => {
 
         const d = dict?.caseReview; // Shortcut
@@ -252,8 +253,6 @@ Concerns: ${formData.biggestConcern.join(', ')}
         const ui = dict?.ui;
 
         if (!d || !o) return null;
-
-        const currentInsight = calculateScore().insight;
 
         switch (step) {
             case 1: // Accident
@@ -556,6 +555,9 @@ Concerns: ${formData.biggestConcern.join(', ')}
             default: return null;
         }
     }
+
+
+    const currentInsight = calculateScore().insight;
 
     return (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
