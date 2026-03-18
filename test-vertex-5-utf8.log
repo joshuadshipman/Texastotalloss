@@ -1,0 +1,259 @@
+﻿ENV CHECK: { project: true, email: true, key: true }
+Starting Vertex AI Diagnostic...
+[ModelRouter] Vertex AI Initialized Lazily.
+Model Instance Created: gemini-1.5-flash
+node.exe : DIAGNOSTIC 
+FAILED: ClientError: [
+VertexAI.ClientError]:
+ got status: 403 
+Forbidden. {"error":{"
+code":403,"message":"V
+ertex AI API has not 
+been used in project 
+total-loss-intake-bot 
+before or it is 
+disabled. Enable it 
+by visiting https://co
+nsole.developers.googl
+e.com/apis/api/aiplatf
+orm.googleapis.com/ove
+rview?project=total-lo
+ss-intake-bot then 
+retry. If you enabled 
+this API recently, 
+wait a few minutes 
+for the action to 
+propagate to our 
+systems and retry.","s
+tatus":"PERMISSION_DEN
+IED","details":[{"@typ
+e":"type.googleapis.co
+m/google.rpc.ErrorInfo
+","reason":"SERVICE_DI
+SABLED","domain":"goog
+leapis.com","metadata"
+:{"service":"aiplatfor
+m.googleapis.com","con
+sumer":"projects/total
+-loss-intake-bot","act
+ivationUrl":"https://c
+onsole.developers.goog
+le.com/apis/api/aiplat
+form.googleapis.com/ov
+erview?project=total-l
+oss-intake-bot","servi
+ceTitle":"Vertex AI AP
+I","containerInfo":"to
+tal-loss-intake-bot"}}
+,{"@type":"type.google
+apis.com/google.rpc.Lo
+calizedMessage","local
+e":"en-US","message":"
+Vertex AI API has not 
+been used in project 
+total-loss-intake-bot 
+before or it is 
+disabled. Enable it 
+by visiting https://co
+nsole.developers.googl
+e.com/apis/api/aiplatf
+orm.googleapis.com/ove
+rview?project=total-lo
+ss-intake-bot then 
+retry. If you enabled 
+this API recently, 
+wait a few minutes 
+for the action to 
+propagate to our 
+systems and retry."},{
+"@type":"type.googleap
+is.com/google.rpc.Help
+","links":[{"descripti
+on":"Google 
+developers console 
+API activation","url":
+"https://console.devel
+opers.google.com/apis/
+api/aiplatform.googlea
+pis.com/overview?proje
+ct=total-loss-intake-b
+ot"}]}]}}
+At line:1 char:1
++ & "C:\Program Files\
+nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~~~~
+    + CategoryInfo    
+          : NotSpeci  
+  fied: (DIAGNOSTIC   
+  FAIL...take-bot"    
+}]}]}}:String) []    
+, RemoteException
+    + FullyQualifiedE 
+   rrorId : NativeCo  
+  mmandError
+ 
+    at 
+throwErrorIfNotOK (C:\
+Users\17549\.gemini\an
+tigravity\scratch\tota
+l-loss-intake\node_mod
+ules\@google-cloud\ver
+texai\src\functions\po
+st_fetch_processing.ts
+:47:21)
+    at process.process
+TicksAndRejections (no
+de:internal/process/ta
+sk_queues:103:5)
+    ... 3 lines 
+matching cause stack 
+trace ...
+    at async test (C:\
+Users\17549\.gemini\an
+tigravity\scratch\tota
+l-loss-intake\tests\te
+st-vertex.ts:28:24) {
+  stackTrace: 
+GoogleApiError: 
+Vertex AI API has not 
+been used in project 
+total-loss-intake-bot 
+before or it is 
+disabled. Enable it 
+by visiting https://co
+nsole.developers.googl
+e.com/apis/api/aiplatf
+orm.googleapis.com/ove
+rview?project=total-lo
+ss-intake-bot then 
+retry. If you enabled 
+this API recently, 
+wait a few minutes 
+for the action to 
+propagate to our 
+systems and retry.
+      at 
+throwErrorIfNotOK (C:\
+Users\17549\.gemini\an
+tigravity\scratch\tota
+l-loss-intake\node_mod
+ules\@google-cloud\ver
+texai\src\functions\po
+st_fetch_processing.ts
+:49:9)
+      at process.proce
+ssTicksAndRejections (
+node:internal/process/
+task_queues:103:5)
+      at async 
+generateContent (C:\Us
+ers\17549\.gemini\anti
+gravity\scratch\total-
+loss-intake\node_modul
+es\@google-cloud\verte
+xai\src\functions\gene
+rate_content.ts:94:3)
+      at async 
+executeGoogleAction (C
+:\Users\17549\.gemini\
+antigravity\scratch\to
+tal-loss-intake\src\li
+b\models\router.ts:102
+:33)
+      at async Object.
+generateContent (C:\Us
+ers\17549\.gemini\anti
+gravity\scratch\total-
+loss-intake\src\lib\mo
+dels\router.ts:118:32)
+      at async test (C
+:\Users\17549\.gemini\
+antigravity\scratch\to
+tal-loss-intake\tests\
+test-vertex.ts:28:24) 
+{
+    code: 403,
+    status: 
+'PERMISSION_DENIED',
+    errorDetails: [ 
+[Object], [Object], 
+[Object] ]
+  },
+  [cause]: 
+GoogleApiError: 
+Vertex AI API has not 
+been used in project 
+total-loss-intake-bot 
+before or it is 
+disabled. Enable it 
+by visiting https://co
+nsole.developers.googl
+e.com/apis/api/aiplatf
+orm.googleapis.com/ove
+rview?project=total-lo
+ss-intake-bot then 
+retry. If you enabled 
+this API recently, 
+wait a few minutes 
+for the action to 
+propagate to our 
+systems and retry.
+      at 
+throwErrorIfNotOK (C:\
+Users\17549\.gemini\an
+tigravity\scratch\tota
+l-loss-intake\node_mod
+ules\@google-cloud\ver
+texai\src\functions\po
+st_fetch_processing.ts
+:49:9)
+      at process.proce
+ssTicksAndRejections (
+node:internal/process/
+task_queues:103:5)
+      at async 
+generateContent (C:\Us
+ers\17549\.gemini\anti
+gravity\scratch\total-
+loss-intake\node_modul
+es\@google-cloud\verte
+xai\src\functions\gene
+rate_content.ts:94:3)
+      at async 
+executeGoogleAction (C
+:\Users\17549\.gemini\
+antigravity\scratch\to
+tal-loss-intake\src\li
+b\models\router.ts:102
+:33)
+      at async Object.
+generateContent (C:\Us
+ers\17549\.gemini\anti
+gravity\scratch\total-
+loss-intake\src\lib\mo
+dels\router.ts:118:32)
+      at async test (C
+:\Users\17549\.gemini\
+antigravity\scratch\to
+tal-loss-intake\tests\
+test-vertex.ts:28:24) 
+{
+    code: 403,
+    status: 
+'PERMISSION_DENIED',
+    errorDetails: [ 
+[Object], [Object], 
+[Object] ]
+  }
+}
+Assertion failed: 
+!(handle->flags & 
+UV_HANDLE_CLOSING), 
+file src\win\async.c, 
+line 76

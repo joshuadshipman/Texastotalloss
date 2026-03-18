@@ -1,0 +1,88 @@
+﻿node.exe : 
+[ModelRouter] Warning: 
+No Gemini API key or 
+Vertex AI credentials 
+found.
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo     
+         : NotSpeci    
+fied: ([ModelRout    
+er] W...dentials     
+found.:String) []    , 
+RemoteException
+    + FullyQualifiedE  
+  rrorId : NativeCo    
+mmandError
+ 
+ENV CHECK: { project: true, email: true, key: true }
+Starting Vertex AI Diagnostic...
+[ModelRouter] ROUTING: Type=GENERAL, Complexity=low, Reasoning=false, AllowPaid=false
+[ModelRouter] ≡ƒÅ« 
+STOP: All FREE options 
+for "GENERAL" are 
+exhausted/unavailable. 
+Paid fallback is 
+DISABLED to save 
+tokens.
+DIAGNOSTIC FAILED: 
+Error: [ModelRouter] 
+≡ƒÅ« STOP: All FREE 
+options for "GENERAL" 
+are 
+exhausted/unavailable. 
+Paid fallback is 
+DISABLED to save 
+tokens.
+    at 
+ModelRouter.getModel (C
+:\Users\17549\.gemini\a
+ntigravity\scratch\tota
+l-loss-intake\src\lib\m
+odels\router.ts:244:19)
+    at test (C:\Users\1
+7549\.gemini\antigravit
+y\scratch\total-loss-in
+take\tests\test-vertex.
+ts:25:41)
+    at fs (C:\Users\175
+49\.gemini\antigravity\
+scratch\total-loss-inta
+ke\tests\test-vertex.ts
+:37:1)
+    at 
+Object.<anonymous> (C:\
+Users\17549\.gemini\ant
+igravity\scratch\total-
+loss-intake\tests\test-
+vertex.ts:37:6)
+    at Module._compile 
+(node:internal/modules/
+cjs/loader:1761:14)
+    at 
+Object.transformer (C:\
+Users\17549\AppData\Loc
+al\npm-cache\_npx\fd45a
+72a545557e9\node_module
+s\tsx\dist\register-D46
+fvsV_.cjs:3:1104)
+    at Module.load (nod
+e:internal/modules/cjs/
+loader:1481:32)
+    at Module._load (no
+de:internal/modules/cjs
+/loader:1300:12)
+    at TracingChannel.t
+raceSync (node:diagnost
+ics_channel:328:14)
+    at wrapModuleLoad (
+node:internal/modules/c
+js/loader:245:24)

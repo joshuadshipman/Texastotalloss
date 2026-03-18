@@ -11,6 +11,12 @@ if (fs.existsSync(envPath)) {
     }
 }
 
+console.log("ENV CHECK:", {
+    project: !!process.env.GOOGLE_PROJECT_ID,
+    email: !!process.env.GOOGLE_CLIENT_EMAIL,
+    key: !!process.env.GOOGLE_PRIVATE_KEY
+});
+
 import { modelRouter } from '../src/lib/models/router';
 
 async function test() {

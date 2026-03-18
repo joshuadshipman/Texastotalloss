@@ -54,15 +54,19 @@ export async function POST(req: NextRequest) {
         const text = result.response.text().replace(/```json/gi, '').replace(/```/g, '').trim();
         const interpreted = JSON.parse(text);
 
-        // 2. Log to Live Dispatch (This file is monitored by the active agent)
-        const dispatchPath = path.join(process.cwd(), '.agent/live_dispatch.log');
-        const logEntry = `[${new Date().toISOString()}] CMD: ${command}\nTYPE: ${interpreted.type}\nINTENT: ${interpreted.intent}\nTARGET: ${interpreted.target}\n---\n`;
-        
-        const dispatchDir = path.dirname(dispatchPath);
-        if (!fs.existsSync(dispatchDir)) {
-            fs.mkdirSync(dispatchDir, { recursive: true });
+        // 2. Log to Live Dispatch (Only locally or if writable)
+        try {
+            const dispatchPath = path.join(process.cwd(), '.agent/live_dispatch.log');
+            const logEntry = `[${new Date().toISOString()}] CMD: ${command}\nTYPE: ${interpreted.type}\nINTENT: ${interpreted.intent}\nTARGET: ${interpreted.target}\n---\n`;
+            
+            const dispatchDir = path.dirname(dispatchPath);
+            if (!fs.existsSync(dispatchDir)) {
+                fs.mkdirSync(dispatchDir, { recursive: true });
+            }
+            fs.appendFileSync(dispatchPath, logEntry);
+        } catch (fsError) {
+            console.warn('[AdminAPI] Skipping local file logging (Read-only filesystem detected)');
         }
-        fs.appendFileSync(dispatchPath, logEntry);
 
         // 3. Save to pending tasks if it's an EDIT or needs processing
         if (interpreted.type === 'EDIT_REQUEST' || interpreted.type === 'RESEARCH') {
