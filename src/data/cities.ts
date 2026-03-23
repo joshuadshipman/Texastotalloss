@@ -16,7 +16,7 @@ export interface CityData {
     parentCity?: string; // Slug of parent city
     resources?: {
         towing: LocalBusiness[];
-        repair: LocalBusiness[]; // Keeping for backward compatibility, will map to collisionCenters
+        repair?: LocalBusiness[]; // Keeping for backward compatibility, will map to collisionCenters
         rental: LocalBusiness[];
         collisionCenters?: LocalBusiness[]; // New specific field
         hospitals?: LocalBusiness[]; // New
@@ -67,39 +67,39 @@ export const cities: CityData[] = [
             'plano', 'mesquite', 'irving'
         ],
         medicalResources: [
-            { name: "Parkland Memorial Hospital", link: "https://www.parklandhealth.org", note: "Level I Trauma Center. 5200 Harry Hines Blvd", address: "5200 Harry Hines Blvd, Dallas, TX 75235" },
-            { name: "Baylor University Medical Center", link: "https://www.bswhealth.com/locations/dallas", note: "Level I Trauma Center. 3500 Gaston Ave", address: "3500 Gaston Ave, Dallas, TX 75246" },
-            { name: "Methodist Dallas Medical Center", link: "https://www.methodisthealth.org", note: "Level I Trauma Center. 1441 N Beckley Ave", address: "1441 N Beckley Ave, Dallas, TX 75203" }
+            { name: "Parkland Memorial Hospital", link: "https://www.google.com/maps/search/?api=1&query=Parkland+Memorial+Hospital+Dallas+TX", note: "Level I Trauma Center. 5200 Harry Hines Blvd", address: "5200 Harry Hines Blvd, Dallas, TX 75235", phone: "214-590-8000" },
+            { name: "Baylor University Medical Center", link: "https://www.google.com/maps/search/?api=1&query=Baylor+University+Medical+Center+Dallas+TX", note: "Level I Trauma Center. 3500 Gaston Ave", address: "3500 Gaston Ave, Dallas, TX 75246", phone: "214-820-0111" },
+            { name: "Methodist Dallas Medical Center", link: "https://www.google.com/maps/search/?api=1&query=Methodist+Dallas+Medical+Center+Dallas+TX", note: "Level I Trauma Center. 1441 N Beckley Ave", address: "1441 N Beckley Ave, Dallas, TX 75203", phone: "214-947-8181" }
         ],
         resources: {
             towing: [
-                { name: "Walnut Hill Wrecker", link: "https://walnuthillwrecker.com", note: "24/7 Service", rating: 4.8 },
-                { name: "Dallas Tow Boys", link: "https://dallastowboys.com", note: "Fast response downtown", rating: 4.7 }
+                { name: "Walnut Hill Wrecker", link: "https://www.google.com/maps/search/?api=1&query=Walnut+Hill+Wrecker+Dallas+TX", note: "24/7 Service", rating: 4.8, phone: "214-352-3375" },
+                { name: "Dallas Tow Boys", link: "https://www.google.com/maps/search/?api=1&query=Dallas+Tow+Boys+Dallas+TX", note: "Fast response downtown", rating: 4.7, phone: "214-900-5060" }
             ],
             repair: [], // Legacy
             collisionCenters: [
-                { name: "Service King Collision (Crash Champions)", link: "https://crashchampions.com", note: "Multiple DFW locations, Lifetime Warranty", rating: 4.5 },
-                { name: "Sewell Collision Center", link: "https://www.sewellcollision.com", note: "Luxury vehicle specialists (Lexus/Audi/BMW)", rating: 4.8 },
-                { name: "Caliber Collision", link: "https://caliber.com", note: "National warranty, works with all insurers", rating: 4.6 }
+                { name: "Service King Collision (Crash Champions)", link: "https://www.google.com/maps/search/?api=1&query=Crash+Champions+Collision+Dallas+TX", note: "Multiple DFW locations, Lifetime Warranty", rating: 4.5 },
+                { name: "Sewell Collision Center", link: "https://www.google.com/maps/search/?api=1&query=Sewell+Collision+Center+Dallas+TX", note: "Luxury vehicle specialists (Lexus/Audi/BMW)", rating: 4.8, address: "2322 W Mockingbird Ln, Dallas, TX 75235" },
+                { name: "Caliber Collision", link: "https://www.google.com/maps/search/?api=1&query=Caliber+Collision+Dallas+TX", note: "National warranty, works with all insurers", rating: 4.6 }
             ],
             hospitals: [
-                { name: "Parkland Memorial Hospital", link: "https://www.parklandhealth.org", note: "Level I Trauma Center" },
-                { name: "Baylor University Medical Center", link: "https://www.bswhealth.com", note: "Level I Trauma Center" }
+                { name: "Parkland Memorial Hospital", link: "https://www.google.com/maps/search/?api=1&query=Parkland+Memorial+Hospital+Dallas+TX", note: "Level I Trauma Center" },
+                { name: "Baylor University Medical Center", link: "https://www.google.com/maps/search/?api=1&query=Baylor+University+Medical+Center+Dallas+TX", note: "Level I Trauma Center" }
             ],
             insuranceDept: {
                 name: "TDI Consumer Help",
-                link: "https://www.tdi.texas.gov",
+                link: "https://www.google.com/maps/search/?api=1&query=Texas+Department+of+Insurance+Austin+TX",
                 note: "File a complaint: 800-252-3439",
                 address: "333 Guadalupe St, Austin, TX 78701 (Statewide HQ)"
             },
             registrationOffice: {
                 name: "Dallas County Tax Office",
-                link: "https://www.dallascounty.org/departments/tax/",
+                link: "https://www.google.com/maps/search/?api=1&query=Dallas+County+Tax+Office+Dallas+TX",
                 note: "Vehicle Title & Registration",
                 address: "500 Elm St, Dallas, TX 75202"
             },
             rental: [
-                { name: "Enterprise Rent-A-Car", link: "https://www.enterprise.com", note: "Multiple DFW locations" }
+                { name: "Enterprise Rent-A-Car", link: "https://www.google.com/maps/search/?api=1&query=Enterprise+Rent-A-Car+Dallas+TX", note: "Multiple DFW locations" }
             ]
         }
     },
@@ -121,27 +121,27 @@ export const cities: CityData[] = [
         zipCodes: ["75033", "75034", "75035"],
         subCities: ['little-elm', 'prosper', 'celina', 'the-colony'],
         medicalResources: [
-            { name: "Baylor Scott & White Medical Center - Frisco", link: "https://www.bswhealth.com/locations/frisco", note: "Sports Medicine & Trauma" },
-            { name: "Scottish Rite for Children", link: "https://scottishriteforchildren.org", note: "Pediatric Orthopedics (North Campus)" },
-            { name: "Airrosti Frisco", link: "https://www.airrosti.com", note: "Soft tissue therapy" }
+            { name: "Baylor Scott & White Medical Center - Frisco", link: "https://www.google.com/maps/search/?api=1&query=Baylor+Scott+White+Medical+Center+Frisco", note: "Sports Medicine & Trauma" },
+            { name: "Scottish Rite for Children", link: "https://www.google.com/maps/search/?api=1&query=Scottish+Rite+for+Children+Frisco+TX", note: "Pediatric Orthopedics (North Campus)" },
+            { name: "Airrosti Frisco", link: "https://www.google.com/maps/search/?api=1&query=Airrosti+Frisco+TX", note: "Soft tissue therapy" }
         ],
         resources: {
-            towing: [{ name: "Frisco Towing Service", link: "#", note: "Local expert", rating: 4.9 }],
+            towing: [{ name: "Frisco Towing Service", link: "https://www.google.com/maps/search/?api=1&query=Frisco+Towing+Service+Frisco+TX", note: "Local expert", rating: 4.9 }],
             collisionCenters: [
-                { name: "Frisco Paint & Body", link: "https://friscopaint.com", note: "High-end repairs", rating: 4.8 },
-                { name: "Crash Champions Frisco", link: "https://crashchampions.com", note: "Legacy Service King location", rating: 4.6 }
+                { name: "Frisco Paint & Body", link: "https://www.google.com/maps/search/?api=1&query=Frisco+Paint+Body+Frisco+TX", note: "High-end repairs", rating: 4.8 },
+                { name: "Crash Champions Frisco", link: "https://www.google.com/maps/search/?api=1&query=Crash+Champions+Frisco+TX", note: "Legacy Service King location", rating: 4.6 }
             ],
             repair: [],
             hospitals: [
-                { name: "Baylor Scott & White Medical Center - Frisco", link: "https://www.bswhealth.com/locations/frisco", note: "Urgent Care & Surgery" }
+                { name: "Baylor Scott & White Medical Center - Frisco", link: "https://www.google.com/maps/search/?api=1&query=Baylor+Scott+White+Medical+Center+Frisco", note: "Urgent Care & Surgery" }
             ],
             registrationOffice: {
                 name: "Collin County Tax Assessor",
-                link: "https://www.collincountytx.gov/tax_assessor",
+                link: "https://www.google.com/maps/search/?api=1&query=Collin+County+Tax+Assessor+Frisco+TX",
                 note: "Frisco Sub-Courthouse",
                 address: "6101 Frisco Square Blvd, Frisco, TX 75034"
             },
-            rental: [{ name: "Hertz Frisco", link: "#", note: "Near Stonebriar", rating: 4.5 }]
+            rental: [{ name: "Hertz Frisco", link: "https://www.google.com/maps/search/?api=1&query=Hertz+Frisco+TX", note: "Near Stonebriar", rating: 4.5 }]
         }
     },
     // --- HOUSTON METRO ---
@@ -164,29 +164,29 @@ export const cities: CityData[] = [
         zipCodes: ["77002", "77003"],
         subCities: ['the-woodlands', 'katy', 'sugar-land', 'pearland', 'pasadena', 'river-oaks', 'heights', 'montrose'],
         medicalResources: [
-            { name: "Memorial Hermann - Texas Medical Center", link: "https://memorialhermann.org", note: "Level I Trauma Center. World-class care.", address: "6411 Fannin St, Houston, TX 77030" },
-            { name: "Ben Taub Hospital", link: "https://www.harrishealth.org", note: "Level I Trauma Center", address: "1504 Taub Loop, Houston, TX 77030" }
+            { name: "Memorial Hermann - Texas Medical Center", link: "https://www.google.com/maps/search/?api=1&query=Memorial+Hermann+Texas+Medical+Center+Houston+TX", note: "Level I Trauma Center. World-class care.", address: "6411 Fannin St, Houston, TX 77030" },
+            { name: "Ben Taub Hospital", link: "https://www.google.com/maps/search/?api=1&query=Ben+Taub+Hospital+Houston+TX", note: "Level I Trauma Center", address: "1504 Taub Loop, Houston, TX 77030" }
         ],
         resources: {
-            towing: [{ name: "Milam's Towing", link: "https://milamstowing.com", note: "Heavy duty specialists", rating: 4.7 }],
+            towing: [{ name: "Milam's Towing", link: "https://www.google.com/maps/search/?api=1&query=Milam+Towing+Houston+TX", note: "Heavy duty specialists", rating: 4.7 }],
             repair: [],
             collisionCenters: [
-                { name: "Caliber Collision", link: "https://caliber.com", note: "Lifetime warranty, multiple locations", rating: 4.6 },
-                { name: "JJ Auto Body", link: "https://jjautobodyhouston.com", note: "High-end import repair", rating: 4.8 }
+                { name: "Caliber Collision", link: "https://www.google.com/maps/search/?api=1&query=Caliber+Collision+Houston+TX", note: "Lifetime warranty, multiple locations", rating: 4.6 },
+                { name: "JJ Auto Body", link: "https://www.google.com/maps/search/?api=1&query=JJ+Auto+Body+Houston+TX", note: "High-end import repair", rating: 4.8 }
             ],
             hospitals: [
-                { name: "Memorial Hermann - Texas Medical Center", link: "https://memorialhermann.org", note: "Level I Trauma Center", address: "6411 Fannin St, Houston, TX 77030", phone: "713-704-4000" },
-                { name: "Ben Taub Hospital", link: "https://www.harrishealth.org", note: "Level I Trauma Center - County Hospital", address: "1504 Taub Loop, Houston, TX 77030", phone: "713-873-2000" },
-                { name: "Houston Methodist Hospital", link: "https://www.houstonmethodist.org", note: "Nationally ranked. Texas Medical Center", address: "6565 Fannin St, Houston, TX 77030", phone: "713-790-3311" },
-                { name: "Texas Children's Hospital", link: "https://www.texaschildrens.org", note: "Pediatric injuries", address: "6621 Fannin St, Houston, TX 77030", phone: "832-824-1000" }
+                { name: "Memorial Hermann - Texas Medical Center", link: "https://www.google.com/maps/search/?api=1&query=Memorial+Hermann+Texas+Medical+Center+Houston+TX", note: "Level I Trauma Center", address: "6411 Fannin St, Houston, TX 77030", phone: "713-704-4000" },
+                { name: "Ben Taub Hospital", link: "https://www.google.com/maps/search/?api=1&query=Ben+Taub+Hospital+Houston+TX", note: "Level I Trauma Center - County Hospital", address: "1504 Taub Loop, Houston, TX 77030", phone: "713-873-2000" },
+                { name: "Houston Methodist Hospital", link: "https://www.google.com/maps/search/?api=1&query=Houston+Methodist+Hospital+Houston+TX", note: "Nationally ranked. Texas Medical Center", address: "6565 Fannin St, Houston, TX 77030", phone: "713-790-3311" },
+                { name: "Texas Children's Hospital", link: "https://www.google.com/maps/search/?api=1&query=Texas+Children+Hospital+Houston+TX", note: "Pediatric injuries", address: "6621 Fannin St, Houston, TX 77030", phone: "832-824-1000" }
             ],
             registrationOffice: {
                 name: "Harris County Tax Office",
-                link: "https://www.hctax.net",
+                link: "https://www.google.com/maps/search/?api=1&query=Harris+County+Tax+Office+Houston+TX",
                 note: "Vehicle Registration",
                 address: "1001 Preston St, Houston, TX 77002"
             },
-            rental: [{ name: "Enterprise", link: "#", note: "Downtown & Airports", rating: 4.5 }]
+            rental: [{ name: "Enterprise", link: "https://www.google.com/maps/search/?api=1&query=Enterprise+Rent-A-Car+Houston+TX", note: "Downtown & Airports", rating: 4.5 }]
         }
     },
     // --- AUSTIN METRO ---
@@ -209,34 +209,34 @@ export const cities: CityData[] = [
         zipCodes: ["78701", "78704"],
         subCities: ['bastrop', 'round-rock', 'pflugerville', 'cedar-park', 'south-congress', 'hyde-park'],
         medicalResources: [
-            { name: "Dell Seton Medical Center at UT", link: "https://www.seton.net", note: "Level I Trauma Center", address: "1500 Red River St, Austin, TX 78701" },
-            { name: "St. David's South Austin", link: "https://stdavids.com", note: "Level II Trauma Center", address: "901 W Ben White Blvd, Austin, TX 78704" }
+            { name: "Dell Seton Medical Center at UT", link: "https://www.google.com/maps/search/?api=1&query=Dell+Seton+Medical+Center+Austin+TX", note: "Level I Trauma Center", address: "1500 Red River St, Austin, TX 78701" },
+            { name: "St. David's South Austin", link: "https://www.google.com/maps/search/?api=1&query=St.+Davids+South+Austin+Medical+Center+Austin+TX", note: "Level II Trauma Center", address: "901 W Ben White Blvd, Austin, TX 78704" }
         ],
         resources: {
-            towing: [{ name: "Bulldog Towing", link: "https://bulldogtow.com", note: "Quick response", rating: 4.8 }],
+            towing: [{ name: "Bulldog Towing", link: "https://www.google.com/maps/search/?api=1&query=Bulldog+Towing+Austin+TX", note: "Quick response", rating: 4.8 }],
             collisionCenters: [
-                { name: "Austin Body Works", link: "https://austindescriptionworks.com", note: "Local favorite", rating: 4.9 },
-                { name: "Caliber Collision", link: "https://caliber.com", note: "Multiple Austin locations" }
+                { name: "Austin Body Works", link: "https://www.google.com/maps/search/?api=1&query=Austin+Body+Works+Austin+TX", note: "Local favorite", rating: 4.9 },
+                { name: "Caliber Collision", link: "https://www.google.com/maps/search/?api=1&query=Caliber+Collision+Austin+TX", note: "Multiple Austin locations" }
             ],
             repair: [],
             hospitals: [
-                { name: "Dell Seton Medical Center at UT", link: "https://www.seton.net", note: "Level I Trauma Center", address: "1500 Red River St, Austin, TX 78701", phone: "512-324-7000" },
-                { name: "St. David's South Austin Medical Center", link: "https://stdavids.com/south-austin", note: "Level II Trauma", address: "901 W Ben White Blvd, Austin, TX 78704", phone: "512-816-7000" },
-                { name: "Ascension Seton Medical Center Austin", link: "https://www.seton.net", note: "Full-service trauma care", address: "1201 W 38th St, Austin, TX 78705", phone: "512-324-1000" }
+                { name: "Dell Seton Medical Center at UT", link: "https://www.google.com/maps/search/?api=1&query=Dell+Seton+Medical+Center+Austin+TX", note: "Level I Trauma Center", address: "1500 Red River St, Austin, TX 78701", phone: "512-324-7000" },
+                { name: "St. David's South Austin Medical Center", link: "https://www.google.com/maps/search/?api=1&query=St.+Davids+South+Austin+Medical+Center+Austin+TX", note: "Level II Trauma", address: "901 W Ben White Blvd, Austin, TX 78704", phone: "512-816-7000" },
+                { name: "Ascension Seton Medical Center Austin", link: "https://www.google.com/maps/search/?api=1&query=Ascension+Seton+Medical+Center+Austin+TX", note: "Full-service trauma care", address: "1201 W 38th St, Austin, TX 78705", phone: "512-324-1000" }
             ],
             insuranceDept: {
                 name: "TDI Headquarters",
-                link: "https://www.tdi.texas.gov",
+                link: "https://www.google.com/maps/search/?api=1&query=Texas+Department+of+Insurance+Austin+TX",
                 note: "Main Office",
                 address: "333 Guadalupe St, Austin, TX 78701"
             },
             registrationOffice: {
                 name: "Travis County Tax Office",
-                link: "https://tax-office.traviscountytx.gov",
+                link: "https://www.google.com/maps/search/?api=1&query=Travis+County+Tax+Office+Austin+TX",
                 note: "Registration & Title",
                 address: "5501 Airport Blvd, Austin, TX 78751"
             },
-            rental: [{ name: "Enterprise", link: "#", note: "South Congress", rating: 4.6 }]
+            rental: [{ name: "Enterprise", link: "https://www.google.com/maps/search/?api=1&query=Enterprise+Rent-A-Car+Austin+TX", note: "South Congress", rating: 4.6 }]
         }
     },
     // --- SAN ANTONIO METRO ---
@@ -258,30 +258,30 @@ export const cities: CityData[] = [
         coordinates: { latitude: 29.4241, longitude: -98.4936 },
         zipCodes: ["78201", "78202", "78203", "78204", "78205"],
         medicalResources: [
-            { name: "Texas Pain & Injury", link: "https://texaspainandinjury.com/locations/san-antonio/", note: "Dedicated centers for accident injury across San Antonio." },
-            { name: "The Joint Chiropractic - San Antonio", link: "https://www.thejoint.com/texas/san-antonio/", note: "Multiple clinics including Alamo Heights and Stone Oak." },
-            { name: "Airrosti San Antonio", link: "https://www.airrosti.com/locations/san-antonio/", note: "Headquartered in SA with broad city-wide coverage." }
+            { name: "Texas Pain & Injury", link: "https://www.google.com/maps/search/?api=1&query=Texas+Pain+Injury+San+Antonio+TX", note: "Dedicated centers for accident injury across San Antonio." },
+            { name: "The Joint Chiropractic - San Antonio", link: "https://www.google.com/maps/search/?api=1&query=The+Joint+Chiropractic+San+Antonio+TX", note: "Multiple clinics including Alamo Heights and Stone Oak." },
+            { name: "Airrosti San Antonio", link: "https://www.google.com/maps/search/?api=1&query=Airrosti+San+Antonio+TX", note: "Headquartered in SA with broad city-wide coverage." }
         ],
         resources: {
-            towing: [{ name: "San Antonio Towing", link: "#", note: "24/7", rating: 4.5 }],
+            towing: [{ name: "San Antonio Towing", link: "https://www.google.com/maps/search/?api=1&query=San+Antonio+Towing+San+Antonio+TX", note: "24/7", rating: 4.5 }],
             collisionCenters: [
-                { name: "Blue Bonnet Motors Collision", link: "#", note: "Ford Certified", rating: 4.7 },
-                { name: "Caliber Collision", link: "#", note: "San Antonio wide" }
+                { name: "Blue Bonnet Motors Collision", link: "https://www.google.com/maps/search/?api=1&query=Blue+Bonnet+Motors+Collision+San+Antonio+TX", note: "Ford Certified", rating: 4.7 },
+                { name: "Caliber Collision", link: "https://www.google.com/maps/search/?api=1&query=Caliber+Collision+San+Antonio+TX", note: "San Antonio wide" }
             ],
             repair: [],
             hospitals: [
-                { name: "University Hospital", link: "https://www.universityhealthsystem.com", note: "Level I Trauma Center", address: "4502 Medical Dr, San Antonio, TX 78229", phone: "210-358-4000" },
-                { name: "Brooke Army Medical Center (BAMC)", link: "https://bamc.tricare.mil", note: "Military Trauma Center - civilians accepted", address: "3551 Roger Brooke Dr, San Antonio, TX 78234", phone: "210-916-4141" },
-                { name: "Methodist Hospital", link: "https://www.sahealth.com", note: "Downtown San Antonio", address: "7700 Floyd Curl Dr, San Antonio, TX 78229", phone: "210-575-4000" },
-                { name: "Baptist Medical Center", link: "https://www.baptisthealthsystem.com", note: "Multiple SA locations", address: "111 Dallas St, San Antonio, TX 78205", phone: "210-297-7000" }
+                { name: "University Hospital", link: "https://www.google.com/maps/search/?api=1&query=University+Hospital+San+Antonio+TX", note: "Level I Trauma Center", address: "4502 Medical Dr, San Antonio, TX 78229", phone: "210-358-4000" },
+                { name: "Brooke Army Medical Center (BAMC)", link: "https://www.google.com/maps/search/?api=1&query=Brooke+Army+Medical+Center+San+Antonio+TX", note: "Military Trauma Center - civilians accepted", address: "3551 Roger Brooke Dr, San Antonio, TX 78234", phone: "210-916-4141" },
+                { name: "Methodist Hospital", link: "https://www.google.com/maps/search/?api=1&query=Methodist+Hospital+San+Antonio+TX", note: "Downtown San Antonio", address: "7700 Floyd Curl Dr, San Antonio, TX 78229", phone: "210-575-4000" },
+                { name: "Baptist Medical Center", link: "https://www.google.com/maps/search/?api=1&query=Baptist+Medical+Center+San+Antonio+TX", note: "Multiple SA locations", address: "111 Dallas St, San Antonio, TX 78205", phone: "210-297-7000" }
             ],
             registrationOffice: {
                 name: "Bexar County Tax Assessor",
-                link: "https://www.bexar.org/tax",
+                link: "https://www.google.com/maps/search/?api=1&query=Bexar+County+Tax+Assessor+San+Antonio+TX",
                 note: "Vista Verde Plaza",
                 address: "233 N Pecos La Trinidad, San Antonio, TX 78207"
             },
-            rental: [{ name: "Hertz", link: "#", note: "Airport & Downtown", rating: 4.5 }]
+            rental: [{ name: "Hertz", link: "https://www.google.com/maps/search/?api=1&query=Hertz+San+Antonio+TX", note: "Airport & Downtown", rating: 4.5 }]
         }
     },
 
@@ -303,8 +303,8 @@ export const cities: CityData[] = [
         coordinates: { latitude: 31.7619, longitude: -106.4850 },
         zipCodes: ["79901", "79902", "79903", "79904", "79905"],
         medicalResources: [
-            { name: "The Joint Chiropractic - El Paso", link: "https://www.thejoint.com/texas/el-paso/", note: "West and East side locations available." },
-            { name: "Texas Pain & Injury - El Paso", link: "https://texaspainandinjury.com/locations/el-paso/", note: "Focused pain relief for El Paso accident victims." }
+            { name: "The Joint Chiropractic - El Paso", link: "https://www.google.com/maps/search/?api=1&query=The+Joint+Chiropractic+El+Paso+TX", note: "West and East side locations available." },
+            { name: "Texas Pain & Injury - El Paso", link: "https://www.google.com/maps/search/?api=1&query=Texas+Pain+Injury+El+Paso+TX", note: "Focused pain relief for El Paso accident victims." }
         ]
     },
     // --- DFW EXPANSION ---
@@ -325,13 +325,13 @@ export const cities: CityData[] = [
         coordinates: { latitude: 33.0198, longitude: -96.6989 },
         zipCodes: ["75023", "75024", "75025", "75074", "75075", "75093"],
         medicalResources: [
-            { name: "Texas Health Presbyterian Plano", link: "https://www.texashealth.org/Locations/texas-health-plano", note: "Level II Trauma Center" },
-            { name: "Baylor Scott & White Medical Center - Plano", link: "https://www.bswhealth.com/locations/plano", note: "Heart & Spine Specialty" }
+            { name: "Texas Health Presbyterian Plano", link: "https://www.google.com/maps/search/?api=1&query=Texas+Health+Presbyterian+Plano+TX", note: "Level II Trauma Center" },
+            { name: "Baylor Scott & White Medical Center - Plano", link: "https://www.google.com/maps/search/?api=1&query=Baylor+Scott+White+Medical+Center+Plano+TX", note: "Heart & Spine Specialty" }
         ],
         resources: {
-            towing: [{ name: "Plano Towing Service", link: "#", note: "Rapid DNT Response", rating: 4.8 }],
-            repair: [{ name: "Sewell Collision Center", link: "#", note: "Luxury Vehicle Certified", rating: 4.9 }],
-            rental: [{ name: "Enterprise Rent-A-Car (Legacy)", link: "#", note: "Corporate Rates", rating: 4.7 }]
+            towing: [{ name: "Plano Towing Service", link: "https://www.google.com/maps/search/?api=1&query=Plano+Towing+Service+Plano+TX", note: "Rapid DNT Response", rating: 4.8 }],
+            collisionCenters: [{ name: "Sewell Collision Center", link: "https://www.google.com/maps/search/?api=1&query=Sewell+Collision+Center+Plano+TX", note: "Luxury Vehicle Certified", rating: 4.9 }],
+            rental: [{ name: "Enterprise Rent-A-Car (Legacy)", link: "https://www.google.com/maps/search/?api=1&query=Enterprise+Rent-A-Car+Legacy+West+Plano+TX", note: "Corporate Rates", rating: 4.7 }]
         }
     },
     // --- DALLAS SUB-DISTRICTS ---
@@ -344,7 +344,7 @@ export const cities: CityData[] = [
         coordinates: { latitude: 32.88, longitude: -96.79 },
         zipCodes: ["75230", "75225", "75240"],
         parentCity: 'dallas',
-        medicalResources: [{ name: "Medical City Dallas", link: "https://medicalcityhealthcare.com", note: "Critical Care" }]
+        medicalResources: [{ name: "Medical City Dallas", link: "https://www.google.com/maps/search/?api=1&query=Medical+City+Dallas+TX", note: "Critical Care" }]
     },
     {
         slug: 'south-dallas',
@@ -366,7 +366,7 @@ export const cities: CityData[] = [
         coordinates: { latitude: 32.80, longitude: -96.80 },
         zipCodes: ["75204", "75201"],
         parentCity: 'dallas',
-        medicalResources: [{ name: "Parkland Hospital", link: "https://www.parklandhealth.org", note: "Nearest Major ER" }]
+        medicalResources: [{ name: "Parkland Hospital", link: "https://www.google.com/maps/search/?api=1&query=Parkland+Memorial+Hospital+Dallas+TX", note: "Nearest Major ER" }]
     },
     {
         slug: 'oak-lawn',
@@ -377,7 +377,7 @@ export const cities: CityData[] = [
         coordinates: { latitude: 32.81, longitude: -96.81 },
         zipCodes: ["75219"],
         parentCity: 'dallas',
-        medicalResources: [{ name: "UT Southwestern Medical Center", link: "https://utswmed.org", note: "Advanced Care" }]
+        medicalResources: [{ name: "UT Southwestern Medical Center", link: "https://www.google.com/maps/search/?api=1&query=UT+Southwestern+Medical+Center+Dallas+TX", note: "Advanced Care" }]
     },
     {
         slug: 'the-village',
@@ -388,7 +388,7 @@ export const cities: CityData[] = [
         coordinates: { latitude: 32.85, longitude: -96.76 },
         zipCodes: ["75206"],
         parentCity: 'dallas',
-        medicalResources: [{ name: "Texas Health Dallas", link: "https://www.texashealth.org", note: "Nearby Presbyterian" }]
+        medicalResources: [{ name: "Texas Health Dallas", link: "https://www.google.com/maps/search/?api=1&query=Texas+Health+Presbyterian+Hospital+Dallas+TX", note: "Nearby Presbyterian" }]
     },
     {
         slug: 'murphy',
@@ -398,7 +398,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 33.0151, longitude: -96.6131 },
         zipCodes: ["75094"],
-        medicalResources: [{ name: "Methodist Richardson (Nearby)", link: "https://methodisthealth.org", note: "Emergency Services" }]
+        medicalResources: [{ name: "Methodist Richardson (Nearby)", link: "https://www.google.com/maps/search/?api=1&query=Methodist+Richardson+Medical+Center+Richardson+TX", note: "Emergency Services" }]
     },
     {
         slug: 'venus',
@@ -408,7 +408,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 32.48, longitude: -97.18 },
         zipCodes: ["76084"],
-        medicalResources: [{ name: "Texas Health Huguley", link: "https://www.texashealth.org", note: "Nearest Major Hospital" }]
+        medicalResources: [{ name: "Texas Health Huguley", link: "https://www.google.com/maps/search/?api=1&query=Texas+Health+Huguley+Hospital+Fort+Worth+TX", note: "Nearest Major Hospital" }]
     },
     {
         slug: 'mansfield',
@@ -418,7 +418,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 32.5635, longitude: -97.1420 },
         zipCodes: ["76063"],
-        medicalResources: [{ name: "Methodist Mansfield Medical Center", link: "https://methodisthealth.org", note: "Full Service Hospital" }]
+        medicalResources: [{ name: "Methodist Mansfield Medical Center", link: "https://www.google.com/maps/search/?api=1&query=Methodist+Mansfield+Medical+Center+Mansfield+TX", note: "Full Service Hospital" }]
     },
     {
         slug: 'fort-worth',
@@ -428,7 +428,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 32.7555, longitude: -97.3308 },
         zipCodes: ["76102", "76104", "76107"],
-        medicalResources: [{ name: "JPS Health Network", link: "https://www.jpshealthnet.org", note: "Level 1 Trauma Center" }]
+        medicalResources: [{ name: "JPS Health Network", link: "https://www.google.com/maps/search/?api=1&query=JPS+Health+Network+Fort+Worth+TX", note: "Level 1 Trauma Center" }]
     },
     {
         slug: 'arlington',
@@ -438,7 +438,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 32.7357, longitude: -97.1081 },
         zipCodes: ["76010", "76011"],
-        medicalResources: [{ name: "Texas Health Arlington Memorial", link: "https://www.texashealth.org", note: "Emergency Care" }]
+        medicalResources: [{ name: "Texas Health Arlington Memorial", link: "https://www.google.com/maps/search/?api=1&query=Texas+Health+Arlington+Memorial+Hospital+Arlington+TX", note: "Emergency Care" }]
     },
     {
         slug: 'garland',
@@ -448,7 +448,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 32.9072, longitude: -96.6353 },
         zipCodes: ["75040", "75041"],
-        medicalResources: [{ name: "Baylor Scott & White Garland", link: "https://www.bswhealth.com", note: "Full Service" }]
+        medicalResources: [{ name: "Baylor Scott & White Garland", link: "https://www.google.com/maps/search/?api=1&query=Baylor+Scott+White+Medical+Center+Garland+TX", note: "Full Service" }]
     },
     {
         slug: 'irving',
@@ -458,7 +458,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 32.8196, longitude: -96.9454 },
         zipCodes: ["75038", "75039"],
-        medicalResources: [{ name: "Baylor Scott & White Irving", link: "https://www.bswhealth.com", note: "Emergency Room" }]
+        medicalResources: [{ name: "Baylor Scott & White Irving", link: "https://www.google.com/maps/search/?api=1&query=Baylor+Scott+White+Medical+Center+Irving+TX", note: "Emergency Room" }]
     },
     {
         slug: 'mckinney',
@@ -468,7 +468,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 33.2146, longitude: -96.6145 },
         zipCodes: ["75069", "75070"],
-        medicalResources: [{ name: "Medical City McKinney", link: "https://medicalcityhealthcare.com", note: "Trauma & Emergency" }]
+        medicalResources: [{ name: "Medical City McKinney", link: "https://www.google.com/maps/search/?api=1&query=Medical+City+McKinney+TX", note: "Trauma & Emergency" }]
     },
     {
         slug: 'denton',
@@ -478,7 +478,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 33.2148, longitude: -97.1331 },
         zipCodes: ["76201", "76205"],
-        medicalResources: [{ name: "Texas Health Presbyterian Denton", link: "https://www.texashealth.org", note: "Full Hospital Services" }]
+        medicalResources: [{ name: "Texas Health Presbyterian Denton", link: "https://www.google.com/maps/search/?api=1&query=Texas+Health+Presbyterian+Hospital+Denton+TX", note: "Full Hospital Services" }]
     },
     {
         slug: 'richardson',
@@ -488,7 +488,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 32.9656, longitude: -96.7158 },
         zipCodes: ["75080", "75081"],
-        medicalResources: [{ name: "Methodist Richardson", link: "https://methodisthealth.org", note: "ER & Trauma" }]
+        medicalResources: [{ name: "Methodist Richardson", link: "https://www.google.com/maps/search/?api=1&query=Methodist+Richardson+Medical+Center+Richardson+TX", note: "ER & Trauma" }]
     },
     {
         slug: 'lewisville',
@@ -498,7 +498,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 33.0383, longitude: -97.0061 },
         zipCodes: ["75057", "75067"],
-        medicalResources: [{ name: "Medical City Lewisville", link: "https://medicalcityhealthcare.com", note: "Emergency Services" }]
+        medicalResources: [{ name: "Medical City Lewisville", link: "https://www.google.com/maps/search/?api=1&query=Medical+City+Lewisville+TX", note: "Emergency Services" }]
     },
     {
         slug: 'mesquite',
@@ -508,7 +508,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 32.7828, longitude: -96.6100 },
         zipCodes: ["75149", "75150"],
-        medicalResources: [{ name: "Dallas Regional Medical Center", link: "https://www.dallasregionalmedicalcenter.com", note: "Emergency Room" }]
+        medicalResources: [{ name: "Dallas Regional Medical Center", link: "https://www.google.com/maps/search/?api=1&query=Dallas+Regional+Medical+Center+Mesquite+TX", note: "Emergency Room" }]
     },
     {
         slug: 'grand-prairie',
@@ -518,7 +518,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 32.7460, longitude: -96.9978 },
         zipCodes: ["75050", "75051", "75052"],
-        medicalResources: [{ name: "Medical City ER Grand Prairie", link: "https://medicalcityhealthcare.com", note: "Emergency Care" }]
+        medicalResources: [{ name: "Medical City ER Grand Prairie", link: "https://www.google.com/maps/search/?api=1&query=Medical+City+ER+Grand+Prairie+TX", note: "Emergency Care" }]
     },
 
     // --- HOUSTON METRO EXPANSION ---
@@ -530,7 +530,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 29.6911, longitude: -95.2091 },
         zipCodes: ["77502", "77506"],
-        medicalResources: [{ name: "HCA Houston Healthcare Southeast", link: "https://hcahoustonhealthcare.com", note: "Trauma & ER" }]
+        medicalResources: [{ name: "HCA Houston Healthcare Southeast", link: "https://www.google.com/maps/search/?api=1&query=HCA+Houston+Healthcare+Southeast+Pasadena+TX", note: "Trauma & ER" }]
     },
     {
         slug: 'pearland',
@@ -540,7 +540,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 29.5636, longitude: -95.2861 },
         zipCodes: ["77581", "77584"],
-        medicalResources: [{ name: "Memorial Hermann Pearland", link: "https://memorialhermann.org", note: "Hospital" }]
+        medicalResources: [{ name: "Memorial Hermann Pearland", link: "https://www.google.com/maps/search/?api=1&query=Memorial+Hermann+Pearland+Hospital+Pearland+TX", note: "Hospital" }]
     },
     {
         slug: 'sugar-land',
@@ -550,7 +550,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 29.6197, longitude: -95.6349 },
         zipCodes: ["77478", "77479"],
-        medicalResources: [{ name: "Houston Methodist Sugar Land", link: "https://houstonmethodist.org", note: "Comprehensive Care" }]
+        medicalResources: [{ name: "Houston Methodist Sugar Land", link: "https://www.google.com/maps/search/?api=1&query=Houston+Methodist+Sugar+Land+Hospital+Sugar+Land+TX", note: "Comprehensive Care" }]
     },
     {
         slug: 'cypress',
@@ -560,7 +560,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 29.9691, longitude: -95.6972 },
         zipCodes: ["77429", "77433"],
-        medicalResources: [{ name: "HCA Houston Healthcare North Cypress", link: "https://hcahoustonhealthcare.com", note: "ER & Medical" }]
+        medicalResources: [{ name: "HCA Houston Healthcare North Cypress", link: "https://www.google.com/maps/search/?api=1&query=HCA+Houston+Healthcare+North+Cypress+TX", note: "ER & Medical" }]
     },
     {
         slug: 'katy',
@@ -570,7 +570,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 29.7858, longitude: -95.8244 },
         zipCodes: ["77449", "77494"],
-        medicalResources: [{ name: "Memorial Hermann Katy", link: "https://memorialhermann.org", note: "Trauma Center" }]
+        medicalResources: [{ name: "Memorial Hermann Katy", link: "https://www.google.com/maps/search/?api=1&query=Memorial+Hermann+Katy+Hospital+Katy+TX", note: "Trauma Center" }]
     },
 
     // --- AUSTIN & SAN ANTONIO METRO ---
@@ -582,7 +582,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 30.5083, longitude: -97.6789 },
         zipCodes: ["78664", "78665"],
-        medicalResources: [{ name: "Baylor Scott & White Round Rock", link: "https://www.bswhealth.com", note: "Medical Center" }]
+        medicalResources: [{ name: "Baylor Scott & White Round Rock", link: "https://www.google.com/maps/search/?api=1&query=Baylor+Scott+White+Medical+Center+Round+Rock+TX", note: "Medical Center" }]
     },
     {
         slug: 'cedar-park',
@@ -592,7 +592,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 30.5052, longitude: -97.8203 },
         zipCodes: ["78613"],
-        medicalResources: [{ name: "Cedar Park Regional Medical Center", link: "https://www.cedarparkregional.com", note: "Emergency Sevices" }]
+        medicalResources: [{ name: "Cedar Park Regional Medical Center", link: "https://www.google.com/maps/search/?api=1&query=Cedar+Park+Regional+Medical+Center+Cedar+Park+TX", note: "Emergency Sevices" }]
     },
     {
         slug: 'new-braunfels',
@@ -602,7 +602,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 29.7000, longitude: -98.1167 },
         zipCodes: ["78130", "78132"],
-        medicalResources: [{ name: "Christus Santa Rosa New Braunfels", link: "https://www.christushealth.org", note: "Full Service" }]
+        medicalResources: [{ name: "Christus Santa Rosa New Braunfels", link: "https://www.google.com/maps/search/?api=1&query=Christus+Santa+Rosa+Hospital+New+Braunfels+TX", note: "Full Service" }]
     },
     {
         slug: 'desoto',
@@ -612,7 +612,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 32.5899, longitude: -96.8570 },
         zipCodes: ["75115", "75123"],
-        medicalResources: [{ name: "Methodist Charlton Medical Center", link: "https://methodisthealth.org", note: "Emergency Care" }]
+        medicalResources: [{ name: "Methodist Charlton Medical Center", link: "https://www.google.com/maps/search/?api=1&query=Methodist+Charlton+Medical+Center+Dallas+TX", note: "Emergency Care" }]
     },
     {
         slug: 'the-woodlands',
@@ -622,7 +622,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 30.1658, longitude: -95.4613 },
         zipCodes: ["77380", "77381", "77382"],
-        medicalResources: [{ name: "Memorial Hermann The Woodlands", link: "https://memorialhermann.org", note: "Level II Trauma" }]
+        medicalResources: [{ name: "Memorial Hermann The Woodlands", link: "https://www.google.com/maps/search/?api=1&query=Memorial+Hermann+The+Woodlands+Hospital+The+Woodlands+TX", note: "Level II Trauma" }]
     },
 
     // --- NEW MICRO CITIES / RURAL --- (Added by Request)
@@ -635,7 +635,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 32.8085, longitude: -98.1128 },
         zipCodes: ["76067"],
-        medicalResources: [{ name: "Palo Pinto General Hospital", link: "https://ppgh.com", note: "Local Trauma Center" }]
+        medicalResources: [{ name: "Palo Pinto General Hospital", link: "https://www.google.com/maps/search/?api=1&query=Palo+Pinto+General+Hospital+Mineral+Wells+TX", note: "Local Trauma Center" }]
     },
     {
         slug: 'greenville',
@@ -646,7 +646,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 33.1384, longitude: -96.1106 },
         zipCodes: ["75401", "75402"],
-        medicalResources: [{ name: "Hunt Regional Medical Center", link: "https://www.huntregional.org", note: "Emergency Services" }]
+        medicalResources: [{ name: "Hunt Regional Medical Center", link: "https://www.google.com/maps/search/?api=1&query=Hunt+Regional+Medical+Center+Greenville+TX", note: "Emergency Services" }]
     },
     {
         slug: 'prosper',
@@ -657,7 +657,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 33.2362, longitude: -96.8011 },
         zipCodes: ["75078"],
-        medicalResources: [{ name: "Cook Children's (Prosper)", link: "https://cookchildrens.org", note: "Specialized Pediatric Care" }]
+        medicalResources: [{ name: "Cook Children's (Prosper)", link: "https://www.google.com/maps/search/?api=1&query=Cook+Childrens+Medical+Center+Prosper+TX", note: "Specialized Pediatric Care" }]
     },
     {
         slug: 'anna',
@@ -668,7 +668,7 @@ export const cities: CityData[] = [
         },
         coordinates: { latitude: 33.3512, longitude: -96.5497 },
         zipCodes: ["75409"],
-        medicalResources: [{ name: "Medical City McKinney (Nearest)", link: "https://medicalcityhealthcare.com", note: "Nearest Major ER" }]
+        medicalResources: [{ name: "Medical City McKinney (Nearest)", link: "https://www.google.com/maps/search/?api=1&query=Medical+City+McKinney+TX", note: "Nearest Major ER" }]
     },
     {
         slug: 'melissa',

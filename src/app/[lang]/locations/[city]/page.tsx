@@ -6,11 +6,10 @@ import { ShieldCheckIcon, AlertTriangleIcon, CarIcon, MapPinIcon } from 'lucide-
 import NeighborhoodAccordion from '@/components/NeighborhoodAccordion';
 import TrustBadges from '@/components/TrustBadges';
 import ResourceLinkHelper from '@/components/ResourceLinkHelper';
-// Static imports to debug build issues
-import ValuationCalculator from '@/components/ValuationCalculator';
-import ChatWidget from '@/components/ChatWidget';
-import CaseReviewModal from '@/components/CaseReviewModal';
+import dynamic from 'next/dynamic';
 import { getDictionary } from '@/dictionaries';
+
+import { ValuationCalculator, ChatWidget, CaseReviewModal } from '@/components/DynamicComponents';
 
 type Props = {
     params: Promise<{ city: string; lang: 'en' | 'es' }>;
@@ -142,7 +141,13 @@ export default async function CityPage({ params }: Props) {
                             }
                         }
                     ]
-                }
+                },
+                // MEO UPGRADE: Add related local entities to schema
+                'relatedLink': [
+                    ...(city.resources?.towing?.map(r => r.link) || []),
+                    ...(city.resources?.collisionCenters?.map(r => r.link) || []),
+                    ...(city.resources?.hospitals?.map(r => r.link) || [])
+                ].filter(link => link.includes('google.com/maps'))
             },
             {
                 '@type': 'FAQPage',
@@ -365,7 +370,7 @@ export default async function CityPage({ params }: Props) {
                                                     </div>
                                                     <div className="text-right">
                                                         {r.rating && <div className="text-gold-400 text-sm font-bold">★ {r.rating}</div>}
-                                                        <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:text-blue-300 hover:underline">View</a>
+                                                        <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-blue-400 hover:text-blue-300 hover:underline flex items-center justify-end gap-1"><MapPinIcon size={12} /> {r.link.includes('google.com/maps') ? 'Get Directions' : 'View Website'}</a>
                                                     </div>
                                                 </div>
                                             ))}
@@ -390,7 +395,7 @@ export default async function CityPage({ params }: Props) {
                                                         <div className="text-xs text-slate-500">{r.note}</div>
                                                     </div>
                                                     <div className="text-right">
-                                                        <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:text-blue-300 hover:underline">View</a>
+                                                        <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-blue-400 hover:text-blue-300 hover:underline flex items-center justify-end gap-1"><MapPinIcon size={12} /> {r.link.includes('google.com/maps') ? 'Get Directions' : 'View Website'}</a>
                                                     </div>
                                                 </div>
                                             ))}
@@ -418,7 +423,9 @@ export default async function CityPage({ params }: Props) {
                                                         </div>
                                                         <div className="text-right">
                                                             {r.rating && <div className="text-gold-400 text-sm font-bold">★ {r.rating}</div>}
-                                                            <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:text-blue-300 hover:underline">View</a>
+                                                            <a href={r.link} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-blue-400 hover:text-blue-300 hover:underline flex items-center justify-end gap-1">
+                                                             <MapPinIcon size={12} /> {r.link.includes('google.com/maps') ? 'Get Directions' : 'View Website'}
+                                                         </a>
                                                         </div>
                                                     </div>
                                                 ))

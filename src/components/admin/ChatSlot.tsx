@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { supabaseClient } from '@/lib/supabaseClient';
+import { db } from '@/lib/firebase';
+import { collection, query, where, orderBy, onSnapshot, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { SendIcon, UserIcon, PhoneIcon, MapPinIcon, XCircleIcon, AlertTriangleIcon, CheckCircleIcon } from 'lucide-react';
 
 interface ChatSession {
@@ -19,8 +20,8 @@ interface ChatSession {
 interface ChatMessage {
     id: number;
     session_id: string;
-    sender: 'user' | 'bot' | 'admin';
-    text: string;
+    sender: 'user' | 'bot' | 'agent' | 'system';
+    content: string;
     created_at: string;
     media_url?: string;
 }
@@ -38,26 +39,18 @@ export default function ChatSlot({ session, onClose }: ChatSlotProps) {
 
     // Load initial messages
     useEffect(() => {
-        const fetchMessages = async () => {
-            const { data } = await supabaseClient
-                .from('chat_messages')
-                .select('*')
-                .eq('session_id', session.session_id)
-                .order('created_at', { ascending: true });
-            if (data) setMessages(data);
-        };
-        fetchMessages();
-
-        // Subscribe to new messages
-        const channel = supabaseClient
-            .channel(`slot-${session.session_id}`)
-            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: `session_id=eq.${session.session_id}` }, (payload) => {
-                setMessages((prev) => [...prev, payload.new as ChatMessage]);
-            })
-            .subscribe();
+        const q = query(
+            collection(db, 'chat_messages'),
+            where('session_id', '==', session.session_id),
+            orderBy('created_at', 'asc')
+        );
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const loadedMsgs = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as unknown as ChatMessage));
+            setMessages(loadedMsgs);
+        });
 
         return () => {
-            supabaseClient.removeChannel(channel);
+            unsubscribe();
         };
     }, [session.session_id]);
 
@@ -72,10 +65,11 @@ export default function ChatSlot({ session, onClose }: ChatSlotProps) {
         setInput('');
 
         // 1. Send Message
-        await supabaseClient.from('chat_messages').insert({
+        await addDoc(collection(db, 'chat_messages'), {
             session_id: session.session_id,
-            sender: 'admin',
-            text: text
+            sender: 'agent',
+            content: text,
+            created_at: new Date().toISOString()
         });
 
         // 2. Ensure session is live (if not already)
@@ -86,12 +80,12 @@ export default function ChatSlot({ session, onClose }: ChatSlotProps) {
 
     const toggleLiveStatus = async () => {
         const newStatus = isLive ? 'bot' : 'live';
-        const { error } = await supabaseClient
-            .from('chat_sessions')
-            .update({ status: newStatus })
-            .eq('session_id', session.session_id);
-
-        if (!error) setIsLive(!isLive);
+        try {
+            await updateDoc(doc(db, 'chat_sessions', session.session_id), { status: newStatus });
+            setIsLive(!isLive);
+        } catch (error) {
+            console.error('Failed to toggle live status', error);
+        }
     };
 
     return (
@@ -143,7 +137,7 @@ export default function ChatSlot({ session, onClose }: ChatSlotProps) {
             {/* Chat Body */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
                 {messages.map((msg) => {
-                    const isMe = msg.sender === 'admin';
+                    const isMe = msg.sender === 'agent' || msg.sender === 'admin';
                     const isBot = msg.sender === 'bot';
                     return (
                         <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
@@ -152,7 +146,7 @@ export default function ChatSlot({ session, onClose }: ChatSlotProps) {
                                     'bg-white text-gray-900 border border-gray-200'
                                 }`}>
                                 {isBot && <span className="text-[10px] font-bold text-gray-500 block mb-1">BOT</span>}
-                                {msg.text}
+                                {msg.content}
                                 {msg.media_url && (
                                     <img src={msg.media_url} alt="Attachment" className="mt-2 rounded max-h-32 object-cover" />
                                 )}

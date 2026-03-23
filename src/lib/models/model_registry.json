@@ -19,22 +19,22 @@
   },
   "categories": {
     "CODING": {
-      "free_sequence": ["deepseek-chat", "llama-3.1-sonar-small-128k-online", "gemini-1.5-flash"],
+      "free_sequence": ["gemini-1.5-flash", "deepseek-chat", "llama-3.1-sonar-small-128k-online"],
       "paid_sequence": ["claude-sonnet-4-6", "deepseek-reasoner", "grok-4-fast-reasoning", "gemini-1.5-pro"],
       "description": "Excellence in logic and architecture."
     },
     "MARKETING": {
-      "free_sequence": ["gemini-1.5-flash", "deepseek-chat"],
+      "free_sequence": ["gemini-1.5-flash", "deepseek-chat", "llama-3.1-sonar-small-128k-online"],
       "paid_sequence": ["grok-4.20-beta-latest-non-reasoning", "claude-sonnet-4-6"],
       "description": "Creativity and engagement."
     },
     "CMD_SHELL": {
-      "free_sequence": ["gemini-1.5-flash", "deepseek-chat"],
+      "free_sequence": ["llama-3.1-sonar-small-128k-online", "gemini-1.5-flash", "deepseek-chat"],
       "paid_sequence": ["claude-sonnet-4-6", "gemini-1.5-pro"],
-      "description": "Routine internal commands. DeepSeek used as high-range free fallback."
+      "description": "Routine internal commands. Perplexity prioritized as reliable fallback."
     },
     "GENERAL": {
-      "free_sequence": ["gemini-1.5-flash", "deepseek-chat"],
+      "free_sequence": ["gemini-1.5-flash", "deepseek-chat", "llama-3.1-sonar-small-128k-online"],
       "paid_sequence": ["gemini-1.5-pro", "claude-sonnet-4-6"],
       "description": "Catch-all for unspecified task types."
     },
@@ -44,7 +44,7 @@
       "description": "Grounded web data and market analysis."
     },
     "STRATEGY": {
-      "free_sequence": ["gemini-1.5-flash"],
+      "free_sequence": ["gemini-1.5-flash", "llama-3.1-sonar-small-128k-online"],
       "paid_sequence": ["claude-sonnet-4-6", "gemini-1.5-pro", "deepseek-reasoner"],
       "description": "High-intelligence game planning, acquisition techniques, and platform architecture."
     }

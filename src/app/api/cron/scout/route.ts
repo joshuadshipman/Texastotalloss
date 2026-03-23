@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { fetchTrendingNews } from '@/lib/news_scanner';
 import { scrapeCompetitorHeadlines } from '@/lib/scraper';
 import { analyzeHeadlines, generateFullBlogPost } from '@/lib/gemini';
-import { createClient } from '@supabase/supabase-js';
+import { adminDb } from '@/lib/firebaseAdmin';
 import { generateGBPUpdateFromBlog, postToGoogleBusinessProfile } from '@/lib/google_business';
 
 // This Route is triggered by Vercel Cron (check vercel.json)
@@ -12,8 +12,7 @@ export async function GET(req: NextRequest) {
     // 1. Authenticate (Verify Vercel Cron Header)
     const authHeader = req.headers.get('authorization');
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-        // In dev, we might allow it, but in prod block it
-        // return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     try {
@@ -41,22 +40,18 @@ export async function GET(req: NextRequest) {
         }
 
         // 5. Save to Database (Persistence)
-        const supabase = createClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY! // Ideally use SERVICE_ROLE key for writes
-        );
-
-        const { error } = await supabase.from('blog_posts').insert({
-            title: post.title,
-            slug: post.slug,
-            excerpt: post.excerpt,
-            content: post.content, // HTML
-            tags: post.tags,
-            source_type: 'automated_cron',
-            seo_score: 85 // AI Estimate
-        });
-
-        if (error) {
+        try {
+            await adminDb.collection('blog_posts').doc(post.slug).set({
+                title: post.title,
+                slug: post.slug,
+                excerpt: post.excerpt,
+                content: post.content, // HTML
+                tags: post.tags,
+                source_type: 'automated_cron',
+                seo_score: 85, // AI Estimate
+                created_at: new Date().toISOString()
+            });
+        } catch (error) {
             console.error("DB Save Failed:", error);
             // Don't fail the whole job, maybe we can email admin?
         }

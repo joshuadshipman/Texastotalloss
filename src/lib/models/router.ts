@@ -46,6 +46,24 @@ class ModelRouter {
         if (this.vertexAI) return;
         
         try {
+            // Priority 1: Use the full Service Account JSON if provided (common in Vercel/Production)
+            const serviceAccountRaw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+            if (serviceAccountRaw) {
+                try {
+                    const credentials = JSON.parse(serviceAccountRaw.trim());
+                    this.vertexAI = new VertexAI({ 
+                        project: credentials.project_id, 
+                        location: process.env.GOOGLE_LOCATION || 'us-central1',
+                        googleAuthOptions: { credentials }
+                    });
+                    console.log("[ModelRouter] Vertex AI Initialized from Service Account JSON.");
+                    return;
+                } catch (parseErr) {
+                    console.error("[ModelRouter] Failed to parse GOOGLE_SERVICE_ACCOUNT_JSON:", parseErr);
+                }
+            }
+
+            // Priority 2: Use individual environment variables (common in local .env)
             const project = process.env.GOOGLE_PROJECT_ID;
             const location = process.env.GOOGLE_LOCATION || 'us-central1';
             const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
@@ -62,10 +80,10 @@ class ModelRouter {
                         }
                     }
                 });
-                console.log("[ModelRouter] Vertex AI Initialized Lazily.");
+                console.log("[ModelRouter] Vertex AI Initialized from discrete env variables.");
             }
         } catch (e) {
-            console.error("[ModelRouter] Vertex AI Lazy Initialization failed:", e);
+            console.error("[ModelRouter] Vertex AI Initialization failed:", e);
         }
     }
 
@@ -168,27 +186,38 @@ class ModelRouter {
         const { taskType = 'GENERAL', complexity = 'medium', strict = false, allowPaid = false, reasoning = false } = options;
         const category = this.registry.categories[taskType] || this.registry.categories['GENERAL'];
 
+        // 1. Try Paid Sequence (if requested or complex)
         if ((reasoning || complexity === 'high') && allowPaid) {
             for (const modelId of (category.paid_sequence || [])) {
                 if (this.hasKeyForModel(modelId)) return this.createInstance(modelId);
             }
         }
 
+        // 2. Try Free Sequence (Standard for routine tasks)
         for (const modelId of (category.free_sequence || [])) {
             if (this.hasKeyForModel(modelId)) return this.createInstance(modelId);
         }
 
-        if (!allowPaid || taskType === 'CMD_SHELL') {
+        // 3. Last Resort: Global Fallbacks
+        if (!strict) {
+            // Priority 1: Gemini 1.5 Flash (Global standard free fallback)
             if (this.hasKeyForModel('gemini-1.5-flash')) return this.createInstance('gemini-1.5-flash');
-            throw new Error(`[ModelRouter] No FREE models available for ${taskType}.`);
+            
+            // Priority 2: DeepSeek Chat (Efficiency/Strength fallback)
+            if (this.hasKeyForModel('deepseek-chat')) return this.createInstance('deepseek-chat');
+
+            // Priority 3: Perplexity (Research/Grounded fallback)
+            if (this.hasKeyForModel('llama-3.1-sonar-small-128k-online')) return this.createInstance('llama-3.1-sonar-small-128k-online');
         }
 
-        for (const modelId of (category.paid_sequence || [])) {
-            if (this.hasKeyForModel(modelId)) return this.createInstance(modelId);
+        // 4. Critical Failure: If still nothing, try Pro models as an emergency out if allowed
+        if (!strict && allowPaid) {
+            for (const modelId of (category.paid_sequence || [])) {
+                if (this.hasKeyForModel(modelId)) return this.createInstance(modelId);
+            }
         }
 
-        if (!strict && this.hasKeyForModel('gemini-1.5-pro')) return this.createInstance('gemini-1.5-pro');
-        throw new Error(`[ModelRouter] Critical failure: All model options exhausted.`);
+        throw new Error(`[ModelRouter] Connectivity failure: No authenticated models available for ${taskType}. Please check your .env keys.`);
     }
 }
 

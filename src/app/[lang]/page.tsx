@@ -1,6 +1,6 @@
 import { getDictionary } from './dictionaries';
 import HomeClient from './HomeClient';
-import { getTrendingContent } from '@/lib/content';
+import { getTrendingContent } from '../../lib/content';
 
 export async function generateStaticParams() {
     return [{ lang: 'en' }, { lang: 'es' }];

@@ -1,5 +1,5 @@
 import React from 'react';
-import { cities } from '@/data/cities';
+import { cities } from '../../../../../data/cities';
 import Link from 'next/link';
 import { AlertTriangleIcon, MapPinIcon } from 'lucide-react';
 

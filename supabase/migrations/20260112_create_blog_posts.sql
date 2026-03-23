@@ -29,4 +29,5 @@ create policy "Allow public read access"
 -- Create policy to allow service role/admin write access
 create policy "Allow admin write access"
   on public.blog_posts for insert
+  to service_role
   with check (true);

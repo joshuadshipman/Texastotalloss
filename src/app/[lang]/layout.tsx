@@ -1,7 +1,7 @@
-import { ChatProvider } from "@/components/ChatContext";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
-import WhatsAppButton from "@/components/WhatsAppButton";
-import CookieConsent from '@/components/CookieConsent';
+import { ChatProvider } from "../../components/ChatContext";
+import LanguageSwitcher from "../../components/LanguageSwitcher";
+import WhatsAppButton from "../../components/WhatsAppButton";
+import CookieConsent from '../../components/CookieConsent';
 import { Analytics } from "@vercel/analytics/next";
 
 

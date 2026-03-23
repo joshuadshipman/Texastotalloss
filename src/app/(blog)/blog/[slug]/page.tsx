@@ -1,4 +1,4 @@
-import { supabaseClient } from '@/lib/supabaseClient';
+import { adminDb } from '@/lib/firebaseAdmin';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 // import ReactMarkdown from 'react-markdown'; // Ensure this package is installed or use a simple renderer
@@ -12,13 +12,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
 
     try {
-        const { data: post } = await supabaseClient
-            .from('posts')
-            .select('title, excerpt, published_at')
-            .eq('slug', slug)
-            .single();
+        const snapshot = await adminDb.collection('posts')
+            .where('slug', '==', slug)
+            .limit(1)
+            .get();
 
-        if (!post) return {};
+        if (snapshot.empty) return {};
+        const post = snapshot.docs[0].data();
 
         return {
             title: `${post.title} | Texas Total Loss Blog`,
@@ -40,13 +40,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 // 2. SSG Params
 export async function generateStaticParams() {
     try {
-        const { data: posts } = await supabaseClient
-            .from('posts')
-            .select('slug')
-            .eq('status', 'published');
+        const snapshot = await adminDb.collection('posts')
+            .where('status', '==', 'published')
+            .get();
 
-        return (posts || []).map((post) => ({
-            slug: post.slug,
+        return snapshot.docs.map((doc: any) => ({
+            slug: doc.data().slug,
         }));
     } catch (e) {
         console.warn('Error generating static params for blog:', e);
@@ -59,12 +58,13 @@ export default async function BlogPost({ params }: Props) {
     let post = null;
 
     try {
-        const { data } = await supabaseClient
-            .from('posts')
-            .select('*')
-            .eq('slug', slug)
-            .single();
-        post = data;
+        const snapshot = await adminDb.collection('posts')
+            .where('slug', '==', slug)
+            .limit(1)
+            .get();
+        if (!snapshot.empty) {
+            post = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
+        }
     } catch (e) {
         console.error('Error fetching post:', e);
     }

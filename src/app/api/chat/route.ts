@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
 import dialogflow from '@google-cloud/dialogflow';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { adminDb } from '@/lib/firebaseAdmin';
 import { sendLeadEmailPacket } from '@/lib/email';
-import { google } from 'googleapis';
 import path from 'path';
 import fs from 'fs';
+import { applyComplianceFilter } from '@/lib/compliance';
 
 // 1. Basic Configuration
 const CREDENTIALS_PATH = path.join(process.cwd(), 'service-account.json');
@@ -32,32 +32,7 @@ const sessionClient = new dialogflow.SessionsClient({
     },
 });
 
-const auth = new google.auth.GoogleAuth({
-    credentials,
-    scopes: ['https://www.googleapis.com/auth/datastore', 'https://www.googleapis.com/auth/cloud-platform'],
-});
-const firestore = google.firestore({ version: 'v1', auth });
-
-// 4. Firestore Helper
-async function saveToFirestore(collection: string, id: string, data: any) {
-    if (!credentials) return;
-    try {
-        const parent = `projects/${PROJECT_ID}/databases/(default)/documents`;
-        const fields = Object.entries(data).reduce((acc: any, [key, value]) => {
-            acc[key] = { stringValue: String(value ?? '') };
-            return acc;
-        }, {});
-
-        // Use patch (update/create)
-        await firestore.projects.databases.documents.patch({
-            name: `${parent}/${collection}/${id}`,
-            requestBody: { fields }
-        });
-        console.log(`[Firestore] Sync: ${collection}/${id}`);
-    } catch (e: any) {
-        console.error('[Firestore] Sync Error:', e.message);
-    }
-}
+// Removed custom Google APIs Firestore helper in favor of `firebaseAdmin`
 
 // 5. Main Route Handler
 export async function POST(req: NextRequest) {
@@ -83,43 +58,39 @@ export async function POST(req: NextRequest) {
         const result = response.queryResult;
         if (!result) throw new Error('No result from Dialogflow');
 
-        let fulfillmentText = result.fulfillmentText || '...';
+        let fulfillmentText = applyComplianceFilter(result.fulfillmentText || '...');
         const intentName = result.intent?.displayName;
         const parameters = result.parameters?.fields;
 
-        // --- Persistence: Supabase ---
-        await supabaseAdmin.from('chat_transcripts').insert([
-            { dialogflow_session_id: session, sender: 'user', message, step: intentName },
-            { dialogflow_session_id: session, sender: 'bot', message: fulfillmentText, step: intentName, raw_payload: result }
-        ]);
-
-        // --- Persistence: Firestore (Mirroring for user) ---
+        // --- Persistence: Firestore ---
         const timestamp = new Date().toISOString();
         const transcriptBaseId = `${session}-${Date.now()}`;
         
-        saveToFirestore('transcripts', transcriptBaseId, {
+        await adminDb.collection('transcripts').doc(transcriptBaseId).set({
             session_id: session,
             sender: 'user',
             message,
-            intent: intentName,
+            intent: intentName || null,
             timestamp
         });
 
-        saveToFirestore('transcripts', `${transcriptBaseId}-reply`, {
+        await adminDb.collection('transcripts').doc(`${transcriptBaseId}-reply`).set({
             session_id: session,
             sender: 'bot',
             message: fulfillmentText,
-            intent: intentName,
+            intent: intentName || null,
+            raw_payload: JSON.stringify(result),
             timestamp
         });
 
         // --- Special Logic: Attachments ---
         if (isAttachment) {
             const photoUrl = message.replace('Uploaded photo: ', '');
-            const { data: current } = await supabaseAdmin.from('total_loss_leads').select('photos').eq('dialogflow_session_id', session).single();
-            const photos = [...(current?.photos || []), photoUrl];
-            await supabaseAdmin.from('total_loss_leads').update({ photos }).eq('dialogflow_session_id', session);
-            saveToFirestore('attachments', transcriptBaseId, { session_id: session, photo_url: photoUrl, timestamp });
+            const leadRef = adminDb.collection('total_loss_leads').doc(session);
+            const leadDoc = await leadRef.get();
+            const currentPhotos = leadDoc.exists ? (leadDoc.data()?.photos || []) : [];
+            await leadRef.set({ photos: [...currentPhotos, photoUrl] }, { merge: true });
+            await adminDb.collection('attachments').doc(transcriptBaseId).set({ session_id: session, photo_url: photoUrl, timestamp });
         }
 
         // --- Lead Logic ---
@@ -148,15 +119,11 @@ export async function POST(req: NextRequest) {
                 phone: collected['phone-number'] || parameters?.['phone-number']?.stringValue,
             };
 
-            const { data: lead, error } = await supabaseAdmin
-                .from('total_loss_leads')
-                .upsert(leadData, { onConflict: 'dialogflow_session_id' })
-                .select()
-                .single();
-
-            if (!error && lead) {
-                sendLeadEmailPacket(lead).catch(console.error);
-                saveToFirestore('leads', session, lead);
+            try {
+                await adminDb.collection('total_loss_leads').doc(session).set(leadData, { merge: true });
+                sendLeadEmailPacket(leadData as any).catch(console.error);
+            } catch (err) {
+                console.error('Failed to log lead:', err);
             }
         }
 

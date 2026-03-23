@@ -1,6 +1,6 @@
-import { getDictionary } from '@/app/[lang]/dictionaries';
-import ChatWidget from '@/components/ChatWidget';
-import { ChatProvider } from '@/components/ChatContext';
+import { getDictionary } from '../dictionaries';
+import ChatWidget from '../../../components/ChatWidget';
+import { ChatProvider } from '../../../components/ChatContext';
 
 type Props = {
     params: Promise<{ lang: 'en' | 'es' }>;
@@ -10,7 +10,7 @@ export async function generateStaticParams() {
     return [{ lang: 'en' }, { lang: 'es' }];
 }
 
-import CaseReviewModal from '@/components/CaseReviewModal';
+import CaseReviewModal from '../../../components/CaseReviewModal';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

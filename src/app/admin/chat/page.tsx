@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { supabaseClient } from '@/lib/supabaseClient';
-import ChatSlot from '@/components/admin/ChatSlot';
-import ClawbotShell from '@/components/admin/ClawbotShell';
+import { db } from '../../../lib/firebase';
+import { collection, query, onSnapshot } from 'firebase/firestore';
+import ChatSlot from '../../../components/admin/ChatSlot';
+import ClawbotShell from '../../../components/admin/ClawbotShell';
 import {
     LayoutGridIcon, BellIcon, SearchIcon,
     LogOutIcon, LockIcon, TerminalIcon, MessageCircleIcon
@@ -67,15 +68,13 @@ export default function AdminChatPage() {
         };
         fetchSessions();
 
-        const channel = supabaseClient
-            .channel('admin-sessions')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_sessions' }, (payload: any) => {
-                fetchSessions();
-            })
-            .subscribe();
+        const q = query(collection(db, 'chat_sessions'));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+             fetchSessions();
+        });
 
         return () => {
-            supabaseClient.removeChannel(channel);
+            unsubscribe();
         };
     }, [isAuthenticated]);
 

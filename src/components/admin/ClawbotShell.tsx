@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Terminal, Send, Activity, Shield, Zap, Info, Loader2, Maximize2, Minimize2, Paperclip, ImageIcon } from 'lucide-react';
-import { supabaseClient } from '../../lib/supabaseClient';
+import { Terminal, Send, Activity, Shield, Zap, Info, Loader2, Maximize2, Minimize2, Paperclip, RefreshCwIcon } from 'lucide-react';
+import { storage } from '@/lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 interface LogEntry {
     type: 'input' | 'output' | 'system' | 'error';
@@ -16,7 +17,7 @@ const GravityClawShell = () => {
     const [logs, setLogs] = useState<LogEntry[]>([
         { 
             type: 'system', 
-            content: 'GravityClaw v1.0.9 [MOBILE_OPTIMIZED] Link Established.', 
+            content: 'GravityClaw PRIME v1.1.0 [CORE_SYNC_READY] Link Established.', 
             timestamp: new Date() 
         }
     ]);
@@ -47,7 +48,7 @@ const GravityClawShell = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     command: cmd,
-                    context: { source: 'Mobile_Clawbot_Shell', version: '2026.1' }
+                    context: { source: 'Mobile_Clawbot_Shell', version: '1.1.0' }
                 })
             });
 
@@ -86,15 +87,9 @@ const GravityClawShell = () => {
         const fileName = `${Date.now()}-${file.name}`;
         
         try {
-            const { error } = await supabaseClient.storage
-                .from('scout-attachments')
-                .upload(fileName, file);
-
-            if (error) throw error;
-
-            const { data: { publicUrl } } = supabaseClient.storage
-                .from('scout-attachments')
-                .getPublicUrl(fileName);
+            const storageRef = ref(storage, `scout-attachments/${fileName}`);
+            await uploadBytes(storageRef, file);
+            const publicUrl = await getDownloadURL(storageRef);
 
             setLogs(prev => [...prev, { 
                 type: 'input', 
@@ -102,7 +97,6 @@ const GravityClawShell = () => {
                 timestamp: new Date() 
             }]);
 
-            // Automatically send the image URL to the agent
             const response = await fetch('/api/admin/command', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -132,125 +126,165 @@ const GravityClawShell = () => {
     };
 
     return (
-        <div className={`flex flex-col h-full bg-slate-950 font-mono text-[13px] text-slate-300 transition-all duration-500 overflow-hidden ${isExpanded ? 'fixed inset-0 z-[100]' : 'relative'}`}>
-            {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 bg-slate-900 border-b border-slate-800 shadow-lg">
-                <div className="flex items-center gap-2">
-                    <Terminal className="w-4 h-4 text-emerald-400" />
-                    <span className="font-black text-slate-100 italic tracking-[0.2em] text-[10px] uppercase">G-CLAW.v1</span>
-                    <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 ml-2">
-                        <div className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
-                        <span className="text-[8px] text-emerald-400 uppercase font-black">Linked</span>
+        <div className={`relative flex flex-col h-full bg-slate-950 font-mono text-xs text-blue-100 overflow-hidden transition-all duration-500 ${isExpanded ? 'fixed inset-0 z-50 p-4' : 'rounded-2xl border border-blue-500/30 shadow-2xl shadow-blue-900/10'}`}>
+            
+            {/* Ultra-Visible Prime Header */}
+            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-950 border-b border-blue-500/30">
+                <div className="flex items-center gap-3">
+                    <div className="p-1.5 bg-blue-500 rounded-lg animate-pulse">
+                        <Zap size={16} className="text-white" />
+                    </div>
+                    <div>
+                        <div className="flex items-center gap-2">
+                            <span className="font-black text-blue-400 tracking-tighter text-sm">ANTIGRAVITY // PRIME</span>
+                            <span className="bg-blue-500/20 text-blue-400 text-[9px] px-1.5 py-0.5 rounded border border-blue-500/30">v1.1.0</span>
+                        </div>
+                        <div className="flex items-center gap-2 mt-0.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+                            <span className="text-[10px] text-emerald-400/80 font-bold uppercase tracking-widest">Link Secured</span>
+                        </div>
                     </div>
                 </div>
-                <button 
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    className="p-1.5 text-slate-500 hover:text-white transition-colors"
-                >
-                    {isExpanded ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
-                </button>
+                
+                <div className="flex items-center gap-2">
+                    <button 
+                        onClick={() => setLogs(p => [...p, { type: 'system', content: 'Manual Environment Refresh...', timestamp: new Date() }])}
+                        className="p-2 hover:bg-white/5 rounded-lg text-blue-400 transition-colors"
+                        title="Sync"
+                    >
+                        <RefreshCwIcon size={16} />
+                    </button>
+                    <button 
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        className="p-2 hover:bg-white/5 rounded-lg text-blue-400 transition-colors"
+                    >
+                        {isExpanded ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+                    </button>
+                </div>
             </div>
 
-            {/* Terminal Logs */}
+            {/* Terminal Feed */}
             <div 
                 ref={scrollRef}
-                className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 pb-32 md:pb-24"
+                className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-blue-900/50"
+                style={{ 
+                    backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(29, 78, 216, 0.05) 0%, transparent 100%)',
+                    scrollBehavior: 'smooth'
+                }}
             >
                 {logs.map((log, i) => (
-                    <div key={i} className="animate-in fade-in slide-in-from-bottom-2 duration-400">
-                        <div className="flex items-start gap-3">
-                            <span className="text-[10px] text-slate-600 mt-0.5 opacity-50">{log.timestamp.toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit' })}</span>
-                            
-                            <div className="flex-1 space-y-2">
-                                <div className="flex items-start gap-2">
-                                    {log.type === 'input' && <span className="text-emerald-500 font-black mt-0.5 select-none opacity-50">&gt;</span>}
-                                    {log.type === 'system' && <div className="w-1.5 h-3 bg-blue-500 mt-1 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />}
-                                    {log.type === 'error' && <div className="w-1.5 h-3 bg-rose-500 mt-1 animate-pulse" />}
-                                    {log.type === 'output' && <Zap size={14} className="text-amber-400 mt-0.5 fill-amber-400/20" />}
-                                    
-                                    <span className={`block leading-relaxed tracking-tight ${
-                                        log.type === 'input' ? 'text-white font-bold opacity-90' :
-                                        log.type === 'error' ? 'text-rose-400' :
-                                        log.type === 'system' ? 'text-blue-300 italic' :
-                                        'text-amber-100 font-medium'
-                                    }`}>
-                                        {log.content}
-                                    </span>
-                                </div>
-
-                                {log.interpretation && (
-                                    <div className="ml-2 p-3 bg-slate-800/40 rounded-xl border border-white/5 backdrop-blur-md space-y-2 group hover:border-emerald-500/30 transition-all">
-                                        <div className="flex items-center justify-between">
-                                            <span className="px-2 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-400 font-black uppercase text-[9px] tracking-widest border border-emerald-500/20">
-                                                {log.interpretation.type}
-                                            </span>
-                                            <span className="text-[9px] text-slate-500 font-mono tracking-tighter uppercase opacity-30">Status: En Route</span>
-                                        </div>
-                                        <div className="text-slate-300 text-[11px] font-bold leading-snug">
-                                            {log.interpretation.action_summary}
-                                        </div>
-                                        <div className="flex items-center gap-2 text-[9px]">
-                                            <span className="text-slate-500">Target:</span>
-                                            <span className="text-emerald-300 font-mono">{log.interpretation.target}</span>
-                                        </div>
-                                    </div>
-                                )}
+                    <div key={i} className={`flex flex-col gap-1.5 ${log.type === 'input' ? 'items-end' : 'items-start animate-in fade-in slide-in-from-left-2 duration-300'}`}>
+                        <div className="flex items-center gap-2 px-2">
+                            <span className="text-[9px] text-slate-600">
+                                {log.timestamp.toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                            </span>
+                            <span className={`text-[9px] font-black uppercase tracking-widest ${
+                                log.type === 'input' ? 'text-blue-500' : 
+                                log.type === 'error' ? 'text-red-500' : 
+                                log.type === 'system' ? 'text-emerald-500' : 'text-indigo-400'
+                            }`}>
+                                {log.type === 'input' ? 'User' : 'Core'}
+                            </span>
+                        </div>
+                        
+                        <div className={`max-w-[90%] p-3 rounded-2xl border ${
+                            log.type === 'input' 
+                            ? 'bg-blue-600/10 border-blue-500/30 text-blue-50 text-[13px] rounded-tr-none' 
+                            : log.type === 'error'
+                            ? 'bg-red-500/10 border-red-500/30 text-red-200 text-[13px]'
+                            : log.type === 'system'
+                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-100 font-bold text-[11px]'
+                            : 'bg-slate-900/80 border-slate-800 text-slate-100 text-[13px] leading-relaxed backdrop-blur-md shadow-xl rounded-tl-none'
+                        }`}>
+                            <div className="flex items-start gap-2">
+                                {log.type === 'system' && <Shield size={14} className="mt-0.5 text-emerald-500" />}
+                                {log.type === 'error' && <Info size={14} className="mt-0.5 text-red-500" />}
+                                <div className="whitespace-pre-wrap">{log.content}</div>
                             </div>
+
+                            {log.interpretation && (
+                                <div className="mt-3 pt-3 border-t border-white/5 grid grid-cols-2 gap-2">
+                                    <div className="bg-white/5 p-2 rounded border border-white/10">
+                                        <div className="text-[8px] uppercase text-slate-500 font-black">Intent Detected</div>
+                                        <div className="text-[10px] text-blue-400 truncate font-bold">{log.interpretation.intent}</div>
+                                    </div>
+                                    <div className="bg-white/5 p-2 rounded border border-white/10">
+                                        <div className="text-[8px] uppercase text-slate-500 font-black">Protocol</div>
+                                        <div className="text-[10px] text-emerald-400 uppercase font-bold">{log.interpretation.type}</div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 ))}
+
                 {isTyping && (
-                    <div className="flex items-center gap-3 text-slate-500 ml-12 py-2">
-                        <div className="flex gap-1">
-                            <div className="w-1 h-1 bg-emerald-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                            <div className="w-1 h-1 bg-emerald-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                            <div className="w-1 h-1 bg-emerald-500 rounded-full animate-bounce" />
+                    <div className="flex flex-col gap-1.5 items-start">
+                        <div className="flex items-center gap-2 px-2">
+                            <span className="text-[9px] text-blue-400 animate-pulse font-black uppercase tracking-widest">Core Thinking...</span>
                         </div>
-                        <span className="text-[10px] uppercase font-black tracking-widest opacity-50">Syncing with Core...</span>
+                        <div className="bg-slate-900/50 p-2.5 rounded-xl border border-slate-800 flex gap-1.5">
+                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"></div>
+                        </div>
                     </div>
                 )}
             </div>
 
-            <div className="absolute bottom-4 left-0 right-0 px-4 md:bottom-2">
-                <form 
-                    onSubmit={handleCommand}
-                    className="glass-card rounded-2xl p-1.5 flex items-center gap-2 shadow-2xl border-white/10 backdrop-blur-3xl bg-slate-900/40"
-                >
-                    <div className="flex-1 relative">
-                        <input
-                            type="text"
+            {/* Bottom Controls - Deep Mobile Spacing */}
+            <div className="p-4 bg-slate-950/90 backdrop-blur-2xl border-t border-blue-500/20 pb-12 md:pb-6 relative z-20">
+                <form onSubmit={handleCommand} className="flex flex-col gap-3">
+                    <div className="relative group">
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl opacity-20 group-focus-within:opacity-40 transition duration-500"></div>
+                        <textarea
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder="Direct dispatch to agent..."
-                            disabled={isTyping || uploading}
-                            className="w-full bg-transparent rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none text-[16px] font-medium"
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                    e.preventDefault();
+                                    handleCommand(e);
+                                }
+                            }}
+                            placeholder="Type command locally..."
+                            className="relative w-full bg-slate-900 border border-slate-800 rounded-2xl p-4 pr-16 text-[16px] text-blue-50 placeholder:text-slate-600 focus:outline-none focus:border-blue-500/50 transition-all resize-none min-h-[56px] max-h-32"
+                            rows={1}
                         />
+                        <button 
+                            type="submit"
+                            disabled={!input.trim() || isTyping}
+                            className={`absolute right-2.5 bottom-2.5 p-2 rounded-xl transition-all ${
+                                input.trim() && !isTyping 
+                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/40 hover:scale-110 active:scale-95' 
+                                : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+                            }`}
+                        >
+                            {isTyping ? <Loader2 className="animate-spin" size={20} /> : <Send size={20} />}
+                        </button>
                     </div>
-                    
-                    <input 
-                        type="file" 
-                        ref={fileInputRef} 
-                        onChange={handleFileUpload} 
-                        className="hidden" 
-                        accept="image/*"
-                    />
 
-                    <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={isTyping || uploading}
-                        className="p-3 text-slate-400 hover:text-emerald-400 transition-colors disabled:opacity-20"
-                    >
-                        {uploading ? <Loader2 size={18} className="animate-spin" /> : <Paperclip size={18} />}
-                    </button>
-
-                    <button
-                        type="submit"
-                        disabled={!input.trim() || isTyping || uploading}
-                        className="bg-emerald-600 hover:bg-emerald-500 text-white p-3.5 rounded-xl transition-all active:scale-90 shadow-lg shadow-emerald-500/20 disabled:opacity-20 flex items-center justify-center"
-                    >
-                        <Send size={18} />
-                    </button>
+                    <div className="flex items-center justify-between px-1">
+                        <button 
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="flex items-center gap-2 px-4 py-2 bg-slate-900 border border-slate-800 rounded-xl text-[10px] font-bold text-slate-400 hover:text-blue-400 transition-all active:scale-95"
+                        >
+                            <Paperclip size={14} />
+                            Log File
+                            {uploading && <Loader2 size={12} className="animate-spin" />}
+                        </button>
+                        <input 
+                            type="file" 
+                            ref={fileInputRef} 
+                            onChange={handleFileUpload}
+                            className="hidden" 
+                            accept="image/*,.log,.txt"
+                        />
+                        <div className="flex items-center gap-1.5 text-[9px] font-bold text-slate-600 uppercase tracking-widest">
+                            <Shield size={10} />
+                            <span>Link: Encrypted</span>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

@@ -1,10 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable */
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import { useChat } from './ChatContext';
-import { supabaseClient } from '@/lib/supabaseClient';
-import { Dictionary } from '@/dictionaries/en';
+import { db, storage } from '@/lib/firebase';
+import { collection, addDoc, setDoc, doc, onSnapshot, query, where, updateDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import type { Dictionary } from '../dictionaries/en';
 import { XIcon, SendIcon, AlertTriangleIcon, MessageCircleIcon, SparklesIcon, CalendarIcon, Calculator } from 'lucide-react';
 
 type Message = {
@@ -63,10 +65,14 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
 
     // 1. Update Session
     const updateSessionData = async (newData: any) => {
-        await supabaseClient.from('chat_sessions').update({
-            user_data: newData,
-            updated_at: new Date().toISOString()
-        }).eq('session_id', sessionId);
+        try {
+            await updateDoc(doc(db, 'chat_sessions', sessionId), {
+                user_data: newData,
+                updated_at: new Date().toISOString()
+            });
+        } catch (e) {
+            console.error('Update session error', e);
+        }
     };
 
     const logActivity = (action: string) => {
@@ -86,13 +92,13 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
     const addMessage = (sender: 'user' | 'bot', text: string) => {
         setMessages(prev => [...prev, { sender, text }]);
 
-        supabaseClient.from('chat_messages').insert({
+        addDoc(collection(db, 'chat_messages'), {
             session_id: sessionId,
             sender,
             content: text,
             created_at: new Date().toISOString()
-        }).then(({ error }) => {
-            if (error) console.error('Error saving chat:', error);
+        }).catch(error => {
+            console.error('Error saving chat:', error);
         });
     };
 
@@ -294,30 +300,34 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
         if (!showChat) return;
 
         // 1. Subscribe to Messages
-        const msgChannel = supabaseClient
-            .channel(`session-msgs-${sessionId}`)
-            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: `session_id=eq.${sessionId}` }, (payload) => {
-                const newMsg = payload.new as any;
-                if (newMsg.sender === 'agent') {
-                    if (agentTimeoutRef.current) {
-                        clearTimeout(agentTimeoutRef.current);
-                        agentTimeoutRef.current = null;
+        const qMsgs = query(collection(db, 'chat_messages'), where('session_id', '==', sessionId));
+        const unsubscribeMsgs = onSnapshot(qMsgs, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === 'added') {
+                    const newMsg = change.doc.data();
+                    if (newMsg.sender === 'agent') {
+                        if (agentTimeoutRef.current) {
+                            clearTimeout(agentTimeoutRef.current);
+                            agentTimeoutRef.current = null;
+                        }
+                        setMessages(prev => {
+                            // Check to prevent double adding if logic triggers weirdly 
+                            return [...prev, { sender: 'bot', text: newMsg.content }];
+                        });
                     }
-                    setMessages(prev => [...prev, { sender: 'bot', text: newMsg.content }]);
                 }
-            })
-            .subscribe();
+            });
+        });
 
         // 2. Subscribe to Session Status (Live Mode Takeover)
-        const sessionChannel = supabaseClient
-            .channel(`session-status-${sessionId}`)
-            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'chat_sessions', filter: `session_id=eq.${sessionId}` }, (payload) => {
-                const newState = payload.new as any;
+        const unsubscribeSession = onSnapshot(doc(db, 'chat_sessions', sessionId), (docSnap) => {
+            if (docSnap.exists()) {
+                const newState = docSnap.data();
                 if (newState.status === 'live') {
                     setIsLiveMode(true);
                 }
-            })
-            .subscribe();
+            }
+        });
 
         // 3. Create/Init Session in DB
         const initSession = async () => {
@@ -392,8 +402,11 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 }
             }
 
-            const { error } = await supabaseClient.from('chat_sessions').upsert(dbPayload, { onConflict: 'session_id' });
-            if (error) console.error("Session Init Error:", error);
+            try {
+                await setDoc(doc(db, 'chat_sessions', sessionId), dbPayload, { merge: true });
+            } catch (error) {
+                console.error("Session Init Error:", error);
+            }
 
             // Alert for generic chat start
             if (step === 1 || step === 0 || step === 600 || (chatMode === "valuation")) {
@@ -406,8 +419,8 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
 
         return () => {
             if (agentTimeoutRef.current) clearTimeout(agentTimeoutRef.current);
-            supabaseClient.removeChannel(msgChannel);
-            supabaseClient.removeChannel(sessionChannel);
+            unsubscribeMsgs();
+            unsubscribeSession();
         };
     }, [showChat, sessionId, chatMode, chatData, step]);
 
@@ -860,11 +873,9 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
 
         try {
             const fileName = `${sessionId}/${Date.now()}-${file.name}`;
-            const { error: uploadError } = await supabaseClient.storage
-                .from('vehicle-photos')
-                .upload(fileName, file);
-
-            if (uploadError) throw uploadError;
+            const storageRef = ref(storage, fileName);
+            await uploadBytes(storageRef, file);
+            const publicUrl = await getDownloadURL(storageRef);
 
             addMessage('bot', dict.chat.responses.upload_success);
 
@@ -889,17 +900,23 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
 
     if (variant === 'fullscreen') {
         return (
-            <div className="flex flex-col h-[100dvh] bg-gray-50">
+            <div className="flex flex-col h-[100dvh] bg-background font-sans">
                 {/* Header */}
-                <div className="bg-blue-900 text-white p-4 flex justify-between items-center shrink-0 shadow-md z-10">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center font-bold text-lg">A</div>
+                <header className="bg-primary text-white p-6 flex justify-between items-center shrink-0 shadow-xl z-20">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center font-bold text-xl border border-white/10">A</div>
                         <div>
-                            <h3 className="font-bold text-lg">{dict?.chat.header_title || "Angel - Your AI Accident Case Review Specialist"}</h3>
-                            <p className="text-xs text-blue-200 flex items-center gap-1"><span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> Online • Private Session</p>
+                            <h3 className="font-black text-lg tracking-tight">{dict?.chat.header_title || "Angel - AI Accident Specialist"}</h3>
+                            <div className="flex items-center gap-2 mt-0.5">
+                                <span className="relative flex h-2 w-2">
+                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                </span>
+                                <p className="text-[10px] uppercase font-bold tracking-widest text-blue-200 opacity-80 uppercase">Active • Securing Session</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </header>
 
                 {/* Messages Area */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 pb-20">
@@ -1005,81 +1022,101 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
                 </div>
 
                 {/* Input Area - Fixed Bottom for Mobile */}
-                <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 flex gap-2 z-20 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
-                    <label className="p-3 bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 cursor-pointer active:scale-95 transition">
-                        <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} ref={fileInputRef} />
-                        <span className="text-xl">📷</span>
-                    </label>
-
-                    <input
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                        placeholder="Type message..."
-                        className="flex-1 bg-gray-100 border-0 rounded-full px-5 text-base text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
-                    />
-                    <button
-                        onClick={() => handleSend()}
-                        className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 shadow-md transition transform active:scale-95"
+                <footer className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-border flex gap-3 z-30 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] safe-bottom">
+                    <button 
+                        onClick={() => fileInputRef.current?.click()}
+                        className="w-[52px] h-[52px] bg-slate-50 flex items-center justify-center rounded-2xl text-slate-500 hover:bg-slate-100 active:scale-90 transition-all border border-slate-100"
+                        aria-label="Attach Photos"
                     >
-                        <SendIcon size={20} />
+                        <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} ref={fileInputRef} />
+                        <span className="text-2xl">📸</span>
                     </button>
-                </div>
+
+                    <div className="flex-1 relative flex items-center">
+                        <input
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                            placeholder="Type your message..."
+                            className="w-full h-[52px] bg-slate-50 border border-slate-100 rounded-2xl px-6 text-[16px] text-foreground focus:ring-4 focus:ring-primary/5 focus:border-primary outline-none transition-all pr-12"
+                        />
+                        <button
+                            onClick={() => handleSend()}
+                            disabled={!input.trim()}
+                            className="absolute right-2 p-2.5 bg-primary text-white rounded-xl hover:bg-secondary shadow-lg transition-all active:scale-90 disabled:opacity-0 disabled:pointer-events-none"
+                        >
+                            <SendIcon size={20} />
+                        </button>
+                    </div>
+                </footer>
             </div>
         );
     }
 
     return (
-        <div className="fixed bottom-4 right-4 z-[999] flex flex-col items-end">
+        <div className="fixed bottom-6 right-6 z-[1000] flex flex-col items-end pointer-events-none">
             {/* Trigger Button */}
             {!isOpen && (
                 <button
                     onClick={toggleChat}
-                    className="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition animate-bounce-subtle"
+                    className="pointer-events-auto bg-primary text-white p-5 rounded-3xl shadow-[0_20px_50px_rgba(30,58,138,0.3)] hover:scale-110 active:scale-90 transition-all group border-b-4 border-black/10 flex items-center gap-3 relative"
+                    aria-label="Open Chat"
                 >
-                    <MessageCircleIcon size={28} />
+                    <div className="absolute -top-3 -right-3 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 border-white shadow-lg animate-bounce">1</div>
+                    <MessageCircleIcon size={32} className="group-hover:rotate-12 transition-transform" />
+                    <span className="font-bold text-sm hidden md:inline">Talk to Angel</span>
                 </button>
             )}
 
             {isOpen && (
-                <div className="bg-white w-[350px] md:w-[400px] h-[500px] md:h-[600px] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200 animate-in slide-in-from-bottom-5">
+                <div className="pointer-events-auto bg-card w-[95vw] sm:w-[420px] h-[85vh] sm:h-[700px] max-h-[900px] rounded-[2.5rem] shadow-3xl flex flex-col overflow-hidden border border-border animate-in zoom-in-95 slide-in-from-bottom-10 fade-in duration-500">
 
                     {/* Header */}
-                    <div className="bg-blue-900 text-white p-4 flex justify-between items-center shrink-0">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center font-bold">A</div>
+                    <header className="bg-primary text-white p-6 flex justify-between items-center shrink-0 border-b border-white/5">
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center font-black text-xl border border-white/10">A</div>
                             <div>
-                                <h3 className="font-bold">{dict?.chat?.header_title || "AI Accident Specialist"}</h3>
-                                <p className="text-xs text-blue-200 flex items-center gap-1"><span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> Online</p>
+                                <h3 className="font-black tracking-tight">{dict?.chat?.header_title || "AI Case Review"}</h3>
+                                <div className="flex items-center gap-2 mt-0.5">
+                                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_#22c55e]"></div>
+                                    <p className="text-[10px] font-bold tracking-widest text-blue-200 uppercase opacity-80">Specialist Online</p>
+                                </div>
                             </div>
                         </div>
-                        <button onClick={toggleChat} className="p-2 hover:bg-white/20 rounded-full"><XIcon size={20} /></button>
-                    </div>
+                        <button 
+                            onClick={toggleChat} 
+                            className="p-3 bg-white/10 hover:bg-white/20 rounded-2xl transition-all active:scale-90"
+                            aria-label="Close Chat"
+                        >
+                            <XIcon size={20} />
+                        </button>
+                    </header>
 
                     {/* Messages Area */}
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+                    <main className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50/50">
 
                         {/* Start Options */}
                         {messages.length < 2 && (
-                            <div className="mb-6">
+                            <div className="mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
                                 <button
                                     onClick={handleAtTheScene}
-                                    className="w-full bg-red-600 hover:bg-red-700 text-white p-4 rounded-xl shadow-lg border border-red-500 flex items-center justify-between group transition-all mb-4 text-left"
+                                    className="w-full bg-red-600 hover:bg-red-700 text-white p-6 rounded-3xl shadow-xl border-b-4 border-red-800/30 flex items-center justify-between group transition-all mb-4 text-left active:scale-[0.98]"
                                 >
                                     <div>
-                                        <span className="block text-xs font-bold text-red-100 uppercase tracking-wider animate-pulse">Just Crashed?</span>
-                                        <span className="text-lg font-black">At The Scene? Do This!</span>
+                                        <span className="block text-[10px] font-black text-red-100 uppercase tracking-widest mb-1 opacity-80">Emergency Protocol</span>
+                                        <span className="text-lg font-black leading-tight italic">Just Crashed? Start Here »</span>
                                     </div>
-                                    <AlertTriangleIcon size={24} />
+                                    <div className="bg-white/20 p-2.5 rounded-2xl"><AlertTriangleIcon size={28} className="animate-pulse" /></div>
                                 </button>
+                                <p className="text-[11px] text-center text-slate-400 font-medium uppercase tracking-widest">or continue with general review below</p>
                             </div>
                         )}
 
                         {messages.map((msg, i) => (
-                            <div key={i} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${msg.sender === 'user'
-                                    ? 'bg-blue-600 text-white rounded-tr-none'
-                                    : 'bg-white text-gray-800 border border-gray-200 shadow-sm rounded-tl-none'
+                            <div key={i} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+                                <div className={`max-w-[85%] px-5 py-4 rounded-[1.5rem] text-base leading-relaxed ${msg.sender === 'user'
+                                    ? 'bg-primary text-white rounded-tr-none shadow-xl'
+                                    : 'bg-white text-slate-800 border border-border shadow-sm rounded-tl-none font-medium'
                                     }`}>
                                     {msg.text}
                                 </div>
@@ -1089,73 +1126,61 @@ export default function ChatWidget({ dict, variant = 'popup' }: ChatWidgetProps)
 
                         {/* Options Buttons */}
                         {currentOptions && (
-                            <div className="flex flex-wrap gap-2 mt-2 justify-end animate-in fade-in slide-in-from-bottom-2">
+                            <div className="flex flex-col gap-2 mt-4 animate-in fade-in slide-in-from-bottom-2">
                                 {currentOptions.map((opt, idx) => (
                                     <button
                                         key={idx}
-                                        onClick={() => handleSend(opt.value)} // Send the value as message
-                                        className="bg-blue-100 hover:bg-blue-200 text-blue-800 px-4 py-2 rounded-full text-sm font-medium transition"
+                                        onClick={() => handleSend(opt.value)} 
+                                        className="w-full bg-white hover:bg-slate-50 text-primary border-2 border-slate-100 px-6 py-4 rounded-2xl text-base font-bold transition-all shadow-sm hover:shadow-md hover:border-primary/20 active:scale-[0.98] text-left flex justify-between items-center group"
                                     >
                                         {opt.label}
+                                        <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                                     </button>
                                 ))}
                             </div>
                         )}
-                    </div>
+                    </main>
 
                     {/* Input Area */}
-                    <div className="p-4 bg-white border-t border-gray-100 flex flex-col gap-2 shrink-0">
-                        <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200">
-                            <input
-                                ref={fileInputRef}
-                                type="file"
-                                className="hidden"
-                                accept="image/*"
-                                onChange={(e) => {
-                                    if (e.target.files && e.target.files[0]) {
-                                        // Handle file upload
-                                        addMessage('bot', "Uploading photos is not fully configured in this demo yet!");
-                                    }
-                                }}
-                            />
-                            {/* Camera Icon - Hidden for now or mapped to file input */}
-                            {/* <button onClick={() => fileInputRef.current?.click()} className="p-2 text-gray-400 hover:text-blue-600 transition">
-                                <CameraIcon size={20} />
-                            </button> */}
-
-                            <input
-                                type="text"
-                                value={input}
-                                onChange={e => setInput(e.target.value)}
-                                onKeyDown={e => e.key === 'Enter' && handleSend()}
-                                placeholder={isLiveMode ? "Type a message..." : "Type your answer..."}
-                                className="flex-1 bg-transparent outline-none text-gray-700 min-w-0"
-                                disabled={processingRef.current && !isLiveMode}
-                            />
-                            <button
-                                onClick={() => handleSend()}
-                                disabled={!input.trim() || (processingRef.current && !isLiveMode)}
-                                className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
-                            >
-                                <SendIcon size={18} />
-                            </button>
+                    <footer className="p-6 bg-white border-t border-border flex flex-col gap-4 shrink-0">
+                        <div className="flex items-center gap-3">
+                            <div className="flex-1 flex items-center bg-slate-50 p-2 rounded-2xl border border-slate-100 focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/5 transition-all">
+                                <input
+                                    type="text"
+                                    value={input}
+                                    onChange={e => setInput(e.target.value)}
+                                    onKeyDown={e => e.key === 'Enter' && handleSend()}
+                                    placeholder={isLiveMode ? "Type to agent..." : "Type your answer..."}
+                                    className="flex-1 bg-transparent border-none outline-none text-slate-700 px-3 py-2 text-[16px] min-w-0 font-medium"
+                                    disabled={processingRef.current && !isLiveMode}
+                                />
+                                <button
+                                    onClick={() => handleSend()}
+                                    disabled={!input.trim() || (processingRef.current && !isLiveMode)}
+                                    className="p-3 bg-primary text-white rounded-xl hover:bg-secondary disabled:opacity-0 disabled:pointer-events-none shadow-lg transition-all active:scale-90"
+                                    aria-label="Send Message"
+                                >
+                                    <SendIcon size={18} />
+                                </button>
+                            </div>
                         </div>
 
                         {/* Persistent Live Agent Option */}
                         {!isLiveMode && (
-                            <div className="mt-2 text-center">
+                            <div className="flex justify-center">
                                 <button
                                     onClick={() => {
-                                        setStep(900); // Trigger soft handoff flow
+                                        setStep(900);
                                         handleSend("I'd like to speak to a live agent.");
                                     }}
-                                    className="text-xs text-slate-400 hover:text-blue-600 underline transition cursor-pointer"
+                                    className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-400 hover:text-primary transition-all cursor-pointer flex items-center gap-2"
                                 >
-                                    Start Live Chat with an Agent
+                                    <span className="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
+                                    Need help? Connect to Live Agent
                                 </button>
                             </div>
                         )}
-                    </div>
+                    </footer>
                 </div>
             )}
         </div>

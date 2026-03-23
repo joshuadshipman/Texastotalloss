@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabaseClient } from '@/lib/supabaseClient';
+import { db } from '@/lib/firebase';
+import { collection, query, onSnapshot } from 'firebase/firestore';
 import {
     SearchIcon, FilterIcon, RefreshCwIcon, DownloadIcon,
     CheckCircleIcon, AlertTriangleIcon, FileTextIcon,
@@ -12,6 +13,7 @@ import AdminChatGrid from '@/components/admin/AdminChatGrid';
 import BlogManagement from '@/components/admin/BlogManagement';
 import ContentLibraryManager from '@/components/admin/ContentLibraryManager';
 import ContentEngineManager from '@/components/admin/ContentEngineManager';
+import ClawbotShell from '@/components/admin/ClawbotShell';
 // Removed generateMarketingReport due to fs dependency in client
 import MarketingROI, { MarketingReport } from '@/components/admin/MarketingROI';
 
@@ -121,7 +123,7 @@ export default function AdminDashboard() {
                 injury_summary: s.user_data?.injury_summary || '',
                 description: s.user_data?.description || '',
                 preferred_contact_time: s.user_data?.best_time || '',
-                liability_summary: s.user_data?.fault === 'other' ? 'Not at fault' : (s.user_data.fault === 'me' ? 'At fault' : ''),
+                liability_summary: s.user_data?.fault === 'other' ? 'Not at fault' : (s.user_data?.fault === 'me' ? 'At fault' : ''),
                 accident_date: s.user_data?.accident_date || '',
                 vehicle_info: s.user_data?.vehicle_info || '',
                 insurance_carrier: s.user_data?.insurance_carrier || '',
@@ -152,41 +154,38 @@ export default function AdminDashboard() {
     useEffect(() => {
         if (!isAuthenticated) return;
 
-        const channel = supabaseClient
-            .channel('admin-dashboard-sessions')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_sessions' }, (payload: any) => {
-                // Refresh list
-                fetchLeads();
+        const q = query(collection(db, 'chat_sessions'));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === 'added' || change.type === 'modified') {
+                    const newSession = change.doc.data() as any;
+                    if (newSession && newSession.status === 'live') {
+                        // Play Ping Sound
+                        const audio = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTSVMAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//uQZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWgAAAA0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAABixvW0GAAA0Q7rbDAAABHAAACWAAAAEAAAABwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/7kGQAAAwJb1tBgAANES62wwAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+                        audio.play().catch(e => console.log('Audio play failed', e));
 
-                const newSession = payload.new as any;
-                if (newSession && newSession.status === 'live') {
-                    // Play Ping Sound
-                    // Play Ping Sound
-                    const audio = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTSVMAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//uQZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWgAAAA0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAABixvW0GAAA0Q7rbDAAABHAAACWAAAAEAAAABwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/7kGQAAAwJb1tBgAANES62wwAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
-                    audio.play().catch(e => console.log('Audio play failed', e));
-
-                    // Auto-Add to Grid if space
-                    setActiveSessions(prev => {
-                        if (prev.includes(newSession.session_id)) return prev; // Already there
-                        const emptyIdx = prev.findIndex(s => s === '');
-                        if (emptyIdx !== -1) {
-                            const newArr = [...prev];
-                            newArr[emptyIdx] = newSession.session_id;
-                            return newArr;
-                        } else {
-                            // If full, replace 1st slot? Or do nothing?
-                            // User asked to "pop up into one of the boxes". Let's replace the oldest (index 0)
-                            const newArr = [...prev];
-                            newArr[0] = newSession.session_id;
-                            return newArr;
-                        }
-                    });
+                        // Auto-Add to Grid if space
+                        setActiveSessions(prev => {
+                            if (prev.includes(newSession.session_id)) return prev;
+                            const emptyIdx = prev.findIndex(s => s === '');
+                            if (emptyIdx !== -1) {
+                                const newArr = [...prev];
+                                newArr[emptyIdx] = newSession.session_id;
+                                return newArr;
+                            } else {
+                                const newArr = [...prev];
+                                newArr[0] = newSession.session_id;
+                                return newArr;
+                            }
+                        });
+                    }
                 }
-            })
-            .subscribe();
+            });
+            fetchLeads();
+        });
 
         return () => {
-            supabaseClient.removeChannel(channel);
+            unsubscribe();
         };
     }, [isAuthenticated]);
 
@@ -235,41 +234,40 @@ export default function AdminDashboard() {
     return (
         <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
             {/* Header */}
-            <header className="bg-white border-b sticky top-0 z-10">
-                <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <span className="bg-blue-600 text-white p-1 rounded font-bold text-xs">TTL</span>
-                        <h1 className="font-bold text-lg text-gray-800">Admin Dashboard</h1>
+            <header className="bg-white border-b sticky top-0 z-10 shadow-sm">
+                <div className="max-w-7xl mx-auto px-4 py-3 md:h-16 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-3 w-full md:w-auto">
+                        <div className="bg-blue-600 text-white p-2 rounded-lg font-black text-xs shadow-lg shadow-blue-600/20">TTL</div>
+                        <h1 className="font-black text-lg text-slate-800 tracking-tight uppercase">Admin <span className="text-blue-600">Dashboard</span></h1>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <div className="flex items-center bg-gray-100 rounded-lg p-1">
-                            <button
-                                onClick={() => setActiveTab('leads')}
-                                className={`px-4 py-1.5 rounded-md text-sm font-bold transition ${activeTab === 'leads' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
-                            >
-                                Leads & Chat
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('content')}
-                                className={`px-4 py-1.5 rounded-md text-sm font-bold transition ${activeTab === 'content' ? 'bg-white shadow text-gold-600' : 'text-gray-500 hover:text-gray-700'}`}
-                            >
-                                Video Library
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('scout')}
-                                className={`px-4 py-1.5 rounded-md text-sm font-bold transition ${activeTab === 'scout' ? 'bg-white shadow text-purple-600' : 'text-gray-500 hover:text-gray-700'}`}
-                            >
-                                AI Scout
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('marketing')}
-                                className={`px-4 py-1.5 rounded-md text-sm font-bold transition ${activeTab === 'marketing' ? 'bg-white shadow text-emerald-600' : 'text-gray-500 hover:text-gray-700'}`}
-                            >
-                                Marketing ROI
-                            </button>
+                    
+                    <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-hide">
+                        <div className="flex items-center bg-slate-100 rounded-xl p-1 shadow-inner border border-slate-200 shrink-0">
+                            {[
+                                { id: 'leads', label: 'Leads & Chat', color: 'text-blue-600' },
+                                { id: 'content', label: 'Library', color: 'text-amber-600' },
+                                { id: 'scout', label: 'AI Scout', color: 'text-indigo-600' },
+                                { id: 'marketing', label: 'ROI', color: 'text-emerald-600' }
+                            ].map(tab => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id as any)}
+                                    className={`px-3 md:px-5 py-2 rounded-lg text-[11px] md:text-sm font-black uppercase tracking-widest transition-all ${
+                                        activeTab === tab.id 
+                                        ? `bg-white shadow-md ${tab.color} scale-[1.02]` 
+                                        : 'text-slate-400 hover:text-slate-600'
+                                    }`}
+                                >
+                                    {tab.label}
+                                </button>
+                            ))}
                         </div>
-                        <button onClick={fetchLeads} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full" title="Refresh">
-                            <RefreshCwIcon size={18} className={loading ? 'animate-spin' : ''} />
+                        <button 
+                            onClick={fetchLeads} 
+                            className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors shrink-0" 
+                            title="Refresh"
+                        >
+                            <RefreshCwIcon size={20} className={loading ? 'animate-spin text-blue-600' : ''} />
                         </button>
                     </div>
                 </div>
@@ -277,7 +275,17 @@ export default function AdminDashboard() {
 
             <main className="max-w-[1400px] mx-auto p-4 space-y-8">
 
-                {activeTab === 'scout' && <ContentEngineManager />}
+                {activeTab === 'scout' && (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-200px)]">
+                        {/* The chat widget takes priority on mobile, or they can scroll */}
+                        <div className="h-[600px] lg:h-full border border-gray-200 rounded-xl overflow-hidden shadow-sm hidden lg:flex flex-col">
+                            <ContentEngineManager />
+                        </div>
+                        <div className="h-[80vh] lg:h-full rounded-xl overflow-hidden shadow-sm border border-gray-200">
+                            <ClawbotShell />
+                        </div>
+                    </div>
+                )}
                 {activeTab === 'content' && <ContentLibraryManager />}
 
                 {activeTab === 'leads' && (

@@ -1,20 +1,16 @@
 
 import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { adminDb } from '@/lib/firebaseAdmin';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
     try {
-        const { data, error } = await supabaseAdmin
-            .from('chat_sessions')
-            .select('*')
-            .order('created_at', { ascending: false });
+        const snapshot = await adminDb.collection('chat_sessions')
+            .orderBy('created_at', 'desc')
+            .get();
 
-        if (error) {
-            console.error('Error fetching chat sessions:', error);
-            return NextResponse.json({ error: error.message }, { status: 500 });
-        }
+        const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
         return NextResponse.json({ sessions: data });
     } catch (e) {

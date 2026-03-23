@@ -1,9 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
-
-// Initialize client (Client-side usage mainly, or use a separate admin client for server-side if needed)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { db } from '@/lib/firebase';
+import { collection, query, where, orderBy, limit, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
 
 export interface ContentItem {
     id: string;
@@ -18,49 +14,45 @@ export interface ContentItem {
 }
 
 export async function getLibraryContent(category?: string) {
-    let query = supabase
-        .from('content_library')
-        .select('*')
-        .order('published_at', { ascending: false });
-
-    if (category) {
-        query = query.eq('category', category);
-    }
-
-    const { data, error } = await query;
-    if (error) {
+    try {
+        let q = query(collection(db, 'content_library'), orderBy('published_at', 'desc'));
+        if (category) {
+            q = query(collection(db, 'content_library'), where('category', '==', category), orderBy('published_at', 'desc'));
+        }
+        
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }) as ContentItem);
+    } catch (error) {
         console.error('Error fetching library content:', error);
         return [];
     }
-    return data as ContentItem[];
 }
 
 export async function getTrendingContent() {
-    const { data, error } = await supabase
-        .from('content_library')
-        .select('*')
-        .eq('is_trending', true)
-        .limit(5);
-
-    if (error) {
+    try {
+        const q = query(
+            collection(db, 'content_library'),
+            where('is_trending', '==', true),
+            limit(5)
+        );
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }) as ContentItem);
+    } catch (error) {
         console.error('Error fetching trending content:', error);
         return [];
     }
-    return data as ContentItem[];
 }
 
 export async function getContentBySlug(slug: string) {
-    const { data, error } = await supabase
-        .from('content_library')
-        .select('*')
-        .eq('slug', slug)
-        .single();
-
-    if (error) {
+    try {
+        const q = query(collection(db, 'content_library'), where('slug', '==', slug), limit(1));
+        const snapshot = await getDocs(q);
+        if (snapshot.empty) return null;
+        return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as ContentItem;
+    } catch (error) {
         console.error('Error fetching content by slug:', error);
         return null;
     }
-    return data as ContentItem;
 }
 
 export async function upsertContent(content: Partial<ContentItem>) {
@@ -71,28 +63,33 @@ export async function upsertContent(content: Partial<ContentItem>) {
             .replace(/(^-|-$)+/g, '');
     }
 
-    const { data, error } = await supabase
-        .from('content_library')
-        .upsert(content)
-        .select()
-        .single();
+    try {
+        let docId = content.id;
+        if (!docId && content.slug) {
+             const existing = await getContentBySlug(content.slug);
+             if (existing) docId = existing.id;
+        }
 
-    if (error) {
+        if (docId) {
+             await setDoc(doc(db, 'content_library', docId), content, { merge: true });
+             return { id: docId, ...content } as ContentItem;
+        } else {
+             const newId = content.slug || `generated-${Date.now()}`;
+             await setDoc(doc(db, 'content_library', newId), content);
+             return { id: newId, ...content } as ContentItem;
+        }
+    } catch (error) {
         console.error('Error upserting content:', error);
         throw error;
     }
-    return data as ContentItem;
 }
 
 export async function deleteContent(id: string) {
-    const { error } = await supabase
-        .from('content_library')
-        .delete()
-        .eq('id', id);
-
-    if (error) {
+    try {
+        await deleteDoc(doc(db, 'content_library', id));
+        return true;
+    } catch (error) {
         console.error('Error deleting content:', error);
         throw error;
     }
-    return true;
 }

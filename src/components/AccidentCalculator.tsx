@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { supabaseClient } from '@/lib/supabaseClient';
+import { useState, useEffect } from 'react';
 import { ChevronRight, ChevronLeft, Car, AlertTriangle, DollarSign, CheckCircle, Calculator, PhoneCall, Share2, Stethoscope, Truck, Bike } from 'lucide-react';
 import EvidenceUploader from './EvidenceUploader';
 
@@ -84,23 +83,37 @@ export default function AccidentCalculator() {
         setEstimate(result);
 
         try {
-            const { data, error } = await supabaseClient.from('leads').insert([{
-                type: 'calculator',
-                name: formData.name,
-                email: formData.email,
-                phone: formData.phone,
-                status: 'new',
-                user_data: {
-                    ...formData,
-                    estimated_value: result,
-                    source: 'accident_calculator'
-                }
-            }]).select();
+            const response = await fetch('/api/submit-lead', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session: `calc_${Date.now()}`, // Generate a temporary session ID
+                    full_name: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    source: 'accident_calculator',
+                    source_type: 'organic',
+                    vehicle_value: result.high, // Use high estimate for scoring potential
+                    has_injury: formData.hasInjury === 'Yes',
+                    tools_used: ['calculator'],
+                    description: `Accident Type: ${formData.accidentType}, Status: ${formData.vehicleStatus}`,
+                    user_data: {
+                        ...formData,
+                        estimated_value: result
+                    }
+                })
+            });
 
-            if (error) console.error('Supabase Error:', error);
+            const data = await response.json();
 
-            if (data && data[0]) {
-                setLeadId(data[0].id);
+            if (!response.ok) {
+                console.error('Lead Submission Error:', data.error);
+                // Fallback to direct insertion if API fails? 
+                // No, let's trust the API or report error.
+            }
+
+            if (data && data.id) {
+                setLeadId(data.id);
             }
 
             setStep(6);

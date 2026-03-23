@@ -1,6 +1,6 @@
 
 import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { adminDb } from '@/lib/firebaseAdmin';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,25 +12,17 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: 'Missing sessionId' }, { status: 400 });
     }
 
-    try {
-        const { data, error } = await supabaseAdmin
-            .from('chat_messages')
-            .select('*')
-            .eq('session_id', sessionId)
-            .order('created_at', { ascending: true });
+        const msgsSnapshot = await adminDb.collection('chat_messages')
+            .where('session_id', '==', sessionId)
+            .orderBy('created_at', 'asc')
+            .get();
 
-        if (error) {
-            console.error('Error fetching chat messages:', error);
-            return NextResponse.json({ error: error.message }, { status: 500 });
-        }
+        const messages = msgsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-        const { data: sessionData } = await supabaseAdmin
-            .from('chat_sessions')
-            .select('*')
-            .eq('session_id', sessionId)
-            .single();
+        const sessionDoc = await adminDb.collection('chat_sessions').doc(sessionId).get();
+        const sessionData = sessionDoc.exists ? sessionDoc.data() : null;
 
-        return NextResponse.json({ messages: data, details: sessionData?.user_data || {} });
+        return NextResponse.json({ messages, details: sessionData?.user_data || {} });
     } catch (e) {
         console.error('Unexpected error:', e);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

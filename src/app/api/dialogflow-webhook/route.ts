@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { adminDb } from '@/lib/firebaseAdmin';
 // import { sendLeadEmailPacket } from '@/lib/email'; // Uncomment when email is configured
 
 type DFRequest = {
@@ -31,12 +31,13 @@ export async function POST(req: NextRequest) {
         console.log(`Received intent: ${intentName} for session: ${sessionId}`);
 
         // Log bot message
-        await supabaseAdmin.from('chat_transcripts').insert({
+        await adminDb.collection('chat_transcripts').add({
             dialogflow_session_id: sessionId,
             sender: 'bot',
             message: `Intent: ${intentName}`,
-            raw_payload: body,
-            step: detectStepFromIntent(intentName)
+            raw_payload: JSON.stringify(body),
+            step: detectStepFromIntent(intentName),
+            created_at: new Date().toISOString()
         });
 
         let fulfillmentText = 'Thanks, your information has been received.';
@@ -44,9 +45,10 @@ export async function POST(req: NextRequest) {
         if (intentName === 'Contact Info and Crash Details' || intentName.includes('Contact')) {
             const leadType = parameters.has_injury ? 'total_loss_plus_injury' : 'total_loss_only';
 
-            const { data, error } = await supabaseAdmin
-                .from('total_loss_leads')
-                .insert({
+            let data: any = null;
+            let error = null;
+            try {
+                const leadData = {
                     dialogflow_session_id: sessionId,
                     source: 'chatbot',
                     status: 'new',
@@ -88,10 +90,15 @@ export async function POST(req: NextRequest) {
                     er_visit: parameters.er_visit ?? null,
                     imaging_done: parameters.imaging_done ?? null,
                     surgery_recommended: parameters.surgery_recommended ?? null,
-                    attorney_already: parameters.attorney_already ?? null
-                })
-                .select()
-                .single();
+                    attorney_already: parameters.attorney_already ?? null,
+                    created_at: new Date().toISOString()
+                };
+
+                const docRef = await adminDb.collection('total_loss_leads').add(leadData);
+                data = { id: docRef.id, ...leadData };
+            } catch (err: any) {
+                error = err;
+            }
 
             if (error) {
                 console.error('Error inserting lead', error);

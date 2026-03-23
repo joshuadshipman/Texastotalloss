@@ -1,4 +1,4 @@
-import { supabaseClient } from '@/lib/supabaseClient';
+import { adminDb } from '@/lib/firebaseAdmin';
 import Link from 'next/link';
 import { Metadata } from 'next';
 
@@ -10,11 +10,15 @@ export const metadata: Metadata = {
 export const revalidate = 3600; // Revalidate every hour
 
 export default async function BlogIndex() {
-    const { data: posts } = await supabaseClient
-        .from('posts')
-        .select('title, slug, excerpt, published_at, tags')
-        .eq('status', 'published')
-        .order('published_at', { ascending: false });
+    const snapshot = await adminDb.collection('posts')
+        .where('status', '==', 'published')
+        .orderBy('published_at', 'desc')
+        .get();
+
+    const posts = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    })) as any[];
 
     return (
         <main className="min-h-screen bg-gray-50 font-sans text-gray-900 pb-20">

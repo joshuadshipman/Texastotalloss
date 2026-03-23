@@ -47,10 +47,10 @@ export const en = {
         faq: {
             title: "Common Questions",
             subtitle: "You ask, we answer.",
-            q1: "Do I need a lawyer?",
-            a1: "Not always, but for total loss and injury cases, insurance companies often underpay significantly without one.",
-            q2: "How much does it cost?",
-            a2: "We work on a contingency fee basis. You pay nothing unless we win your case.",
+            q1: "How do I ensure a fair settlement?",
+            a1: "Insurance companies often use automated systems that may not reflect local Texas market values. It is important to compare their offer with local retail listings.",
+            q2: "What are my options?",
+            a2: "You have several options, including invoking the Appraisal Clause or seeking a second opinion on your vehicle's value.",
             q3: "What is 'Total Loss'?",
             a3: "It means the repair cost plus salvage value exceeds the car's actual cash value.",
             q4: "Can I keep my car?",
@@ -74,7 +74,7 @@ export const en = {
                 "Seek medical attention immediately, even for minor pain.",
                 "Do NOT give a recorded statement to insurance.",
                 "Do NOT sign any release forms.",
-                "call a specialist before accepting any offer."
+                "seek a second opinion before accepting any final offer."
             ]
         },
         mitigate: {
@@ -254,7 +254,7 @@ export const en = {
             tickets: "Tickets Issued?",
             towed: "Vehicles Towed?",
             desc_label: "What Happened? (Brief Description)",
-            submit_btn: "Submit to Legal Team »",
+            submit_btn: "Submit for Review »",
             submitting: "Sending...",
             success_title: "Request Received!",
             success_msg: "Our team is reviewing your vehicle valuation and accident details.",
@@ -263,17 +263,17 @@ export const en = {
         }
     },
     info_sections: {
-        partner_title: "Why You Need a Partner",
-        partner_desc: "Motor vehicle accidents are common, but fair settlements are not. Insurance companies have teams of lawyers. You should too.",
-        partner_badge: "Dedicated to Texas Claims",
+        partner_title: "Understanding Your Rights",
+        partner_desc: "Motor vehicle accidents involve complex local and state regulations. Understanding your rights is the first step to a fair outcome.",
+        partner_badge: "Texas Claim Information",
         investigation: "Investigation",
         investigation_desc: "We collect critical evidence, scene photos, and witness statements to prove fault.",
         communication: "Communication",
         communication_desc: "We handle all calls with the insurance company so you can focus strictly on recovering.",
         valuation: "Valuation",
         valuation_desc: "We accurately calculate your total damages, including hidden costs like diminished value.",
-        court: "Court Representation",
-        court_desc: "If they refuse a fair offer, we are prepared to fight for maximum compensation in court.",
+        court: "Professional Guidance",
+        court_desc: "Having the right information is critical if an insurance company refuses a fair settlement.",
         responsibility_title: "Determining Responsibility",
         responsibility_desc: "Establishing fault is the foundation of your claim. We document every detail to ensure liability is clear.",
         causes_title: "Common Causes",
@@ -283,7 +283,7 @@ export const en = {
         urgency_cards: {
             evidence: { title: "Preserve Evidence", desc: "CCTV footage relies on short retention policies. Skid marks fade. Witnesses forget." },
             statute: { title: "Statute of Limitations", desc: "Every state has a deadline. Missing the Texas 2-year filing window generally bars recovery forever." },
-            leverage: { title: "Build Leverage", desc: "Insurance companies pay less to unrepresented claimants. Level the playing field early." }
+            leverage: { title: "Compare Offers", desc: "Insurance companies may provide lower valuations than local retail markets. Always verify their data." }
         },
         causes_list: ['Speeding', 'Drunk Driving', 'Red Lights', 'Road Rage', 'Weather', 'Defects'],
         responsibility_list: ['Drunk / Impaired Drivers', 'Distracted Driving (Texting)', 'Failure to Yield', 'Reckless Speeding', 'Poor Road Design'],
@@ -526,9 +526,9 @@ export const en = {
                 high_chance: "HIGH ACCEPTANCE CHANCE",
                 review_needed: "Review Recommended",
                 match: "Match",
-                call_btn: "Call Attorney Now",
+                call_btn: "Get Detailed Review",
                 close_btn: "Close",
-                case_detected: "{severity} Case Detected",
+                case_detected: "{severity} Incident Detected",
                 review_desc: "A specialized attorney needs to manually review your details. We will contact you at {phone} shortly.",
                 severity_labels: {
                     low: "Standard Case",
@@ -662,7 +662,7 @@ export const en = {
             watch: "Watch:",
             processing: "Video processing...",
             transcript: "Video Transcript / Script",
-            cta: "Speak to an Attorney About This"
+            cta: "Get Information Regarding This"
         }
     },
     // Missing Keys for Case Review

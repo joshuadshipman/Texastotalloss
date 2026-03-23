@@ -4,22 +4,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { YoutubeTranscript } from 'youtube-transcript';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { createClient } from '@supabase/supabase-js';
+import { adminDb } from '@/lib/firebaseAdmin';
 
 // Remove top-level initialization to prevent build-time errors
-// const supabase = createClient... 
-// const genAI = ...
+// Firebase Admin is used below// const genAI = ...
 
 export async function POST(req: NextRequest) {
     try {
         // Initialize Clients at Runtime
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-        const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-        if (!supabaseUrl || !supabaseKey) {
-            console.error("Missing Supabase Keys");
-            return NextResponse.json({ error: 'Server Config Error: Missing Supabase Keys' }, { status: 500 });
-        }
-        const supabase = createClient(supabaseUrl, supabaseKey);
+        // Firebase Admin is initialized in @/lib/firebaseAdmin
 
         const geminiKey = process.env.GEMINI_API_KEY || '';
         if (!geminiKey) {
@@ -88,25 +81,22 @@ export async function POST(req: NextRequest) {
         // 3. Save to Supabase (Draft)
         const slug = `blog-${videoId}-${Math.floor(Math.random() * 1000)}`;
 
-        const { data, error } = await supabase
-            .from('posts')
-            .insert([
-                {
-                    title: `Draft for Video ${videoId}`,
-                    slug: slug,
-                    content: blogPost,
-                    status: 'draft',
-                    source_video_id: videoId
-                }
-            ])
-            .select();
+        const postData = {
+            title: `Draft for Video ${videoId}`,
+            slug: slug,
+            content: blogPost,
+            status: 'draft',
+            source_video_id: videoId,
+            created_at: new Date().toISOString()
+        };
 
-        if (error) {
-            console.error('Supabase Error:', error);
+        try {
+            await adminDb.collection('posts').doc(slug).set(postData);
+            return NextResponse.json({ success: true, post: postData });
+        } catch (error: any) {
+            console.error('Firebase Error:', error);
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
-
-        return NextResponse.json({ success: true, post: data[0] });
 
     } catch (error: any) {
         console.error('Generate Blog Error:', error);

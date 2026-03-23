@@ -1,9 +1,11 @@
 'use client';
 
 import React from 'react';
-import DemandLetterGenerator from '@/components/DemandLetterGenerator';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import Slideshow from '@/components/Slideshow';
+import Slideshow from '../../../../components/Slideshow';
+
+const DemandLetterGenerator = dynamic(() => import('../../../../components/DemandLetterGenerator'), { ssr: false });
 
 export default function DemandLetterPage() {
     const guideImages = [

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { adminDb } from '@/lib/firebaseAdmin';
 
 // Vercel Cron Authentication
 // Ensure you set CRON_SECRET in Vercel Environment Variables
@@ -39,23 +39,19 @@ export async function GET(req: NextRequest) {
         const selectedTopic = topics[dayOfYear % topics.length];
         const uniqueSlug = `${selectedTopic.slug}-${new Date().toISOString().split('T')[0]}`;
 
-        // 2. Insert into Supabase
-        const { data, error } = await supabaseAdmin
-            .from('posts')
-            .insert({
-                title: selectedTopic.title,
-                slug: uniqueSlug,
-                content: selectedTopic.content + `\n\n*Published automatically on ${new Date().toLocaleDateString()}*`,
-                excerpt: selectedTopic.content.substring(0, 150) + '...',
-                tags: [selectedTopic.tag, 'Texas Law'],
-                status: 'published',
-                published_at: new Date().toISOString(),
-                author: 'AI Legal Assistant'
-            })
-            .select()
-            .single();
-
-        if (error) throw error;
+        // 2. Insert into Firestore
+        const postData = {
+            title: selectedTopic.title,
+            slug: uniqueSlug,
+            content: selectedTopic.content + `\n\n*Published automatically on ${new Date().toLocaleDateString()}*`,
+            excerpt: selectedTopic.content.substring(0, 150) + '...',
+            tags: [selectedTopic.tag, 'Texas Law'],
+            status: 'published',
+            published_at: new Date().toISOString(),
+            author: 'AI Legal Assistant'
+        };
+        await adminDb.collection('posts').doc(uniqueSlug).set(postData);
+        const data = postData;
 
         return NextResponse.json({ success: true, post: data });
     } catch (error: any) {

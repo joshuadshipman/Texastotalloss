@@ -26,7 +26,14 @@ Minimize token usage and costs by enforcing a tiered routing strategy and ensuri
    - Before starting a major high-complexity task, check the `model_registry.json`.
    - If the `last_audit` is > 7 days old or the user mentions a new version (e.g., Claude 4.6), perform a **Perplexity Search** for "latest release version and API model ID for [LLM Provider]".
    - Proactively update `model_registry.json` and `MODEL_METRICS.md` to ensure the system is hitting the state-of-the-art model without code refactors.
-5. **Advance Warning**:
+5. **Smart Context Reading**:
+   - For files > 300 lines, NEVER use `view_file` without `StartLine` and `EndLine` unless a full refactor is approved.
+   - ALWAYS use `grep_search` or `find_by_name` to locate the problem area before reading code.
+   - If you must read a large file, read the first 50 lines for imports/context, then jump to the relevant range.
+6. **Context Compaction**:
+   - Before moving between major tasks, summarize the "Current State" in a dedicated `context_summary.md` artifact.
+   - Use this artifact to "onboard" yourself in future turns, reducing the need to re-read source files.
+7. **Advance Warning**:
    - If a prompt exceeds 5,000 tokens or requires the PRO tier, log a "Token Burn Alert" to the console.
 
 # Constraints

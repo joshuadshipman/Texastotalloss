@@ -10,11 +10,11 @@ export const accidentTypes = [
         icon: BikeIcon,
         color: 'bg-green-600',
         stats: [
-            { label: 'Fatality Increase', value: '+58%', sub: 'Since 2019 in Texas' },
-            { label: 'Annual Deaths', value: '106+', sub: 'Texans killed in 2023' },
-            { label: 'Risk Factor', value: 'High', sub: 'Little protection vs autos' }
+            { label: 'Fatalities H1 2025', value: '186', sub: 'Combined Ped/Cyclist' },
+            { label: 'Trend 2026', value: 'Upward', sub: 'Rising statewide' },
+            { label: 'Infrastructure', value: 'LPI', sub: 'New 2026 safety signals' }
         ],
-        description: "Cyclists face extreme risks. Texas law requires drivers to yield, but negligence is common."
+        description: "Bicyclist fatalities are trending upward in Texas. We leverage 2026 safety data, including Leading Pedestrian Interval (LPI) signal failures, to hold negligent drivers accountable."
     },
     {
         id: 'drunk_driving',
@@ -23,10 +23,10 @@ export const accidentTypes = [
         color: 'bg-purple-600',
         stats: [
             { label: 'Annual Deaths', value: '1,053', sub: 'Lives lost in 2024' },
-            { label: 'Fatal Factor', value: '25%', sub: 'Of all traffic deaths' },
-            { label: 'Daily Toll', value: '3', sub: 'Texans die every day' }
+            { label: 'Tyler Dist 2025', value: '36', sub: 'Alcohol-related deaths' },
+            { label: 'Fatal Factor', value: '25%+', sub: 'Of all traffic deaths' }
         ],
-        description: "DUI crashes are entirely preventable. We pursue maximum damages including punitive."
+        description: "Alcohol and drug impairment remain a primary cause of Texas fatalities. We pursue maximum compensatory and punitive damages to ensure full justice for victims."
     },
     {
         id: 'head_on',
@@ -34,23 +34,23 @@ export const accidentTypes = [
         icon: CarFrontIcon,
         color: 'bg-red-700',
         stats: [
-            { label: 'Fatalities', value: '~600', sub: 'Deaths per year in TX' },
+            { label: 'Tyler Dist 2025', value: '18', sub: 'Wrong-side fatalities' },
             { label: 'Severity', value: 'Extreme', sub: 'Highest fatality rate' },
-            { label: 'Common Cause', value: 'Drifting', sub: 'Distraction or sleep' }
+            { label: 'Vehicle Weight', value: '+400lb', sub: 'Avg increase in 2025' }
         ],
-        description: "The most deadly type of crash. Often caused by distracted driving or wrong-way errors."
+        description: "The 2025 increase in average vehicle weight has made head-on collisions even more catastrophic. We analyze black box data to prove drift or distraction."
     },
     {
         id: 'motorcycle',
         title: 'Motorcycle Crashes',
-        icon: BikeIcon, // Using likely fallback, distinct from bicycle
+        icon: BikeIcon,
         color: 'bg-orange-600',
         stats: [
-            { label: 'Risk Multiplier', value: '27x', sub: 'More likely to die' },
-            { label: 'Helmet Usage', value: '40%', sub: 'Of victims unhelmeted' },
-            { label: 'Total Deaths', value: '599', sub: 'In 2023' }
+            { label: 'Daily Toll', value: '1', sub: 'Death every day in TX' },
+            { label: 'Total Deaths', value: '581', sub: 'In 2024' },
+            { label: 'Injury Risk', value: '25x', sub: 'Higher vs auto occupants' }
         ],
-        description: "Riders are vulnerable. Insurance often tries to blame the rider. We fight back."
+        description: "Nearly one motorcyclist dies every day on Texas roads. Insurance companies often rely on 'visibility' excuses; we use traffic reconstruction to prove liability."
     },
     {
         id: 'pedestrian',
@@ -59,10 +59,10 @@ export const accidentTypes = [
         color: 'bg-yellow-600',
         stats: [
             { label: 'Total Deaths', value: '773', sub: 'Killed in 2024' },
-            { label: 'Trend', value: '+22%', sub: 'Increase over 5 yrs' },
-            { label: 'Danger Zone', value: 'Night', sub: 'Most frequent time' }
+            { label: 'H1 2025 Crashes', value: '1,372', sub: 'Higher in urban zones' },
+            { label: 'Austin 2026', value: '-18%', sub: 'Crash drop at LPI turns' }
         ],
-        description: "Pedestrians have the right of way. We hold negligent drivers accountable."
+        description: "Pedestrian fatalities increased significantly in 2024. Success in 2026 depends on analyzing lighting conditions, crosswalk compliance, and new signal technology."
     },
     {
         id: 'rear_end',
@@ -70,11 +70,11 @@ export const accidentTypes = [
         icon: CarIcon,
         color: 'bg-blue-600',
         stats: [
-            { label: 'Frequency', value: '#1', sub: 'Most common crash' },
-            { label: 'Whiplash', value: 'High', sub: 'Common hidden injury' },
-            { label: 'Fault', value: 'Presumed', sub: 'Trailing driver usually liable' }
+            { label: 'Primary Cause', value: 'Tech', sub: 'Infotainment Overload' },
+            { label: 'Hot Zones 2025', value: 'I-35/I-10', sub: 'Highest pileup frequency' },
+            { label: 'Fault', value: '95%+', sub: 'Trailing driver liable' }
         ],
-        description: "Common but dangerous. Whiplash and spinal injuries often appear days later."
+        description: "A major 2025-2026 trend is 'Infotainment Overload'—drivers distracted by complex touchscreens. We secure phone and vehicle logs to prove distraction."
     },
     {
         id: 'rideshare',
@@ -82,11 +82,11 @@ export const accidentTypes = [
         icon: CarIcon,
         color: 'bg-pink-600',
         stats: [
-            { label: 'Insurance Gap', value: 'Phase 1', sub: 'Waiting for ride' },
-            { label: 'Policy Limit', value: '$1M', sub: 'When passenger on board' },
-            { label: 'Complexity', value: 'High', sub: 'Multiple policies involved' }
+            { label: 'Policy Limit', value: '$1M', sub: 'When ride is active' },
+            { label: 'Complexity', value: 'High', sub: 'Multiple policy layers' },
+            { label: 'Insurance Gap', value: 'Phase 1', sub: 'Waiting for requests' }
         ],
-        description: "Uber/Lyft cases involve complex insurance tiers. Don't let them deny coverage."
+        description: "Rideshare accidents involve complex insurance 'periods.' We ensure you access the maximum $1M coverage when an app is active during the crash."
     },
     {
         id: 'rollover',
@@ -94,11 +94,11 @@ export const accidentTypes = [
         icon: CarIcon,
         color: 'bg-indigo-600',
         stats: [
-            { label: 'Fatality Rate', value: '30%', sub: 'Of all crash deaths' },
-            { label: 'Vehicle Type', value: 'SUV', sub: 'Higher center of gravity' },
-            { label: 'Roof Crush', value: 'Risk', sub: 'Structural failure' }
+            { label: 'Fatality Share', value: '29%', sub: 'Of all TX road deaths' },
+            { label: 'Common Cause', value: 'Run-Off', sub: 'Single-vehicle crashes' },
+            { label: 'Vehicle Type', value: 'Truck', sub: 'Higher rollover risk' }
         ],
-        description: "SUVs and trucks are prone to rollovers. These accidents often cause catastrophic injuries."
+        description: "Single-vehicle rollovers accounted for 29% of road deaths in 2025. We investigate road conditions and vehicle stability for potential third-party liability."
     },
     {
         id: 'uninsured',
@@ -106,11 +106,11 @@ export const accidentTypes = [
         icon: ShieldAlertIcon,
         color: 'bg-gray-700',
         stats: [
-            { label: 'TX Rate', value: '20%', sub: 'Drivers without insurance' },
-            { label: 'Your Policy', value: 'UM/UIM', sub: 'Crucial for recovery' },
-            { label: 'Hit & Run', value: 'Covered', sub: 'Usually under UM' }
+            { label: 'TX Rate 2025', value: '14.5%', sub: 'Ranked worst in US' },
+            { label: 'Coverage Gap', value: '50%', sub: 'Drivers underinsured' },
+            { label: 'Hit & Run', value: 'UM/UIM', sub: 'Crucial for recovery' }
         ],
-        description: "1 in 5 Texas drivers have no insurance. We help you access your own UM coverage."
+        description: "Texas ranks as one of the states with the highest share of uninsured drivers. We specialize in navigating UM/UIM claims when the at-fault party has no coverage."
     },
     {
         id: 'wrong_way',
@@ -118,10 +118,10 @@ export const accidentTypes = [
         icon: AlertTriangleIcon,
         color: 'bg-red-800',
         stats: [
-            { label: 'Fatality', value: 'High', sub: 'Often head-on' },
-            { label: 'Impairment', value: '60%+', sub: 'Involve alcohol' },
-            { label: 'Time', value: 'Night', sub: '2am - 5am peak' }
+            { label: 'Fatalities 25', value: '18+', sub: 'Tyler District only' },
+            { label: 'Impairment', value: '60%+', sub: 'Involve alcohol/drugs' },
+            { label: 'Peak Time', value: '2AM-5AM', sub: 'Highly fatal window' }
         ],
-        description: "Extremely dangerous and often linked to intoxication. We aggressive pursue these cases."
+        description: "Wrong-way driving peaks between 2 AM and 5 AM and is almost always linked to intoxication. We aggressively pursue these cases for maximum client recovery."
     }
 ];

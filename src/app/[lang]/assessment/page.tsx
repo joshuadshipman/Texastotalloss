@@ -1,4 +1,4 @@
-import AccidentCalculator from '@/components/AccidentCalculator';
+import AccidentCalculator from '../../../components/AccidentCalculator';
 
 export default function AssessmentPage() {
     return (

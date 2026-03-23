@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { supabaseClient } from '@/lib/supabaseClient';
+import { db, storage } from '@/lib/firebase';
+import { ref, uploadBytes } from 'firebase/storage';
+import { doc, updateDoc } from 'firebase/firestore';
 import { Upload, Loader2, CheckCircle, Camera, X } from 'lucide-react';
 
 interface EvidenceUploaderProps {
@@ -29,14 +31,14 @@ export default function EvidenceUploader({ leadId, uploaderName, uploaderEmail }
             const filePath = `leads/${leadId}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
 
             try {
-                // Upload to Supabase Storage
-                const { error: uploadError } = await supabaseClient.storage
-                    .from('evidence')
-                    .upload(filePath, file);
-
-                if (uploadError) {
+                // Upload to Firebase Storage
+                const storageRef = ref(storage, `vehicle-photos/${filePath}`);
+                
+                try {
+                    await uploadBytes(storageRef, file);
+                } catch (uploadError) {
                     console.error('Storage Error:', uploadError);
-                    setError('Upload failed. Please ensure the "evidence" bucket exists.');
+                    setError('Upload failed. Please ensure the "vehicle-photos" bucket exists.');
                     continue;
                 }
 
@@ -53,9 +55,13 @@ export default function EvidenceUploader({ leadId, uploaderName, uploaderEmail }
                 });
 
                 // Update lead status
-                await supabaseClient.from('leads').update({
-                    status: 'evidence_uploaded'
-                }).eq('id', leadId);
+                try {
+                    await updateDoc(doc(db, 'total_loss_leads', String(leadId)), {
+                        status: 'evidence_uploaded'
+                    });
+                } catch (e) {
+                    console.error('Failed to update lead status:', e);
+                }
 
                 successCount++;
             } catch (err) {

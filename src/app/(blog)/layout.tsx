@@ -1,8 +1,8 @@
 import { Inter } from "next/font/google";
 import "../globals.css";
-import { ChatProvider } from "@/components/ChatContext";
-import ChatWidget from "@/components/ChatWidget";
-import { getDictionary } from "@/app/[lang]/dictionaries";
+import { ChatProvider } from "../../components/ChatContext";
+import ChatWidget from "../../components/ChatWidget";
+import { getDictionary } from "../[lang]/dictionaries";
 
 const inter = Inter({ subsets: ["latin"] });
 

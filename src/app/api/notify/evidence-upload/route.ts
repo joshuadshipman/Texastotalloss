@@ -6,8 +6,9 @@ export async function POST(request: Request) {
         const data = await request.json();
         const { leadId, filePath, uploaderName, uploaderEmail } = data;
 
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-        const publicUrl = `${supabaseUrl}/storage/v1/object/public/evidence/${filePath}`;
+        const bucket = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || '';
+        const encodedPath = encodeURIComponent(filePath);
+        const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/vehicle-photos%2F${encodedPath}?alt=media`;
 
         const html = `
             <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; max-width: 600px;">

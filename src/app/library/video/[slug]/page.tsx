@@ -1,4 +1,4 @@
-import { getContentBySlug } from '@/lib/content';
+import { getContentBySlug } from '../../../../lib/content';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 

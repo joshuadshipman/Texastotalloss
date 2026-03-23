@@ -1,6 +1,6 @@
 'use server';
 
-import { supabaseClient } from '../../lib/supabaseClient';
+import { adminDb } from '@/lib/firebaseAdmin';
 import { analyzeHeadlines, generateFullBlogPost } from '../../lib/gemini';
 import { ContentConcept, BlogPost, NewsItem, ScrapedHeadline } from '../../lib/models/types';
 import { fetchTrendingNews } from '../../lib/news_scanner';
@@ -31,18 +31,16 @@ export async function triggerContentScout() {
         }
 
         console.log("Database: Saving Draft...");
-        const { error } = await supabaseClient
-            .from('content_drafts')
-            .insert({
-                status: 'draft',
-                concept: concept,
-                generated_content: content,
-                source_url: 'Competitor Scan'
-            });
+        await adminDb.collection('content_drafts').add({
+            status: 'draft',
+            concept: concept,
+            generated_content: content,
+            source_url: 'Competitor Scan',
+            created_at: new Date().toISOString()
+        });
 
-        if (error) {
-            console.error("DB Error:", error);
-            return { success: false, message: "Database insertion failed." };
+        if (!adminDb) {
+            return { success: false, message: "Database connection failed." };
         }
 
         return { success: true, message: "New Content Concept Generated & Saved!" };
@@ -54,26 +52,25 @@ export async function triggerContentScout() {
 }
 
 export async function getDrafts() {
-    const { data, error } = await supabaseClient
-        .from('content_drafts')
-        .select('*')
-        .order('created_at', { ascending: false });
+    const snapshot = await adminDb.collection('content_drafts')
+        .orderBy('created_at', 'desc')
+        .get();
 
-    if (error) throw error;
-    return data;
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
 
 export async function publishDraft(id: string) {
     // 1. Get draft
-    const { data: draft } = await supabaseClient.from('content_drafts').select('*').eq('id', id).single();
-    if (!draft) return { success: false, message: "Draft not found" };
+    const draftDoc = await adminDb.collection('content_drafts').doc(id).get();
+    if (!draftDoc.exists) return { success: false, message: "Draft not found" };
+    const draft = draftDoc.data();
+    if (!draft) return { success: false, message: "Draft content missing" };
 
     const content = draft.generated_content;
 
     // 2. Publish to content_library
-    const { error: pubError } = await supabaseClient
-        .from('content_library')
-        .insert({
+    try {
+        await adminDb.collection('content_library').add({
             title: content.title,
             category: 'auto_accident', // Default, could be dynamic
             video_url: '', // Video prompt is in concept, but no actual video yet
@@ -82,14 +79,13 @@ export async function publishDraft(id: string) {
             is_trending: false,
             published_at: new Date().toISOString()
         });
-
-    if (pubError) {
+    } catch (pubError) {
         console.error(pubError);
-        return { success: false, message: "Failed to pubish to library" };
+        return { success: false, message: "Failed to publish to library" };
     }
 
     // 3. Update status
-    await supabaseClient.from('content_drafts').update({ status: 'published' }).eq('id', id);
+    await adminDb.collection('content_drafts').doc(id).update({ status: 'published' });
 
     return { success: true, message: "Published successfully" };
 }

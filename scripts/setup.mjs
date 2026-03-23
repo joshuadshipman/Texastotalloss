@@ -138,6 +138,33 @@ const migrations = [
     )`
   },
   {
+    name: 'chat_sessions table',
+    sql: `
+      create table if not exists public.chat_sessions (
+        id uuid default gen_random_uuid() primary key,
+        session_id text not null unique,
+        user_data jsonb default '{}',
+        status text default 'bot',
+        created_at timestamptz default now(),
+        updated_at timestamptz default now()
+      );
+      
+      -- Guard to ensure columns exist if table was created partially
+      do $$ 
+      begin 
+        if not exists (select 1 from information_schema.columns where table_name='chat_sessions' and column_name='status') then
+          alter table public.chat_sessions add column status text default 'bot';
+        end if;
+        if not exists (select 1 from information_schema.columns where table_name='chat_sessions' and column_name='user_data') then
+          alter table public.chat_sessions add column user_data jsonb default '{}';
+        end if;
+      end $$;
+      
+      -- Force PostgREST to reload schema cache
+      NOTIFY pgrst, 'reload schema';
+    `
+  },
+  {
     name: 'vehicle-photos storage bucket',
     sql: `insert into storage.buckets (id, name, public)
           values ('vehicle-photos', 'vehicle-photos', true)

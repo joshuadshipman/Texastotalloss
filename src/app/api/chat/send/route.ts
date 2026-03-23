@@ -1,6 +1,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { adminDb } from '@/lib/firebaseAdmin';
 
 export async function POST(req: NextRequest) {
     try {
@@ -11,20 +11,14 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
         }
 
-        const { data, error } = await supabaseAdmin
-            .from('chat_messages')
-            .insert({
-                session_id,
-                sender,
-                content
-            })
-            .select()
-            .single();
-
-        if (error) {
-            console.error('Chat Insert Error:', error);
-            throw error;
-        }
+        const msgData = {
+            session_id,
+            sender,
+            content,
+            created_at: new Date().toISOString()
+        };
+        const docRef = await adminDb.collection('chat_messages').add(msgData);
+        const data = { id: docRef.id, ...msgData };
 
         return NextResponse.json({ success: true, data });
 

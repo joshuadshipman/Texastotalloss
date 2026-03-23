@@ -1,32 +1,27 @@
 'use client';
 
-import ChatWidget from '@/components/ChatWidget';
-import Link from 'next/link';
-import AccidentGrid from '@/components/AccidentGrid';
-import InfoSections from '@/components/InfoSections';
-import { useChat } from '@/components/ChatContext';
-import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
-import { Dictionary } from '@/dictionaries/en'; // Type
+import Link from 'next/link';
+import dynamic from 'next/dynamic';
+import type { Dictionary } from '../../dictionaries/en';
+import { useChat } from '../../components/ChatContext';
+import AccidentGrid from '../../components/AccidentGrid';
+import ChatWidget from '../../components/ChatWidget';
 import { ShieldCheckIcon, AlertTriangleIcon, FileTextIcon, CarIcon, DollarSignIcon, SearchIcon, SparklesIcon, PhoneCall } from 'lucide-react';
 
-const CitySearch = dynamic(() => import('@/components/CitySearch'));
+import SectionCard from '../../components/SectionCard';
+import VideoGallery from '../../components/VideoGallery';
+import Footer from '../../components/Footer';
 
-const ValuationCalculator = dynamic(() => import('@/components/ValuationCalculator'), { ssr: false });
-const MobileNav = dynamic(() => import('@/components/MobileNav'), { ssr: false });
-const SectionCard = dynamic(() => import('@/components/SectionCard'));
-import VideoGallery from '@/components/VideoGallery';
-const LightboxImage = dynamic(() => import('@/components/ui/LightboxImage'));
-const ExitIntentPopup = dynamic(() => import('@/components/ExitIntentPopup'), { ssr: false });
+import { ContentItem } from '../../lib/content';
+import TrendingQuestions from '../../components/TrendingQuestions';
 
-import Footer from '@/components/Footer';
-
-const CaseReviewModal = dynamic(() => import('@/components/CaseReviewModal'), { ssr: false });
-
-import { ContentItem } from '@/lib/content';
-import TrendingQuestions from '@/components/TrendingQuestions';
-
-// ... imports
+const CitySearch = dynamic(() => import('../../components/CitySearch'));
+const ValuationCalculator = dynamic(() => import('../../components/ValuationCalculator'), { ssr: false });
+const MobileNav = dynamic(() => import('../../components/MobileNav'), { ssr: false });
+const LightboxImage = dynamic(() => import('../../components/ui/LightboxImage'));
+const ExitIntentPopup = dynamic(() => import('../../components/ExitIntentPopup'), { ssr: false });
+const CaseReviewModal = dynamic(() => import('../../components/CaseReviewModal'), { ssr: false });
 
 interface HomeClientProps {
     dict: Dictionary;
@@ -42,6 +37,45 @@ export default function HomeClient({ dict, lang, trendingContent }: HomeClientPr
     const jsonLd = {
         '@context': 'https://schema.org',
         '@graph': [
+            {
+                '@type': 'LocalBusiness',
+                '@id': 'https://texastotalloss.com/#localbusiness',
+                name: 'Texas Total Loss Claim and Injury Help',
+                image: 'https://texastotalloss.com/images/logo.png',
+                url: 'https://texastotalloss.com',
+                telephone: '+1-469-729-4423',
+                address: {
+                    '@type': 'PostalAddress',
+                    streetAddress: 'Principal Office',
+                    addressLocality: 'Pearland',
+                    addressRegion: 'TX',
+                    postalCode: '77584',
+                    addressCountry: 'US'
+                },
+                geo: {
+                    '@type': 'GeoCoordinates',
+                    latitude: 29.5636,
+                    longitude: -95.2860
+                },
+                areaServed: {
+                    '@type': 'State',
+                    name: 'Texas'
+                },
+                openingHoursSpecification: {
+                    '@type': 'OpeningHoursSpecification',
+                    dayOfWeek: [
+                        'Monday',
+                        'Tuesday',
+                        'Wednesday',
+                        'Thursday',
+                        'Friday',
+                        'Saturday',
+                        'Sunday'
+                    ],
+                    opens: '00:00',
+                    closes: '23:59'
+                }
+            },
             {
                 '@type': 'Organization',
                 '@id': 'https://texastotalloss.com/#org',
@@ -113,6 +147,7 @@ export default function HomeClient({ dict, lang, trendingContent }: HomeClientPr
                     {dict.privacy_banner}
                 </p>
             </div>
+            {/* eslint-disable-next-line react/no-danger */}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -133,9 +168,9 @@ export default function HomeClient({ dict, lang, trendingContent }: HomeClientPr
                     </div>
 
                     {/* Main Title (Serif Authority) */}
-                    <h1 className="text-5xl md:text-7xl font-serif font-black tracking-tight leading-tight drop-shadow-2xl">
+                    <h1 className="text-5xl md:text-8xl font-serif font-black tracking-tight leading-[1.1] drop-shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
                         <span className="block text-white mb-4">{dict.hero.title_main}</span>
-                        <span className="block bg-gradient-to-r from-gold-500 via-yellow-200 to-gold-600 bg-clip-text text-transparent italic">
+                        <span className="block bg-gradient-to-r from-gold-400 via-yellow-100 to-gold-500 bg-clip-text text-transparent italic pb-2">
                             {dict.hero.title_sub}
                         </span>
                     </h1>
@@ -147,14 +182,15 @@ export default function HomeClient({ dict, lang, trendingContent }: HomeClientPr
                     </p>
 
                     {/* Primary Call to Action - Gold Power Button */}
-                    <div className="py-10 relative group flex flex-col items-center justify-center">
-                        <div className="absolute inset-0 bg-gold-500/20 blur-[60px] opacity-40 rounded-full group-hover:opacity-60 transition duration-500"></div>
+                    <div className="py-12 relative group flex flex-col items-center justify-center animate-in fade-in zoom-in duration-700 delay-300">
+                        <div className="absolute inset-0 bg-gold-500/30 blur-[80px] opacity-40 group-hover:opacity-70 transition duration-700 rounded-full scale-125"></div>
                         <button
                             onClick={openReview}
-                            className="relative w-full max-w-lg h-24 bg-gradient-to-b from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-navy-900 font-serif font-black rounded-sm shadow-[0_10px_40px_-10px_rgba(212,175,55,0.4)] transition-all flex items-center justify-center gap-5 text-2xl md:text-3xl transform hover:-translate-y-1 border-t border-white/20"
+                            className="relative w-full max-w-xl h-24 bg-gradient-to-b from-gold-400 to-gold-600 hover:from-gold-300 hover:to-gold-500 text-navy-900 font-serif font-black rounded-2xl shadow-[0_25px_60px_-15px_rgba(212,175,55,0.5)] transition-all flex items-center justify-center gap-6 text-2xl md:text-4xl transform hover:-translate-y-2 active:scale-95 border-t-4 border-white/30 backdrop-blur-sm overflow-hidden"
                         >
-                            <SparklesIcon size={36} className="text-white fill-white/20 animate-pulse" />
-                            <span className="tracking-wide">{dict.buttons.ai_review}</span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer"></div>
+                            <SparklesIcon size={40} className="text-navy-900/60 animate-pulse" />
+                            <span className="tracking-tighter">{dict.buttons.ai_review}</span>
                         </button>
 
                         {/* Click-to-Call Button */}
@@ -213,9 +249,6 @@ export default function HomeClient({ dict, lang, trendingContent }: HomeClientPr
                 <TrendingQuestions items={trendingContent} />
             )}
 
-            {/* Informational Sections (Why Hire, Liability, Urgency) - Moved Above Calculator */}
-            <InfoSections dict={dict} />
-
             <div id="calculator">
                 <ValuationCalculator dict={dict} />
             </div>
@@ -243,44 +276,29 @@ export default function HomeClient({ dict, lang, trendingContent }: HomeClientPr
             </section>
 
             {/* Recognized for Excellence - Trust Badges (Visual Update) */}
-            <section className="bg-white py-16 border-b border-gray-200">
-                <div className="max-w-7xl mx-auto px-4 text-center">
-                    <div className="inline-block border-b-2 border-gold-500 mb-8 pb-2">
-                        <h3 className="text-3xl font-serif font-bold text-navy-900 uppercase tracking-widest">{dict.sections.trust_badges.title}</h3>
+            <section className="bg-slate-50 py-24 border-b border-slate-200">
+                <div className="max-w-7xl mx-auto px-6 text-center">
+                    <div className="inline-block mb-12">
+                        <span className="text-[11px] font-black text-primary uppercase tracking-[0.3em] block mb-2">{dict.sections.trust_badges.sub || "VERIFIED LEGAL EXCELLENCE"}</span>
+                        <h3 className="text-4xl md:text-5xl font-serif font-black text-slate-900 tracking-tight">{dict.sections.trust_badges.title}</h3>
+                        <div className="h-1.5 w-24 bg-gold-500 mx-auto mt-6 rounded-full"></div>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
-                        {/* Badge 1 */}
-                        <div className="flex flex-col items-center p-8 bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
-                            <div className="w-16 h-16 bg-navy-900 text-gold-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
-                                <SparklesIcon size={32} />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+                        {[
+                            { icon: <SparklesIcon size={36} />, title: dict.sections.trust_badges.badge1_title, sub: dict.sections.trust_badges.badge1_sub },
+                            { icon: <ShieldCheckIcon size={36} />, title: dict.sections.trust_badges.badge2_title, sub: dict.sections.trust_badges.badge2_sub },
+                            { icon: <DollarSignIcon size={36} />, title: dict.sections.trust_badges.badge3_title, sub: dict.sections.trust_badges.badge3_sub },
+                            { icon: <CarIcon size={36} />, title: dict.sections.trust_badges.badge4_title, sub: dict.sections.trust_badges.badge4_sub }
+                        ].map((badge, idx) => (
+                            <div key={idx} className="flex flex-col items-center p-10 bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500 group relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold-500/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                                <div className="w-20 h-20 bg-primary/5 text-primary rounded-[1.5rem] flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-500 shadow-inner">
+                                    {badge.icon}
+                                </div>
+                                <span className="font-serif font-black text-2xl text-slate-900 leading-tight">{badge.title}</span>
+                                <span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] mt-4 font-black">{badge.sub}</span>
                             </div>
-                            <span className="font-serif font-bold text-xl text-navy-900">{dict.sections.trust_badges.badge1_title}</span>
-                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-sans font-bold">{dict.sections.trust_badges.badge1_sub}</span>
-                        </div>
-                        {/* Badge 2 */}
-                        <div className="flex flex-col items-center p-8 bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
-                            <div className="w-16 h-16 bg-navy-900 text-gold-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
-                                <ShieldCheckIcon size={32} />
-                            </div>
-                            <span className="font-serif font-bold text-xl text-navy-900">{dict.sections.trust_badges.badge2_title}</span>
-                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-sans font-bold">{dict.sections.trust_badges.badge2_sub}</span>
-                        </div>
-                        {/* Badge 3 */}
-                        <div className="flex flex-col items-center p-8 bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
-                            <div className="w-16 h-16 bg-navy-900 text-gold-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
-                                <DollarSignIcon size={32} />
-                            </div>
-                            <span className="font-serif font-bold text-xl text-navy-900">{dict.sections.trust_badges.badge3_title}</span>
-                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-sans font-bold">{dict.sections.trust_badges.badge3_sub}</span>
-                        </div>
-                        {/* Badge 4 */}
-                        <div className="flex flex-col items-center p-8 bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
-                            <div className="w-16 h-16 bg-navy-900 text-gold-500 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
-                                <CarIcon size={32} />
-                            </div>
-                            <span className="font-serif font-bold text-xl text-navy-900">{dict.sections.trust_badges.badge4_title}</span>
-                            <span className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-sans font-bold">{dict.sections.trust_badges.badge4_sub}</span>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </section>

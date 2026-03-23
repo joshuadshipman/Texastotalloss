@@ -1,5 +1,5 @@
-import { en } from '@/dictionaries/en';
-import { es } from '@/dictionaries/es';
+import { en } from '../../dictionaries/en';
+import { es } from '../../dictionaries/es';
 
 const dictionaries = {
     en,

@@ -8,7 +8,7 @@ import { Dictionary } from '@/dictionaries/en';
 import { VEHICLE_DATA } from '@/data/vehicles';
 import { jsPDF } from 'jspdf';
 import EmailCaptureModal from './EmailCaptureModal';
-import { FileTextIcon, MessageCircleIcon } from 'lucide-react';
+import { FileTextIcon, MessageCircleIcon, Shield, Activity, Loader2 } from 'lucide-react';
 
 interface ValuationCalculatorProps {
     dict: Dictionary;
@@ -257,48 +257,50 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
     };
 
     return (
-        <section className="py-16 px-4 bg-slate-900 text-white font-sans border-t border-white/5">
+        <section className="py-16 px-4 bg-background text-foreground font-sans border-t border-border">
             <div className="max-w-4xl mx-auto">
-                <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-blue-50 text-gray-900 min-h-[600px]">
+                <div className="bg-card rounded-[2rem] shadow-2xl overflow-hidden border border-border text-foreground min-h-[600px]">
 
                     {/* Header / Progress Bar */}
-                    <div className="bg-gray-50 p-6 border-b flex justify-between items-center">
-                        <h2 className="font-bold text-blue-900 text-lg">{dict.val_calc.labels.calc_title || "Total Loss Calculator"}</h2>
+                    <header className="bg-slate-50 p-6 border-b flex justify-between items-center">
+                        <h2 className="font-bold text-primary text-lg">{dict.val_calc.labels.calc_title || "Total Loss Calculator"}</h2>
                         <div className="flex gap-2">
                             {step > 0 && [1, 2, 3].map(s => (
-                                <div key={s} className={`h-2 w-12 rounded-full transition-all ${step >= s ? 'bg-green-500' : 'bg-gray-200'}`} />
+                                <div key={s} className={`h-2.5 w-12 rounded-full transition-all ${step >= s ? 'bg-accent' : 'bg-slate-200'}`} />
                             ))}
                         </div>
-                    </div>
+                    </header>
 
-                    <div className="p-8 md:p-12">
+                    <main className="p-8 md:p-12">
                         {/* STEP 0: INSURANCE TYPE */}
                         {step === 0 && (
                             <div className="animate-in fade-in duration-500 text-center flex flex-col items-center justify-center h-full min-h-[400px]">
-                                <h3 className="text-2xl md:text-3xl font-black mb-4 text-navy-900">
+                                <h3 className="text-2xl md:text-3xl font-black mb-6 text-primary leading-tight">
                                     {dict.val_calc_updates?.who_insurance || "Whose insurance company are you fighting?"}
                                 </h3>
-                                <p className="text-gray-500 mb-8 max-w-lg">
+                                <p className="text-slate-500 mb-10 max-w-lg text-base">
                                     This helps us generate the correct legal strategy for your claim.
                                 </p>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-2xl">
                                     <button
                                         onClick={() => handleInsuranceSelection('other')}
-                                        className="group p-8 border-2 border-green-100 hover:border-green-500 bg-green-50/50 hover:bg-green-50 rounded-2xl transition-all shadow-sm hover:shadow-xl text-left"
+                                        className="group p-8 border-2 border-slate-100 hover:border-primary bg-slate-50/50 hover:bg-white rounded-3xl transition-all shadow-sm hover:shadow-xl text-left"
+                                        aria-label="At-Fault Driver's Insurance"
                                     >
-                                        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">🚗</div>
-                                        <h4 className="font-bold text-lg text-green-800 mb-2">{dict.val_calc_updates?.option_other || "At-Fault Driver's Insurance"}</h4>
-                                        <p className="text-sm text-gray-600">I am filing a claim against the person who hit me (Third Party).</p>
+                                        <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🚗</div>
+                                        <h4 className="font-bold text-xl text-primary mb-3">{dict.val_calc_updates?.option_other || "Other Driver's Insurance"}</h4>
+                                        <p className="text-sm text-slate-600 leading-relaxed">I am filing a claim against the person who hit me (Third Party).</p>
                                     </button>
 
                                     <button
                                         onClick={() => handleInsuranceSelection('mine')}
-                                        className="group p-8 border-2 border-blue-100 hover:border-blue-500 bg-blue-50/50 hover:bg-blue-50 rounded-2xl transition-all shadow-sm hover:shadow-xl text-left"
+                                        className="group p-8 border-2 border-slate-100 hover:border-accent bg-slate-50/50 hover:bg-white rounded-3xl transition-all shadow-sm hover:shadow-xl text-left"
+                                        aria-label="My Own Insurance"
                                     >
-                                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">📄</div>
-                                        <h4 className="font-bold text-lg text-blue-900 mb-2">{dict.val_calc_updates?.option_mine || "My Own Insurance"}</h4>
-                                        <p className="text-sm text-gray-600">I am filing a claim under my own policy (First Party / Uninsured).</p>
+                                        <div className="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">📄</div>
+                                        <h4 className="font-bold text-xl text-accent mb-3">{dict.val_calc_updates?.option_mine || "My Own Insurance"}</h4>
+                                        <p className="text-sm text-slate-600 leading-relaxed">I am filing a claim under my own policy (First Party / Uninsured).</p>
                                     </button>
                                 </div>
                             </div>
@@ -306,31 +308,31 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
 
                         {/* WARNING MODAL FOR 1ST PARTY */}
                         {showAppraisalWarning && (
-                            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-                                <div className="bg-white rounded-2xl max-w-lg w-full p-8 shadow-2xl relative">
-                                    <div className="w-16 h-16 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                                        <span className="text-3xl">⚠️</span>
+                            <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary/20 backdrop-blur-md p-6 animate-in fade-in">
+                                <div className="bg-white rounded-[2rem] max-w-lg w-full p-10 shadow-3xl relative border border-slate-100">
+                                    <div className="w-20 h-20 bg-amber-50 text-accent rounded-full flex items-center justify-center mx-auto mb-8">
+                                        <span className="text-4xl">⚠️</span>
                                     </div>
-                                    <h3 className="text-2xl font-black text-center mb-4 text-gray-900">
+                                    <h3 className="text-3xl font-black text-center mb-6 text-primary">
                                         {dict.val_calc_updates?.warning_title || "Invoking Your Appraisal Clause"}
                                     </h3>
-                                    <p className="text-gray-600 mb-4 leading-relaxed">
-                                        {dict.val_calc_updates?.warning_msg || "Fighting your own insurance company is different..."}
+                                    <p className="text-slate-600 mb-6 leading-relaxed text-center">
+                                        {dict.val_calc_updates?.warning_msg || "Fighting your own insurance company requires a different legal strategy..."}
                                     </p>
-                                    <p className="text-gray-600 mb-8 leading-relaxed font-medium">
-                                        {dict.val_calc_updates?.warning_msg_2 || "Our tools are optimized for Third-Party claims..."}
+                                    <p className="text-slate-600 mb-10 leading-relaxed font-medium text-center italic">
+                                        {dict.val_calc_updates?.warning_msg_2 || "Our tools will help you invoke the mandatory appraisal clause."}
                                     </p>
 
-                                    <div className="flex flex-col gap-3">
+                                    <div className="flex flex-col gap-4">
                                         <button
                                             onClick={handleWarningProceed}
-                                            className="w-full bg-navy-900 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-navy-800 transition-all"
+                                            className="w-full bg-primary text-white font-bold py-5 rounded-2xl shadow-xl hover:bg-secondary transition-all text-lg active:scale-95"
                                         >
-                                            {dict.val_calc_updates?.btn_proceed || "I Understand, Proceed to Calculator »"}
+                                            {dict.val_calc_updates?.btn_proceed || "I Understand, Proceed »"}
                                         </button>
                                         <button
                                             onClick={() => { setShowAppraisalWarning(false); setInsuranceType(null); }}
-                                            className="w-full text-slate-500 font-medium py-3 hover:text-slate-800"
+                                            className="w-full text-slate-400 font-bold py-3 hover:text-primary transition-colors text-sm"
                                         >
                                             Go Back
                                         </button>
@@ -342,68 +344,100 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
                         {/* STEP 1: VEHICLE */}
                         {step === 1 && (
                             <div className="animate-in slide-in-from-right duration-300">
-                                <h3 className="text-2xl font-black mb-6 text-center">{dict.val_calc.labels.step1_title || "Step 1: Vehicle Details"}</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                                    <div className="md:col-span-2 grid grid-cols-3 gap-4">
+                                <h3 className="text-3xl font-black mb-10 text-center text-primary">{dict.val_calc.labels.step1_title || "Initial Vehicle Match"}</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                                    <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-6">
                                         <div className="col-span-1">
-                                            <label className="block text-sm font-bold text-gray-700 mb-2">Zip Code *</label>
-                                            <input name="zip" value={formData.zip} onChange={handleInputChange} maxLength={5} className="w-full p-2 border rounded font-mono text-center tracking-widest bg-yellow-50 border-yellow-200" placeholder="75001" />
+                                            <label className="block text-sm font-bold text-slate-700 mb-3 uppercase tracking-wider">Zip Code *</label>
+                                            <input 
+                                                name="zip" 
+                                                value={formData.zip} 
+                                                onChange={handleInputChange} 
+                                                maxLength={5} 
+                                                className="w-full p-4 border rounded-2xl font-mono text-center tracking-[0.2em] bg-blue-50/30 border-blue-100 focus:border-primary focus:ring-4 focus:ring-primary/5 outline-none text-[20px] font-bold" 
+                                                placeholder="75001" 
+                                            />
                                         </div>
-                                        <div className="col-span-2">
-                                            <label className="block text-sm font-bold text-gray-700 mb-2">{dict.val_calc.labels.vin || "VIN (Optional)"}</label>
-                                            <input name="vin" value={formData.vin} onChange={handleInputChange} className="w-full p-2 border rounded font-mono" placeholder="17 Digit VIN" />
+                                        <div className="col-span-1 md:col-span-2">
+                                            <label className="block text-sm font-bold text-slate-700 mb-3 uppercase tracking-wider">{dict.val_calc.labels.vin || "VIN (Optional for Precision)"}</label>
+                                            <input 
+                                                name="vin" 
+                                                value={formData.vin} 
+                                                onChange={handleInputChange} 
+                                                className="w-full p-4 border rounded-2xl font-mono focus:border-primary outline-none text-[16px] bg-slate-50" 
+                                                placeholder="17 Digit VIN No." 
+                                            />
                                         </div>
                                     </div>
-                                    <CustomSelect
-                                        label={dict.val_calc.labels.year || "Year"}
-                                        options={Object.keys(VEHICLE_DATA).sort((a, b) => b.localeCompare(a)).map(y => ({ label: y, value: y }))}
-                                        value={formData.year}
-                                        onChange={(v) => {
-                                            setFormData({ ...formData, year: v.toString(), make: '', model: '', trim: '' });
-                                        }}
-                                        placeholder="Select Year"
-                                    />
+                                    
+                                    <div className="space-y-2">
+                                        <CustomSelect
+                                            label={dict.val_calc.labels.year || "Year"}
+                                            options={Object.keys(VEHICLE_DATA).sort((a, b) => b.localeCompare(a)).map(y => ({ label: y, value: y }))}
+                                            value={formData.year}
+                                            onChange={(v) => {
+                                                setFormData({ ...formData, year: v.toString(), make: '', model: '', trim: '' });
+                                            }}
+                                            placeholder="Select Year"
+                                        />
+                                    </div>
 
-                                    <CustomSelect
-                                        label={dict.val_calc.labels.make || "Make"}
-                                        options={formData.year && VEHICLE_DATA[formData.year]
-                                            ? Object.keys(VEHICLE_DATA[formData.year]).map(m => ({ label: m, value: m }))
-                                            : []}
-                                        value={formData.make}
-                                        onChange={(v) => {
-                                            setFormData({ ...formData, make: v.toString(), model: '', trim: '' });
-                                        }}
-                                        placeholder={formData.year ? "Select Make" : "Select Year First"}
-                                    />
+                                    <div className="space-y-2">
+                                        <CustomSelect
+                                            label={dict.val_calc.labels.make || "Make"}
+                                            options={formData.year && VEHICLE_DATA[formData.year]
+                                                ? Object.keys(VEHICLE_DATA[formData.year]).map(m => ({ label: m, value: m }))
+                                                : []}
+                                            value={formData.make}
+                                            onChange={(v) => {
+                                                setFormData({ ...formData, make: v.toString(), model: '', trim: '' });
+                                            }}
+                                            placeholder={formData.year ? "Select Make" : "Select Year First"}
+                                        />
+                                    </div>
 
-                                    <CustomSelect
-                                        label={dict.val_calc.labels.model || "Model"}
-                                        options={formData.year && formData.make && VEHICLE_DATA[formData.year][formData.make]
-                                            ? Object.keys(VEHICLE_DATA[formData.year][formData.make]).map(m => ({ label: m, value: m }))
-                                            : []}
-                                        value={formData.model}
-                                        onChange={(v) => {
-                                            setFormData({ ...formData, model: v.toString(), trim: '' });
-                                        }}
-                                        placeholder={formData.make ? "Select Model" : "Select Make First"}
-                                    />
+                                    <div className="space-y-2">
+                                        <CustomSelect
+                                            label={dict.val_calc.labels.model || "Model"}
+                                            options={formData.year && formData.make && VEHICLE_DATA[formData.year][formData.make]
+                                                ? Object.keys(VEHICLE_DATA[formData.year][formData.make]).map(m => ({ label: m, value: m }))
+                                                : []}
+                                            value={formData.model}
+                                            onChange={(v) => {
+                                                setFormData({ ...formData, model: v.toString(), trim: '' });
+                                            }}
+                                            placeholder={formData.make ? "Select Model" : "Select Make First"}
+                                        />
+                                    </div>
 
-                                    <div>
-                                        <label className="block text-sm font-bold mb-2">{dict.val_calc.labels.mileage || "Mileage"}</label>
-                                        <input type="number" name="mileage" value={formData.mileage} onChange={handleInputChange} className="w-full p-3 border rounded-xl" placeholder="50000" />
+                                    <div className="space-y-2">
+                                        <label className="block text-sm font-bold text-slate-700 mb-3 uppercase tracking-wider">{dict.val_calc.labels.mileage || "Mileage"}</label>
+                                        <input 
+                                            type="number" 
+                                            name="mileage" 
+                                            value={formData.mileage} 
+                                            onChange={handleInputChange} 
+                                            className="w-full p-4 border rounded-2xl focus:border-primary outline-none text-[16px] bg-slate-50" 
+                                            placeholder="e.g. 45000" 
+                                        />
                                     </div>
                                 </div>
-                                <button onClick={handleNextStep1} className="w-full bg-navy-900 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-navy-800 transition-colors">{dict.val_calc.labels.btn_next || "Next Step »"}</button>
+                                <button 
+                                    onClick={handleNextStep1} 
+                                    className="w-full bg-primary text-white font-bold py-5 rounded-[1.5rem] shadow-xl hover:bg-secondary transition-all text-lg active:scale-[0.98]"
+                                >
+                                    {dict.val_calc.labels.btn_next || "Analysis: Next Step »"}
+                                </button>
                             </div>
                         )}
 
                         {/* STEP 2: TRIM & FEATURES */}
                         {step === 2 && (
                             <div className="animate-in slide-in-from-right duration-300">
-                                <h3 className="text-2xl font-black mb-6 text-center">{labels.step2_title || "Step 2: Trim & Features"}</h3>
+                                <h3 className="text-3xl font-black mb-10 text-center text-primary">{labels.step2_title || "Precision Tuning"}</h3>
 
-                                <div className="mb-8">
-                                    <label className="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">{labels.select_trim || "Select Trim Level"}</label>
+                                <div className="mb-10">
+                                    <label className="block text-sm font-bold text-slate-700 mb-4 uppercase tracking-wider">{labels.select_trim || "Verify Trim Level"}</label>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <CustomSelect
                                             label={labels.select_trim || "Select Trim Level"}
@@ -417,22 +451,38 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
                                     </div>
                                 </div>
 
-                                <div className="mb-8">
-                                    <label className="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">{labels.select_features || "Key Features (Select all that apply)"}</label>
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <div className="mb-10">
+                                    <label className="block text-sm font-bold text-slate-700 mb-5 uppercase tracking-wider">{labels.select_features || "Installed Factory Options"}</label>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                                         {mockFeatures.map(f => (
-                                            <label key={f.id} className={`p-3 border rounded-lg cursor-pointer flex items-center gap-2 text-sm hover:bg-gray-50 ${formData.features.includes(f.id) ? 'bg-green-50 border-green-500 text-green-800' : 'text-gray-600'}`}>
-                                                <input type="checkbox" checked={formData.features.includes(f.id)} onChange={() => toggleFeature(f.id)} className="rounded text-green-600 focus:ring-green-500" />
-                                                {f.label}
-                                            </label>
+                                            <button 
+                                                key={f.id} 
+                                                type="button"
+                                                onClick={() => toggleFeature(f.id)}
+                                                className={`p-5 border-2 rounded-[1.25rem] cursor-pointer flex items-center justify-between text-base transition-all ${formData.features.includes(f.id) ? 'bg-blue-50 border-primary text-primary shadow-inner scale-[0.98]' : 'bg-white border-slate-100 text-slate-500 hover:border-slate-300'}`}
+                                            >
+                                                <span className="font-bold">{f.label}</span>
+                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.features.includes(f.id) ? 'border-primary bg-primary text-white' : 'border-slate-200'}`}>
+                                                    {formData.features.includes(f.id) && <span className="text-[10px]">✓</span>}
+                                                </div>
+                                            </button>
                                         ))}
                                     </div>
                                 </div>
 
-                                <div className="flex gap-4">
-                                    <button onClick={() => setStep(1)} className="px-6 py-4 border font-bold rounded-xl text-gray-500 hover:text-gray-900">{labels.back || "Back"}</button>
-                                    <button onClick={handleNextStep2} disabled={isCalculating} className="flex-1 bg-gold-500 text-navy-900 font-bold py-4 rounded-xl shadow-lg hover:bg-gold-400 disabled:opacity-50 disabled:cursor-wait transition-colors">
-                                        {isCalculating ? (labels.searching || "Searching Market...") : (labels.calculate || "Calculate Value »")}
+                                <div className="flex flex-col sm:flex-row gap-4 mt-12">
+                                    <button 
+                                        onClick={() => setStep(1)} 
+                                        className="w-full sm:w-auto px-10 py-5 border-2 border-slate-100 font-bold rounded-2xl text-slate-400 hover:text-slate-600 hover:border-slate-300 transition-all text-lg"
+                                    >
+                                        {labels.back || "Back"}
+                                    </button>
+                                    <button 
+                                        onClick={handleNextStep2} 
+                                        disabled={isCalculating} 
+                                        className="flex-1 bg-accent text-white font-black py-5 rounded-[1.5rem] shadow-2xl hover:brightness-110 disabled:opacity-50 disabled:cursor-wait transition-all text-xl"
+                                    >
+                                        {isCalculating ? (labels.searching || "Accessing Market APIs...") : (labels.calculate || "Secure Valuation Analysis »")}
                                     </button>
                                 </div>
                             </div>
@@ -441,47 +491,48 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
                         {/* STEP 3: RESULTS (Empathetic) */}
                         {step === 3 && valuation && (
                             <div className="animate-in slide-in-from-right duration-300">
-                                <div className="bg-green-50 border border-green-100 p-6 rounded-2xl mb-8 text-center relative overflow-hidden">
-                                    {/* Official Seal Watermark */}
-                                    <div className="absolute -top-10 -right-10 opacity-5 pointer-events-none">
-                                        <div className="w-40 h-40 bg-green-900 rounded-full"></div>
+                                <div className="bg-blue-50/50 border-2 border-primary/10 p-10 rounded-[2.5rem] mb-12 text-center relative overflow-hidden">
+                                    {/* Authority Seal Decoration */}
+                                    <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
+                                        <Shield size={200} className="text-primary rotate-12" />
                                     </div>
 
-                                    <h4 className="text-green-800 font-bold uppercase text-xs tracking-widest mb-1">{labels.est_value_title || "Estimated Market Value"}</h4>
-                                    <div className="text-4xl md:text-5xl font-black text-green-700">
+                                    <h4 className="text-primary font-black uppercase text-sm tracking-[0.25em] mb-4">{labels.est_value_title || "Official Market Valuation"}</h4>
+                                    <div className="text-5xl md:text-7xl font-black text-secondary tracking-tighter mb-4">
                                         ${valuation.min.toLocaleString()} - ${valuation.max.toLocaleString()}
                                     </div>
-                                    <p className="text-xs text-green-600 mt-2">
-                                        {(labels.est_value_subtitle || "Includes +${trim} for Trim and +${opts} for Options.")
+                                    <p className="text-slate-500 font-medium text-base mb-8">
+                                        {(labels.est_value_subtitle || "Calculated with +${trim} trim and +${opts} options adjustment.")
                                             .replace('{trim}', valuation.trimAdj.toLocaleString())
                                             .replace('{opts}', valuation.featAdj.toLocaleString())}
                                     </p>
 
                                     {/* DOWNLOAD BUTTON */}
-                                    <div className="mt-6 flex justify-center">
+                                    <div className="flex justify-center">
                                         <button
                                             onClick={() => setShowEmailModal(true)}
-                                            className="bg-white border border-green-200 text-green-700 hover:bg-green-100 hover:border-green-300 font-bold py-2 px-6 rounded-full text-sm flex items-center gap-2 shadow-sm transition-all"
+                                            className="bg-white border-2 border-primary/10 text-primary hover:bg-primary hover:text-white font-bold py-4 px-10 rounded-2xl text-base flex items-center gap-3 shadow-sm transition-all hover:shadow-xl active:scale-95"
                                         >
-                                            <FileTextIcon size={16} />
-                                            Download Official PDF Report
+                                            <FileTextIcon size={22} />
+                                            Download Legal PDF Report
                                         </button>
                                     </div>
                                 </div>
 
                                 {valuation.methodology && (
-                                    <div className="mb-8 bg-slate-50 p-4 rounded-xl border border-slate-100 text-left">
-                                        <h5 className="font-bold text-slate-700 text-sm uppercase tracking-wide mb-2 flex items-center gap-2">
-                                            <span className="bg-green-100 text-green-700 p-1 rounded">✓</span> Market Methodology
+                                    <div className="mb-12 bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm text-left">
+                                        <h5 className="font-bold text-primary text-base uppercase tracking-widest mb-4 flex items-center gap-3">
+                                            <div className="bg-primary/5 p-2 rounded-xl"><Activity size={18} /></div>
+                                            Market Analysis Methodology
                                         </h5>
-                                        <p className="text-sm text-slate-600 mb-3 leading-relaxed">
+                                        <p className="text-slate-600 text-base mb-6 leading-relaxed">
                                             {valuation.methodology}
                                         </p>
                                         {valuation.sources && (
-                                            <div className="flex flex-wrap gap-2">
+                                            <div className="flex flex-wrap gap-3">
                                                 {valuation.sources.map((source, idx) => (
-                                                    <a key={idx} href={source.url} target="_blank" rel="noopener noreferrer" className="text-xs bg-white border border-slate-200 px-2 py-1 rounded text-blue-600 hover:underline hover:bg-blue-50">
-                                                        View {source.name} Source ↗
+                                                    <a key={idx} href={source.url} target="_blank" rel="noopener noreferrer" className="text-sm bg-slate-50 border border-slate-100 px-4 py-2 rounded-xl text-primary font-bold hover:bg-white hover:shadow-md transition-all flex items-center gap-2">
+                                                        <span>Source {idx + 1}:</span> {source.name} ↗
                                                     </a>
                                                 ))}
                                             </div>
@@ -490,27 +541,27 @@ export default function ValuationCalculator({ dict }: ValuationCalculatorProps) 
                                 )}
 
                                 <div className="text-center animate-in fade-in duration-500 delay-150">
-                                    <h3 className="text-2xl font-black text-blue-900 mb-4">{labels.empathy_title || "We understand this might not be enough..."}</h3>
-                                    <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto leading-relaxed">
-                                        {labels.empathy_msg || "It might not be enough to pay off your loan or match what you were expecting. Don't worry about the vehicle right now, worry about you getting better."}
+                                    <h3 className="text-3xl font-black text-primary mb-6 leading-tight max-w-2xl mx-auto">{labels.empathy_title || "Is the insurance company offering you less than this?"}</h3>
+                                    <p className="text-lg text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+                                        {labels.empathy_msg || "Most initial offers are 20-30% below actual market value. You have the legal right to a fair breakdown. Don't let them undervalue your safety."}
                                     </p>
 
                                     <div className="flex flex-col gap-4 max-w-md mx-auto">
                                         <button
                                             onClick={() => openChat('valuation', { ...formData, valuation, source: 'calculator' })}
-                                            className="w-full bg-gradient-to-r from-gold-500 to-gold-600 text-navy-900 font-black py-4 rounded-xl shadow-xl hover:from-gold-400 hover:to-gold-500 hover:scale-105 transition-all text-lg flex items-center justify-center gap-2"
+                                            className="w-full bg-accent text-white font-black py-6 rounded-[2rem] shadow-2xl hover:brightness-110 hover:scale-[1.03] active:scale-95 transition-all text-xl flex items-center justify-center gap-3"
                                         >
-                                            <span>💬</span> {labels.btn_chat || "Chat Now & See How We Can Help »"}
+                                            <MessageCircleIcon size={24} /> {labels.btn_chat || "Get Legal Help Now »"}
                                         </button>
 
-                                        <a href="/tools/demand-letter" className="block text-center text-blue-600 font-bold hover:underline text-sm mt-2">
+                                        <a href="/tools/demand-letter" className="block text-center text-primary font-bold hover:underline text-base mt-4 transition-all">
                                             {labels.btn_demand || "Or, generate a Total Loss Demand Letter »"}
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         )}
-                    </div>
+                    </main>
                 </div>
             </div>
 

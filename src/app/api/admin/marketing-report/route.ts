@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabaseClient } from '@/lib/supabaseClient';
+import { adminDb } from '@/lib/firebaseAdmin';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -32,12 +32,9 @@ export async function GET() {
             };
         }
 
-        // 2. Fetch Lead Data from Supabase
-        const { data: leads, error } = await supabaseClient
-            .from('total_loss_leads')
-            .select('id, source, created_at');
-
-        if (error) throw error;
+        // 2. Fetch Lead Data from Firestore
+        const snapshot = await adminDb.collection('total_loss_leads').get();
+        const leads = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
         // 3. Process Metrics
         const totalSpend = campaignData.campaigns.reduce((acc: number, c: Campaign) => acc + c.spend, 0);

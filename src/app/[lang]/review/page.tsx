@@ -1,8 +1,8 @@
 
-import { getDictionary } from '@/app/[lang]/dictionaries';
-import CaseReviewModal from '@/components/CaseReviewModal';
-import { ChatProvider } from '@/components/ChatContext';
-import RedirectToReview from '@/components/RedirectToReview';
+import { getDictionary } from '../dictionaries';
+import CaseReviewModal from '../../../components/CaseReviewModal';
+import { ChatProvider } from '../../../components/ChatContext';
+import RedirectToReview from '../../../components/RedirectToReview';
 
 type Props = {
     params: Promise<{ lang: 'en' | 'es' }>;
