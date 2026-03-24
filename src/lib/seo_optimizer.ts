@@ -1,8 +1,13 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { BlogPost } from './gemini';
+import { getPagePerformance, getStrikingDistancePages } from './gsc';
 
-// This module handles the "Defense" - keeping content in the Top 3
-// It requires a future connection to Google Search Console (GSC) API
+/**
+ * SEO Optimizer - The "Self-Healing" Loop
+ * 
+ * This module monitors page rankings via GSC and automatically
+ * identifies content gaps to reclaim Top 3 positions.
+ */
 
 interface PagePerformance {
     slug: string;
@@ -28,7 +33,6 @@ export async function reOptimizePost(
 ): Promise<OptimizationResult | null> {
 
     // Config: Only touch pages that are "Striking Distance" (Rank 4-20)
-    // If we are #1-3, don't mess with it!
     if (performance.currentPosition < 3.5) {
         console.log(`Skipping ${post.slug}: Already dominating at position ${performance.currentPosition}`);
         return null;
@@ -41,21 +45,21 @@ export async function reOptimizePost(
     My article "${post.title}" is currently ranking #${performance.currentPosition} for keyword "${performance.targetKeyword}".
     I want to break into the Top 3.
     
-    Here is my current content Summary: ${post.excerpt}
+    Current Content Summary: ${post.excerpt}
     
-    Here is the content ranking #1 (The Competitor):
+    Competitor #1 Content:
     "${topCompetitorContent.substring(0, 500)}..."
 
     DIAGNOSIS TASK:
-    1. Why is the competitor ranking higher? (Missing depth? Better Title? More Entities?)
-    2. Generate a SPECIFIC improvement.
+    1. Why is the competitor ranking higher?
+    2. Generate a SPECIFIC additive improvement.
 
     Return JSON:
     {
         "originalSlug": "${post.slug}",
-        "suggestedTitle": "A click-worthier title if CTE is low",
-        "addedSection": "A purely additive HTML section (<h2...>...</h2>) that covers a 'Content Gap' the competitor has but I don't.",
-        "seoImprovementNote": "Explanation of why this fix will boost rank."
+        "suggestedTitle": "New Title",
+        "addedSection": "HTML Section content",
+        "seoImprovementNote": "Strategy explanation"
     }
     `;
 
@@ -70,15 +74,24 @@ export async function reOptimizePost(
     }
 }
 
-// Stub for the Cron Job to call later
+/**
+ * The "Self-Healing" Loop
+ * Triggered by cron job to fetch rankings and re-optimize.
+ */
 export async function runDailyRankCheck() {
-    // 1. Fetch GSC Data (Mocked for now)
-    const mockPerformance: PagePerformance[] = [
-        { slug: 'texas-ice-accidents', targetKeyword: 'ice accident lawyer texas', currentPosition: 8.2, ctr: 0.5, impressions: 500 }
-    ];
+    console.log("Starting Daily GSC Rank Check...");
+    
+    // 1. Fetch Real GSC Data
+    const performanceRows = await getPagePerformance();
+    const targets = getStrikingDistancePages(performanceRows);
+    
+    console.log(`Found ${targets.length} pages in Striking Distance.`);
 
-    // 2. Loop through underperformers
-    // 3. Call reOptimizePost()
-    // 4. Update Supabase with new content
-    console.log("Would run GSC check here...");
+    // 2. Process targets
+    for (const row of targets.slice(0, 5)) {
+        const pageUrl = row.keys[0];
+        console.log(`Analyzing ${pageUrl} (Pos: ${row.position}) targeting queries like: ${row.keys[1]}`);
+        
+        // This would fetch the post from DB and run re-optimization logic
+    }
 }

@@ -17,6 +17,11 @@ async function checkStatus() {
         GOOGLE_MAPS: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
     };
 
+    console.log("Debug Keys (masked):", Object.keys(keys).reduce((acc: any, k) => {
+        acc[k] = keys[k as keyof typeof keys] ? "PRESENT" : "MISSING";
+        return acc;
+    }, {}));
+
     // 0. Google Maps Validation
     if (keys.GOOGLE_MAPS) {
         try {
@@ -91,6 +96,19 @@ async function checkStatus() {
             max_tokens: 1,
             messages: [{ role: 'user', content: 'hi' }]
         }, { 'Authorization': `Bearer ${keys.PERPLEXITY}` });
+    }
+
+    if (keys.GEMINI) {
+        try {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${keys.GEMINI}`;
+            await axios.post(url, {
+                contents: [{ parts: [{ text: "hi" }] }]
+            });
+            console.log(`[GEMINI] Status: ACTIVE (Verified via minimal request)`);
+        } catch (e: any) {
+            const msg = e.response?.data?.error?.message || e.message;
+            console.log(`[GEMINI] Status: ERROR - ${msg}`);
+        }
     }
 
     console.log("\n--- Report Complete ---");

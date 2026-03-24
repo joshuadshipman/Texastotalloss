@@ -113,19 +113,30 @@ class ModelRouter {
         const provider = this.registry.models?.[modelId]?.provider;
 
         if (provider === 'google') {
-            this.ensureVertex();
             const executeGoogleAction = async (useVertex: boolean, modelName: string, p: string) => {
-                if (useVertex && this.vertexAI) {
+                const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
+                
+                // Priority: Use Standard SDK (AI Studio Free) if apiKey is present and it's a Flash model OR vertex is not initialized
+                if (apiKey && (!useVertex || !this.vertexAI || modelName.includes('flash'))) {
+                    try {
+                        const genAI = new GoogleGenerativeAI(apiKey);
+                        const model = genAI.getGenerativeModel({ model: modelName });
+                        const res = await model.generateContent(p);
+                        return { response: { text: () => res.response.text() } };
+                    } catch (err: any) {
+                        console.warn(`[ModelRouter] Standard SDK failed for ${modelName}: ${err.message}. Falling back to Vertex...`);
+                    }
+                }
+
+                // Fallback to Vertex AI
+                this.ensureVertex();
+                if (this.vertexAI) {
                     const model = this.vertexAI.getGenerativeModel({ model: modelName });
                     const res = await model.generateContent(p);
                     return { response: { text: () => res.response.candidates?.[0]?.content?.parts?.[0]?.text || '' } };
-                } else {
-                    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
-                    if (!apiKey) throw new Error("No Gemini API Key for Standard SDK fallback");
-                    const genAI = new GoogleGenerativeAI(apiKey);
-                    const model = genAI.getGenerativeModel({ model: modelName });
-                    return model.generateContent(p);
                 }
+
+                throw new Error("No available method (Standard SDK or Vertex) to execute Google AI request.");
             };
 
             return {
@@ -133,7 +144,9 @@ class ModelRouter {
                 isPaid,
                 generateContent: async (prompt) => {
                     try {
-                        return await executeGoogleAction(true, modelId, prompt);
+                        // For Flash models, always try non-Vertex (Free) first
+                        const initiallyUseVertex = !modelId.includes('flash');
+                        return await executeGoogleAction(initiallyUseVertex, modelId, prompt);
                     } catch (e: any) {
                         const errorMsg = e.message?.toLowerCase() || '';
                         const isOverloaded = errorMsg.includes('503') || errorMsg.includes('high traffic') || errorMsg.includes('overloaded');
@@ -141,10 +154,10 @@ class ModelRouter {
                         
                         if (isOverloaded || isAuthError) {
                             console.log(`[ModelRouter] 🚨 Google Service Issue (${isAuthError ? 'Auth/Config' : 'Overloaded'}). Attempting Self-Healing Fallback...`);
-                            if (modelId === 'gemini-1.5-flash' && this.vertexAI) {
+                            // Emergency cross-model fallback
+                            if (modelId === 'gemini-1.5-flash') {
                                 try { return await executeGoogleAction(true, 'gemini-1.5-pro', prompt); } catch (err) {}
                             }
-                            try { return await executeGoogleAction(false, modelId, prompt); } catch (err) {}
                         }
                         throw e;
                     }
@@ -166,20 +179,7 @@ class ModelRouter {
             };
         }
 
-        if (provider === 'deepseek') {
-            const key = process.env.DEEPSEEK_API_KEY;
-            return {
-                modelName: modelId, isPaid,
-                generateContent: async (prompt) => {
-                    const res = await axios.post('https://api.deepseek.com/chat/completions', {
-                        model: modelId, messages: [{ role: 'user', content: prompt }]
-                    }, { headers: { 'Authorization': `Bearer ${key}` } });
-                    return { response: { text: () => res.data.choices[0].message.content } };
-                }
-            };
-        }
-
-        throw new Error(`Unknown provider for model ${modelId}`);
+        throw new Error(`Unknown or Decommissioned provider for model ${modelId}`);
     }
 
     async getModel(options: RouterOptions = {}): Promise<ModelInstance> {
@@ -203,10 +203,7 @@ class ModelRouter {
             // Priority 1: Gemini 1.5 Flash (Global standard free fallback)
             if (this.hasKeyForModel('gemini-1.5-flash')) return this.createInstance('gemini-1.5-flash');
             
-            // Priority 2: DeepSeek Chat (Efficiency/Strength fallback)
-            if (this.hasKeyForModel('deepseek-chat')) return this.createInstance('deepseek-chat');
-
-            // Priority 3: Perplexity (Research/Grounded fallback)
+            // Priority 2: Perplexity (Research/Grounded fallback)
             if (this.hasKeyForModel('llama-3.1-sonar-small-128k-online')) return this.createInstance('llama-3.1-sonar-small-128k-online');
         }
 
@@ -214,6 +211,18 @@ class ModelRouter {
         if (!strict && allowPaid) {
             for (const modelId of (category.paid_sequence || [])) {
                 if (this.hasKeyForModel(modelId)) return this.createInstance(modelId);
+            }
+        }
+
+        // 5. Final Emergency Fallback: If absolutely nothing found, try ANY authenticated model
+        const allModelIds = Object.keys(this.registry.models);
+        for (const modelId of allModelIds) {
+            const provider = this.registry.models?.[modelId]?.provider;
+            if (provider === 'deepseek') continue; // Skip decommissioned
+            
+            if (this.hasKeyForModel(modelId)) {
+                console.log(`[ModelRouter] 🛡️ EMERGENCY FALLBACK: Using ${modelId}`);
+                return this.createInstance(modelId);
             }
         }
 

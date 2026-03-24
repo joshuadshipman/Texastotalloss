@@ -62,4 +62,3 @@ I have created the logic for this in `src/lib/seo_optimizer.ts`. Here is how to 
     *   **Win**: This pushes you into the Top 3 automatically.
 
 **Next Step**: When you are ready, ask me to "Connect Google Search Console API" to close this loop.
-

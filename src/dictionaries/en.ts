@@ -48,17 +48,17 @@ export const en = {
             title: "Common Questions",
             subtitle: "You ask, we answer.",
             q1: "How do I ensure a fair settlement?",
-            a1: "Insurance companies often use automated systems that may not reflect local Texas market values. It is important to compare their offer with local retail listings.",
-            q2: "What are my options?",
-            a2: "You have several options, including invoking the Appraisal Clause or seeking a second opinion on your vehicle's value.",
-            q3: "What is 'Total Loss'?",
-            a3: "It means the repair cost plus salvage value exceeds the car's actual cash value.",
+            a1: "Insurance companies often use automated systems like CCC that may not reflect local Texas market values. Under TAC Rule 3.290, you are entitled to replacement cost including sales tax.",
+            q2: "What are my options if the offer is low?",
+            a2: "You can invoke the 'Appraisal Clause' found in most standard Texas policies (1st party) or send a formal demand for Ch. 542 statutory compliance (3rd party).",
+            q3: "What is the 'Total Loss' formula in Texas?",
+            a3: "Under Texas Transportation Code § 501.091, a vehicle is a total loss if repair costs (including parts and labor) equal or exceed 100% of the ACV.",
             q4: "Can I keep my car?",
-            a4: "Yes, you can choose 'Owner Retain', but the salvage value will be deducted from your settlement.",
-            q5: "What if I was at fault?",
-            a5: "You may still have coverage under your own policy (PIP/MedPay) or for your vehicle (Collision).",
+            a4: "Yes, this is 'Owner Retention'. The insurer deducts the salvage value. Note: If you have a lien, the lender must usually approve this.",
+            q5: "What if the insurance company delays my payment?",
+            a5: "Texas Insurance Code Ch. 542 (Prompt Payment of Claims Act) sets strict deadlines. Violations can trigger an 18% annual penalty + attorney fees.",
             q6: "How long does it take?",
-            a6: "Simple property claims take weeks. Injury cases can take months to ensure you are fully treated."
+            a6: "Simple property claims take 15-30 days per Ch. 542. Injury cases take longer to ensure full medical stabilization."
         },
         resources_title: "Critical Resources",
         checklist: {
@@ -117,26 +117,42 @@ export const en = {
         total_loss: {
             title: "Total Loss Law",
             subtitle: "100% Threshold Rule",
-            main_title: "Understanding ACV vs. Repair Cost",
-            content: "In Texas, a car is a total loss if the repair cost + salvage value equals or exceeds the Actual Cash Value (ACV).",
+            main_title: "Ch. 501.091 Compliance",
+            content: "Texas follows a strict 100% threshold. A vehicle is 'Totaled' only when repairs equal/exceed its Actual Cash Value (ACV).",
             bullets: [
-                "ACV is the market value, NOT what you owe.",
-                "You have the right to an independent appraisal.",
-                "You can dispute their valuation with comparable listings.",
-                "Understand 'Owner Retain' options if you want to keep the car."
+                "Defined by Texas Transportation Code § 501.091.",
+                "ACV must be based on local 'Retail' value, not wholesale or trade-in.",
+                "Insurers must include 6.25% Sales Tax (TAC Rule 3.290).",
+                "You have a 'Right to Appraisal' to dispute low valuations."
             ]
         },
         market: {
             title: "Fair Market Value",
             subtitle: "Dealer Quotes vs. CCC Reports",
-            main_title: "Don't Accept the First Offer",
-            content: "Insurers use systems like CCC to undervalue cars. They ignore local market realities. You are owed replacement cost.",
+            main_title: "Ch. 542 Prompt Payment",
+            content: "Insurance companies often use 'Condition Adjustments' to artificially lower value. This may violate Ch. 542 bad faith rules.",
             bullets: [
-                "Demand dealer retail quotes, not private party values.",
-                "Ensure all features and packages are listed.",
-                "Demand 6.25% Sales Tax and Title Fees be included.",
-                "Challenge 'Condition Ratings' that lower value."
+                "Demand to see the 'Comparable Vehicles' used in their report.",
+                "Ensure they aren't using 'Sold' prices from 6 months ago.",
+                "Texas law requires 'Market Value' at the time of loss.",
+                "Reject 'Take-Price' or 'Negotiation' deductions."
             ]
+        },
+        ai_review: {
+            banner: "AI Case Analysis",
+            active: "AI Analysis Active",
+            greeting: "Hello, {name}. Let's build your Demand File.",
+            subtitle: "We use advanced AI to extract VIN data and detect statutory delays. Our experts will respond in under 4 hours.",
+            integrity: "Case Integrity",
+            needs_evidence: "Needs Evidence",
+            finish_btn: "Finish & Chat with Agent",
+            categories: {
+                vin: "Scan VIN Plate",
+                front: "Front Damage",
+                side: "Side/Rear",
+                police_report: "Police Report",
+                injury: "Injury Evidence"
+            }
         },
         fault: {
             title: "Determining Fault",

@@ -40,15 +40,16 @@ export async function POST(req: NextRequest) {
         const scoringInput: LeadScoringInput = {
             vehicleValue,
             disputeGap: body.dispute_gap,
-            insuranceCompany: body.insurance_company,
+            insuranceCompany: body.carrier || body.insurance_company,
             toolsUsed,
             chatMessageCount: body.chat_messages_count,
-            formCompleteness: body.vin && body.accident_date ? 'full' : 'partial',
+            formCompleteness: body.vin && (body.accident_date || body.accidentDate) ? 'full' : 'partial',
             lastActivityAt: new Date(),
             daysSinceLoss,
             insuranceOfferStatus: body.offer_status,
             source: body.source_type || 'organic',
             city: body.city,
+            zipCode: body.zipCode, // Added mapping
             language: body.language || 'en',
             deviceType: req.headers.get('user-agent')?.toLowerCase().includes('mobile') ? 'mobile' : 'desktop'
         };

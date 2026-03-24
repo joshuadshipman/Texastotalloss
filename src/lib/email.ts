@@ -3,12 +3,53 @@ import nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT),
-    secure: false, // true for 465, false for other ports
+    secure: false, 
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS
     }
 });
+
+/**
+ * Attorney Intake Notification (Deep Link Only)
+ * Notifies the attorney team of a "Hot Lead" and links to the Portal.
+ * Does NOT dump full data in email for security and protocol compliance.
+ */
+export async function sendAttorneyIntakeAlert(data: {
+    to: string,
+    clientName: string,
+    liabilityScore: 'High' | 'Medium' | 'Low',
+    sessionId: string
+}) {
+    const portalUrl = `https://texastotalloss.com/admin/leads/${data.sessionId}`;
+    
+    const html = `
+        <div style="font-family: Arial; padding: 20px; border: 1px solid #ddd; border-top: 5px solid #2196F3;">
+            <h2 style="color: #1a73e8;">🔥 HOT LEAD ALERT: ${data.clientName}</h2>
+            <p>A new high-priority lead has been processed by the TTL Predictive Engine.</p>
+            
+            <div style="background: #eef6ff; padding: 15px; border-radius: 5px;">
+                <p><strong>Liability Score:</strong> ${data.liabilityScore}</p>
+                <p><strong>Action:</strong> Review documentation, medical logs, and evidence in the Portal.</p>
+            </div>
+            
+            <br />
+            <a href="${portalUrl}" style="background: #2196F3; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">OPEN IN PORTAL</a>
+            
+            <p style="color: #666; font-size: 12px; margin-top: 20px;">
+                Note: Full evidence capture and pain logs are available exclusively via the secure portal.
+            </p>
+        </div>
+    `;
+
+    await sendGenericEmail({
+        to: data.to,
+        subject: `[TTL] Hot Lead Alert: ${data.clientName} (${data.liabilityScore} Liability)`,
+        html
+    });
+}
+
+// Existing Exports Maintained Below
 
 export async function sendLeadEmailPacket(lead: any) {
     const html = `
@@ -44,7 +85,7 @@ export async function sendLeadEmailPacket(lead: any) {
     try {
         await transporter.sendMail({
             from: process.env.FROM_EMAIL,
-            to: ['intake@yourdomain.com', 'jds@pmaction.com'], // Updated recipient
+            to: ['intake@yourdomain.com', 'jds@pmaction.com'], 
             subject: `New Total Loss + Injury Lead: ${lead.id}`,
             html
         });
@@ -62,42 +103,41 @@ export async function sendChatAlertEmail(data: {
 }) {
     if (!process.env.SMTP_USER) return;
 
+    const recipientList = ['joshua@texastotalloss.com'];
+    if (process.env.NOTIFY_PHONE_EMAIL) {
+        recipientList.push(process.env.NOTIFY_PHONE_EMAIL);
+    }
+
     const mailOptions = {
         from: process.env.FROM_EMAIL || '"Texas Total Loss" <alerts@texastotalloss.com>',
-        to: 'joshua@texastotalloss.com', // TODO: Make configurable or use env var
-        subject: `🔔 NEW CHAT STARTED: ${data.userName} (${data.language.toUpperCase()})`,
+        to: recipientList.join(','), 
+        subject: `🔔 New Chat: ${data.userName} (${data.language.toUpperCase()})`,
         text: `
-      URGENT: New Chat Session Started
+      URGENT: New Chat Started
+      User: ${data.userName} (${data.language})
+      Session: ${data.sessionId}
       
-      User: ${data.userName}
-      Language: ${data.language}
-      Session ID: ${data.sessionId}
+      Message:
+      "${data.initialMessage}"
       
-      Initial Message / Intent:
-      ${data.initialMessage}
-      
-      Go to Admin Dashboard to respond!
+      Link: https://texastotalloss.com/admin/chat
     `,
         html: `
-      <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
-        <h2 style="color: #d32f2f;">🔔 New Live Chat Started</h2>
-        <p><strong>User:</strong> ${data.userName}</p>
-        <p><strong>Language:</strong> ${data.language.toUpperCase()}</p>
-        <p><strong>Session ID:</strong> ${data.sessionId}</p>
-        <hr />
-        <p><strong>Initial Message/Context:</strong></p>
-        <blockquote style="background: #f9f9f9; padding: 10px; border-left: 4px solid #2196F3;">
-          ${data.initialMessage}
-        </blockquote>
-        <br />
-        <a href="https://texastotalloss.com/admin" style="display: inline-block; padding: 10px 20px; background-color: #2196F3; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">Go to Admin Dashboard</a>
+      <div style="font-family: sans-serif; padding: 16px; border: 1px solid #e0e0e0; border-radius: 12px; max-width: 400px; margin: auto;">
+        <h2 style="color: #d32f2f; margin-top: 0;">🔔 New Live Chat</h2>
+        <p style="font-size: 16px;"><strong>${data.userName}</strong> is waiting.</p>
+        <div style="background: #f5f5f5; padding: 12px; border-radius: 8px; border-left: 4px solid #2196F3; margin: 16px 0;">
+          "${data.initialMessage}"
+        </div>
+        <a href="https://texastotalloss.com/admin/chat" style="display: block; text-align: center; padding: 14px; background: #2196F3; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">OPEN DASHBOARD</a>
+        <p style="font-size: 10px; color: #999; margin-top: 16px; text-align: center;">Session ID: ${data.sessionId}</p>
       </div>
     `
     };
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log(`Chat alert sent for session ${data.sessionId}`);
+        console.log(`Chat alert sent for session ${data.sessionId} to ${recipientList.length} recipients`);
     } catch (error) {
         console.error('Error sending chat alert:', error);
     }

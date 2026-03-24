@@ -14,6 +14,8 @@ import BlogManagement from '@/components/admin/BlogManagement';
 import ContentLibraryManager from '@/components/admin/ContentLibraryManager';
 import ContentEngineManager from '@/components/admin/ContentEngineManager';
 import ClawbotShell from '@/components/admin/ClawbotShell';
+import LopGenerator from '@/components/admin/LopGenerator';
+import LopProviderPortal from '@/components/admin/LopProviderPortal'; // New Phase 5/6
 // Removed generateMarketingReport due to fs dependency in client
 import MarketingROI, { MarketingReport } from '@/components/admin/MarketingROI';
 
@@ -40,6 +42,9 @@ type Lead = {
     vehicle_info?: string; // New
     insurance_carrier?: string; // New
     activity_log?: string[]; // New
+    liability_score?: number; // New Phase 5
+    impact_type?: string; // New Phase 5
+    is_commercial?: boolean; // New Phase 5
 };
 
 export default function AdminDashboard() {
@@ -47,13 +52,14 @@ export default function AdminDashboard() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [pin, setPin] = useState('');
     const [loading, setLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState<'leads' | 'content' | 'scout' | 'marketing'>('leads');
+    const [activeTab, setActiveTab] = useState<'leads' | 'chat' | 'blogs' | 'library' | 'engine' | 'clawbot' | 'roi' | 'lop'>('leads');
     const [report, setReport] = useState<MarketingReport | null>(null);
 
 
     // Filters
     const [filterLang, setFilterLang] = useState<'all' | 'en' | 'es'>('all');
     const [filterScore, setFilterScore] = useState<'all' | 'high' | 'prospect'>('all');
+    const [filterImpact, setFilterImpact] = useState<'all' | 'rear-end' | 'commercial'>('all'); // New Phase 5
 
     // Selected Lead for Modal
     const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
@@ -128,6 +134,9 @@ export default function AdminDashboard() {
                 vehicle_info: s.user_data?.vehicle_info || '',
                 insurance_carrier: s.user_data?.insurance_carrier || '',
                 activity_log: s.user_data?.activity_log || [],
+                liability_score: s.user_data?.liability_score || 0,
+                impact_type: s.user_data?.impact_type || '',
+                is_commercial: s.user_data?.is_commercial || false,
                 files_count: 0
             }));
             setLeads(mappedSessions);
@@ -161,7 +170,7 @@ export default function AdminDashboard() {
                     const newSession = change.doc.data() as any;
                     if (newSession && newSession.status === 'live') {
                         // Play Ping Sound
-                        const audio = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTSVMAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//uQZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWgAAAA0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAABixvW0GAAA0Q7rbDAAABHAAACWAAAAEAAAABwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/7kGQAAAwJb1tBgAANES62wwAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+                        const audio = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTSVMAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//uQZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWgAAAA0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAABixvW0GAAA0Q7rbDAAABHAAACWAAAAEAAAABwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/7kGQAAAwJb1tBgAANES62wwAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAADAltWwGAAQAQzbVsAAAARwAAAlgAAABAAAAAcAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
                         audio.play().catch(e => console.log('Audio play failed', e));
 
                         // Auto-Add to Grid if space
@@ -194,6 +203,8 @@ export default function AdminDashboard() {
         if (filterLang !== 'all' && l.language !== filterLang) return false;
         if (filterScore === 'high' && l.score <= 70) return false;
         if (filterScore === 'prospect' && l.score > 70) return false;
+        if (filterImpact === 'rear-end' && l.impact_type !== 'rear-end') return false;
+        if (filterImpact === 'commercial' && !l.is_commercial) return false;
         return true;
     });
 
@@ -245,9 +256,11 @@ export default function AdminDashboard() {
                         <div className="flex items-center bg-slate-100 rounded-xl p-1 shadow-inner border border-slate-200 shrink-0">
                             {[
                                 { id: 'leads', label: 'Leads & Chat', color: 'text-blue-600' },
-                                { id: 'content', label: 'Library', color: 'text-amber-600' },
-                                { id: 'scout', label: 'AI Scout', color: 'text-indigo-600' },
-                                { id: 'marketing', label: 'ROI', color: 'text-emerald-600' }
+                                { id: 'library', label: 'Library', color: 'text-amber-600' },
+                                { id: 'engine', label: 'AI Engine', color: 'text-indigo-600' },
+                                { id: 'clawbot', label: 'Clawbot', color: 'text-purple-600' },
+                                { id: 'roi', label: 'ROI', color: 'text-emerald-600' },
+                                { id: 'lop', label: 'LOP Portal', color: 'text-red-600' }
                             ].map(tab => (
                                 <button
                                     key={tab.id}
@@ -275,7 +288,7 @@ export default function AdminDashboard() {
 
             <main className="max-w-[1400px] mx-auto p-4 space-y-8">
 
-                {activeTab === 'scout' && (
+                {activeTab === 'engine' && (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-200px)]">
                         {/* The chat widget takes priority on mobile, or they can scroll */}
                         <div className="h-[600px] lg:h-full border border-gray-200 rounded-xl overflow-hidden shadow-sm hidden lg:flex flex-col">
@@ -286,7 +299,12 @@ export default function AdminDashboard() {
                         </div>
                     </div>
                 )}
-                {activeTab === 'content' && <ContentLibraryManager />}
+                {activeTab === 'clawbot' && (
+                    <div className="h-[80vh] lg:h-full rounded-xl overflow-hidden shadow-sm border border-gray-200">
+                        <ClawbotShell />
+                    </div>
+                )}
+                {activeTab === 'library' && <ContentLibraryManager />}
 
                 {activeTab === 'leads' && (
                     <>
@@ -334,6 +352,15 @@ export default function AdminDashboard() {
                                         <option value="high">High Value (70+)</option>
                                         <option value="prospect">Prospects (&lt;70)</option>
                                     </select>
+                                    <select
+                                        value={filterImpact}
+                                        onChange={e => setFilterImpact(e.target.value as any)}
+                                        className="text-sm border rounded-lg px-3 py-2 bg-white font-bold text-blue-600"
+                                    >
+                                        <option value="all">Any Impact</option>
+                                        <option value="rear-end">Rear-Ended Only</option>
+                                        <option value="commercial">Commercial Only</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -344,8 +371,8 @@ export default function AdminDashboard() {
                                             <th className="px-6 py-4">Session / Date</th>
                                             <th className="px-6 py-4">User</th>
                                             <th className="px-6 py-4">Status</th>
-                                            <th className="px-6 py-4">Score</th>
-                                            <th className="px-6 py-4">Last Activity</th>
+                                            <th className="px-6 py-4">Lead Score</th>
+                                            <th className="px-6 py-4">Liability</th>
                                             <th className="px-6 py-4 text-right">Actions</th>
                                         </tr>
                                     </thead>
@@ -374,8 +401,16 @@ export default function AdminDashboard() {
                                                 <td className="px-6 py-4">
                                                     <ScoreBadge score={lead.score} />
                                                 </td>
-                                                <td className="px-6 py-4 max-w-xs truncate text-gray-500 italic">
-                                                    {lead.injury_summary || "Start of conversation..."}
+                                                <td className="px-6 py-4">
+                                                    <div className="flex flex-col gap-1">
+                                                        <span className={`text-xs font-black ${lead.liability_score && lead.liability_score > 75 ? 'text-green-600' : 'text-slate-400'}`}>
+                                                            Score: {lead.liability_score || 0}%
+                                                        </span>
+                                                        <div className="flex gap-1">
+                                                            {lead.impact_type === 'rear-end' && <span className="bg-blue-100 text-blue-700 text-[10px] px-1.5 py-0.5 rounded font-black">REAR-END</span>}
+                                                            {lead.is_commercial && <span className="bg-purple-100 text-purple-700 text-[10px] px-1.5 py-0.5 rounded font-black">COMMERCIAL</span>}
+                                                        </div>
+                                                    </div>
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
                                                     <div className="flex justify-end gap-2 opacity-100">
@@ -393,6 +428,18 @@ export default function AdminDashboard() {
                                                         >
                                                             <FileTextIcon size={16} />
                                                         </button>
+                                                        <button
+                                                            onClick={async () => {
+                                                                if(confirm("Re-place this case on the market?")) {
+                                                                    alert("Case re-listed. Lead status updated to 'Market-Ready'.");
+                                                                    fetchLeads();
+                                                                }
+                                                            }}
+                                                            className="p-2 text-orange-600 hover:bg-orange-50 rounded border border-orange-200 transition"
+                                                            title="Re-market Case"
+                                                        >
+                                                            <RefreshCwIcon size={16} />
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -404,8 +451,16 @@ export default function AdminDashboard() {
                     </>
                 )}
 
-                {activeTab === 'marketing' && (
-                    <MarketingROI report={report} />
+                {activeTab === 'roi' && (
+                    <div className="p-8">
+                        <MarketingROI report={report} />
+                    </div>
+                )}
+
+                {activeTab === 'lop' && (
+                    <div className="p-8">
+                        <LopProviderPortal />
+                    </div>
                 )}
             </main>
 
@@ -498,6 +553,15 @@ export default function AdminDashboard() {
                                 </div>
                             </div>
 
+                            {/* LOP Generator Integration (Phase 5) */}
+                            {(selectedLead.liability_score && selectedLead.liability_score > 70) && (
+                                <LopGenerator 
+                                    leadName={selectedLead.full_name}
+                                    date={selectedLead.accident_date || new Date().toLocaleDateString()}
+                                    caseId={selectedLead.id}
+                                />
+                            )}
+
                             {/* Files Section could go here if we had link data stored, currently files_count is int */}
                             {selectedLead.files_count > 0 && (
                                 <div className="p-4 border border-blue-100 bg-blue-50 rounded-lg flex items-center gap-3">
@@ -510,7 +574,6 @@ export default function AdminDashboard() {
                             )}
 
                             <div className="flex justify-end gap-3 pt-4 border-t">
-                                <button onClick={() => setSelectedLead(null)} className="px-4 py-2 bg-gray-200 text-gray-700 font-bold rounded hover:bg-gray-300">Close</button>
                                 <button onClick={() => setSelectedLead(null)} className="px-4 py-2 bg-gray-200 text-gray-700 font-bold rounded hover:bg-gray-300">Close</button>
                             </div>
                         </div>

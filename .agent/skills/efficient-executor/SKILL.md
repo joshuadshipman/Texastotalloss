@@ -35,6 +35,13 @@ Minimize token usage and costs by enforcing a tiered routing strategy and ensuri
    - Use this artifact to "onboard" yourself in future turns, reducing the need to re-read source files.
 7. **Advance Warning**:
    - If a prompt exceeds 5,000 tokens or requires the PRO tier, log a "Token Burn Alert" to the console.
+8. **External Leverage (Qwen & CLI)**:
+   - **Qwen Code Companion**: Use for all local "typing," boilerplate, and autocomplete. It handles the bulk of the character generation at $0 cloud cost.
+   - **Gemini CLI**: Use for "Context Piping." Instead of sending full files, pipe targeted state (e.g., `grep "error" build.log | gemini chat`) to the hub to save 90%+ in token overhead.
+
+# Iron Law: No Sprawl
+- **NO DUPLICATION**: Every efficiency tactic MUST live in this skill. If a tactic is found in another MD file, it must be deleted from there and referenced here.
+- **AUDIT FIRST**: Before suggesting a new "Guide" or "Roadmap," run `grep_search` for related keywords to find existing documentation.
 
 # Constraints
 

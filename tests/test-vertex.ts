@@ -1,37 +1,23 @@
-import dotenv from 'dotenv';
-import path from 'path';
-import fs from 'fs';
-
-// Load .env.local BEFORE other imports
-const envPath = path.resolve(process.cwd(), '.env.local');
-if (fs.existsSync(envPath)) {
-    const envConfig = dotenv.parse(fs.readFileSync(envPath));
-    for (const k in envConfig) {
-        process.env[k] = envConfig[k];
-    }
-}
-
-console.log("ENV CHECK:", {
-    project: !!process.env.GOOGLE_PROJECT_ID,
-    email: !!process.env.GOOGLE_CLIENT_EMAIL,
-    key: !!process.env.GOOGLE_PRIVATE_KEY
-});
-
 import { modelRouter } from '../src/lib/models/router';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
 
-async function test() {
-    console.log("Starting Vertex AI Diagnostic...");
+dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
+
+async function testVertex() {
+    console.log("Starting Vertex AI Test...");
+    
     try {
-        const model = await modelRouter.getModel({ taskType: 'GENERAL', complexity: 'low' });
-        console.log("Model Instance Created:", model.modelName);
+        // Try gemini-1.5-flash via Vertex
+        const model = await modelRouter.createInstance('gemini-1.5-flash');
+        console.log(`✅ Success! Created instance: ${model.modelName}`);
         
-        const result = await model.generateContent("Hello, are you working?");
-        console.log("Response Text:", result.response.text());
-        console.log("DIAGNOSTIC SUCCESSFUL");
-    } catch (e) {
-        console.error("DIAGNOSTIC FAILED:", e);
-        process.exit(1);
+        const response = await model.generateContent("Hello, are you connected via Vertex?");
+        console.log("Response Content:", response.response.text());
+    } catch (e: any) {
+        console.error("❌ Vertex Test Failed:", e.message);
+        console.error("Stack:", e.stack);
     }
 }
 
-test();
+testVertex();

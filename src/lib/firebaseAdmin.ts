@@ -2,14 +2,23 @@ import * as admin from 'firebase-admin';
 
 if (!admin.apps.length) {
     try {
-        admin.initializeApp({
-            credential: admin.credential.cert({
+        let authConfig;
+        
+        if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON) {
+            authConfig = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
+            console.log('Using GOOGLE_SERVICE_ACCOUNT_JSON for authentication');
+        } else {
+            authConfig = {
                 projectId: process.env.FIREBASE_PROJECT_ID,
                 clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-                // Handle newlines in the private key if provided via Vercel env
                 privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-            }),
-            storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET // Important for admin storage access
+            };
+            console.log('Using individual FIREBASE_* variables for authentication');
+        }
+
+        admin.initializeApp({
+            credential: admin.credential.cert(authConfig),
+            storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
         });
         console.log('Firebase Admin Initialized Successfully');
     } catch (error) {

@@ -49,18 +49,18 @@ export const es: Dictionary = {
         faq: {
             title: "Preguntas Frecuentes",
             subtitle: "Usted pregunta, nosotros respondemos.",
-            q1: "¿Necesito un abogado?",
-            a1: "No siempre, pero para casos de lesiones y pérdida total, las aseguradoras a menudo pagan mucho menos sin uno.",
-            q2: "¿Cuánto cuesta?",
-            a2: "Trabajamos con base en honorarios de contingencia. Usted no paga nada a menos que ganemos.",
-            q3: "¿Qué es 'Pérdida Total'?",
-            a3: "Significa que el costo de reparación más el valor de salvamento excede el valor real del auto.",
+            q1: "¿Cómo garantizo un acuerdo justo?",
+            a1: "Las aseguradoras usan sistemas como CCC que pueden no reflejar los valores locales. Según la Regla 3.290 del TAC, usted tiene derecho al costo de reemplazo, incluyendo impuestos.",
+            q2: "¿Qué opciones tengo si la oferta es baja?",
+            a2: "Puede invocar la 'Cláusula de Tasación' (1ra parte) o enviar una demanda formal por cumplimiento del Ch. 542 del Código de Seguros (3ra parte).",
+            q3: "¿Cuál es la fórmula de 'Pérdida Total' en Texas?",
+            a3: "Según el Código de Transporte § 501.091, un auto es pérdida total si los costos de reparación igualan o superan el 100% del valor real (ACV).",
             q4: "¿Puedo quedarme con mi auto?",
-            a4: "Sí, puede elegir 'Retención del Propietario', pero el valor de salvamento se deducirá de su pago.",
-            q5: "¿Qué pasa si fue mi culpa?",
-            a5: "Aún puede tener cobertura bajo su propia póliza (PIP/MedPay) o para su vehículo (Colisión).",
+            a4: "Sí, es la 'Retención del Propietario'. El seguro deduce el valor de salvamento. Nota: Si tiene un préstamo, el prestamista debe aprobarlo.",
+            q5: "¿Qué pasa si el seguro retrasa mi pago?",
+            a5: "El Capítulo 542 (Ley de Pago Pronto) establece plazos estrictos. Las violaciones pueden generar una penalización del 18% anual más honorarios de abogado.",
             q6: "¿Cuánto tiempo toma?",
-            a6: "Reclamos simples toman semanas. Casos de lesiones pueden tomar meses para asegurar su tratamiento."
+            a6: "Reclamos de daños simples toman de 15 a 30 días según el Ch. 542. Casos de lesiones toman más tiempo para estabilización médica."
         },
         resources_title: "Recursos Críticos",
         checklist: {
@@ -119,26 +119,42 @@ export const es: Dictionary = {
         total_loss: {
             title: "Ley de Pérdida Total",
             subtitle: "Regla del 100% del Umbral",
-            main_title: "ACV vs. Costo de Reparación",
-            content: "En Texas, un auto es pérdida total si el costo de reparación + valor de salvamento iguala o excede el Valor Real en Efectivo (ACV).",
+            main_title: "Cumplimiento del Ch. 501.091",
+            content: "Texas sigue un umbral estricto del 100%. Un vehículo es 'Pérdida Total' solo cuando las reparaciones igualan o superan su Valor Real (ACV).",
             bullets: [
-                "El ACV es el valor de mercado, NO lo que usted debe.",
-                "Tiene derecho a una tasación independiente.",
-                "Puede disputar su valoración con listados comparables.",
-                "Entienda las opciones de 'Retención del Propietario' si desea quedarse con el auto."
+                "Definido por el Código de Transporte de Texas § 501.091.",
+                "El ACV debe basarse en el valor 'Retail' local, no en subastas.",
+                "Las aseguradoras deben incluir el 6.25% de Impuesto (Regla 3.290).",
+                "Usted tiene 'Derecho a Tasación' para disputar ofertas bajas."
             ]
         },
         market: {
             title: "Valor Justo de Mercado",
             subtitle: "Cotizaciones de Concesionarios vs. CCC",
-            main_title: "No Acepte la Primera Oferta",
-            content: "Las aseguradoras usan sistemas como CCC para subvaluar autos. Ignoran las realidades del mercado local. Se le debe el costo de reemplazo.",
+            main_title: "Pago Pronto Capítulo 542",
+            content: "Las aseguradoras a menudo usan 'Ajustes de Condición' para bajar el valor. Esto puede violar las reglas de buena fe del Ch. 542.",
             bullets: [
-                "Exija cotizaciones de venta al por menor de concesionarios, no valores de particulares.",
-                "Asegúrese de que se enumeren todas las características y paquetes.",
-                "Exija que se incluyan el 6.25% de Impuesto sobre Ventas y Tarifas de Título.",
-                "Dispute las 'Calificaciones de Condición' que reducen el valor."
+                "Exija ver los 'Vehículos Comparables' usados en su reporte.",
+                "Asegúrese de que no usen precios de 'Vendido' de hace 6 meses.",
+                "La ley exige el 'Valor de Mercado' al momento de la pérdida.",
+                "Rechace deducciones por 'Poder de Negociación'."
             ]
+        },
+        ai_review: {
+            banner: "Análisis AI de Caso",
+            active: "Análisis AI Activo",
+            greeting: "Hola, {name}. Vamos a construir su Expediente de Demanda.",
+            subtitle: "Usamos AI avanzada para extraer datos de VIN y detectar retrasos estatutarios. Nuestros expertos responderán en menos de 4 horas.",
+            integrity: "Integridad del Caso",
+            needs_evidence: "Falta Evidencia",
+            finish_btn: "Terminar y Chatear con Agente",
+            categories: {
+                vin: "Escanear Placa VIN",
+                front: "Daño Frontal",
+                side: "Lateral/Trasero",
+                police_report: "Informe Policial",
+                injury: "Evidencia de Lesión"
+            }
         },
         fault: {
             title: "Determinando la Culpa",

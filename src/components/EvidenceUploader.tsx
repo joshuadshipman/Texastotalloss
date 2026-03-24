@@ -4,19 +4,35 @@ import { useState } from 'react';
 import { db, storage } from '@/lib/firebase';
 import { ref, uploadBytes } from 'firebase/storage';
 import { doc, updateDoc } from 'firebase/firestore';
-import { Upload, Loader2, CheckCircle, Camera, X } from 'lucide-react';
+import { Upload, Loader2, CheckCircle, Camera, X, FileText } from 'lucide-react';
 
 interface EvidenceUploaderProps {
     leadId: number | string;
     uploaderName?: string;
     uploaderEmail?: string;
+    category?: 'vin' | 'front' | 'side' | 'rear' | 'police_report' | 'injury' | 'loss_photos' | 'carrier_report';
+    label?: string;
+    onUploadSuccess?: (totalCount: number) => void;
 }
 
-export default function EvidenceUploader({ leadId, uploaderName, uploaderEmail }: EvidenceUploaderProps) {
+export default function EvidenceUploader({ leadId, uploaderName, uploaderEmail, category = 'front', label, onUploadSuccess }: EvidenceUploaderProps) {
     const [uploading, setUploading] = useState(false);
     const [completed, setCompleted] = useState(false);
     const [uploadedCount, setUploadedCount] = useState(0);
     const [error, setError] = useState<string | null>(null);
+
+    const getCategoryDetails = () => {
+        switch (category) {
+            case 'vin': return { icon: Camera, text: label || 'VIN Plate', sub: 'Critical for valuation' };
+            case 'police_report': return { icon: Upload, text: label || 'Police Report', sub: 'PDF or Image' };
+            case 'injury': return { icon: Camera, text: label || 'Injury Photos', sub: 'Confidential' };
+            case 'loss_photos': return { icon: Camera, text: label || 'Damage Photos', sub: 'Scene & Impacts' };
+            case 'carrier_report': return { icon: FileText, text: label || 'Carrier Report', sub: 'Mitchell / CCC / Audatex' };
+            default: return { icon: Camera, text: label || 'Evidence Photo', sub: category.toUpperCase() };
+        }
+    };
+
+    const details = getCategoryDetails();
 
     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) return;
@@ -28,88 +44,56 @@ export default function EvidenceUploader({ leadId, uploaderName, uploaderEmail }
 
         for (const file of files) {
             const fileExt = file.name.split('.').pop();
-            const filePath = `leads/${leadId}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+            const filePath = `leads/${leadId}/${category}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
 
             try {
                 // Upload to Firebase Storage
-                const storageRef = ref(storage, `vehicle-photos/${filePath}`);
+                const storagePath = category === 'police_report' ? 'documents' : 'vehicle-photos';
+                const storageRef = ref(storage, `${storagePath}/${filePath}`);
                 
-                try {
-                    await uploadBytes(storageRef, file);
-                } catch (uploadError) {
-                    console.error('Storage Error:', uploadError);
-                    setError('Upload failed. Please ensure the "vehicle-photos" bucket exists.');
-                    continue;
-                }
+                await uploadBytes(storageRef, file);
 
-                // Send Email Notification
-                await fetch('/api/notify/evidence-upload', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        leadId,
-                        filePath,
-                        uploaderName,
-                        uploaderEmail
-                    })
+                // Update lead metadata in Firestore to track evidence types
+                await updateDoc(doc(db, 'total_loss_leads', String(leadId)), {
+                    [`evidence_counts.${category}`]: (uploadedCount || 0) + 1,
+                    status: 'evidence_uploaded',
+                    updated_at: new Date().toISOString()
                 });
-
-                // Update lead status
-                try {
-                    await updateDoc(doc(db, 'total_loss_leads', String(leadId)), {
-                        status: 'evidence_uploaded'
-                    });
-                } catch (e) {
-                    console.error('Failed to update lead status:', e);
-                }
 
                 successCount++;
             } catch (err) {
                 console.error('Upload error:', err);
+                setError('Upload failed. Check connection.');
             }
         }
 
-        setUploadedCount(successCount);
-        if (successCount > 0) {
-            setCompleted(true);
-        }
+        setUploadedCount(prev => {
+            const newCount = prev + successCount;
+            if (onUploadSuccess) onUploadSuccess(newCount);
+            return newCount;
+        });
+        if (successCount > 0) setCompleted(true);
         setUploading(false);
     };
 
-    if (completed) {
-        return (
-            <div className="w-full py-5 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl flex flex-col items-center justify-center space-y-2 text-green-700 animate-in fade-in zoom-in duration-500">
-                <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
-                    <CheckCircle className="h-6 w-6 text-green-600" />
-                </div>
-                <span className="font-bold text-lg">{uploadedCount} Photo{uploadedCount > 1 ? 's' : ''} Uploaded!</span>
-                <span className="text-sm text-green-600">Our team has been notified.</span>
-            </div>
-        );
-    }
-
     return (
-        <div className="mt-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <label className="flex flex-col items-center justify-center w-full h-36 border-2 border-dashed border-blue-300 rounded-2xl cursor-pointer bg-gradient-to-br from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 transition-all group">
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+        <div className="animate-in fade-in duration-500">
+            <label className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-2xl cursor-pointer transition-all group ${
+                completed ? 'border-green-300 bg-green-50' : 'border-gray-200 bg-gray-50 hover:bg-gray-100 hover:border-blue-300'
+            }`}>
+                <div className="flex flex-col items-center justify-center p-4">
                     {uploading ? (
-                        <div className="flex flex-col items-center">
-                            <div className="relative">
-                                <Loader2 className="h-10 w-10 text-blue-600 animate-spin" />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <Camera className="h-4 w-4 text-blue-600" />
-                                </div>
-                            </div>
-                            <p className="mt-3 text-sm font-medium text-blue-600">Uploading securely...</p>
-                        </div>
+                        <Loader2 className="h-8 w-8 text-blue-600 animate-spin" />
+                    ) : completed ? (
+                        <>
+                            <CheckCircle className="h-8 w-8 text-green-600" />
+                            <span className="text-xs font-bold text-green-700 mt-1">UPLOADED</span>
+                        </>
                     ) : (
                         <>
-                            <div className="p-4 bg-white rounded-full shadow-md mb-3 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
-                                <Camera className="w-7 h-7 text-blue-600" />
-                            </div>
-                            <p className="mb-1 text-base font-semibold text-gray-700">Upload Accident Photos</p>
-                            <p className="text-xs text-gray-500">Tap to take a photo or select from gallery</p>
-                            <p className="text-xs text-blue-500 mt-1 font-medium">Supports multiple files</p>
+                            <details.icon className={`w-6 h-6 mb-1 ${category === 'vin' ? 'text-amber-500' : 'text-gray-400'} group-hover:text-blue-500`} />
+                            <p className="text-sm font-bold text-gray-800 tracking-tight">{details.text}</p>
+                            <p className="text-[10px] text-gray-400 font-medium">{details.sub}</p>
                         </>
                     )}
                 </div>
@@ -118,17 +102,13 @@ export default function EvidenceUploader({ leadId, uploaderName, uploaderEmail }
                     className="hidden"
                     onChange={handleUpload}
                     disabled={uploading}
-                    accept="image/*"
-                    multiple
-                    capture="environment"
+                    accept={category === 'police_report' ? 'image/*,application/pdf' : 'image/*'}
+                    capture={category !== 'police_report' ? 'environment' : undefined}
                 />
             </label>
 
             {error && (
-                <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-2 text-red-700 text-sm animate-in fade-in">
-                    <X className="h-4 w-4" />
-                    <span>{error}</span>
-                </div>
+                <p className="text-[10px] text-red-500 mt-1 font-bold text-center uppercase tracking-tighter animate-pulse">{error}</p>
             )}
         </div>
     );

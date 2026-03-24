@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { modelRouter } from '@/lib/models/router';
 import { adminDb } from '@/lib/firebaseAdmin';
+import { sendChatAlertEmail } from '@/lib/email';
 import path from 'path';
 import fs from 'fs';
 
@@ -48,17 +49,17 @@ export async function POST(req: NextRequest) {
         let lastError = null;
 
         const attemptModelBatch = [
-            { complexity: isComplex ? 'high' : 'low', allowPaid: !!isComplex },
-            { complexity: 'low', allowPaid: false }, 
-            { taskType: 'RESEARCH', complexity: 'low' } 
+            { complexity: (isComplex ? 'high' : 'low') as 'high' | 'low', allowPaid: !!isComplex },
+            { complexity: 'low' as 'low', allowPaid: false }, 
+            { taskType: 'RESEARCH', complexity: 'low' as 'low' } 
         ];
 
         for (const opts of attemptModelBatch) {
             try {
                 const model = await modelRouter.getModel({ 
-                    taskType: 'CMD_SHELL', 
+                    taskType: (opts.taskType as any) || 'CMD_SHELL', 
                     ...opts 
-                });
+                } as any);
                 const result = await model.generateContent(interpretationPrompt);
                 const text = result.response.text().replace(/```json/gi, '').replace(/```/g, '').trim();
                 
@@ -101,13 +102,22 @@ export async function POST(req: NextRequest) {
         // 4. Save to pending tasks if it's an EDIT or needs processing
         if (interpreted.type === 'EDIT_REQUEST' || interpreted.type === 'RESEARCH') {
             try {
-                await adminDb.collection('clawbot_tasks').add({
+                const taskRef = await adminDb.collection('clawbot_tasks').add({
                     prompt: command,
                     type: interpreted.type.toLowerCase(),
                     status: 'pending',
                     payload: interpreted,
                     created_at: new Date().toISOString()
                 });
+
+                // Notify Admin of new queued task
+                await sendChatAlertEmail({
+                    sessionId: `task-${taskRef.id}`,
+                    userName: 'GravityClaw Queue',
+                    language: 'en',
+                    initialMessage: `New ${interpreted.type} Queued: "${command}"`
+                }).catch(console.error);
+
             } catch (error) {
                 console.error('Failed to log task:', error);
             }

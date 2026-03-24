@@ -1,9 +1,8 @@
 
-"use client";
-
 import React, { useState, ChangeEvent } from 'react';
 import { useChat } from './ChatContext';
-import { XIcon, CheckCircleIcon, AlertTriangleIcon, ChevronRightIcon, ChevronLeftIcon, InfoIcon, TrendingUpIcon } from 'lucide-react';
+import { XIcon, CheckCircleIcon, AlertTriangleIcon, ChevronRightIcon, ChevronLeftIcon, InfoIcon, TrendingUpIcon, ShieldCheck } from 'lucide-react';
+import AICaseReview from './AICaseReview';
 import { db } from '@/lib/firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import { Dictionary } from '@/dictionaries/en';
@@ -21,6 +20,7 @@ export default function CaseReviewModal({ dict, lang }: CaseReviewModalProps) {
     const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [score, setScore] = useState<{ score: number, severity: string } | null>(null);
+    const [lastLeadId, setLastLeadId] = useState<string>("");
 
     // Dictionary mappings (Safe Access)
     const d: any = dict?.caseReview;
@@ -223,14 +223,14 @@ Concerns: ${formData.biggestConcern.join(', ')}
             });
 
             // 2. Add Chat Log (Optional, for continuity)
-            const sessionId = `review-${Date.now()}`; // This might duplicate session IDs if we aren't careful. 
-            // Ideally use same ID. For now let's just log.
-            await addDoc(collection(db, 'chat_messages'), {
+            const sessionId = `review-${Date.now()}`; 
+            const docRef = await addDoc(collection(db, 'chat_messages'), {
                 session_id: sessionId,
                 sender: 'system',
                 content: formattedReport,
                 created_at: new Date().toISOString()
             });
+            setLastLeadId(docRef.id);
         } catch (e) {
             console.error(e);
         }
@@ -647,12 +647,18 @@ Concerns: ${formData.biggestConcern.join(', ')}
                                 </div>
                                 <div className="flex flex-col gap-4 max-w-sm mx-auto">
                                     <button 
-                                        onClick={() => { closeReview(); openChat('high_value_lead', { score, ...formData }); }} 
+                                        onClick={() => setStep(9)} 
                                         className="w-full bg-gradient-to-br from-primary via-blue-700 to-primary text-white font-black py-6 px-10 rounded-2xl shadow-2xl text-lg hover:scale-[1.03] active:scale-95 transition-all uppercase tracking-[0.15em] border-b-4 border-black/20 group"
                                     >
                                         <span className="flex items-center justify-center gap-3">
-                                            {d.steps.result.call_btn} <ChevronRightIcon size={20} className="group-hover:translate-x-1 transition-transform" />
+                                            Build My Demand File <ShieldCheck size={20} className="group-hover:scale-110 transition-transform" />
                                         </span>
+                                    </button>
+                                    <button 
+                                        onClick={() => { closeReview(); openChat('high_value_lead', { score, ...formData }); }} 
+                                        className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-primary transition-colors"
+                                    >
+                                        Or Chat with an Agent Now
                                     </button>
                                 </div>
                             </>
@@ -676,6 +682,20 @@ Concerns: ${formData.biggestConcern.join(', ')}
                                 </button>
                             </>
                         )}
+                    </div>
+                );
+            case 9: // AI Evaluation / Evidence
+                return (
+                    <div className="animate-in fade-in slide-in-from-right-10 duration-700">
+                        <AICaseReview leadId={lastLeadId || "temp"} userName={formData.fullName || "Claimant"} dict={dict} />
+                        <div className="mt-8 flex justify-center">
+                             <button 
+                                onClick={() => { closeReview(); openChat('high_value_lead', { score, ...formData }); }}
+                                className="bg-slate-900 text-white font-black py-4 px-12 rounded-2xl hover:bg-primary transition-all uppercase tracking-widest text-xs shadow-xl"
+                            >
+                                Finish & Chat with Agent
+                            </button>
+                        </div>
                     </div>
                 );
             default: return null;

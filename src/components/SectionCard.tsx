@@ -26,21 +26,21 @@ export default function SectionCard({ title, subtitle, icon, colorClass, childre
             {/* Card Trigger */}
             <div
                 onClick={() => setIsOpen(true)}
-                className={`bg-slate-900/50 backdrop-blur-md rounded-[2rem] shadow-sm border border-white/5 p-6 md:p-8 flex items-center justify-between cursor-pointer hover:bg-slate-800 hover:border-gold-500/40 transition-all duration-300 active:scale-[0.98] w-full mb-6 group relative overflow-hidden`}
+                className={`bg-slate-900/40 backdrop-blur-xl rounded-[2.5rem] shadow-[0_16px_50px_rgba(0,0,0,0.2)] border border-white/10 p-10 flex items-center justify-between cursor-pointer hover:bg-slate-800 hover:border-gold-500/50 hover:shadow-gold-500/5 transition-all duration-500 active:scale-[0.98] w-full mb-8 group relative overflow-hidden`}
             >
-                <div className="absolute inset-0 bg-gradient-to-r from-gold-500/0 via-gold-500/5 to-gold-500/0 -translate-x-full group-hover:animate-shimmer"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-gold-500/0 via-gold-500/10 to-gold-500/0 -translate-x-full group-hover:animate-shimmer duration-1000"></div>
                 
-                <div className="flex items-center gap-6 relative z-10">
-                    <div className={`w-14 h-14 rounded-2xl ${colorClass} text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-500`}>
-                        {icon}
+                <div className="flex items-center gap-8 relative z-10">
+                    <div className={`w-20 h-20 rounded-[2rem] ${colorClass} text-white flex items-center justify-center shadow-[0_8px_30px_rgba(0,0,0,0.3)] group-hover:scale-110 group-hover:rotate-3 transition-all duration-700 border border-white/20`}>
+                        {React.cloneElement(icon as React.ReactElement<any>, { size: 32 })}
                     </div>
                     <div className="text-left">
-                        <h3 className="text-xl md:text-2xl font-black text-white group-hover:text-gold-400 transition-colors tracking-tight">{title}</h3>
-                        <p className="text-sm md:text-base text-slate-400 font-medium uppercase tracking-widest mt-1 opacity-70">{subtitle}</p>
+                        <h3 className="text-2xl md:text-3xl font-black text-white group-hover:text-gold-400 transition-colors tracking-tight leading-none mb-2">{title}</h3>
+                        <p className="text-xs md:text-sm text-slate-400 font-black uppercase tracking-[0.3em] opacity-50 group-hover:opacity-100 group-hover:text-gold-500/80 transition-all">{subtitle}</p>
                     </div>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-gold-500 group-hover:text-navy-900 transition-all duration-300 relative z-10">
-                    <ChevronRightIcon size={20} className="text-slate-500 group-hover:text-inherit" />
+                <div className="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-gold-500 group-hover:text-navy-900 group-hover:shadow-[0_0_30px_rgba(234,179,8,0.4)] transition-all duration-500 relative z-10 border border-white/5">
+                    <ChevronRightIcon size={24} className="text-slate-500 group-hover:text-inherit" />
                 </div>
             </div>
 
