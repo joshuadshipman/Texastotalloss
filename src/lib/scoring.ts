@@ -24,6 +24,12 @@ export interface LeadScoringInput {
     zipCode?: string;
     language?: 'es' | 'en';
     deviceType?: 'mobile' | 'desktop';
+
+    // Dimension 6: Physical Injury & Intent (NEW)
+    hasInjury?: boolean;
+    isTreating?: boolean;
+    atFaultInsurance?: string;
+    description_length?: number;
 }
 
 export interface ScoreResult {
@@ -31,89 +37,59 @@ export interface ScoreResult {
     tier: 'Hot' | 'Warm' | 'Cold' | 'Low Priority';
     breakdown: {
         caseValue: number;
+        injuryIntent: number;
         engagement: number;
         timeline: number;
-        source: number;
-        geoFit: number;
+        fit: number;
     };
 }
 
 export function calculateLeadScore(input: LeadScoringInput): ScoreResult {
     const breakdown = {
         caseValue: 0,
+        injuryIntent: 0,
         engagement: 0,
         timeline: 0,
-        source: 0,
-        geoFit: 0
+        fit: 0
     };
 
-    // --- Dimension 1: Case Value Potential (Max 30) ---
-    // Reflects potential for significant vehicle equity or injury recovery
+    // --- Dimension 1: Case Value (Vehicle/Gap) (Max 20) ---
     if (input.vehicleValue) {
-        if (input.vehicleValue >= 40000) breakdown.caseValue += 15;
-        else if (input.vehicleValue >= 25000) breakdown.caseValue += 10;
-        else if (input.vehicleValue >= 12000) breakdown.caseValue += 5; // Texas average threshold
+        if (input.vehicleValue >= 40000) breakdown.caseValue += 10;
+        else if (input.vehicleValue >= 20000) breakdown.caseValue += 5;
     }
+    if (input.disputeGap && input.disputeGap > 2000) breakdown.caseValue += 10;
 
-    if (input.disputeGap) {
-        if (input.disputeGap > 5000) breakdown.caseValue += 10;
-        else if (input.disputeGap >= 2000) breakdown.caseValue += 5;
-    }
-
-    if (input.insuranceCompany) {
-        const aggressive = ['state farm', 'allstate', 'progressive', 'farmers'];
-        const company = input.insuranceCompany.toLowerCase();
-        if (aggressive.some(c => company.includes(c))) breakdown.caseValue += 5;
-    }
-    breakdown.caseValue = Math.min(30, breakdown.caseValue);
-
-    // --- Dimension 2: Engagement & Intent (Max 25) ---
-    // Measures user's commitment to the process
+    // --- Dimension 2: Injury & Treatment Status (Max 25) ---
+    if (input.hasInjury) breakdown.injuryIntent += 15;
+    if (input.isTreating) breakdown.injuryIntent += 10;
+    
+    // --- Dimension 3: Engagement & Evidence (Max 25) ---
     if (input.toolsUsed.includes('demand_letter')) breakdown.engagement += 10;
-    if (input.toolsUsed.includes('calculator')) breakdown.engagement += 10; // High intent
-    if (input.chatMessageCount && input.chatMessageCount > 5) breakdown.engagement += 10;
+    if (input.toolsUsed.includes('calculator')) breakdown.engagement += 5;
+    if (input.description_length && input.description_length > 150) breakdown.engagement += 5;
+    if (input.atFaultInsurance) breakdown.engagement += 5;
 
-    if (input.formCompleteness === 'full') breakdown.engagement += 5;
-    
-    breakdown.engagement = Math.min(25, breakdown.engagement);
-
-    // --- Dimension 3: Timeline & Statutory Exposure (Max 20) ---
-    // Key "18% Hammer" logic (Texas Insurance Code § 542.060)
+    // --- Dimension 4: Timeline & Statutory Exposure (Max 15) ---
     if (input.daysSinceLoss !== undefined) {
-        if (input.daysSinceLoss > 60) breakdown.timeline += 20; // Critical Statutory Violation
-        else if (input.daysSinceLoss > 30) breakdown.timeline += 15;
-        else if (input.daysSinceLoss > 15) breakdown.timeline += 10;
-        else breakdown.timeline += 5; // Recent accident
+        if (input.daysSinceLoss > 30) breakdown.timeline += 15;
+        else if (input.daysSinceLoss > 10) breakdown.timeline += 10;
+        else breakdown.timeline += 5;
     }
-    breakdown.timeline = Math.min(20, breakdown.timeline);
 
-    // --- Dimension 4: Source & Inbound Quality (Max 15) ---
-    const sourcePoints: Record<string, number> = {
-        'organic': 15,
-        'referral': 15,
-        'exclusive': 12,
-        'ppc': 8
-    };
-    if (input.source && sourcePoints[input.source]) {
-        breakdown.source += sourcePoints[input.source];
-    }
-    breakdown.source = Math.min(15, breakdown.source);
-
-    // --- Dimension 5: Geo & Demographic Fit (Max 10) ---
-    const highValueZips = ['75205', '75225', '76092', '75024', '75093']; // Dallas, Southlake, Plano
-    if (input.zipCode && highValueZips.includes(input.zipCode)) breakdown.geoFit += 10;
-    else if (input.city) breakdown.geoFit += 5;
-
-    if (input.deviceType === 'mobile') breakdown.geoFit += 2;
+    // --- Dimension 5: Source & Geo Fit (Max 15) ---
+    const sourcePoints: Record<string, number> = { 'organic': 10, 'referral': 10, 'exclusive': 8, 'ppc': 5 };
+    if (input.source && sourcePoints[input.source]) breakdown.fit += sourcePoints[input.source];
     
-    breakdown.geoFit = Math.min(10, breakdown.geoFit);
+    const highValueZips = ['75205', '75225', '76092', '75024', '75093'];
+    if (input.zipCode && highValueZips.includes(input.zipCode)) breakdown.fit += 5;
 
-    const totalScore = breakdown.caseValue + breakdown.engagement + breakdown.timeline + breakdown.source + breakdown.geoFit;
+    const totalScore = breakdown.caseValue + breakdown.injuryIntent + breakdown.engagement + breakdown.timeline + breakdown.fit;
 
     let tier: ScoreResult['tier'] = 'Low Priority';
-    if (totalScore >= 85) tier = 'Hot';
-    else if (totalScore >= 65) tier = 'Warm';
-    else if (totalScore >= 45) tier = 'Cold';
+    if (totalScore >= 80) tier = 'Hot';
+    else if (totalScore >= 60) tier = 'Warm';
+    else if (totalScore >= 35) tier = 'Cold';
 
     return {
         totalScore,

@@ -1,9 +1,0 @@
-﻿[dotenv@17.2.3] injecting env (12) from .env.local -- tip: ≡ƒ¢á∩╕Å  run anywhere with `dotenvx run -- yourcommand`
---- API Quota & Status Report ---
-
-[DEEPSEEK] Error: Authentication Fails, Your api key: ****HERE is invalid
-[ANTHROPIC] Status: ACTIVE (Verified via minimal request)
-[XAI] Status: ERROR - Request failed with status code 400
-[PERPLEXITY] Status: ERROR - You exceeded your current quota, please check your plan and billing details. For more information, visit https://www.perplexity.ai/settings/api.
-
---- Report Complete ---

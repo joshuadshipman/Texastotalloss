@@ -1,0 +1,36 @@
+{
+  "functions": {
+    "source": "functions"
+  },
+  "hosting": {
+    "public": "frontend/build",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/chatWithClawbot",
+        "run": {
+          "serviceId": "chatWithClawbot",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/runProjectResearch",
+        "run": {
+          "serviceId": "runProjectResearch",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  }
+}

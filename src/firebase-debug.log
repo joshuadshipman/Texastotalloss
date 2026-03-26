@@ -1,0 +1,190 @@
+[debug] [2026-03-25T15:15:15.425Z] ----------------------------------------------------------------------
+[debug] [2026-03-25T15:15:15.453Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2026-03-25T15:15:15.455Z] CLI Version:   15.10.1
+[debug] [2026-03-25T15:15:15.455Z] Platform:      win32
+[debug] [2026-03-25T15:15:15.455Z] Node Version:  v24.11.1
+[debug] [2026-03-25T15:15:15.455Z] Time:          Wed Mar 25 2026 10:15:15 GMT-0500 (Central Daylight Time)
+[debug] [2026-03-25T15:15:15.455Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-03-25T15:15:15.457Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2026-03-25T15:15:21.024Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-03-25T15:15:21.025Z] > authorizing via signed-in user (joshuadshipman@gmail.com)
+[debug] [2026-03-25T15:15:21.025Z] [iam] checking project total-loss-intake-bot for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2026-03-25T15:15:21.027Z] Checked if tokens are valid: false, expires at: 1774241427965
+[debug] [2026-03-25T15:15:21.027Z] Checked if tokens are valid: false, expires at: 1774241427965
+[debug] [2026-03-25T15:15:21.028Z] > refreshing access token with scopes: []
+[debug] [2026-03-25T15:15:21.031Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-03-25T15:15:21.032Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-03-25T15:15:21.145Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2026-03-25T15:15:21.145Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-03-25T15:15:21.161Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/total-loss-intake-bot:testIamPermissions [none]
+[debug] [2026-03-25T15:15:21.162Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/total-loss-intake-bot:testIamPermissions  x-goog-user-project=total-loss-intake-bot
+[debug] [2026-03-25T15:15:21.162Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/total-loss-intake-bot:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2026-03-25T15:15:21.170Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2026-03-25T15:15:21.171Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2026-03-25T15:15:21.253Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/total-loss-intake-bot:testIamPermissions 200
+[debug] [2026-03-25T15:15:21.253Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/total-loss-intake-bot:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2026-03-25T15:15:21.253Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:21.254Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:21.254Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/total-loss-intake-bot/serviceAccounts/total-loss-intake-bot@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2026-03-25T15:15:21.254Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/total-loss-intake-bot/serviceAccounts/total-loss-intake-bot@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2026-03-25T15:15:21.447Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/total-loss-intake-bot/serviceAccounts/total-loss-intake-bot@appspot.gserviceaccount.com:testIamPermissions 404
+[debug] [2026-03-25T15:15:21.447Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/total-loss-intake-bot/serviceAccounts/total-loss-intake-bot@appspot.gserviceaccount.com:testIamPermissions {"error":{"code":404,"message":"Unknown service account","status":"NOT_FOUND"}}
+[debug] [2026-03-25T15:15:21.448Z] [functions] service account IAM check errored, deploy may fail: Request to https://iam.googleapis.com/v1/projects/total-loss-intake-bot/serviceAccounts/total-loss-intake-bot@appspot.gserviceaccount.com:testIamPermissions had HTTP Error: 404, Unknown service account {"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":404,"message":"Unknown service account","status":"NOT_FOUND"}},"response":{"statusCode":404}},"exit":1,"message":"Request to https://iam.googleapis.com/v1/projects/total-loss-intake-bot/serviceAccounts/total-loss-intake-bot@appspot.gserviceaccount.com:testIamPermissions had HTTP Error: 404, Unknown service account","status":404}
+[info] 
+[info] === Deploying to 'total-loss-intake-bot'...
+[info] 
+[info] i  deploying functions 
+[debug] [2026-03-25T15:15:21.457Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:21.457Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:21.457Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudresourcemanager.googleapis.com [none]
+[debug] [2026-03-25T15:15:21.457Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudresourcemanager.googleapis.com  x-goog-user-project=total-loss-intake-bot
+[debug] [2026-03-25T15:15:21.961Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudresourcemanager.googleapis.com 200
+[debug] [2026-03-25T15:15:21.961Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudresourcemanager.googleapis.com [omitted]
+[debug] [2026-03-25T15:15:21.965Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:21.965Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:21.965Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/total-loss-intake-bot [none]
+[debug] [2026-03-25T15:15:22.030Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/total-loss-intake-bot 200
+[debug] [2026-03-25T15:15:22.030Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/total-loss-intake-bot {"projectNumber":"135403123084","projectId":"total-loss-intake-bot","lifecycleState":"ACTIVE","name":"Total-Loss-Intake-Bot","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-12-16T02:55:56.456542Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[debug] [2026-03-25T15:15:22.037Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:22.037Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:22.038Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:22.039Z] Checked if tokens are valid: true, expires at: 1774455320146
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2026-03-25T15:15:22.041Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:22.042Z] Checked if tokens are valid: true, expires at: 1774455320146
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2026-03-25T15:15:22.045Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:22.045Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:22.045Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudfunctions.googleapis.com [none]
+[debug] [2026-03-25T15:15:22.045Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudfunctions.googleapis.com  x-goog-user-project=total-loss-intake-bot
+[debug] [2026-03-25T15:15:22.047Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/runtimeconfig.googleapis.com [none]
+[debug] [2026-03-25T15:15:22.047Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/runtimeconfig.googleapis.com  x-goog-user-project=total-loss-intake-bot
+[debug] [2026-03-25T15:15:22.055Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudbuild.googleapis.com [none]
+[debug] [2026-03-25T15:15:22.055Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudbuild.googleapis.com  x-goog-user-project=total-loss-intake-bot
+[debug] [2026-03-25T15:15:22.060Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/artifactregistry.googleapis.com [none]
+[debug] [2026-03-25T15:15:22.061Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/artifactregistry.googleapis.com  x-goog-user-project=total-loss-intake-bot
+[debug] [2026-03-25T15:15:22.273Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudfunctions.googleapis.com 200
+[debug] [2026-03-25T15:15:22.274Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudfunctions.googleapis.com [omitted]
+[warn] !  functions: missing required API cloudfunctions.googleapis.com. Enabling now... 
+[debug] [2026-03-25T15:15:22.275Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:22.275Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:22.275Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudfunctions.googleapis.com:enable [none]
+[debug] [2026-03-25T15:15:22.275Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudfunctions.googleapis.com:enable  x-goog-user-project=total-loss-intake-bot
+[debug] [2026-03-25T15:15:22.344Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/runtimeconfig.googleapis.com 200
+[debug] [2026-03-25T15:15:22.345Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2026-03-25T15:15:22.490Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudbuild.googleapis.com 200
+[debug] [2026-03-25T15:15:22.491Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudbuild.googleapis.com [omitted]
+[warn] !  functions: missing required API cloudbuild.googleapis.com. Enabling now... 
+[debug] [2026-03-25T15:15:22.493Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:22.493Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:22.494Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudbuild.googleapis.com:enable [none]
+[debug] [2026-03-25T15:15:22.494Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudbuild.googleapis.com:enable  x-goog-user-project=total-loss-intake-bot
+[debug] [2026-03-25T15:15:22.500Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/artifactregistry.googleapis.com 200
+[debug] [2026-03-25T15:15:22.500Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/artifactregistry.googleapis.com [omitted]
+[warn] !  artifactregistry: missing required API artifactregistry.googleapis.com. Enabling now... 
+[debug] [2026-03-25T15:15:22.504Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:22.505Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:22.506Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/artifactregistry.googleapis.com:enable [none]
+[debug] [2026-03-25T15:15:22.506Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/artifactregistry.googleapis.com:enable  x-goog-user-project=total-loss-intake-bot
+[debug] [2026-03-25T15:15:22.559Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudfunctions.googleapis.com:enable 200
+[debug] [2026-03-25T15:15:22.559Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudfunctions.googleapis.com:enable [omitted]
+[debug] [2026-03-25T15:15:22.825Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/artifactregistry.googleapis.com:enable 200
+[debug] [2026-03-25T15:15:22.825Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/artifactregistry.googleapis.com:enable [omitted]
+[debug] [2026-03-25T15:15:22.891Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudbuild.googleapis.com:enable 200
+[debug] [2026-03-25T15:15:22.891Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/total-loss-intake-bot/services/cloudbuild.googleapis.com:enable [omitted]
+[debug] [2026-03-25T15:15:32.902Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:32.903Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:32.903Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/total-loss-intake-bot/adminSdkConfig [none]
+[debug] [2026-03-25T15:15:33.104Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/total-loss-intake-bot/adminSdkConfig 200
+[debug] [2026-03-25T15:15:33.104Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/total-loss-intake-bot/adminSdkConfig {"projectId":"total-loss-intake-bot","storageBucket":"total-loss-intake-bot.firebasestorage.app"}
+[debug] [2026-03-25T15:15:33.105Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:33.105Z] Checked if tokens are valid: true, expires at: 1774455320146
+[debug] [2026-03-25T15:15:33.105Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/total-loss-intake-bot/configs [none]
+[debug] [2026-03-25T15:15:33.261Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/total-loss-intake-bot/configs 200
+[debug] [2026-03-25T15:15:33.262Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/total-loss-intake-bot/configs {}
+[debug] [2026-03-25T15:15:33.376Z] Validating nodejs source
+[warn] !  functions: Runtime Node.js 20 will be deprecated on 2026-04-30 and will be decommissioned on 2026-10-30, after which you will not be able to deploy without upgrading. Consider upgrading now to avoid disruption. See https://cloud.google.com/functions/docs/runtime-support for full details on the lifecycle policy 
+[warn] !  functions: Couldn't find firebase-functions package in your source code. Have you run 'npm install'? 
+[debug] [2026-03-25T15:15:33.379Z] getFunctionsSDKVersion encountered error: Cannot find module 'firebase-functions'
+Require stack:
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\runtimes\node\versioning.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\runtimes\node\index.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\runtimes\index.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\prepare.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\emulator\functionsEmulatorShared.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\frameworks\index.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\hosting\prepare.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\hosting\index.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\index.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\commands\deploy.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\commands\index.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\index.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\cli.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js {"code":"MODULE_NOT_FOUND","requireStack":["C:\\Users\\17549\\AppData\\Roaming\\npm\\node_modules\\firebase-tools\\lib\\deploy\\functions\\runtimes\\node\\versioning.js","C:\\Users\\17549\\AppData\\Roaming\\npm\\node_modules\\firebase-tools\\lib\\deploy\\functions\\runtimes\\node\\index.js","C:\\Users\\17549\\AppData\\Roaming\\npm\\node_modules\\firebase-tools\\lib\\deploy\\functions\\runtimes\\index.js","C:\\Users\\17549\\AppData\\Roaming\\npm\\node_modules\\firebase-tools\\lib\\deploy\\functions\\prepare.js","C:\\Users\\17549\\AppData\\Roaming\\npm\\node_modules\\firebase-tools\\lib\\emulator\\functionsEmulatorShared.js","C:\\Users\\17549\\AppData\\Roaming\\npm\\node_modules\\firebase-tools\\lib\\frameworks\\index.js","C:\\Users\\17549\\AppData\\Roaming\\npm\\node_modules\\firebase-tools\\lib\\deploy\\hosting\\prepare.js","C:\\Users\\17549\\AppData\\Roaming\\npm\\node_modules\\firebase-tools\\lib\\deploy\\hosting\\index.js","C:\\Users\\17549\\AppData\\Roaming\\npm\\node_modules\\firebase-tools\\lib\\deploy\\index.js","C:\\Users\\17549\\AppData\\Roaming\\npm\\node_modules\\firebase-tools\\lib\\commands\\deploy.js","C:\\Users\\17549\\AppData\\Roaming\\npm\\node_modules\\firebase-tools\\lib\\commands\\index.js","C:\\Users\\17549\\AppData\\Roaming\\npm\\node_modules\\firebase-tools\\lib\\index.js","C:\\Users\\17549\\AppData\\Roaming\\npm\\node_modules\\firebase-tools\\lib\\bin\\cli.js","C:\\Users\\17549\\AppData\\Roaming\\npm\\node_modules\\firebase-tools\\lib\\bin\\firebase.js"]}
+[debug] [2026-03-25T15:15:33.387Z] checkFunctionsSDKVersion encountered error: Invalid Version:  {}
+[debug] [2026-03-25T15:15:33.389Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "@google-cloud/vertexai": "^1.10.0",
+    "@google/generative-ai": "^0.24.1",
+    "@supabase/supabase-js": "^2.81.1",
+    "apify-client": "^2.22.2",
+    "axios": "^1.13.6",
+    "csv-parse": "^6.1.0",
+    "dotenv": "^17.2.3",
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.1",
+    "googleapis": "^140.0.1",
+    "open": "^11.0.0"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2026-03-25T15:15:33.390Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2026-03-25T15:15:33.392Z] Could not parse firebase-functions version '' into semver.
+[debug] [2026-03-25T15:15:33.399Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-03-25T15:15:33.518Z] Error: Cannot find module 'firebase-functions'
+Require stack:
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\runtimes\node\index.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\runtimes\index.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\prepare.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\emulator\functionsEmulatorShared.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\frameworks\index.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\hosting\prepare.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\hosting\index.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\index.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\commands\deploy.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\commands\index.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\index.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\cli.js
+- C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1421:15)
+    at require.resolve (node:internal/modules/helpers:163:19)
+    at Delegate.findFunctionsBinary (C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\runtimes\node\index.js:101:33)
+    at Delegate.spawnFunctionsProcess (C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\runtimes\node\index.js:131:30)
+    at Delegate.serveAdmin (C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\runtimes\node\index.js:152:35)
+    at Delegate.discoverBuild (C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\runtimes\node\index.js:192:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async loadCodebases (C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\prepare.js:334:33)
+    at async prepare (C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\prepare.js:69:24)
+    at async chain (C:\Users\17549\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\index.js:45:9)
+[error] 
+[error] Error: An unexpected error has occurred.

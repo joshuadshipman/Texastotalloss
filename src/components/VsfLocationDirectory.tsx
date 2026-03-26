@@ -1,8 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, MapPin, Shield, Info, ExternalLink, Calculator } from 'lucide-react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { db } from '@/lib/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 interface VsfLocation {
     id: string;
@@ -22,8 +25,34 @@ const MOCK_VSF_DATA: VsfLocation[] = [
 
 export default function VsfLocationDirectory() {
     const [searchTerm, setSearchTerm] = useState('');
+    const [locations, setLocations] = useState<VsfLocation[]>(MOCK_VSF_DATA);
+    const [loading, setLoading] = useState(true);
+    const params = useParams();
+    const lang = (params?.lang as string) || 'en';
 
-    const filteredLocations = MOCK_VSF_DATA.filter(loc => 
+    useEffect(() => {
+        async function fetchLocations() {
+            try {
+                const vsfCollection = collection(db, 'vsf_locations');
+                const snapshot = await getDocs(vsfCollection);
+                
+                if (!snapshot.empty) {
+                    const data = snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    })) as VsfLocation[];
+                    setLocations(data);
+                }
+            } catch (err) {
+                console.warn('Falling back to mock VSF data. (Firebase collection vsf_locations may not be seeded)');
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchLocations();
+    }, []);
+
+    const filteredLocations = locations.filter(loc => 
         loc.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
         loc.city.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -96,13 +125,13 @@ export default function VsfLocationDirectory() {
 
                         <div className="flex gap-2">
                             <Link 
-                                href={`/vsf/${loc.id}`}
+                                href={`/${lang}/vsf/${loc.id}`}
                                 className="flex-1 text-center py-2.5 bg-slate-900 text-white text-sm font-bold rounded-xl hover:bg-slate-800 transition-colors"
                             >
                                 View Rights Guide
                             </Link>
                             <Link 
-                                href={`/calculator/storage?vsf=${loc.id}`}
+                                href={`/${lang}/tools/storage-calculator?vsf=${loc.id}`}
                                 className="px-4 py-2.5 bg-blue-50 text-blue-600 text-sm font-bold rounded-xl hover:bg-blue-100 transition-colors"
                                 title="Calculate Fees"
                             >
@@ -137,4 +166,3 @@ export default function VsfLocationDirectory() {
         </div>
     );
 }
-

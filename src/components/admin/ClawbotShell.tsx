@@ -17,8 +17,13 @@ const GravityClawShell = () => {
     const [logs, setLogs] = useState<LogEntry[]>([
         { 
             type: 'system', 
-            content: 'GravityClaw PRIME v1.1.0 [CORE_SYNC_READY] Link Established.', 
+            content: 'GravityClaw PRIME v1.2.0 [LIVE_STREAM_ENABLED] Link Established.', 
             timestamp: new Date() 
+        },
+        {
+            type: 'output',
+            content: 'Welcome back. I have been upgraded with Live Streaming and Conversation Memory. We are ready to initiate the next phase of Texas Total Loss expansion. How shall we proceed?',
+            timestamp: new Date()
         }
     ]);
     const [isTyping, setIsTyping] = useState(false);
@@ -42,36 +47,65 @@ const GravityClawShell = () => {
         setLogs(prev => [...prev, { type: 'input', content: cmd, timestamp: new Date() }]);
         setIsTyping(true);
 
+        const newEntryIndex = logs.length + 1; // Current input + 1 for future output
+        
         try {
             const response = await fetch('/api/admin/command', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'text/event-stream' // Request streaming
+                },
                 body: JSON.stringify({ 
                     command: cmd,
-                    context: { source: 'Mobile_Clawbot_Shell', version: '1.1.0' }
+                    context: { source: 'Mobile_Clawbot_Shell', version: '1.2.0' }
                 })
             });
 
-            const data = await response.json();
+            if (!response.ok) throw new Error('Link refusal');
 
-            if (data.success) {
-                setLogs(prev => [...prev, { 
-                    type: 'output', 
-                    content: data.message || 'Transmission received by core.', 
-                    timestamp: new Date(),
-                    interpretation: data.interpretation
-                }]);
-            } else {
-                setLogs(prev => [...prev, { 
-                    type: 'error', 
-                    content: `Link Error: ${data.message || 'Core refused connection.'}`, 
-                    timestamp: new Date() 
-                }]);
+            // Handle Stream
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder();
+            let accumulatedResponse = "";
+
+            // Create placeholder for streaming response
+            setLogs(prev => [...prev, { 
+                type: 'output', 
+                content: '', 
+                timestamp: new Date() 
+            }]);
+
+            while (reader) {
+                const { value, done } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value, { stream: true });
+                // SSE format: data: {"text": "..."}\n\n
+                const lines = chunk.split('\n');
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        try {
+                            const data = JSON.parse(line.slice(6));
+                            if (data.text) {
+                                accumulatedResponse += data.text;
+                                // Update only the last log entry
+                                setLogs(prev => {
+                                    const next = [...prev];
+                                    next[next.length - 1].content = accumulatedResponse;
+                                    return next;
+                                });
+                            }
+                        } catch (e) {
+                            if (line.includes('[DONE]')) break;
+                        }
+                    }
+                }
             }
         } catch (err) {
             setLogs(prev => [...prev, { 
                 type: 'error', 
-                content: 'Critical Link Failure: core-not-reachable', 
+                content: 'Critical Link Failure: core-not-reachable or stream-interrupted', 
                 timestamp: new Date() 
             }]);
         } finally {
@@ -137,7 +171,7 @@ const GravityClawShell = () => {
                     <div>
                         <div className="flex items-center gap-2">
                             <span className="font-black text-blue-400 tracking-tighter text-sm">ANTIGRAVITY // PRIME</span>
-                            <span className="bg-blue-500/20 text-blue-400 text-[9px] px-1.5 py-0.5 rounded border border-blue-500/30">v1.1.0</span>
+                            <span className="bg-blue-500/20 text-blue-400 text-[9px] px-1.5 py-0.5 rounded border border-blue-500/30">v1.2.0</span>
                         </div>
                         <div className="flex items-center gap-2 mt-0.5">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>

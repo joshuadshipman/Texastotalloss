@@ -51,7 +51,13 @@ export async function POST(req: NextRequest) {
             city: body.city,
             zipCode: body.zipCode, // Added mapping
             language: body.language || 'en',
-            deviceType: req.headers.get('user-agent')?.toLowerCase().includes('mobile') ? 'mobile' : 'desktop'
+            deviceType: req.headers.get('user-agent')?.toLowerCase().includes('mobile') ? 'mobile' : 'desktop',
+
+            // NEW: Physical Injury & Intent
+            hasInjury: body.has_injury === true || body.has_injury === 'yes',
+            isTreating: body.treatment_status === 'yes' || body.treatment_status === 'treating',
+            atFaultInsurance: body.at_fault_insurance || body.other_party_carrier,
+            description_length: (body.description || '').length
         };
 
         const scoreResult = calculateLeadScore(scoringInput);
@@ -78,6 +84,13 @@ export async function POST(req: NextRequest) {
             injury_summary: body.injury_summary,
             liability_summary: body.liability_summary,
             files_count: body.files_count || 0,
+
+            // Monetization Fields (Top Level for filtering/selling)
+            zip_code: body.zipCode || body.zip_code,
+            carrier: body.carrier || body.insurance_company,
+            fault_status: body.fault_info || body.role,
+            is_represented: body.attorney_status === 'yes' || body.has_attorney,
+            treatment_status: body.treatment_status || body.seeing_doctor,
 
             // Meta info for scoring later
             user_data: {

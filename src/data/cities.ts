@@ -680,5 +680,85 @@ export const cities: CityData[] = [
         coordinates: { latitude: 33.2857, longitude: -96.5728 },
         zipCodes: ["75454"],
         medicalResources: [{ name: "Texas Health Presbyterian (Nearby)", link: "https://texashealth.org", note: "Emergency Care" }]
+    },
+    {
+        slug: 'tyler',
+        metroArea: 'Rural/Exurban', // East Texas Hub
+        translations: {
+            en: { 
+                name: 'Tyler', 
+                county: 'Smith', 
+                description: "As the hub of East Texas, Tyler sees heavy traffic on Loop 323 and Hwy 69. We help Rose City residents navigate total loss valuations that insurance companies often underestimate." 
+            },
+            es: { 
+                name: 'Tyler', 
+                county: 'Smith', 
+                description: "Como el centro del este de Texas, Tyler ve un tráfico pesado en Loop 323 y la carretera 69. Ayudamos a los residentes de Rose City." 
+            }
+        },
+        coordinates: { latitude: 32.3513, longitude: -95.3011 },
+        zipCodes: ["75701", "75702", "75703"],
+        medicalResources: [
+            { name: "UT Health Tyler", link: "https://www.google.com/maps/search/?api=1&query=UT+Health+Tyler+TX", note: "Level 1 Trauma Center", address: "1000 S Beckham Ave, Tyler, TX 75701" },
+            { name: "CHRISTUS Mother Frances Hospital", link: "https://www.google.com/maps/search/?api=1&query=CHRISTUS+Mother+Frances+Hospital+Tyler+TX", note: "Level II Trauma", address: "800 E Dawson St, Tyler, TX 75701" }
+        ],
+        resources: {
+            towing: [{ name: "Tyler Towing Service", link: "https://www.google.com/maps/search/?api=1&query=Tyler+Towing+Service+Tyler+TX", note: "24/7 Smith County coverage", rating: 4.7 }],
+            collisionCenters: [{ name: "Tower Collision Center", link: "https://www.google.com/maps/search/?api=1&query=Tower+Collision+Center+Tyler+TX", note: "Highly rated local shop", rating: 4.8 }],
+            registrationOffice: { name: "Smith County Tax Office", link: "https://www.google.com/maps/search/?api=1&query=Smith+County+Tax+Office+Tyler+TX", address: "300 E Ferguson St, Tyler, TX 75702" }
+        }
+    },
+    {
+        slug: 'waco',
+        metroArea: 'Rural/Exurban', // Central Texas Hub
+        translations: {
+            en: { 
+                name: 'Waco', 
+                county: 'McLennan', 
+                description: "Located halfway between Dallas and Austin, Waco's stretch of I-35 is one of the most dangerous in the state. We assist McLennan County drivers with totaled vehicle claims and asset protection." 
+            },
+            es: { 
+                name: 'Waco', 
+                county: 'McLennan', 
+                description: "Ubicado entre Dallas y Austin, el tramo de la I-35 en Waco es uno de los más peligrosos del estado." 
+            }
+        },
+        coordinates: { latitude: 31.5493, longitude: -97.1467 },
+        zipCodes: ["76701", "76706", "76710"],
+        medicalResources: [
+            { name: "Baylor Scott & White Medical Center - Hillcrest", link: "https://www.google.com/maps/search/?api=1&query=Baylor+Scott+White+Hillcrest+Waco+TX", note: "Level II Trauma", address: "100 Hillcrest Medical Blvd, Waco, TX 76712" },
+            { name: "Ascension Providence Hospital", link: "https://www.google.com/maps/search/?api=1&query=Ascension+Providence+Hospital+Waco+TX", address: "6901 Medical Pkwy, Waco, TX 76712" }
+        ],
+        resources: {
+            towing: [{ name: "Waco Towing", link: "https://www.google.com/maps/search/?api=1&query=Waco+Towing+Waco+TX", note: "I-35 assistance", rating: 4.6 }],
+            collisionCenters: [{ name: "Pruitt's Paint & Body", link: "https://www.google.com/maps/search/?api=1&query=Pruitt+Paint+Body+Waco+TX", note: "Long-standing local family business", rating: 4.8 }],
+            registrationOffice: { name: "McLennan County Tax Office", link: "https://www.google.com/maps/search/?api=1&query=McLennan+County+Tax+Office+Waco+TX", address: "215 N 5th St, Waco, TX 76701" }
+        }
+    },
+    {
+        slug: 'wichita-falls',
+        metroArea: 'Rural/Exurban', // North Texas Hub
+        translations: {
+            en: { 
+                name: 'Wichita Falls', 
+                county: 'Wichita', 
+                description: "Deep in North Texas, Wichita Falls drivers frequent US-287 and I-44. We specialize in rural total loss valuations that reflect the true market cost of trucks and work vehicles." 
+            },
+            es: { 
+                name: 'Wichita Falls', 
+                county: 'Wichita', 
+                description: "En el norte de Texas, los conductores de Wichita Falls frecuentan la US-287 y la I-44." 
+            }
+        },
+        coordinates: { latitude: 33.9137, longitude: -98.4934 },
+        zipCodes: ["76301", "76308", "76310"],
+        medicalResources: [
+            { name: "United Regional Health Care System", link: "https://www.google.com/maps/search/?api=1&query=United+Regional+Wichita+Falls+TX", note: "Level II Trauma", address: "1600 11th St, Wichita Falls, TX 76301" }
+        ],
+        resources: {
+            towing: [{ name: "Red River Towing", link: "https://www.google.com/maps/search/?api=1&query=Red+River+Towing+Wichita+Falls+TX", note: "North Texas experts", rating: 4.7 }],
+            collisionCenters: [{ name: "Herb Easley Collision Center", link: "https://www.google.com/maps/search/?api=1&query=Herb+Easley+Collision+Wichita+Falls+TX", rating: 4.6 }],
+            registrationOffice: { name: "Wichita County Tax Office", link: "https://www.google.com/maps/search/?api=1&query=Wichita+County+Tax+Office+Wichita+Falls+TX", address: "600 Scott Ave, Wichita Falls, TX 76301" }
+        }
     }
 ];

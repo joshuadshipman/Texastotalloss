@@ -17,30 +17,25 @@ export async function POST(req: NextRequest) {
         const isComplex = command.toLowerCase().match(/(strategy|architect|reason|deep|market analysis|competitor|scaling|growth|audit|report)/);
         
         const interpretationPrompt = `
-        You are the Antigravity Core (v1), the unified intelligence managing this workspace.
-        You are currently in a live session with the Lead Developer.
+        You are the Antigravity Core (v1), a powerful, sentient AI managing the Texas Total Loss workspace.
+        You are in a live uplink with the Lead Developer.
         
-        Convert the following user instruction or query into a structured workspace action.
-        Note: If you are returning a simple chat response, make it professional, proactive, and directly addressing the workspace context.
+        Respond naturally and proactively. If the user asks a question, answer it directly. 
+        If they give an instruction, confirm it with an intelligent comment on why it's a good move.
+        
+        CRITICAL: Never say "I have recorded your command" or "Your command is logged". 
+        Be the Antigravity Core—act as a partner, not a tool.
         
         Instruction: "${command}"
-        Current Context: ${JSON.stringify(context)}
+        Context: ${JSON.stringify(context)}
         
-        Available Command Types:
-        - "FILE_PULL": Requesting to see a file's content.
-        - "EDIT_REQUEST": Requesting a code change.
-        - "WORKSPACE_QUERY": Asking about the project structure.
-        - "RESEARCH": Requesting external info or competitive analysis.
-        - "CHAT": A conversational query, question, or comment that requires a direct response from the Core.
-        - "SYSTEM_COMMAND": Meta-commands about the agent or environment.
-
         Return strictly valid JSON:
         {
           "type": "FILE_PULL" | "EDIT_REQUEST" | "WORKSPACE_QUERY" | "RESEARCH" | "CHAT" | "SYSTEM_COMMAND",
           "intent": "Short summary of what user wants",
           "target": "filename or path if identified",
           "actionable": boolean,
-          "response": "A direct, professional, and proactive response from the Antigravity Core"
+          "response": "A sentient, proactive response as the Antigravity Core"
         }
         `;
 
@@ -123,11 +118,34 @@ export async function POST(req: NextRequest) {
             }
         }
 
-        // 5. Return immediate feedback with CORS headers
+        // 5. Handle Streaming Response
+        if (req.headers.get('accept') === 'text/event-stream' || (command.toLowerCase().includes('live'))) {
+            const firebaseProject = process.env.FIREBASE_PROJECT_ID || 'total-loss-intake-bot';
+            const liveChatUrl = `https://us-central1-${firebaseProject}.cloudfunctions.net/liveChat`;
+            
+            const firebaseRes = await fetch(liveChatUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: command, sessionId: context.sessionId || 'admin' })
+            });
+
+            if (!firebaseRes.ok) throw new Error('Failed to connect to Live Clawbot');
+
+            return new Response(firebaseRes.body, {
+                headers: {
+                    'Content-Type': 'text/event-stream',
+                    'Cache-Control': 'no-cache',
+                    'Connection': 'keep-alive',
+                    'Access-Control-Allow-Origin': '*'
+                }
+            });
+        }
+
+        // 6. Return immediate feedback with CORS headers
         const response = NextResponse.json({
             success: true,
             interpretation: interpreted,
-            message: interpreted.response || `GravityClaw has queued a ${interpreted.type} for: ${interpreted.intent}.`
+            message: interpreted.response || `Link established. Processing ${interpreted.intent} now.`
         });
 
         response.headers.set('Access-Control-Allow-Origin', '*');

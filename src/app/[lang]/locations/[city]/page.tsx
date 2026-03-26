@@ -6,6 +6,7 @@ import { ShieldCheckIcon, AlertTriangleIcon, CarIcon, MapPinIcon } from 'lucide-
 import NeighborhoodAccordion from '@/components/NeighborhoodAccordion';
 import TrustBadges from '@/components/TrustBadges';
 import ResourceLinkHelper from '@/components/ResourceLinkHelper';
+import SemanticFAQ from '@/components/SemanticFAQ';
 import dynamic from 'next/dynamic';
 import { getDictionary } from '@/dictionaries';
 
@@ -65,10 +66,10 @@ export default async function CityPage({ params }: Props) {
         '@context': 'https://schema.org',
         '@graph': [
             {
-                '@type': 'LegalService',
+                '@type': ['LegalService', 'Attorney'],
                 '@id': `https://texastotalloss.com/locations/${city.slug}#service`,
-                name: `Texas Total Loss & Auto Accident Attorneys - ${city.name}`,
-                description: `Full-service auto accident attorneys in ${city.name} handling injury claims, total loss disputes, and complex liability cases.`,
+                name: `Texas Total Loss - AI Claim Assistance - ${city.name}`,
+                description: `Full-service total loss assistance and AI claim review in ${city.name} handling vehicle valuations and injury disputes.`,
                 url: `https://texastotalloss.com/locations/${city.slug}`,
                 logo: "https://texastotalloss.com/images/logo.png",
                 image: "https://texastotalloss.com/images/og-image.jpg",
@@ -333,6 +334,27 @@ export default async function CityPage({ params }: Props) {
                                 />
                             </div>
                         )}
+
+                        {/* SEMANTIC FAQ (AEO/GEO Optimized) */}
+                        <div className="mt-12">
+                            <SemanticFAQ faqs={[
+                                {
+                                    id: `faq-diminished-value-${city.slug}`,
+                                    question: `Is ${city.name} in a diminished value state?`,
+                                    answerHtml: `Yes, Texas is a diminished value state. If you live in ${city.name} and were in an accident that wasn't your fault, you may be entitled to the lost value of your vehicle.`,
+                                    citationText: "A person who differs property damage may recover the reasonable cost of repairs necessary to restore the property to its condition... and the difference in its market value immediately before and immediately after the injury.",
+                                    citationSource: "Texas Pattern Jury Charges (PJC 7.3)"
+                                },
+                                {
+                                    id: `faq-dispute-appraisal-${city.slug}`,
+                                    question: `How do I dispute a total loss offer in ${city.county} County?`,
+                                    answerHtml: `To fight a low-ball settlement, you must invoke the <strong>Appraisal Clause</strong>. This forces the insurer to accept an independent valuation from a local appraiser in ${city.name}.`,
+                                    citationText: "If we and you do not agree on the amount of loss, either may demand an appraisal of the loss. Each party will select a competent appraiser.",
+                                    citationSource: "Standard Texas Personal Auto Policy",
+                                    citationUrl: "https://www.tdi.texas.gov"
+                                }
+                            ]} />
+                        </div>
 
                         {/* RECENT SETTLEMENTS (Social Proof) */}
                         {city.settlements && city.settlements.length > 0 && (
