@@ -11,13 +11,6 @@
     ],
     "rewrites": [
       {
-        "source": "/chatWithClawbot",
-        "run": {
-          "serviceId": "chatWithClawbot",
-          "region": "us-central1"
-        }
-      },
-      {
         "source": "/runProjectResearch",
         "run": {
           "serviceId": "runProjectResearch",

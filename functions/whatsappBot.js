@@ -74,9 +74,34 @@ async function routeIntent(db, fromNumber, messageText) {
     const text = messageText.trim().toLowerCase();
     const geminiKey = process.env.GEMINI_KEY;
 
+    // ── 0. Check User Session Mode ─────────────────────────────────────────
+    const userRef = db.collection('user_metadata').doc(fromNumber);
+    const userDoc = await userRef.get();
+    const userData = userDoc.exists ? userDoc.data() : {};
+    const chatMode = userData.chat_mode || 'standard';
+
+    if (text === 'exit agent' || text === 'stop chat') {
+        await userRef.set({ chat_mode: 'standard' }, { merge: true });
+        return '👋 *Direct Agent Mode* deactivated. Switched back to Standard Mode.';
+    }
+
+    if (chatMode === 'agent') {
+        // Log to direct commands for the agent to pick up
+        await db.collection('agent_direct_commands').add({
+            from: fromNumber,
+            message: messageText,
+            status: 'pending',
+            at: new Date()
+        });
+        return ''; // Agent will respond asynchronously via the script
+    }
+
+    if (text === 'chat with agent' || text === 'talk to antigravity') {
+        await userRef.set({ chat_mode: 'agent' }, { merge: true });
+        return '🚀 *Direct Agent Mode* activated! I am now listening for your commands directly. \n\nI will process your requests and reply back here. Type "exit agent" to return to standard mode.';
+    }
+
     // ── 1. Shopping list: "add milk" / "add 2 eggs" ──────────────────────
-    const addMatch = text.match(/^add\s+(.+)$/i) || text.match(/^add to (?:list|cart):?\s*(.+)$/i);
-    if (addMatch) {
         const itemName = addMatch[1].trim();
         const docRef = await db.collection('shopping_list').add({
             product_name: itemName,

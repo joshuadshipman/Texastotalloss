@@ -47,6 +47,15 @@ const initialTasks = [
         status: "active",
         interval_minutes: 60, // 1 hour
         explicit_model: null
+    },
+    {
+        name: "Reputation & Review Audit",
+        task_type: "llm_analysis",
+        prompt_template: "Conduct an autonomous audit of brand mentions and customer reviews for 'Texas Total Loss'. Summarize findings for the board.",
+        status: "active",
+        interval_minutes: 240, // 4 hours
+        explicit_model: "gemini_1_5_flash_free",
+        skill_name: "reputation-review"
     }
 ];
 

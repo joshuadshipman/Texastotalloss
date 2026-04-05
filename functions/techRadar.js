@@ -14,7 +14,7 @@ exports.runTechRadarNow = onRequest(async (req, res) => {
     const db = admin.firestore();
     try {
         logger.info('[techRadar] Manual run triggered');
-        const geminiKey = process.env.GEMINI_KEY;
+        const geminiKey = process.env.GEMINI_API_KEY;
         if (!geminiKey) throw new Error('GEMINI_KEY missing');
         const genAI = new GoogleGenerativeAI(geminiKey);
         const geminiModel = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });

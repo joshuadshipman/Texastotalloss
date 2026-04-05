@@ -5,6 +5,7 @@
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
+    "predeploy": "node scripts/pre_flight_parity.js",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
@@ -26,7 +27,9 @@
     "open": "^11.0.0"
   },
   "devDependencies": {
-    "firebase-functions-test": "^3.1.0"
+    "chai": "^6.2.2",
+    "firebase-functions-test": "^3.1.0",
+    "mocha": "^11.7.5"
   },
   "private": true
 }

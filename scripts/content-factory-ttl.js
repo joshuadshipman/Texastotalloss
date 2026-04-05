@@ -3,11 +3,19 @@
  * Generates SEO/GEO/AEO optimized articles for TexasTotalLoss.com
  * using Gemini 1.5 Pro. Focuses on the "Legal Authority Cluster".
  */
+const { GoogleGenAI } = require('@google/genai');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../../../.env') });
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "YOUR_KEY";
-const MODEL_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.trim() : null;
+
+if (!GEMINI_API_KEY) {
+    console.error("❌ CRITICAL ERROR: GEMINI_API_KEY not found in global .env file.");
+    process.exit(1);
+}
+
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 const outputDir = path.join(__dirname, 'output');
 if (!fs.existsSync(outputDir)) {
@@ -65,31 +73,15 @@ Ensure the JSON is perfectly valid and not wrapped in markdown code blocks if po
 async function generateArticle(topic) {
     console.log(`Generating article: ${topic.title}...`);
     try {
-        const response = await fetch(MODEL_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                contents: [{
-                    role: "user",
-                    parts: [{
-                        text: `${personaPrompt}\n\nWrite the comprehensive Deep-Dive article for the following topic:\nTitle Focus: ${topic.title}\nStrategic Goal: ${topic.focus}`
-                    }]
-                }],
-                generationConfig: {
-                    response_mime_type: "application/json"
-                }
-            })
+        const response = await ai.models.generateContent({
+            model: 'gemini-3.1-pro-preview',
+            contents: `${personaPrompt}\n\nWrite the comprehensive Deep-Dive article for the following topic:\nTitle Focus: ${topic.title}\nStrategic Goal: ${topic.focus}`,
+            config: {
+                responseMimeType: "application/json"
+            }
         });
 
-        if (!response.ok) {
-            console.error(`API Error for ${topic.title}: ${response.status} ${response.statusText}`);
-            return null;
-        }
-
-        const data = await response.json();
-        const textOutput = data.candidates[0].content.parts[0].text;
+        const textOutput = response.text;
         
         let articleJson;
         try {

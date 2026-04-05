@@ -1,0 +1,61 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "pi_leads",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "plir_status", "order": "ASCENDING" },
+        { "fieldPath": "lvi_score",   "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "pi_leads",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status",     "order": "ASCENDING" },
+        { "fieldPath": "lvi_score",  "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "pi_leads",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "voice_callback_scheduled", "order": "ASCENDING" },
+        { "fieldPath": "voice_call_attempted",     "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "portal_listings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status",     "order": "ASCENDING" },
+        { "fieldPath": "lvi_score",  "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "portal_listings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "lvi_tier",    "order": "ASCENDING" },
+        { "fieldPath": "created_at",  "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "target_firms",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "outreachStatus", "order": "ASCENDING" },
+        { "fieldPath": "discoveredAt",   "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "task_runs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "task_id",     "order": "ASCENDING" },
+        { "fieldPath": "executed_at", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

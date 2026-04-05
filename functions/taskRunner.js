@@ -7,10 +7,34 @@ if (!admin.apps.length) {
     admin.initializeApp();
 }
 
+// ── Skill Registry — PI Platform Skills Added ──────────────────────────────────
 // Lazy-load skill runners to avoid crashing if a skill file is missing
 const SKILL_RUNNERS = {
-    'tech-radar': () => require('./skills/tech-radar/scripts/runner'),
-    'mcp-connector': () => require('./skills/mcp-connector/scripts/runner'),
+    // Original Skills
+    'tech-radar':        () => require('./skills/tech-radar/scripts/runner'),
+    'mcp-connector':     () => require('./skills/mcp-connector/scripts/runner'),
+    'reputation-review': () => require('./skills/reputation-review/scripts/runner'),
+
+    // Series B: PI Lead Platform Skills
+    'plir-batch':        () => ({
+        run: async () => {
+            const { runPLIRBatch } = require('./logic/plirGenerator');
+            return runPLIRBatch(10); // Process up to 10 leads per run
+        }
+    }),
+    'firm-discovery':    () => ({
+        run: async () => {
+            const { runFirmDiscovery } = require('./firmDiscovery');
+            return runFirmDiscovery(3); // 3 cities per weekly run
+        }
+    }),
+    'voice-callbacks':   () => ({
+        run: async () => {
+            const { retryVoiceCallbacks } = require('./piVoiceWebhook');
+            return retryVoiceCallbacks();
+        }
+    }),
+    'outreach-agent':    () => require('./skills/outreach-agent/scripts/runner'),
 };
 
 /**
@@ -180,5 +204,66 @@ exports.scheduledTaskRunner = onSchedule("every 15 minutes", async (event) => {
         logger.error("Fatal error in notebook_tasks section:", e);
     }
 
+    // ─── Part 3.5: PI Platform Hourly Checks ──────────────────────────────────────
+    // Runs PI-specific platform tasks on an hourly cadence (every 4 cycles of 15min)
+    try {
+        const hourMark = now.getMinutes() < 15; // Only run on the hour (first 15-min window)
+
+        if (hourMark) {
+            logger.info("[PI Platform] Running hourly PI platform tasks...");
+
+            // 1. PLIR Batch — generate reports for new scored leads
+            try {
+                const { runPLIRBatch } = require('./logic/plirGenerator');
+                const plirResult = await runPLIRBatch(5);
+                logger.info(`[PI Platform] PLIR batch: ${plirResult.processed || 0} reports generated.`);
+            } catch (plirErr) {
+                logger.error('[PI Platform] PLIR batch failed:', plirErr.message);
+            }
+
+            // 2. Voice callback retries (for leads blocked by business hours)
+            const ctHour = parseInt(now.toLocaleString('en-US', { timeZone: 'America/Chicago', hour: 'numeric', hour12: false }));
+            if (ctHour === 8) { // Retry at 8am CT
+                try {
+                    const { retryVoiceCallbacks } = require('./piVoiceWebhook');
+                    const callResult = await retryVoiceCallbacks();
+                    logger.info(`[PI Platform] Voice retries: ${callResult?.processed || 0} processed.`);
+                } catch (callErr) {
+                    logger.error('[PI Platform] Voice callback retry failed:', callErr.message);
+                }
+            }
+
+            // 3. Firm discovery (Monday only — weekly cadence)
+            const isMonday = now.getDay() === 1;
+            if (isMonday && ctHour === 9) {
+                try {
+                    const { runFirmDiscovery } = require('./firmDiscovery');
+                    const discoveryResult = await runFirmDiscovery(3);
+                    logger.info(`[PI Platform] Firm discovery: ${discoveryResult.totalSaved || 0} new firms.`);
+                } catch (discErr) {
+                    logger.error('[PI Platform] Firm discovery failed:', discErr.message);
+                }
+            }
+        }
+    } catch (e) {
+        logger.error("Fatal error in PI Platform section:", e);
+    }
+
     logger.info("TaskRunner complete.");
 });
+
+/**
+ * Manual trigger for skills to bypass cron for high-priority audits (e.g. Board review)
+ */
+exports.manualRunSkill = async (request) => {
+    const { name, params = {} } = request.data;
+    const db = admin.firestore();
+    
+    if (!SKILL_RUNNERS[name]) {
+        throw new Error(`Skill ${name} not found or no runner registered.`);
+    }
+    
+    logger.info(`[manual-runner] Manual trigger for: ${name}`);
+    const runner = SKILL_RUNNERS[name]();
+    return await runner({ taskId: `manual_${name}`, taskParams: params, db });
+};
