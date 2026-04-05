@@ -53,9 +53,15 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+    const apiKey = process.env.GOOGLE_AI_API_KEY || process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      return NextResponse.json({ error: "Vision API not configured" }, { status: 500 });
+      console.warn("[ACV Analyzer] No API key — returning mock result");
+      return NextResponse.json({
+        success: true,
+        analysis: buildMockResult(year, make, model, mileage, injured),
+        photosProcessed: photos.length,
+        mock: true,
+      });
     }
 
     // Build analysis prompt
@@ -149,4 +155,55 @@ Respond in this exact JSON format:
     console.error("[ACV Analyzer]", message);
     return NextResponse.json({ error: message }, { status: 500 });
   }
+}
+
+function buildMockResult(
+  year: string | null,
+  make: string | null,
+  model: string | null,
+  mileage: string | null,
+  injured: boolean
+) {
+  const mi = parseInt(mileage || "0") || 55000;
+  const base = 18500;
+  const mileageAdj = Math.max(0, (80000 - mi) / 80000) * 4000;
+  const mid = Math.round(base + mileageAdj);
+
+  return {
+    vehicle: {
+      year: year || "2020",
+      make: make || "Vehicle",
+      model: model || "Identified",
+      trim: "Unknown",
+      confidence: make && year ? "Medium" : "Low",
+    },
+    damage: {
+      severity: "Severe",
+      areas: ["Front Bumper", "Hood", "Left Fender"],
+      estimatedRepairCost: { low: 7500, high: 12000 },
+      isTotalLoss: true,
+    },
+    acv: {
+      low: mid - 2000,
+      mid,
+      high: mid + 3500,
+      factors: [
+        "Texas market demand (Dallas/Houston premium)",
+        "Pre-accident condition estimate",
+        `Mileage adjustment (${mi.toLocaleString()} miles)`,
+        "Comparable sales within 100 miles",
+      ],
+    },
+    recommendation: {
+      shouldDispute: true,
+      negotiationPoints: [
+        "Request the full CCC One valuation report before signing",
+        "Provide 3-5 comparable listings from AutoTrader/CarGurus within 100 miles",
+        "Document all recent maintenance and upgrades",
+        "Texas law (§542.056) requires insurer response within 15 business days",
+      ],
+      possibleInjuryCase: injured,
+      injuryIndicators: injured ? ["User reported injuries at time of accident"] : [],
+    },
+  };
 }

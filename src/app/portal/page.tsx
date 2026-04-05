@@ -11,9 +11,7 @@ import {
   limit,
   getDocs,
 } from "firebase/firestore";
-import { BusinessTree } from "../components/BusinessTree";
-import { TestingHub } from "../components/TestingHub";
-import { KaplanBoard } from "../components/KaplanBoard";
+
 
 // ── Types ────────────────────────────────────────────────────────────────────
 interface PortalListing {
@@ -112,7 +110,7 @@ function PortalLanding({ onLogin }: { onLogin: () => void }) {
 
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             {DEMO_CASES.map((c) => (
-              <CaseCard key={c.id} case={c} locked={true} onUnlock={onLogin} />
+              <CaseCard key={c.id} case={c} locked={true} />
             ))}
           </div>
 
@@ -151,11 +149,9 @@ function PortalLanding({ onLogin }: { onLogin: () => void }) {
 function CaseCard({
   case: c,
   locked,
-  onUnlock,
 }: {
   case: Omit<PortalListing, "created_at">;
   locked: boolean;
-  onUnlock?: () => void;
 }) {
   const tier = TIER_CONFIG[c.lvi_tier];
 
@@ -223,7 +219,7 @@ function CaseCard({
           {tier.price}
         </div>
         {c.status === "available" ? (
-          <button onClick={onUnlock} className="btn btn-primary btn-sm">
+          <button className="btn btn-primary btn-sm">
             {locked ? "Login to Purchase" : "Purchase Case"}
           </button>
         ) : (
@@ -240,7 +236,7 @@ function AuthenticatedPortal({ user }: { user: User }) {
   const [firmProfile, setFirmProfile] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
-  const [activeTab, setActiveTab] = useState<"marketplace" | "kaplan" | "business" | "uat">("marketplace");
+  const [activeTab] = useState<"marketplace">("marketplace");
 
   useEffect(() => {
     const load = async () => {
@@ -305,32 +301,7 @@ function AuthenticatedPortal({ user }: { user: User }) {
 
       <div className="container" style={{ paddingTop: "2rem" }}>
         
-        {/* Dashboard Navigation Tabs */}
-        <div style={{ display: "flex", gap: "1rem", marginBottom: "2rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "1rem", overflowX: "auto" }}>
-          {[
-            { id: "marketplace", label: "Lead Marketplace" },
-            { id: "kaplan", label: "Kaplan Board" },
-            { id: "business", label: "Business Tree" },
-            { id: "uat", label: "Testing Hub" }
-          ].map(tab => (
-             <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                style={{
-                   padding: "0.5rem 1rem",
-                   background: "none",
-                   border: "none",
-                   color: activeTab === tab.id ? "var(--color-primary)" : "var(--text-secondary)",
-                   fontWeight: activeTab === tab.id ? "bold" : "normal",
-                   cursor: "pointer",
-                   borderBottom: activeTab === tab.id ? "2px solid var(--color-primary)" : "none",
-                   whiteSpace: "nowrap"
-                }}
-             >
-                {tab.label}
-             </button>
-          ))}
-        </div>
+
 
         {activeTab === "marketplace" && (
           <>
@@ -384,9 +355,7 @@ function AuthenticatedPortal({ user }: { user: User }) {
           </>
         )}
 
-        {activeTab === "kaplan" && <KaplanBoard />}
-        {activeTab === "business" && <BusinessTree />}
-        {activeTab === "uat" && <TestingHub />}
+
 
       </div>
     </main>
