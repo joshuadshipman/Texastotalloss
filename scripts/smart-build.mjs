@@ -77,6 +77,9 @@ async function runSmartBuild() {
         
         saveState(state);
         generateErrorPacket(output, cacheCleared);
+        console.error("====== BUILD OUTPUT ======");
+        console.error(output);
+        console.error("==========================");
         process.exit(1);
     }
 }
