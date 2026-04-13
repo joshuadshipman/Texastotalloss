@@ -55,7 +55,12 @@ function IntakeContent() {
   // Pre-fill from URL param if needed
   useEffect(() => {
     const type = searchParams.get("type");
+    const intent = searchParams.get("intent");
+    
     if (type) setForm((f) => ({ ...f, accidentType: type }));
+    if (intent === "ACV_DISPUTE") {
+      setForm((f) => ({ ...f, isInjured: "no", vehicleStatus: "total_loss" }));
+    }
   }, [searchParams]);
 
   const update = (key: string, val: unknown) =>
@@ -148,8 +153,12 @@ function IntakeContent() {
             
             {/* Mobile Header */}
             <div className="mobile-only" style={{ textAlign: "center", marginBottom: "2rem" }}>
-              <h1 className="text-2xl font-extrabold" style={{ marginBottom: "0.5rem" }}>Total Loss & Claim Review</h1>
-              <p className="text-secondary text-sm">Step {step} of {STEPS.length} — evaluate your property damage and see what your case is worth.</p>
+              <h1 className="text-2xl font-extrabold" style={{ marginBottom: "0.5rem" }}>
+                {searchParams.get("intent") === "ACV_DISPUTE" ? "Settlement Multiplier Audit" : "Claim Recovery Audit"}
+              </h1>
+              <p className="text-secondary text-sm">
+                Step {step} of 5 — secure the retail value you're legally owed.
+              </p>
             </div>
 
             {/* Step Indicator */}
@@ -444,33 +453,39 @@ function IntakeContent() {
           )}
 
           {/* Navigation Buttons */}
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2rem", gap: "1rem" }}>
-            {step > 1 ? (
-              <button className="btn btn-secondary" onClick={() => setStep((s) => s - 1)}>
-                ← Back
-              </button>
-            ) : <div />}
-
-            {step < STEPS.length ? (
-              <button
-                className="btn btn-primary"
+          <div style={{ display: "flex", gap: "1rem" }}>
+              {step > 1 && (
+                <button 
+                  className="btn" 
+                  style={{ flex: 1, color: "var(--text-secondary)", background: "var(--surface-overlay)", border: "1px solid var(--surface-border)" }}
+                  onClick={() => {
+                    if (step === 4 && searchParams.get("intent") === "ACV_DISPUTE") {
+                      setStep(2);
+                    } else {
+                      setStep(s => s - 1);
+                    }
+                  }}
+                >
+                  ← Back
+                </button>
+              )}
+              <button 
+                className="btn btn-primary" 
+                style={{ flex: 2, height: "3.5rem", opacity: loading || !canProceed() ? 0.7 : 1 }} 
+                disabled={!canProceed() || loading}
                 onClick={() => {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                  canProceed() && setStep((s) => s + 1);
+                  if (step === 5) {
+                    handleSubmit();
+                  } else if (step === 2 && searchParams.get("intent") === "ACV_DISPUTE") {
+                    update("isInjured", "no");
+                    setStep(4);
+                  } else {
+                    setStep(s => s + 1);
+                  }
                 }}
-                disabled={!canProceed()}
-                style={{ opacity: canProceed() ? 1 : 0.5 }}>
-                Continue →
+              >
+                {loading ? "Processing..." : step === 5 ? "Submit Audit Request →" : "Continue →"}
               </button>
-            ) : (
-              <button
-                className="btn btn-primary animate-pulse-glow"
-                onClick={handleSubmit}
-                disabled={loading || !canProceed()}
-                style={{ opacity: loading || !canProceed() ? 0.7 : 1 }}>
-                {loading ? "Submitting..." : "Submit My Case →"}
-              </button>
-            )}
           </div>
         </div>
 

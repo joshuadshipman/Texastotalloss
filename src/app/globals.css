@@ -511,4 +511,15 @@ select.form-input { appearance: none; cursor: pointer; }
 
 /* ── Responsive Utilities ──────────────────────────────────────────────────── */
 .hidden-mobile { display: block; }
-@media (max-width: 768px) { .hidden-mobile { display: none; } }
+.mobile-only { display: none; }
+
+@media (max-width: 768px) {
+  .hidden-mobile { display: none; }
+  .mobile-only { display: block; }
+  
+  .container { padding: 0 1rem; }
+  .section { padding: 4rem 0; }
+  
+  .btn { width: 100%; justify-content: center; padding: 1rem; }
+  .grid-2, .grid-3, .grid-4 { gap: 1rem; }
+}

@@ -86,6 +86,9 @@ exports.insuranceVoiceWebhook = onDocumentWritten(
     twimlUrl.searchParams.set('name', lead.firstName || 'there');
     twimlUrl.searchParams.set('vehicle', lead.vehicleYear && lead.vehicleMake
       ? `${lead.vehicleYear} ${lead.vehicleMake}` : 'vehicle');
+    // Enforce the new educational strategy
+    twimlUrl.searchParams.set('strategy', 'replacement_quote_education');
+    twimlUrl.searchParams.set('systemPromptOverride', 'You are assisting a claimant who needs a replacement vehicle policy check after a total loss. Educate them on why policy checks are smart post-accident. Do not bash their old insurer.');
 
     logger.info(`[VOICE-WEBHOOK] Initiating call for lead ${leadId} → ${lead.phone}`);
 

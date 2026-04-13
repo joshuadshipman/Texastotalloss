@@ -102,6 +102,8 @@ async function routeIntent(db, fromNumber, messageText) {
     }
 
     // ── 1. Shopping list: "add milk" / "add 2 eggs" ──────────────────────
+    const addMatch = text.match(/^add\s+(.+)$/i);
+    if (addMatch) {
         const itemName = addMatch[1].trim();
         const docRef = await db.collection('shopping_list').add({
             product_name: itemName,

@@ -48,9 +48,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Messages array required" }, { status: 400 });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+    const apiKey =
+      process.env.GOOGLE_AI_API_KEY ||
+      process.env.GEMINI_API_KEY ||
+      process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+
     if (!apiKey) {
-      return NextResponse.json({ error: "Chat service not configured" }, { status: 500 });
+      // Graceful fallback — never show a raw error to users
+      return NextResponse.json({
+        reply:
+          "I'm having trouble connecting right now. For immediate help with your claim, please [complete our free evaluation](/quiz) or call us directly. We're here to help.",
+      });
     }
 
     // Convert chat messages to Gemini format

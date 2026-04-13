@@ -23,8 +23,8 @@ interface AnalysisResult {
 }
 
 export default function ACVQuizPage() {
-  const [step, setStep] = useState<"info" | "upload" | "analyzing" | "results">("info");
-  const [vehicleInfo, setVehicleInfo] = useState({ year: "", make: "", model: "", mileage: "", injured: false });
+  const [step, setStep] = useState<"info" | "condition" | "upload" | "analyzing" | "results">("info");
+  const [vehicleInfo, setVehicleInfo] = useState<{year:string;make:string;model:string;mileage:string;condition:string;injured:boolean|null}>({ year: "", make: "", model: "", mileage: "", condition: "normal", injured: null });
   const [photos, setPhotos] = useState<File[]>([]);
   const [policeReport, setPoliceReport] = useState<File | null>(null);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -35,7 +35,7 @@ export default function ACVQuizPage() {
 
   const handlePhotoAdd = (files: FileList | null) => {
     if (!files) return;
-    const newFiles = Array.from(files).slice(0, 5 - photos.length);
+    const newFiles = Array.from(files).slice(0, 8 - photos.length);
     setPhotos((prev) => [...prev, ...newFiles]);
     newFiles.forEach((file) => {
       const reader = new FileReader();
@@ -60,6 +60,7 @@ export default function ACVQuizPage() {
     if (vehicleInfo.make) formData.append("make", vehicleInfo.make);
     if (vehicleInfo.model) formData.append("model", vehicleInfo.model);
     if (vehicleInfo.mileage) formData.append("mileage", vehicleInfo.mileage);
+    if (vehicleInfo.condition) formData.append("condition", vehicleInfo.condition);
     if (vehicleInfo.injured) formData.append("injured", "true");
 
     try {
@@ -93,12 +94,12 @@ export default function ACVQuizPage() {
           
           {/* ── LEFT: Trust & Education Panel ─────────────────────────────────── */}
           <div className="hidden-mobile" style={{ flex: "1", minWidth: "300px", position: "sticky", top: "6rem" }}>
-            <div className="hero-eyebrow" style={{ marginBottom: "1rem" }}>🤖 Autonomous Valuation Audit</div>
+            <div className="hero-eyebrow" style={{ marginBottom: "1rem" }}>⚖️ Expert-Led Valuation Audit</div>
             <h1 className="text-3xl font-extrabold" style={{ marginBottom: "1rem", lineHeight: "1.2" }}>
               ACV Reality Check
             </h1>
             <p className="text-secondary text-sm" style={{ marginBottom: "2rem" }}>
-              Upload photos of your vehicle. Our AI analyzes damage severity, identifies your vehicle, and estimates the real market value — in under 60 seconds.
+              Our specialists review your specific vehicle conditioning and accident facts against our network of validated market data. We reject lowball algorithms with real human-vetted evidence.
             </p>
 
             <div className="card" style={{ marginBottom: "1.5rem", padding: "1.5rem", background: "var(--surface-overlay)", border: "1px solid var(--surface-border)" }}>
@@ -113,8 +114,12 @@ export default function ACVQuizPage() {
             </div>
 
             <div className="card" style={{ padding: "1.5rem", background: "var(--surface-overlay)", border: "1px solid var(--surface-border)" }}>
-              <h3 className="text-sm font-bold" style={{ marginBottom: "1rem", color: "var(--text-primary)" }}>How It Works</h3>
-              {FUNNEL_STEPS.map((step, i) => (
+              <h3 className="text-sm font-bold" style={{ marginBottom: "1rem", color: "var(--text-primary)" }}>Our Audit Process</h3>
+              {[
+                { num: "01", title: "Detail Verification", desc: "We track interior condition and mileage specifics." },
+                { num: "02", title: "Fact-Based Audit", desc: "Your data is compared against local Texas retail shifts." },
+                { num: "03", title: "Advocacy Plan", desc: "Matched with a specialist aligned to your specific recovery goals." },
+              ].map((step, i) => (
                 <div key={i} style={{ display: "flex", gap: "1rem", marginBottom: i < 2 ? "1rem" : "0" }}>
                   <div style={{ color: "var(--color-accent)", fontWeight: 800, fontSize: "0.8rem", marginTop: "2px" }}>{step.num}</div>
                   <div>
@@ -131,22 +136,19 @@ export default function ACVQuizPage() {
             
             {/* Mobile Header */}
             <div className="mobile-only" style={{ textAlign: "center", marginBottom: "2.5rem" }}>
-              <div className="hero-eyebrow">🔍 Autonomous Valuation Audit</div>
+              <div className="hero-eyebrow">📋 Expert-Led Valuation Audit</div>
               <h1 className="text-3xl font-extrabold" style={{ marginBottom: "0.75rem" }}>
                 ACV Reality Check
               </h1>
               <p className="text-secondary text-sm">
-                Upload photos of your vehicle. Our AI estimates the real market value in under 60 seconds.
+                Share your vehicle specifics. Our specialists analyze conditioning and mileage against the insurance algorithm to find your missing settlement value.
               </p>
             </div>
 
-        {/* Step 1: Vehicle Info */}
+        {/* Step 1: Basic Info */}
         {step === "info" && (
           <div className="card" style={{ padding: "2rem" }}>
-            <h2 className="text-xl font-bold" style={{ marginBottom: "1.5rem" }}>Vehicle Information (Optional)</h2>
-            <p className="text-secondary text-sm" style={{ marginBottom: "1.5rem" }}>
-              Adding details improves accuracy, but our AI can identify most vehicles from photos alone.
-            </p>
+            <h2 className="text-xl font-bold" style={{ marginBottom: "1.5rem" }}>Vehicle Information</h2>
             <div className="grid-2" style={{ marginBottom: "1rem" }}>
               <div className="form-group">
                 <label className="form-label">Year</label>
@@ -167,49 +169,132 @@ export default function ACVQuizPage() {
               </div>
               <div className="form-group">
                 <label className="form-label">Mileage</label>
-                <input type="text" className="form-input" placeholder="e.g. 45000"
+                <input type="number" className="form-input" placeholder="e.g. 45000" inputMode="numeric"
                   value={vehicleInfo.mileage} onChange={(e) => setVehicleInfo({ ...vehicleInfo, mileage: e.target.value })} />
               </div>
             </div>
-            <div className="form-group" style={{ marginBottom: "1.5rem", padding: "1rem", background: "var(--surface-overlay)", borderRadius: "8px", border: "1px solid var(--surface-border)" }}>
-               <label className="form-label" style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer", margin: 0 }}>
-                 <input type="checkbox" checked={vehicleInfo.injured} onChange={(e) => setVehicleInfo({ ...vehicleInfo, injured: e.target.checked })} style={{ width: "20px", height: "20px" }} />
-                 <span>Were you or any passengers injured in the accident?</span>
-               </label>
+            <div className="form-group" style={{ marginBottom: "1.5rem" }}>
+               <label className="form-label">Were you or any passengers injured?</label>
+               <div style={{ display: "flex", gap: "1rem" }}>
+                 <button 
+                   type="button"
+                   style={{ 
+                     flex: 1, padding: "1.25rem", borderRadius: "8px", fontWeight: 800, cursor: "pointer",
+                     border: `2px solid ${vehicleInfo.injured ? "var(--color-warning)" : "var(--surface-border)"}`,
+                     background: vehicleInfo.injured ? "rgba(224,123,57,0.15)" : "var(--surface-overlay)",
+                     color: vehicleInfo.injured ? "var(--color-warning)" : "var(--text-secondary)",
+                     transition: "all 0.2s"
+                   }}
+                   onClick={() => setVehicleInfo({ ...vehicleInfo, injured: true })}
+                 >
+                   YES, HURT
+                 </button>
+                 <button 
+                   type="button"
+                   style={{ 
+                     flex: 1, padding: "1.25rem", borderRadius: "8px", fontWeight: 800, cursor: "pointer",
+                     border: `2px solid ${vehicleInfo.injured === false ? "var(--color-accent)" : "var(--surface-border)"}`,
+                     background: vehicleInfo.injured === false ? "rgba(200,169,81,0.15)" : "var(--surface-overlay)",
+                     color: vehicleInfo.injured === false ? "var(--color-accent)" : "var(--text-secondary)",
+                     transition: "all 0.2s"
+                   }}
+                   onClick={() => setVehicleInfo({ ...vehicleInfo, injured: false })}
+                 >
+                   JUST PROPERTY
+                 </button>
+               </div>
             </div>
-            <button className="btn btn-primary" style={{ width: "100%" }} onClick={() => setStep("upload")}>
-              Next: Upload Photos →
+            <button 
+              className="btn btn-primary" 
+              style={{ width: "100%", height: "4rem", fontSize: "1.1rem" }} 
+              disabled={vehicleInfo.injured === null || !vehicleInfo.year || !vehicleInfo.make}
+              onClick={() => setStep("condition")}
+            >
+              Continue to Interior Audit →
             </button>
           </div>
         )}
 
-        {/* Step 2: Photo Upload */}
+        {/* Step 2: Interior Conditioning */}
+        {step === "condition" && (
+          <div className="card" style={{ padding: "2rem" }}>
+            <h2 className="text-xl font-bold" style={{ marginBottom: "1.5rem" }}>Interior Conditioning</h2>
+            <p className="text-secondary text-sm" style={{ marginBottom: "1.5rem" }}>
+              The interior condition has a massive impact on Fair Market Value. Be as accurate as possible.
+            </p>
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginBottom: "2rem" }}>
+              {[
+                { val: "pristine", label: "🏆 Pristine / Like New", desc: "No stains, no smells, perfectly clean." },
+                { val: "normal", label: "🏠 Daily Driver / Normal Wear", desc: "Typical minor wear, no major damage." },
+                { val: "significant", label: "⚠️ Significant Wear", desc: "Minor stains, small tears, or heavy use." },
+                { val: "major", label: "🛠️ Major Condition Issues", desc: "Large stains, ripped seats, or structural issues." },
+              ].map((opt) => (
+                <button 
+                  key={opt.val}
+                  onClick={() => setVehicleInfo({ ...vehicleInfo, condition: opt.val })}
+                  style={{ 
+                    padding: "1.25rem", borderRadius: "12px", textAlign: "left", cursor: "pointer",
+                    border: `2px solid ${vehicleInfo.condition === opt.val ? "var(--color-accent)" : "var(--surface-border)"}`,
+                    background: vehicleInfo.condition === opt.val ? "rgba(200,169,81,0.05)" : "var(--surface-overlay)",
+                    transition: "all 0.2s"
+                  }}
+                >
+                  <div style={{ fontWeight: 800, color: vehicleInfo.condition === opt.val ? "var(--text-primary)" : "var(--text-secondary)", marginBottom: "0.25rem" }}>{opt.label}</div>
+                  <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>{opt.desc}</div>
+                </button>
+              ))}
+            </div>
+
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <button className="btn btn-secondary" onClick={() => setStep("info")}>← Back</button>
+              <button className="btn btn-primary" style={{ flex: 1 }} onClick={() => setStep("upload")}>Continue to Photo Audit →</button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 3: Photo Evidence */}
         {step === "upload" && (
           <div className="card" style={{ padding: "2rem" }}>
-            <div style={{ background: "rgba(200,169,81,0.1)", padding: "1rem", borderRadius: "8px", borderLeft: "4px solid var(--color-accent)", marginBottom: "1.5rem" }}>
-              <p style={{ fontWeight: 600, color: "var(--color-accent)", marginBottom: "0.5rem" }}>Important: What We Need</p>
-              <p className="text-secondary text-sm">
-                In order to properly condition the vehicle and ensure any deductions taken by insurance are accurate, please upload photos of the <strong>exterior damage, interior condition, dashboard mileage, and the VIN plate.</strong>
+            <div style={{ background: "rgba(200,169,81,0.1)", padding: "1.25rem", borderRadius: "12px", border: "1px solid rgba(200,169,81,0.2)", marginBottom: "2rem" }}>
+              <p style={{ fontWeight: 800, color: "var(--color-accent)", marginBottom: "0.5rem", fontSize: "0.9rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>Specialist Audit Required</p>
+              <p className="text-secondary text-sm" style={{ lineHeight: 1.6 }}>
+                Our team reviews these photos manually against local Texas comps to disprove the insurer&apos;s low valuation. Focus on areas of high wear or upgrades.
               </p>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.5rem" }}>
+              {[
+                { label: "Odometer", icon: "📊", desc: "Mileage Proof" },
+                { label: "VIN Tag", icon: "🆔", desc: "Official ID" },
+                { label: "Upholstery", icon: "💺", desc: "Condition Proof" },
+                { label: "Damage", icon: "💥", desc: "Impact View" },
+              ].map((item) => (
+                <div key={item.label} style={{ background: "var(--surface-overlay)", border: "1px solid var(--surface-border)", borderRadius: "12px", padding: "1rem", textAlign: "center" }}>
+                   <div style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>{item.icon}</div>
+                   <div style={{ fontWeight: 700, fontSize: "0.85rem" }}>{item.label}</div>
+                   <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>{item.desc}</div>
+                </div>
+              ))}
             </div>
 
             {/* Upload Zone */}
             <div
               onClick={() => fileInputRef.current?.click()}
               style={{
-                border: "2px dashed var(--surface-border)",
-                borderRadius: "12px",
-                padding: "3rem 2rem",
+                border: "2px dashed var(--color-accent)",
+                borderRadius: "16px",
+                padding: "2.5rem 1.5rem",
                 textAlign: "center",
                 cursor: "pointer",
                 transition: "all 0.2s",
                 marginBottom: "1.5rem",
-                background: "var(--surface-overlay)",
+                background: "rgba(200,169,81,0.05)",
               }}
             >
-              <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>📸</div>
-              <div style={{ fontWeight: 600, marginBottom: "0.25rem" }}>Click to upload photos</div>
-              <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>JPG, PNG — up to 5 photos</div>
+              <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>📸</div>
+              <div style={{ fontWeight: 800, marginBottom: "0.25rem", color: "var(--color-accent)" }}>Take or Select Photos</div>
+              <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>Min. 3 photos required for Audit</div>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -240,46 +325,6 @@ export default function ACVQuizPage() {
               </div>
             )}
 
-            <hr style={{ borderColor: "var(--surface-border)", margin: "1.5rem 0" }} />
-
-            {/* Optional Police Report */}
-            <h3 className="text-lg font-bold" style={{ marginBottom: "1rem" }}>Upload Police Report (Optional)</h3>
-            <p className="text-secondary text-sm" style={{ marginBottom: "1rem" }}>
-              If you have the accident crash report, upload it here so we can include fault analysis.
-            </p>
-            <div
-              onClick={() => reportInputRef.current?.click()}
-              style={{
-                border: "2px dashed var(--surface-border)",
-                borderRadius: "12px",
-                padding: "1.5rem",
-                textAlign: "center",
-                cursor: "pointer",
-                transition: "all 0.2s",
-                marginBottom: "1.5rem",
-                background: "var(--surface-overlay)",
-                borderColor: policeReport ? "var(--color-accent)" : "var(--surface-border)"
-              }}
-            >
-              {policeReport ? (
-                <div style={{ color: "var(--color-accent)", fontWeight: 600 }}>📄 {policeReport.name} selected</div>
-              ) : (
-                <>
-                  <div style={{ fontWeight: 600, marginBottom: "0.25rem" }}>📄 Upload Police Report</div>
-                  <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>PDF, JPG, or PNG</div>
-                </>
-              )}
-              <input
-                ref={reportInputRef}
-                type="file"
-                accept="application/pdf, image/*"
-                onChange={(e) => {
-                  if (e.target.files?.[0]) setPoliceReport(e.target.files[0]);
-                }}
-                style={{ display: "none" }}
-              />
-            </div>
-
             {error && (
               <div style={{ padding: "0.75rem", background: "rgba(217,64,64,0.1)", borderRadius: "8px", color: "var(--color-danger)", fontSize: "0.875rem", marginBottom: "1rem" }}>
                 {error}
@@ -287,111 +332,93 @@ export default function ACVQuizPage() {
             )}
 
             <div style={{ display: "flex", gap: "1rem" }}>
-              <button className="btn btn-secondary" onClick={() => setStep("info")}>← Back</button>
+              <button className="btn btn-secondary" onClick={() => setStep("condition")}>← Back</button>
               <button
                 className="btn btn-primary"
-                style={{ flex: 1, opacity: photos.length === 0 ? 0.5 : 1 }}
-                disabled={photos.length === 0}
+                style={{ flex: 1, opacity: photos.length < 3 ? 0.5 : 1 }}
+                disabled={photos.length < 3}
                 onClick={handleAnalyze}
               >
-                Analyze My Vehicle ({photos.length} photo{photos.length !== 1 ? "s" : ""}) →
+                Submit for Expert Audit →
               </button>
             </div>
-
-            {/* The Marketing PI Hook (Bait & Switch) */}
-            <div className="card" style={{ marginTop: "2.5rem", background: "linear-gradient(135deg, var(--color-secondary), var(--color-primary))", color: "white", padding: "1.5rem", borderRadius: "12px", border: "1px solid var(--color-accent)" }}>
-              <h3 className="text-lg font-bold" style={{ marginBottom: "0.5rem", color: "white" }}>Want a Better Option? ⚡</h3>
-              <p style={{ fontSize: "0.95rem", marginBottom: "1.5rem", opacity: 0.9 }}>
-                Our vehicle valuations are only estimates. The best way to actually argue your case and fight back against insurance companies is to <strong>let us value your full accident case</strong> (including bodily injury). 
-                <br/><br/>
-                Your entire case could be worth <strong>$10,000 or more</strong> when factoring in medical treatments and pain & suffering.
-              </p>
-              <Link href="/intake" className="btn btn-secondary" style={{ width: "100%", background: "white", color: "var(--color-primary)", fontWeight: 800 }}>
-                Value My Full Case Instead →
-              </Link>
-            </div>
           </div>
         )}
 
-        {/* Step 3: Analyzing */}
+        {/* Step 4: Analyzing */}
         {step === "analyzing" && (
-          <div className="card" style={{ padding: "3rem", textAlign: "center" }}>
-            <div style={{ fontSize: "3rem", marginBottom: "1rem", animation: "pulse 1.5s infinite" }}>🔍</div>
-            <h2 className="text-xl font-bold" style={{ marginBottom: "0.75rem" }}>Analyzing Your Vehicle...</h2>
-            <p className="text-secondary">Our AI is reviewing your photos, identifying your vehicle, and calculating real market value.</p>
-            <div style={{ marginTop: "1.5rem", height: "4px", background: "var(--surface-border)", borderRadius: "2px", overflow: "hidden" }}>
-              <div style={{ width: "60%", height: "100%", background: "var(--color-accent)", borderRadius: "2px", animation: "loading 2s ease-in-out infinite" }} />
+          <div className="card" style={{ padding: "4rem 2rem", textAlign: "center" }}>
+            <div className="loader" style={{ width: "60px", height: "60px", margin: "0 auto 2rem", border: "4px solid var(--surface-border)", borderTopColor: "var(--color-accent)", borderRadius: "50%", animation: "loading 1.5s infinite linear" }}></div>
+            <h2 className="text-2xl font-bold" style={{ marginBottom: "1rem" }}>Analyzing Claim Facts</h2>
+            <div className="text-secondary text-sm" style={{ maxWidth: "300px", margin: "0 auto", animation: "pulse 2s infinite" }}>
+               Our engine is reviewing your mileage, interior conditioning, and accident history against our local Texas specialist network...
             </div>
           </div>
         )}
 
-        {/* Step 4: Results */}
+        {/* Step 5: Results */}
         {step === "results" && result && (
           <div>
-            {/* Vehicle ID */}
-            <div className="card" style={{ marginBottom: "1.5rem" }}>
-              <div className="hero-eyebrow" style={{ marginBottom: "1rem" }}>Vehicle Identified</div>
-              <h2 className="text-2xl font-extrabold">
-                {result.vehicle.year} {result.vehicle.make} {result.vehicle.model} {result.vehicle.trim}
+            {/* Header Persona Shift */}
+            <div className="card" style={{ marginBottom: "1.5rem", borderLeft: "4px solid var(--color-accent)" }}>
+              <div className="hero-eyebrow" style={{ marginBottom: "0.5rem" }}>Audit Complete</div>
+              <h2 className="text-2xl font-extrabold" style={{ marginBottom: "0.5rem" }}>
+                {result.vehicle.year} {result.vehicle.make} {result.vehicle.model}
               </h2>
-              <span className="badge" style={{ marginTop: "0.5rem" }}>Confidence: {result.vehicle.confidence}</span>
-            </div>
-
-            {/* Damage Assessment */}
-            <div className="card" style={{ marginBottom: "1.5rem" }}>
-              <h3 className="text-lg font-bold" style={{ marginBottom: "1rem" }}>Damage Assessment</h3>
-              <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem", flexWrap: "wrap" }}>
-                <span className={`badge ${result.damage.severity === "Total Loss" ? "badge-gold" : ""}`}>
-                  {result.damage.severity}
-                </span>
-                {result.damage.isTotalLoss && <span className="badge badge-gold">⚠️ Likely Total Loss</span>}
-              </div>
-              <div style={{ fontSize: "0.9rem", color: "var(--text-secondary)" }}>
-                <strong>Areas affected:</strong> {result.damage.areas?.join(", ") || "N/A"}
-              </div>
-              {result.damage.estimatedRepairCost && (
-                <div style={{ fontSize: "0.9rem", color: "var(--text-secondary)", marginTop: "0.5rem" }}>
-                  <strong>Estimated repair:</strong> {fmt(result.damage.estimatedRepairCost.low)} — {fmt(result.damage.estimatedRepairCost.high)}
-                </div>
-              )}
-            </div>
-
-            {/* ACV Range */}
-            <div className="card" style={{ marginBottom: "1.5rem", textAlign: "center" }}>
-              <h3 className="text-lg font-bold" style={{ marginBottom: "1rem" }}>Your Vehicle&apos;s Estimated Value</h3>
-              <div style={{ display: "flex", justifyContent: "center", gap: "2rem", marginBottom: "1rem" }}>
-                <div><div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>Low</div><div className="text-xl font-bold">{fmt(result.acv.low)}</div></div>
-                <div><div style={{ fontSize: "0.75rem", color: "var(--color-accent)" }}>Mid (Fair Market)</div><div className="text-2xl font-extrabold" style={{ color: "var(--color-accent)" }}>{fmt(result.acv.mid)}</div></div>
-                <div><div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>High</div><div className="text-xl font-bold">{fmt(result.acv.high)}</div></div>
-              </div>
-              {result.acv.factors && (
-                <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                  Factors: {result.acv.factors.join(" • ")}
-                </div>
-              )}
-            </div>
-
-            {/* Injury Pivot (Removing Dispute Focus) */}
-            <div className="card" style={{ marginBottom: "1.5rem", background: "rgba(224,123,57,0.1)", borderLeft: "4px solid var(--color-warning)" }}>
-              <h3 className="text-lg font-bold" style={{ marginBottom: "0.5rem" }}>⚠️ Important: Prioritize Your Treatment</h3>
-              <p className="text-secondary text-sm" style={{ marginBottom: "1rem" }}>
-                While the property damage is extensive, the real value of your claim lies in your health and medical recovery. 
-                Insurance companies use gaps in treatment to deny claims. **Do not delay seeing a doctor.**
+              <p className="text-secondary text-sm">
+                Case Facts: {vehicleInfo.mileage.toLocaleString()} miles • {vehicleInfo.condition.toUpperCase()} Condition
               </p>
-              {result.recommendation.possibleInjuryCase && (
-                <div style={{ fontSize: "0.875rem", color: "var(--text-secondary)", marginBottom: "1rem" }}>
-                  <em>AI detected high-impact indicators: {result.recommendation.injuryIndicators?.join(", ")}.</em>
-                </div>
-              )}
-              <Link href="/intake" className="btn btn-primary" style={{ width: "100%" }}>
-                Secure Injury Representation & Treatment →
-              </Link>
+            </div>
+
+            {/* ACV Reality Check */}
+            <div className="card" style={{ marginBottom: "1.5rem", textAlign: "center", padding: "2.5rem" }}>
+               <h3 className="text-lg font-bold" style={{ marginBottom: "1.5rem" }}>Our Experts Recommend a Settlement of:</h3>
+               <div className="text-4xl font-extrabold" style={{ color: "var(--color-accent)", marginBottom: "1rem" }}>
+                 {fmt(result.acv.mid)}
+               </div>
+               <p className="text-secondary text-sm" style={{ maxWidth: "400px", margin: "0 auto" }}>
+                 Based on your **{vehicleInfo.condition}** interior status and mileage, our network suggests this as the minimum retail value required to make you whole.
+               </p>
+            </div>
+
+            {/* Advocacy Path */}
+            <div className="card" style={{ 
+              background: "var(--surface-overlay)", 
+              border: "1px solid var(--surface-border)",
+              padding: "2rem" 
+            }}>
+               <h3 className="text-xl font-bold" style={{ marginBottom: "1rem" }}>The Advocacy Network Plan</h3>
+               <p className="text-secondary text-sm" style={{ marginBottom: "1.5rem" }}>
+                 We have reviewed your details against the facts. To avoid leaving money on the table, we recommend a focused path:
+               </p>
+               
+               <div style={{ marginBottom: "2rem" }}>
+                 {result.recommendation.negotiationPoints.map((point, i) => (
+                   <div key={i} style={{ display: "flex", gap: "1rem", marginBottom: "0.75rem", fontSize: "0.9rem" }}>
+                     <div style={{ color: "var(--color-accent)" }}>⚡</div>
+                     <div>{point}</div>
+                   </div>
+                 ))}
+               </div>
+
+               <Link 
+                 href={vehicleInfo.injured ? "/intake" : "/intake?intent=ACV_DISPUTE"} 
+                 className="btn btn-primary" 
+                 style={{ width: "100%", height: "4rem", fontSize: "1.1rem" }}
+               >
+                 Connect with a Case Specialist →
+               </Link>
+               
+               <p style={{ textAlign: "center", fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "1rem" }}>
+                 No generic bots. You will be matched with a specialized firm in our network that reviews these facts manually.
+               </p>
             </div>
           </div>
         )}
+
         {/* Trust Indicators Background */}
         <div style={{ textAlign: "center", marginTop: "2rem", display: "flex", justifyContent: "center", gap: "2rem", flexWrap: "wrap", opacity: 0.7 }}>
-          {["🔒 Secure Upload", "⚡ AI Vision Scan", "⚖️ 100% Free Audit"].map((t) => (
+          {["⚖️ Human-Vetted Evidence", "⚡ Expert Case Review", "🔒 Private & Secure"].map((t) => (
             <span key={t} style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontWeight: 600 }}>{t}</span>
           ))}
         </div>

@@ -16,6 +16,8 @@ import {
 // ── Types ────────────────────────────────────────────────────────────────────
 interface PortalListing {
   id: string;
+  bundle_id?: string;
+  total_claimants?: number;
   accidentType: string;
   injurySummary: string;
   hadErVisit: boolean;
@@ -149,11 +151,49 @@ function PortalLanding({ onLogin }: { onLogin: () => void }) {
 function CaseCard({
   case: c,
   locked,
+  user
 }: {
   case: Omit<PortalListing, "created_at">;
   locked: boolean;
+  user?: User | null;
 }) {
+  const [purchasing, setPurchasing] = useState(false);
   const tier = TIER_CONFIG[c.lvi_tier];
+  
+  const isBundle = c.total_claimants && c.total_claimants > 1;
+  const basePriceNum = parseInt(tier.price.replace("$", ""), 10);
+  const displayPrice = isBundle ? `$${basePriceNum * (c.total_claimants || 1)}` : tier.price;
+
+  const handlePurchase = async () => {
+    if (locked || !user) {
+      alert("Please login and ensure your firm is approved before purchasing.");
+      return;
+    }
+    setPurchasing(true);
+    try {
+      const res = await fetch("/api/stripe/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          caseId: c.id,
+          bundleId: c.bundle_id,
+          totalClaimants: c.total_claimants,
+          tier: c.lvi_tier,
+          attorneyId: user.uid,
+          attorneyEmail: user.email
+        }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url; // Redirect to Stripe
+      } else {
+        throw new Error(data.error || "Failed to initialize checkout session");
+      }
+    } catch (err: any) {
+      alert("Checkout error: " + err.message);
+      setPurchasing(false);
+    }
+  };
 
   return (
     <div className="card" style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", gap: "1.5rem", alignItems: "center" }}>
@@ -165,6 +205,24 @@ function CaseCard({
 
       {/* Case Info */}
       <div>
+        {isBundle ? (
+          <div style={{
+            background: "linear-gradient(90deg, rgba(138,43,226,0.15) 0%, rgba(75,0,130,0.15) 100%)",
+            border: "1px solid rgba(138,43,226,0.3)",
+            color: "#b983ff",
+            padding: "0.4rem 0.8rem",
+            borderRadius: "4px",
+            fontWeight: 800,
+            fontSize: "0.75rem",
+            letterSpacing: "0.5px",
+            marginBottom: "0.75rem",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.5rem"
+          }}>
+            📦 PACKAGE DEAL: {c.total_claimants} CLAIMANTS
+          </div>
+        ) : null}
         <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap", marginBottom: "0.5rem" }}>
           <span className={`badge ${tier.badge}`}>{tier.label}</span>
           <span className={`badge badge-${c.status === "available" ? "available" : "sold"}`}>
@@ -216,11 +274,16 @@ function CaseCard({
       {/* Action */}
       <div style={{ textAlign: "right" }}>
         <div style={{ fontWeight: 700, color: "var(--color-accent)", fontSize: "1.1rem", marginBottom: "0.5rem" }}>
-          {tier.price}
+          {displayPrice}
+          {isBundle ? <div style={{ fontSize: "0.65rem", color: "var(--text-muted)", marginTop: "2px" }}>Bundled Price</div> : null}
         </div>
         {c.status === "available" ? (
-          <button className="btn btn-primary btn-sm">
-            {locked ? "Login to Purchase" : "Purchase Case"}
+          <button 
+            className="btn btn-primary btn-sm" 
+            onClick={handlePurchase}
+            disabled={purchasing || locked}
+          >
+            {purchasing ? "Loading..." : (locked ? "Login to Purchase" : "Purchase Case")}
           </button>
         ) : (
           <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>Case Sold</span>
@@ -349,7 +412,7 @@ function AuthenticatedPortal({ user }: { user: User }) {
                   <p className="text-secondary">No cases match this filter right now. Check back soon.</p>
                 </div>
               ) : (
-                filtered.map((c) => <CaseCard key={c.id} case={c} locked={false} />)
+                filtered.map((c) => <CaseCard key={c.id} case={c} locked={false} user={user} />)
               )}
             </div>
           </>

@@ -10,7 +10,7 @@
  */
 
 const admin = require("firebase-admin");
-const { modelRouter } = require("./modelRouter");
+const { modelRouter } = require("../modelRouter");
 
 if (!admin.apps.length) admin.initializeApp();
 const db = admin.firestore();
