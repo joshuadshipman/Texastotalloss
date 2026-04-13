@@ -523,3 +523,130 @@ select.form-input { appearance: none; cursor: pointer; }
   .btn { width: 100%; justify-content: center; padding: 1rem; }
   .grid-2, .grid-3, .grid-4 { gap: 1rem; }
 }
+
+/* ── Floating Angel Widget ───────────────────────────────────────────── */
+.floating-angel {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.angel-bubble {
+  background: rgba(17, 30, 48, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(200, 169, 81, 0.3);
+  padding: 1rem 1.5rem;
+  border-radius: 20px 20px 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), var(--shadow-glow);
+  animation: fadeInUp 0.5s ease-out;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.angel-bubble:hover {
+  transform: scale(1.05) translateY(-5px);
+  border-color: var(--color-accent-light);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.5), var(--shadow-glow-strong);
+}
+
+.angel-status {
+  width: 12px;
+  height: 12px;
+  background: var(--status-available);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--status-available);
+  position: relative;
+}
+
+.angel-status::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px solid var(--status-available);
+  border-radius: 50%;
+  animation: pulse-ring 2s infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.angel-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.angel-name {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.angel-msg {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.angel-actions {
+  display: flex;
+  gap: 0.75rem;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.floating-angel:hover .angel-actions {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.angel-btn {
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.angel-btn.sms {
+  background: var(--tier-platinum);
+  color: var(--color-primary);
+}
+
+.angel-btn.call {
+  background: var(--color-accent);
+  color: var(--color-primary);
+}
+
+.angel-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+@media (max-width: 768px) {
+  .floating-angel {
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+  .angel-bubble {
+    padding: 0.75rem 1rem;
+  }
+}

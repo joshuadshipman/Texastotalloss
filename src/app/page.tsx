@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import AngelChatWidget from "@/components/AngelChatWidget";
 
 // Removed STATS and STEPS to keep root purely informational
 
@@ -74,8 +75,8 @@ export default function HomePage() {
                 <Link href="/quiz" className="btn btn-primary btn-lg animate-pulse-glow">
                   Start Free ACV Audit →
                 </Link>
-                <Link href="/total-loss" className="btn btn-secondary btn-lg">
-                  Read Total Loss Guides
+                <Link href="sms:+19723099156" className="btn btn-secondary btn-lg">
+                  💬 Text Angel for Help
                 </Link>
               </div>
             </div>
@@ -159,11 +160,19 @@ export default function HomePage() {
           <p className="text-secondary" style={{ marginBottom: "2rem", maxWidth: "520px", margin: "0 auto 2rem" }}>
             Upload photos of your damage and run a free, AI-powered valuation audit against insurance offers.
           </p>
-          <Link href="/quiz" className="btn btn-primary btn-lg animate-pulse-glow">
-            Start Free AI Valuation →
-          </Link>
+          <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+            <Link href="/quiz" className="btn btn-primary btn-lg animate-pulse-glow">
+              Start Free AI Valuation →
+            </Link>
+            <Link href="tel:+19723099156" className="btn btn-secondary btn-lg">
+              📞 Call Angel Now
+            </Link>
+          </div>
         </div>
       </section>
+
+      {/* ── Floating Angel Widget ───────────────────────────────────────────── */}
+      <AngelChatWidget />
 
       {/* ── Footer ──────────────────────────────────────────────────────────── */}
       <footer style={{ background: "var(--surface-overlay)", borderTop: "1px solid var(--surface-border)", padding: "2rem 0" }}>
