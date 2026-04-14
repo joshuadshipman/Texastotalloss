@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import AngelChatWidget from "@/components/AngelChatWidget";
+import CounselChatWidget from "@/components/CounselChatWidget";
 
 // Removed STATS and STEPS to keep root purely informational
 
@@ -46,6 +46,7 @@ export default function HomePage() {
           </Link>
           <ul className="nav-links hidden-mobile">
             <li><Link href="/total-loss">Total Loss Guides</Link></li>
+            <li><Link href="/journey">Journey Map</Link></li>
             <li><Link href="#faq">FAQ</Link></li>
             <li><Link href="/portal">Attorney Portal</Link></li>
           </ul>
@@ -76,7 +77,7 @@ export default function HomePage() {
                   Start Free ACV Audit →
                 </Link>
                 <Link href="sms:+19723099156" className="btn btn-secondary btn-lg">
-                  💬 Text Angel for Help
+                  💬 Text Counsel for Help
                 </Link>
               </div>
             </div>
@@ -165,14 +166,14 @@ export default function HomePage() {
               Start Free AI Valuation →
             </Link>
             <Link href="tel:+19723099156" className="btn btn-secondary btn-lg">
-              📞 Call Angel Now
+              📞 Call Counsel Now
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── Floating Angel Widget ───────────────────────────────────────────── */}
-      <AngelChatWidget />
+      {/* ── Floating Counsel Widget ───────────────────────────────────────────── */}
+      <CounselChatWidget />
 
       {/* ── Footer ──────────────────────────────────────────────────────────── */}
       <footer style={{ background: "var(--surface-overlay)", borderTop: "1px solid var(--surface-border)", padding: "2rem 0" }}>

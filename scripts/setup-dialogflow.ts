@@ -372,7 +372,7 @@ const intentsToCreate: IntentConfig[] = [
   {
     displayName: 'Default Welcome Intent',
     trainingPhrasesParts: ['Hi', 'Hello', 'Start', 'I have a total loss', 'Good morning', 'Help'],
-    messageTexts: ['Welcome to Ask Angel support. I can help you file a claim for your vehicle. First, can I get your full name?'],
+    messageTexts: ['Welcome to Ask Counsel support. I can help you file a claim for your vehicle. First, can I get your full name?'],
     outputContexts: [{ name: 'awaiting_name', lifespan: 2 }]
   },
   {

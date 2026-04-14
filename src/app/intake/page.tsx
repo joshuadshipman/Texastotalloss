@@ -52,6 +52,9 @@ function IntakeContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const isAcvDispute = searchParams.get("intent") === "ACV_DISPUTE";
+  const currentSteps = isAcvDispute ? STEPS.filter(s => s.id !== 3) : STEPS;
+
   // Pre-fill from URL param if needed
   useEffect(() => {
     const type = searchParams.get("type");
@@ -154,22 +157,22 @@ function IntakeContent() {
             {/* Mobile Header */}
             <div className="mobile-only" style={{ textAlign: "center", marginBottom: "2rem" }}>
               <h1 className="text-2xl font-extrabold" style={{ marginBottom: "0.5rem" }}>
-                {searchParams.get("intent") === "ACV_DISPUTE" ? "Settlement Multiplier Audit" : "Claim Recovery Audit"}
+                {isAcvDispute ? "Settlement Multiplier Audit" : "Claim Recovery Audit"}
               </h1>
               <p className="text-secondary text-sm">
-                Step {step} of 5 — secure the retail value you're legally owed.
+                Step {currentSteps.findIndex(s => s.id === step) + 1} of {currentSteps.length} — secure the retail value you're legally owed.
               </p>
             </div>
 
             {/* Step Indicator */}
             <div className="step-indicator" style={{ marginBottom: "2.5rem" }}>
-              {STEPS.map((s, i) => (
-                <div key={s.id} className="step" style={{ flex: i < STEPS.length - 1 ? "1" : "0" }}>
+              {currentSteps.map((s, i) => (
+                <div key={s.id} className="step" style={{ flex: i < currentSteps.length - 1 ? "1" : "0" }}>
                   <div className={`step-circle ${step === s.id ? "active" : step > s.id ? "completed" : ""}`}
                     style={{ border: step === s.id ? "2px solid var(--color-accent)" : step > s.id ? "2px solid var(--color-success)" : "2px solid var(--surface-border)", transform: step === s.id ? "scale(1.1)" : "scale(1)" }}>
-                    {step > s.id ? "✓" : s.id}
+                    {step > s.id ? "✓" : i + 1}
                   </div>
-                  {i < STEPS.length - 1 && (
+                  {i < currentSteps.length - 1 && (
                     <div className={`step-line ${step > s.id ? "completed" : ""}`} />
                   )}
                 </div>

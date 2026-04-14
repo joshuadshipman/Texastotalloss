@@ -189,8 +189,9 @@ function CaseCard({
       } else {
         throw new Error(data.error || "Failed to initialize checkout session");
       }
-    } catch (err: any) {
-      alert("Checkout error: " + err.message);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      alert("Checkout error: " + errorMessage);
       setPurchasing(false);
     }
   };

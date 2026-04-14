@@ -7,12 +7,12 @@ interface Message {
   content: string;
 }
 
-export default function AngelChatWidget() {
+export default function CounselChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { 
       role: "assistant", 
-      content: "Hi, I'm Angel, the Texas Total Loss AI assistant. Were you involved in a car accident and need help figuring out your next steps?" 
+      content: "Hi, I'm Counsel, the Texas Total Loss AI assistant. Were you involved in a car accident and need help figuring out your next steps?" 
     }
   ]);
   const [input, setInput] = useState("");
@@ -116,7 +116,7 @@ export default function AngelChatWidget() {
           zIndex: 9999,
           animation: "pulse-glow 2s infinite"
         }}
-        aria-label="Chat with Angel"
+        aria-label="Chat with Counsel"
       >
         💬
       </button>
@@ -149,9 +149,9 @@ export default function AngelChatWidget() {
             alignItems: "center"
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <div style={{ width: "32px", height: "32px", borderRadius: "16px", background: "var(--color-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1rem" }}>😇</div>
+              <div style={{ width: "32px", height: "32px", borderRadius: "16px", background: "var(--color-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1rem" }}>💼</div>
               <div>
-                <div style={{ fontWeight: 700, fontSize: "1rem" }}>Angel AI</div>
+                <div style={{ fontWeight: 700, fontSize: "1rem" }}>Counsel AI</div>
                 <div style={{ fontSize: "0.75rem", color: "var(--color-success)" }}>● Online</div>
               </div>
             </div>
@@ -186,7 +186,7 @@ export default function AngelChatWidget() {
             ))}
             {isLoading && (
               <div style={{ alignSelf: "flex-start", background: "rgba(255,255,255,0.05)", padding: "0.5rem 1rem", borderRadius: "12px", fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                Angel is typing...
+                Counsel is typing...
               </div>
             )}
             <div ref={messagesEndRef} />
