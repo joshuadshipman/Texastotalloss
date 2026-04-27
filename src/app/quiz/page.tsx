@@ -23,7 +23,7 @@ interface AnalysisResult {
 }
 
 export default function ACVQuizPage() {
-  const [step, setStep] = useState<"info" | "condition" | "upload" | "analyzing" | "results">("info");
+  const [step, setStep] = useState<"info" | "condition" | "upload" | "analyzing" | "results" | "attorney-handoff" | "attorney-success">("info");
   const [vehicleInfo, setVehicleInfo] = useState<{year:string;make:string;model:string;mileage:string;condition:string;injured:boolean|null}>({ year: "", make: "", model: "", mileage: "", condition: "normal", injured: null });
   const [photos, setPhotos] = useState<File[]>([]);
   const [policeReport, setPoliceReport] = useState<File | null>(null);
@@ -208,9 +208,15 @@ export default function ACVQuizPage() {
               className="btn btn-primary" 
               style={{ width: "100%", height: "4rem", fontSize: "1.1rem" }} 
               disabled={vehicleInfo.injured === null || !vehicleInfo.year || !vehicleInfo.make}
-              onClick={() => setStep("condition")}
+              onClick={() => {
+                if (vehicleInfo.injured) {
+                  setStep("attorney-handoff");
+                } else {
+                  setStep("condition");
+                }
+              }}
             >
-              Continue to Interior Audit →
+              {vehicleInfo.injured ? "Get Priority Legal Help →" : "Continue to Interior Audit →"}
             </button>
           </div>
         )}
@@ -413,6 +419,50 @@ export default function ACVQuizPage() {
                  No generic bots. You will be matched with a specialized firm in our network that reviews these facts manually.
                </p>
             </div>
+          </div>
+        )}
+
+        {/* Step: Attorney Priority Handoff */}
+        {step === "attorney-handoff" && (
+          <div className="card" style={{ padding: "3rem 2rem", textAlign: "center", borderLeft: "4px solid var(--color-warning)" }}>
+            <div className="hero-eyebrow" style={{ marginBottom: "1rem", color: "var(--color-warning)" }}>⚠️ Priority Legal Triage</div>
+            <h2 className="text-2xl font-extrabold" style={{ marginBottom: "1rem" }}>
+              Attorney Priority Handoff
+            </h2>
+            <p className="text-secondary text-sm" style={{ marginBottom: "2rem", maxWidth: "450px", margin: "0 auto 2rem auto" }}>
+              Because you reported injuries, preserving your rights is critical. Do not speak to the at-fault insurance carrier. You need a specialized Texas PI attorney immediately.
+            </p>
+            
+            <div style={{ maxWidth: "350px", margin: "0 auto" }}>
+              <div className="form-group" style={{ textAlign: "left" }}>
+                <label className="form-label">Phone Number for Immediate Contact</label>
+                <input type="tel" className="form-input" placeholder="e.g. 555-555-0100" />
+              </div>
+              <button 
+                className="btn btn-primary" 
+                style={{ width: "100%", height: "4rem", fontSize: "1.1rem", background: "var(--color-warning)" }}
+                onClick={() => setStep("attorney-success")} 
+              >
+                Get Legal Help Now →
+              </button>
+            </div>
+            
+            <button className="btn" style={{ marginTop: "1.5rem", fontSize: "0.875rem", background: "transparent", color: "var(--text-muted)" }} onClick={() => setStep("info")}>
+              ← Back to Vehicle Info
+            </button>
+          </div>
+        )}
+
+        {/* Step: Attorney Success */}
+        {step === "attorney-success" && (
+          <div className="card" style={{ padding: "4rem 2rem", textAlign: "center", borderLeft: "4px solid var(--color-success)" }}>
+            <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>✅</div>
+            <h2 className="text-2xl font-extrabold" style={{ marginBottom: "1rem" }}>
+              Secure Handoff Complete
+            </h2>
+            <p className="text-secondary text-sm" style={{ maxWidth: "400px", margin: "0 auto" }}>
+              Your case has been securely prioritized. A specialized Texas PI Attorney will contact you shortly to protect your settlement.
+            </p>
           </div>
         )}
 
