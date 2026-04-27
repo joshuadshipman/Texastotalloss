@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import UltimateResourceHub from "./UltimateResourceHub";
 
 interface Message {
   role: "user" | "assistant";
@@ -9,12 +10,14 @@ interface Message {
 
 export default function CounselChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showHub, setShowHub] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { 
       role: "assistant", 
-      content: "Hi, I'm Counsel, the Texas Total Loss AI assistant. Were you involved in a car accident and need help figuring out your next steps?" 
+      content: "I'm Angel. If your insurance company just totaled your vehicle, they've likely offered you less than it's worth. I specialize in Texas Total Loss disputes. Have you received a settlement offer yet?" 
     }
   ]);
+
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -116,7 +119,7 @@ export default function CounselChatWidget() {
           zIndex: 9999,
           animation: "pulse-glow 2s infinite"
         }}
-        aria-label="Chat with Counsel"
+        aria-label="Chat with Angel"
       >
         💬
       </button>
@@ -151,16 +154,25 @@ export default function CounselChatWidget() {
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <div style={{ width: "32px", height: "32px", borderRadius: "16px", background: "var(--color-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1rem" }}>💼</div>
               <div>
-                <div style={{ fontWeight: 700, fontSize: "1rem" }}>Counsel AI</div>
-                <div style={{ fontSize: "0.75rem", color: "var(--color-success)" }}>● Online</div>
+                <div style={{ fontWeight: 700, fontSize: "1rem" }}>Angel AI</div>
+                <div style={{ fontSize: "0.75rem", color: "var(--color-success)" }}>● Node Dallas_01</div>
               </div>
             </div>
-            <button 
-              onClick={() => setIsOpen(false)}
-              style={{ background: "none", border: "none", color: "var(--text-secondary)", fontSize: "1.2rem", cursor: "pointer" }}
-            >
-              ✕
-            </button>
+            <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+              <button 
+                onClick={() => setShowHub(true)}
+                title="Texas Total Loss Reference Hub"
+                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid var(--surface-border)", borderRadius: "4px", padding: "4px 8px", fontSize: "0.65rem", fontWeight: 700, color: "var(--color-accent)", cursor: "pointer", textTransform: "uppercase", letterSpacing: "1px" }}
+              >
+                Truth Hub
+              </button>
+              <button 
+                onClick={() => setIsOpen(false)}
+                style={{ background: "none", border: "none", color: "var(--text-secondary)", fontSize: "1.2rem", cursor: "pointer" }}
+              >
+                ✕
+              </button>
+            </div>
           </div>
 
           {/* Messages */}
@@ -186,7 +198,7 @@ export default function CounselChatWidget() {
             ))}
             {isLoading && (
               <div style={{ alignSelf: "flex-start", background: "rgba(255,255,255,0.05)", padding: "0.5rem 1rem", borderRadius: "12px", fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                Counsel is typing...
+                Angel is typing...
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -229,6 +241,58 @@ export default function CounselChatWidget() {
               ➤
             </button>
           </form>
+        </div>
+      )}
+      {/* Resource Hub Overlay */}
+      {showHub && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "rgba(0,0,0,0.8)",
+          backdropFilter: "blur(10px)",
+          zIndex: 20000,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "2rem"
+        }}>
+          <div style={{ 
+            width: "100%", 
+            maxWidth: "800px", 
+            maxHeight: "90vh", 
+            overflowY: "auto",
+            position: "relative",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.5)"
+          }}>
+            <button 
+              onClick={() => setShowHub(false)}
+              style={{
+                position: "absolute",
+                top: "1rem",
+                right: "1rem",
+                zIndex: 20001,
+                background: "var(--color-accent)",
+                color: "var(--background-base)",
+                border: "none",
+                borderRadius: "50%",
+                width: "32px",
+                height: "32px",
+                cursor: "pointer",
+                fontWeight: "bold",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
+              }}
+            >
+              ✕
+            </button>
+            <UltimateResourceHub />
+          </div>
+          <p onClick={() => setShowHub(false)} style={{ marginTop: "1rem", color: "var(--text-muted)", cursor: "pointer", fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "2px" }}>
+            Click anywhere outside or ✕ to return to Angel
+          </p>
         </div>
       )}
     </>

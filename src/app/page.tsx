@@ -41,14 +41,12 @@ export default function HomePage() {
       {/* ── Navigation ──────────────────────────────────────────────────────── */}
       <nav className="nav">
         <div className="container nav-inner">
-          <Link href="/" className="nav-logo">
-            Texas<span>Total</span>Loss
+          <Link href="/" className="nav-logo" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '1.5rem' }}>🛡️</span> Agent<span style={{ color: "var(--color-accent)" }}>Angel</span>.io
           </Link>
           <ul className="nav-links hidden-mobile">
             <li><Link href="/total-loss">Total Loss Guides</Link></li>
-            <li><Link href="/journey">Journey Map</Link></li>
             <li><Link href="#faq">FAQ</Link></li>
-            <li><Link href="/portal">Attorney Portal</Link></li>
           </ul>
           <Link href="/quiz" className="btn btn-primary hidden-mobile">
             Free ACV Audit →
@@ -77,7 +75,7 @@ export default function HomePage() {
                   Start Free ACV Audit →
                 </Link>
                 <Link href="sms:+19723099156" className="btn btn-secondary btn-lg">
-                  💬 Text Counsel for Help
+                  💬 Text Angel for Help
                 </Link>
               </div>
             </div>
@@ -166,7 +164,7 @@ export default function HomePage() {
               Start Free AI Valuation →
             </Link>
             <Link href="tel:+19723099156" className="btn btn-secondary btn-lg">
-              📞 Call Counsel Now
+              📞 Call Angel Now
             </Link>
           </div>
         </div>
@@ -178,13 +176,12 @@ export default function HomePage() {
       {/* ── Footer ──────────────────────────────────────────────────────────── */}
       <footer style={{ background: "var(--surface-overlay)", borderTop: "1px solid var(--surface-border)", padding: "2rem 0" }}>
         <div className="container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
-          <div className="nav-logo">Texas<span style={{ color: "var(--color-accent)" }}>Total</span>Loss</div>
+          <div className="nav-logo" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><span style={{ fontSize: '1.2rem' }}>🛡️</span> Agent<span style={{ color: "var(--color-accent)" }}>Angel</span>.io</div>
           <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", maxWidth: "500px" }}>
             Texas Total Loss is a lead generation platform. We are not a law firm. 
             Information provided is for general purposes only and does not constitute legal advice.
           </div>
           <div style={{ display: "flex", gap: "1.5rem" }}>
-            <Link href="/portal" style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Attorney Portal</Link>
             <Link href="/quiz" style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Free ACV Audit</Link>
           </div>
         </div>
